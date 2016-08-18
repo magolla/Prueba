@@ -1,0 +1,9 @@
+contextPath=/d2d
+port=8080
+httpsPort=8443
+serverport=-1
+contextcontent=
+jvmargs=-Dlog4j.configurationFile=conf/app/localhost/log4j2.xml -Dspring.profiles.active=localhost -Djdbc1.url=[scdb] -Duser.timezone=GMT-0
+#jmargs=-Duser.timezone=GMT-0  -javaagent:/home/mgodoy/newrelic/newrelic.jar
+#-Dflights.api.version=rc
+default=false

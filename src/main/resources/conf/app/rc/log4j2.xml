@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+ <Appenders> 	
+ 	<Async name="Async" blocking="false">
+ 		 <AppenderRef ref="Temp"/>
+ 	</Async>
+
+	<RollingFile name="Temp" fileName="./logs/d2d.log"
+	    filePattern="./logs/d2d-%d{MM-dd-yyyy}-%i.log">
+		<PatternLayout>
+			<Pattern>[%p] %d %c %M - %m%n</Pattern>
+		</PatternLayout>
+	</RollingFile>
+  </Appenders> 
+  
+  <Loggers>
+     <Root level="error">
+      <AppenderRef ref="Async"/>
+    </Root>
+  </Loggers>
+ 
+</Configuration>

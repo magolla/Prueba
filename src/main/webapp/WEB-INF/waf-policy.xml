@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!--
+                This file defines a set of "web application firewall" rules that
+                defend a web application against certain types of attacks. These rules
+                are loaded and enforced by a filter that sits in front of a web
+                application and has access to both request and response on both the
+                way in and the way out.
+        -->
+
+<policy>
+
+        <!--
+                Setup some simple aliases to use elsewhere in the WAF policy. Alias
+                types are: string (default), regex. String is a literal string, regex
+                is a pattern.
+        -->
+        <aliases>
+                <alias name="INPUT_VALIDATION_ERROR">/security/input.jsp</alias>
+        </aliases>
+
+        <!--
+                Set the overall WAF mode of operation. The mode can be either "block"
+                or "log". "block" mode will send all errors to the web page defined in
+                the error-handling configuration. "log" mode will not change HTTP
+                requests at all, but will simply log errors.
+        -->
+        <settings>
+                <mode>block</mode>
+                <error-handling>
+                		<default-redirect-page>error.html</default-redirect-page>
+                        <default-page>error.html</default-page>
+                        <default-status>403</default-status>
+                </error-handling>
+        </settings>
+
+        <!--
+                Set rules for incoming URLs.
+        -->
+        <url-rules>
+                <restrict-method allow="^(GET|POST|TRACE)$" />
+                <!--  enforce-https path="/.*">
+                </enforce-https-->
+        </url-rules>
+
+        <!--
+                Set rules for incoming headers and parameters.
+        -->
+        <header-rules>
+                <restrict-content-type deny="multipart" />
+                <!--  restrict-content-type allow="text/plain" />
+                <restrict-content-type allow="x-www-form-urlencoded" />
+                <restrict-content-type allow="application/json" />
+                <restrict-user-agent deny=".*GoogleBot.*" /-->
+                <restrict-user-agent allow=".*" />
+        </header-rules>
+
+        <!-- Set rules for outbound headers and data -->
+
+        <outbound-rules>
+
+                <add-http-only-flag>
+                        <cookie name=".*" />
+                </add-http-only-flag>
+
+                <add-secure-flag>
+                        <cookie name=".*" />
+                </add-secure-flag>
+
+        </outbound-rules>
+
+</policy>
