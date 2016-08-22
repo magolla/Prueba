@@ -35,6 +35,22 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 	}
 	
 	@Override
+	public User getUserByEmail(String email) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
+			criteria.add(Restrictions.eq("email", email));
+			List<User> list = criteria.list();
+			if (CollectionUtils.isEmpty(list)) {
+				return null;
+			} else {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
 	public User getLastLoginUser() throws DAOException {
 		DetachedCriteria maxDateQuery = DetachedCriteria.forClass(User.class);
 		ProjectionList proj = Projections.projectionList();

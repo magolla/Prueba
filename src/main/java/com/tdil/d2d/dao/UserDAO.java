@@ -13,4 +13,6 @@ public interface UserDAO {
 
 	public User getLastLoginUser() throws DAOException;
 
+	public User getUserByEmail(String email) throws DAOException;
+
 }

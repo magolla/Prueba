@@ -30,6 +30,12 @@ public class User implements PersistentEntity {
 	@Column(name = "email")
 	private String email;
 	
+	@Column(name = "emailHash")
+	private String emailHash;
+	
+	@Column(name = "emailValidated")
+	private boolean emailValidated;
+	
 	/* Formayo yyyyMMdd*/
 	@Column(name = "birthdate")
 	private String birthdate;
@@ -180,6 +186,22 @@ public class User implements PersistentEntity {
 
 	public void setLastLoginDate(Date lastLoginDate) {
 		this.lastLoginDate = lastLoginDate;
+	}
+
+	public String getEmailHash() {
+		return emailHash;
+	}
+
+	public void setEmailHash(String emailHash) {
+		this.emailHash = emailHash;
+	}
+
+	public boolean isEmailValidated() {
+		return emailValidated;
+	}
+
+	public void setEmailValidated(boolean emailValidated) {
+		this.emailValidated = emailValidated;
 	}
 
 }

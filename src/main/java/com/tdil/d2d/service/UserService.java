@@ -16,4 +16,6 @@ public interface UserService {
 
 	public void updateLastLoginDate() throws ServiceException;
 
+	public User getUserByEmail(String username) throws ServiceException;
+
 }

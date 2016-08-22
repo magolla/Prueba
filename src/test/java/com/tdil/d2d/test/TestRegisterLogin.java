@@ -27,17 +27,16 @@ public class TestRegisterLogin {
 		// registro
 		given().config(RestAssured.config().sslConfig(
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-				.body("{\"firstname\":\"marcos\",\"lastname\":\"godoy\",\"username\":\"marcos"+suffix+"\",\"password\":\"123456\","
-						+ "\"email\":\"m@m.com\",\"identityCardTypeId\":1,\"identityCard\":\"25270160\","
-						+ "\"countryId\":1,\"city\":\"La Plata\",\"birthdate\":\"19760813\","
-						+ "\"deviceId\":\"zyryr23123\",\"document\":\"250000000\",\"phoneNumber\":\"0221232323\"}}")
+				.body("{\"password\":\"123456\","
+						+ "\"email\":\"m"+suffix+"@m.com\","
+						+ "\"deviceId\":\"zyryr23123\",\"phoneNumber\":\"0221232323\"}}")
 				.post(AP_URL +"/api/user/register")
 				.then().log().body().statusCode(201).body("status", equalTo(201))/*.
 				and().time(lessThan(100L))*/;
 		
 		// Login
 		String jwttoken = given().config(RestAssured.config().sslConfig(
-				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"marcos"+suffix+"\",\"password\":\"123456\"}}")
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"123456\"}}")
 				.post(AP_URL +"/api/auth")
 				.then().log().body().statusCode(200).extract().path("token");
 		Assert.assertNotNull(jwttoken);
@@ -48,6 +47,8 @@ public class TestRegisterLogin {
 		.post(AP_URL +"/api/user/androidRegId")
 		.then().log().body().statusCode(200);
 		
+		
+		/*
 		// Create Credit Card
 		given().config(RestAssured.config().sslConfig(
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
@@ -109,7 +110,7 @@ public class TestRegisterLogin {
 			.post(AP_URL +"/api/user/creditCard/"+idCreditCard+"/delete")
 			.then().log().body().statusCode(200);
 		
-		
+		*/
 		//System.out.println(response);
 	}
 

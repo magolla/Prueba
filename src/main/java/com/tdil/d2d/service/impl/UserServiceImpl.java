@@ -8,6 +8,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,6 +51,15 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	@Override
+	public User getUserByEmail(String email) throws ServiceException {
+		try {
+			return this.userDAO.getUserByEmail(email);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	@Override
 	public RegistrationResponse register(RegistrationRequest registrationRequest) throws ServiceException {
@@ -57,16 +67,17 @@ public class UserServiceImpl implements UserService {
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
 			User user = new User();
 			user.setCreationDate(new Date());
-			user.setUsername(registrationRequest.getUsername());
-			user.setFirstname(registrationRequest.getFirstname());
-			user.setLastname(registrationRequest.getLastname());
 			user.setEmail(registrationRequest.getEmail());
-			user.setBirthdate(registrationRequest.getBirthdate());
 			user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 			user.setEnabled(true);
 			user.setDeviceId(cryptographicService.encrypt(registrationRequest.getDeviceId(), "", user.getSalt()));
 			user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(), "", user.getSalt()));
+			user.setEmailValidated(false);
+			user.setEmailHash(RandomStringUtils.randomAlphanumeric(10));
 			this.userDAO.save(user);
+			
+			// TODO ENVIAR EMAIL DE VALIDACION
+			
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
