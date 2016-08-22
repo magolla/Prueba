@@ -47,6 +47,12 @@ public class TestRegisterLogin {
 		.post(AP_URL +"/api/user/androidRegId")
 		.then().log().body().statusCode(200);
 		
+		// Update regid
+		given().config(RestAssured.config().sslConfig(
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken)).body("{\"iosPushId\":\"123456789\"}}")
+		.post(AP_URL +"/api/user/iosPushId")
+		.then().log().body().statusCode(200);
+		
 		
 		/*
 		// Create Credit Card

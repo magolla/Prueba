@@ -46,6 +46,9 @@ public class User implements PersistentEntity {
 	@Column(name = "androidRegId", length=256)
 	private String androidRegId;
 	
+	@Column(name = "iosPushId", length=256)
+	private String iosPushId;
+	
 	@Column(name = "creationDate")
 	private Date creationDate;
 	
@@ -202,6 +205,14 @@ public class User implements PersistentEntity {
 
 	public void setEmailValidated(boolean emailValidated) {
 		this.emailValidated = emailValidated;
+	}
+
+	public String getIosPushId() {
+		return iosPushId;
+	}
+
+	public void setIosPushId(String iosPushId) {
+		this.iosPushId = iosPushId;
 	}
 
 }

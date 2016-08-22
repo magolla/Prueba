@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
+import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
 import com.tdil.d2d.controller.api.request.RegistrationResponse;
 import com.tdil.d2d.dao.UserDAO;
@@ -90,6 +91,18 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = this.userDAO.getById(User.class, RuntimeContext.getCurrentUser().getId());
 			user.setAndroidRegId(androidRegIdRequest.getAndroidRegId());
+			this.userDAO.save(user);
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean updateIOsPushId(IOsPushIdRequest iOsPushIdRequest) throws ServiceException {
+		try {
+			User user = this.userDAO.getById(User.class, RuntimeContext.getCurrentUser().getId());
+			user.setIosPushId(iOsPushIdRequest.getIosPushId());
 			this.userDAO.save(user);
 			return true;
 		} catch (DAOException e) {
