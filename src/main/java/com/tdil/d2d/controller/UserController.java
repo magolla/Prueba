@@ -98,14 +98,20 @@ public class UserController {
     	try {
 			boolean validated = this.userService.validateEmail(email, hash);
 			if (validated) {
-				return new ModelAndView("emailValidated.jsp");
+				return new ModelAndView("emailValidated");
 			} else {
-				return new ModelAndView("emailNotValidated.jsp");
+				return new ModelAndView("emailNotValidated");
 			}
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
-			return new ModelAndView("emailNotValidated.jsp");
+			return new ModelAndView("emailNotValidated");
 		}
+    }
+    
+    @RequestMapping(value = "/test111", method = RequestMethod.GET)
+    public ModelAndView test() {
+		return new ModelAndView("index");
+
     }
     
 }
