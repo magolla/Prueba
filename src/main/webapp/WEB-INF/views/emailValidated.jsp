@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div>
-		<b>ADAPTER WORKS FINE!</b>
+		<b>Email validado</b>
 	</div>
 </body>
 </html>

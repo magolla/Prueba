@@ -26,6 +26,7 @@ import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.AndroidNotificationService;
 import com.tdil.d2d.service.CryptographicService;
+import com.tdil.d2d.service.EmailService;
 import com.tdil.d2d.service.UserService;
 
 @Transactional
@@ -43,6 +44,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private AndroidNotificationService androidNotificationService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	@Override
 	public User getUserByUsername(String username) throws ServiceException {
@@ -74,10 +78,13 @@ public class UserServiceImpl implements UserService {
 			user.setDeviceId(cryptographicService.encrypt(registrationRequest.getDeviceId(), "", user.getSalt()));
 			user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(), "", user.getSalt()));
 			user.setEmailValidated(false);
-			user.setEmailHash(RandomStringUtils.randomAlphanumeric(10));
+			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
 			this.userDAO.save(user);
 			
 			// TODO ENVIAR EMAIL DE VALIDACION
+			
+			String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link " + user.getEmailHash();
+			emailService.sendEmail(registrationRequest.getEmail(), EmailServiceImpl.defaultFrom, "Registracion", body);
 			
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
@@ -117,6 +124,25 @@ public class UserServiceImpl implements UserService {
 			User user = this.userDAO.getById(User.class, RuntimeContext.getCurrentUser().getId());
 			user.setLastLoginDate(new Date());
 			this.userDAO.save(user);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean validateEmail(String email, String hash) throws ServiceException {
+		try {
+			User user = this.userDAO.getUserByEmail(email);
+			if (user == null) {
+				return false;
+			}
+			if (user.getEmailHash().equals(hash)) {
+				user.setEmailValidated(true);
+				this.userDAO.save(user);
+				return true;
+			} else {
+				return false;
+			}
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}

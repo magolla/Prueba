@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApiResponse;
@@ -88,6 +90,21 @@ public class UserController {
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/user/validateEmail", method = RequestMethod.GET)
+    public ModelAndView validateEmail(@RequestParam("email") String email, @RequestParam("hash") String hash) {
+    	try {
+			boolean validated = this.userService.validateEmail(email, hash);
+			if (validated) {
+				return new ModelAndView("emailValidated.jsp");
+			} else {
+				return new ModelAndView("emailNotValidated.jsp");
+			}
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ModelAndView("emailNotValidated.jsp");
 		}
     }
     

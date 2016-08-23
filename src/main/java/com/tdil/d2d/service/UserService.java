@@ -21,4 +21,6 @@ public interface UserService {
 
 	public boolean updateIOsPushId(IOsPushIdRequest iOsPushIdRequest) throws ServiceException;
 
+	public boolean validateEmail(String email, String hash) throws ServiceException;
+
 }
