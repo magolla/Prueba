@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/api/user/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationResponse> update(@Valid @RequestBody RegistrationRequest registrationRequest) {
+    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
     	try {
 			RegistrationResponse response = this.userService.register(registrationRequest);
 			return new ResponseEntity<RegistrationResponse>(response, HttpStatus.CREATED);

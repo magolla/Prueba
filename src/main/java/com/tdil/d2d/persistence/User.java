@@ -17,15 +17,27 @@ public class User implements PersistentEntity {
 	@GeneratedValue
 	@Column(name = "id")
 	private long id;
-
-	@Column(name = "username")
-	private String username;
+	
+	@Column(name = "creationDate")
+	private Date creationDate;
 
 	@Column(name = "firstname")
 	private String firstname;
 
 	@Column(name = "lastname")
 	private String lastname;
+	
+	@Column(name = "mobilePhone")
+	private String mobilePhone;
+	
+	@Column(name = "linePhone")
+	private String linePhone;
+	
+	@Column(name = "tacAccepted")
+	private boolean tacAccepted;
+	
+	@Column(name = "tacAcceptDate")
+	private Date tacAcceptDate;
 
 	@Column(name = "email")
 	private String email;
@@ -43,29 +55,17 @@ public class User implements PersistentEntity {
 	@Column(name = "enabled")
 	private boolean enabled;
 	
+	@Column(name = "deviceId")
+	private String deviceId;
+
 	@Column(name = "androidRegId", length=256)
 	private String androidRegId;
 	
 	@Column(name = "iosPushId", length=256)
 	private String iosPushId;
 	
-	@Column(name = "creationDate")
-	private Date creationDate;
-	
-	@Column(name = "lastLoginDate")
-	private Date lastLoginDate;
-
 	@Column(name = "lastPasswordResetDate")
 	private Date lastPasswordResetDate;
-
-	@Column(name = "pass")
-	private String password;
-	
-	@Column(name = "deviceId")
-	private String deviceId;
-	
-	@Column(name = "phoneNumber")
-	private String phoneNumber;
 
 	public long getId() {
 		return id;
@@ -73,22 +73,6 @@ public class User implements PersistentEntity {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getEmail() {
@@ -109,14 +93,6 @@ public class User implements PersistentEntity {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
-
-	public Date getLastPasswordResetDate() {
-		return lastPasswordResetDate;
-	}
-
-	public void setLastPasswordResetDate(Date lastPasswordResetDate) {
-		this.lastPasswordResetDate = lastPasswordResetDate;
 	}
 
 	public String getFirstname() {
@@ -151,24 +127,8 @@ public class User implements PersistentEntity {
 		this.deviceId = deviceId;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
 	public String getAndroidRegId() {
 		return androidRegId;
-	}
-
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
 	}
 
 	public String getSalt() {
@@ -181,14 +141,6 @@ public class User implements PersistentEntity {
 
 	public void setBirthdate(String birthdate) {
 		this.birthdate = birthdate;
-	}
-
-	public Date getLastLoginDate() {
-		return lastLoginDate;
-	}
-
-	public void setLastLoginDate(Date lastLoginDate) {
-		this.lastLoginDate = lastLoginDate;
 	}
 
 	public String getEmailHash() {
@@ -213,6 +165,46 @@ public class User implements PersistentEntity {
 
 	public void setIosPushId(String iosPushId) {
 		this.iosPushId = iosPushId;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	public boolean isTacAccepted() {
+		return tacAccepted;
+	}
+
+	public void setTacAccepted(boolean tacAccepted) {
+		this.tacAccepted = tacAccepted;
+	}
+
+	public Date getTacAcceptDate() {
+		return tacAcceptDate;
+	}
+
+	public void setTacAcceptDate(Date tacAcceptDate) {
+		this.tacAcceptDate = tacAcceptDate;
+	}
+
+	public Date getLastPasswordResetDate() {
+		return lastPasswordResetDate;
+	}
+
+	public void setLastPasswordResetDate(Date lastPasswordResetDate) {
+		this.lastPasswordResetDate = lastPasswordResetDate;
 	}
 
 }

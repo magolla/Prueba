@@ -9,6 +9,16 @@ import com.tdil.d2d.esapi.validation.ValidInput;
 public class RegistrationRequest extends ApiRequest {
 
 	@NotEmpty
+    @Length(min= 2, max = 50)
+	@ValidInput
+	private String firstname;
+	
+	@NotEmpty
+    @Length(min= 2, max = 50)
+	@ValidInput
+	private String lastname;
+	
+	@NotEmpty
     @Length(min= 4, max = 50)
 	@Email
 	@ValidInput
@@ -17,17 +27,39 @@ public class RegistrationRequest extends ApiRequest {
 	@NotEmpty
     @Length(min= 6, max = 20)
 	@ValidInput
-	private String password;
+	private String mobilePhone;
+	
+	@NotEmpty
+    @Length(min= 6, max = 20)
+	@ValidInput
+	private String linePhone;
+	
+	@NotEmpty
+    @Length(min= 8, max = 8)
+	private String birthdate;
 	
 	@NotEmpty
     @Length(min= 6, max = 20)
 	@ValidInput
 	private String deviceId;
 	
-	@NotEmpty
-    @Length(min= 6, max = 20)
-	@ValidInput
-	private String phoneNumber;
+	private boolean tacAccepted;
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
 
 	public String getEmail() {
 		return email;
@@ -37,12 +69,20 @@ public class RegistrationRequest extends ApiRequest {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getMobilePhone() {
+		return mobilePhone;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	public String getBirthdate() {
+		return birthdate;
+	}
+
+	public void setBirthdate(String birthdate) {
+		this.birthdate = birthdate;
 	}
 
 	public String getDeviceId() {
@@ -53,14 +93,21 @@ public class RegistrationRequest extends ApiRequest {
 		this.deviceId = deviceId;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public boolean isTacAccepted() {
+		return tacAccepted;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setTacAccepted(boolean tacAccepted) {
+		this.tacAccepted = tacAccepted;
 	}
 
+	public String getLinePhone() {
+		return linePhone;
+	}
+
+	public void setLinePhone(String linePhone) {
+		this.linePhone = linePhone;
+	}
 
 
 	

@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public RegistrationResponse register(RegistrationRequest registrationRequest) throws ServiceException {
 		try {
+			xxx TODO
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
 			User user = new User();
 			user.setCreationDate(new Date());
