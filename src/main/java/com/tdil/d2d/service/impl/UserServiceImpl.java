@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
-import com.tdil.d2d.controller.api.request.RegistrationResponse;
+import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;

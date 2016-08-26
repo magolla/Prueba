@@ -1,4 +1,4 @@
-package com.tdil.d2d.controller.api.request;
+package com.tdil.d2d.controller.api.response;
 
 public class ApiResponse {
 

@@ -33,11 +33,12 @@ public class JobOffer implements PersistentEntity {
 	@Column(name = "offerDate")
 	private Date offerDate;
 	
+	@Column(name="hour")
+	private String hour;
+
 	@Column(name="permanent")
 	private boolean permanent;
 	
-	@Column(name="hour")
-	private String hour;
 	
 	@Column(name="comment")
 	private String comment;

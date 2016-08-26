@@ -3,6 +3,7 @@ package com.tdil.d2d.controller;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -18,11 +19,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
+import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
-import com.tdil.d2d.controller.api.request.ApiResponse;
+import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
-import com.tdil.d2d.controller.api.request.RegistrationResponse;
+import com.tdil.d2d.controller.api.response.ApiResponse;
+import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.security.JwtTokenUtil;
 import com.tdil.d2d.service.UserService;
@@ -71,6 +76,8 @@ public class UserController {
 		}
     }
     
+    
+    
     @RequestMapping(value = "/api/user/androidRegId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> androidRegId(@Valid @RequestBody AndroidRegIdRequest androidRegIdRequest) {
     	try {
@@ -105,6 +112,39 @@ public class UserController {
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ModelAndView("emailNotValidated");
+		}
+    }
+    
+    @RequestMapping(value = "/api/offer/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> offerCreate(@Valid @RequestBody CreateJobOfferRequest createOfferRequest) {
+    	try {
+			boolean response = this.userService.createJobOffer(createOfferRequest);
+			return new ResponseEntity<ApiResponse>(new ApiResponse(response == true ? HttpStatus.OK.value() : HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/offers", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> offers() {
+    	try {
+			List<JobOfferStatusDTO> myOffers = this.userService.getMyOffers();
+			return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>(new GenericResponse<List<JobOfferStatusDTO>>(myOffers,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/log", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<List<ActivityLogDTO>>> activityLog() {
+    	try {
+			List<ActivityLogDTO> myOffers = this.userService.getActivityLog();
+			return new ResponseEntity<GenericResponse<List<ActivityLogDTO>>>(new GenericResponse<List<ActivityLogDTO>>(myOffers,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<List<ActivityLogDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
     
