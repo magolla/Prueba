@@ -20,6 +20,9 @@ public class User implements PersistentEntity {
 	
 	@Column(name = "creationDate")
 	private Date creationDate;
+	
+	@Column(name = "lastLoginDate")
+	private Date lastLoginDate;
 
 	@Column(name = "firstname")
 	private String firstname;
@@ -205,6 +208,14 @@ public class User implements PersistentEntity {
 
 	public void setLastPasswordResetDate(Date lastPasswordResetDate) {
 		this.lastPasswordResetDate = lastPasswordResetDate;
+	}
+
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
 	}
 
 }

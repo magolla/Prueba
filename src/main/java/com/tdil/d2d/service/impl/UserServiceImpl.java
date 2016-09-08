@@ -2,7 +2,11 @@ package com.tdil.d2d.service.impl;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -15,13 +19,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
+import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
+import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
+import com.tdil.d2d.dao.ActivityLogDAO;
+import com.tdil.d2d.dao.JobOfferDAO;
+import com.tdil.d2d.dao.SpecialtyDAO;
+import com.tdil.d2d.dao.SubSpecialtyDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.ActivityLog;
+import com.tdil.d2d.persistence.JobOffer;
+import com.tdil.d2d.persistence.Specialty;
+import com.tdil.d2d.persistence.SubSpecialty;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.AndroidNotificationService;
@@ -35,6 +50,14 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserDAO userDAO;
+	@Autowired
+	private JobOfferDAO jobDAO;
+	@Autowired
+	private SpecialtyDAO specialtyDAO;
+	@Autowired
+	private SubSpecialtyDAO subspecialtyDAO;
+	@Autowired
+	private ActivityLogDAO activityLogDAO;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -69,15 +92,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public RegistrationResponse register(RegistrationRequest registrationRequest) throws ServiceException {
 		try {
-			xxx TODO
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
 			User user = new User();
 			user.setCreationDate(new Date());
 			user.setEmail(registrationRequest.getEmail());
-			user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+			//user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 			user.setEnabled(true);
 			user.setDeviceId(cryptographicService.encrypt(registrationRequest.getDeviceId(), "", user.getSalt()));
-			user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(), "", user.getSalt()));
+			//user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(), "", user.getSalt()));
 			user.setEmailValidated(false);
 			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
 			this.userDAO.save(user);
@@ -149,4 +171,78 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
+	
+	@Override
+	public boolean createJobOffer(CreateJobOfferRequest createOfferRequest) throws ServiceException {
+		try {
+			JobOffer jobOffer = new JobOffer();
+			jobOffer.setOfferent(userDAO.getById(User.class, com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId()));
+			jobOffer.setCreationDate(new Date());
+			jobOffer.setSpecialty(specialtyDAO.getById(Specialty.class,createOfferRequest.getSpecialtyId()));
+			jobOffer.setSubSpecialty(subspecialtyDAO.getById(SubSpecialty.class, createOfferRequest.getSubspecialtyId()));
+			jobOffer.setAddress(createOfferRequest.getAddress());
+			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate(), "YYYYMMDD"));
+			jobOffer.setHour(createOfferRequest.getOfferHour());
+			jobOffer.setPermanent(createOfferRequest.isPermanent());
+			jobOffer.setComment(createOfferRequest.getComment());
+			jobOffer.setTasks(createOfferRequest.getTasks());
+			jobOffer.setVacants(createOfferRequest.getVacants());
+			jobOffer.setStatus(JobOffer.VACANT);
+			this.jobDAO.save(jobOffer);
+			return true;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	private Date getDate(String offerDate, String string) throws ParseException {
+		return new SimpleDateFormat(string).parse(offerDate);
+	}
+	
+	@Override
+	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
+		try {
+			List<JobOffer> creditCards = this.jobDAO.getOffers(RuntimeContext.getCurrentUser().getId());
+			return creditCards.stream().map(s -> toDTO(s))
+					.collect(Collectors.toList());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	private JobOfferStatusDTO toDTO(JobOffer s) {
+		JobOfferStatusDTO result = new JobOfferStatusDTO();
+		result.setId(s.getId());
+		// TODO format
+		result.setCreationDate(s.getCreationDate().toString());
+		result.setSpecialtyName(s.getSpecialty().getName());
+		result.setSubspecialtyName(s.getSubSpecialty().getName());
+		result.setAddress(s.getAddress());
+		result.setOfferDate(s.getOfferDate().toString());
+		result.setOfferHour(s.getHour());
+		result.setVacants(s.getVacants());
+		// TODO 
+//		result.setApplications(applications);
+		result.setStatus(s.getStatus());
+		return result;
+	}
+	
+	@Override
+	public List<ActivityLogDTO> getActivityLog() throws ServiceException {
+		try {
+			List<ActivityLog> creditCards = this.activityLogDAO.getLastLog(RuntimeContext.getCurrentUser().getId());
+			return creditCards.stream().map(s -> toDTO(s))
+					.collect(Collectors.toList());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	private ActivityLogDTO toDTO(ActivityLog s) {
+		ActivityLogDTO r = new ActivityLogDTO();
+		r.setId(s.getId());
+		r.setCreationDate(s.getCreationDate().toString());
+		r.setLog(s.getLog());
+		return null;
+	}
 }

@@ -6,12 +6,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "D2D_JOBOFFER")
 public class JobOffer implements PersistentEntity {
+	
+	public static String VACANT = "VACANT";
 
 	@Id
 	@GeneratedValue
@@ -51,6 +54,9 @@ public class JobOffer implements PersistentEntity {
 	
 	@Column(name="status")
 	private String status;
+	
+	@ManyToOne
+	private User offerent;
 
 	public long getId() {
 		return id;
@@ -58,6 +64,102 @@ public class JobOffer implements PersistentEntity {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Specialty getSpecialty() {
+		return specialty;
+	}
+
+	public void setSpecialty(Specialty specialty) {
+		this.specialty = specialty;
+	}
+
+	public SubSpecialty getSubSpecialty() {
+		return subSpecialty;
+	}
+
+	public void setSubSpecialty(SubSpecialty subSpecialty) {
+		this.subSpecialty = subSpecialty;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Date getOfferDate() {
+		return offerDate;
+	}
+
+	public void setOfferDate(Date offerDate) {
+		this.offerDate = offerDate;
+	}
+
+	public String getHour() {
+		return hour;
+	}
+
+	public void setHour(String hour) {
+		this.hour = hour;
+	}
+
+	public boolean isPermanent() {
+		return permanent;
+	}
+
+	public void setPermanent(boolean permanent) {
+		this.permanent = permanent;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(String tasks) {
+		this.tasks = tasks;
+	}
+
+	public Integer getVacants() {
+		return vacants;
+	}
+
+	public void setVacants(Integer vacants) {
+		this.vacants = vacants;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public User getOfferent() {
+		return offerent;
+	}
+
+	public void setOfferent(User offerent) {
+		this.offerent = offerent;
 	}
 
 

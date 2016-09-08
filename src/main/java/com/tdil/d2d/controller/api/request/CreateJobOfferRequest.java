@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.tdil.d2d.esapi.validation.ValidInput;
 
 public class CreateJobOfferRequest extends ApiRequest {
-
+	
 	@NotEmpty
 	private long specialtyId;
 	
@@ -116,5 +116,4 @@ public class CreateJobOfferRequest extends ApiRequest {
 		this.vacants = vacants;
 	}
 
-	
 }
