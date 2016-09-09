@@ -65,7 +65,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/api/user/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/user/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
     	try {
 			RegistrationResponse response = this.userService.register(registrationRequest);
@@ -78,7 +78,7 @@ public class UserController {
     
     
     
-    @RequestMapping(value = "/api/user/androidRegId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/user/androidRegId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> androidRegId(@Valid @RequestBody AndroidRegIdRequest androidRegIdRequest) {
     	try {
 			boolean response = this.userService.updateAndroidRegId(androidRegIdRequest);
@@ -89,7 +89,7 @@ public class UserController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/iosPushId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/user/iosPushId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> iosPushId(@Valid @RequestBody IOsPushIdRequest iOsPushIdRequest) {
     	try {
 			boolean response = this.userService.updateIOsPushId(iOsPushIdRequest);
@@ -115,7 +115,7 @@ public class UserController {
 		}
     }
     
-    @RequestMapping(value = "/api/offer/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/offer/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> offerCreate(@Valid @RequestBody CreateJobOfferRequest createOfferRequest) {
     	try {
 			boolean response = this.userService.createJobOffer(createOfferRequest);
@@ -126,7 +126,7 @@ public class UserController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/offers", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/user/offers", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> offers() {
     	try {
 			List<JobOfferStatusDTO> myOffers = this.userService.getMyOffers();
@@ -137,7 +137,7 @@ public class UserController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/log", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/user/log", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<ActivityLogDTO>>> activityLog() {
     	try {
 			List<ActivityLogDTO> myOffers = this.userService.getActivityLog();

@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService {
 			//user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(), "", user.getSalt()));
 			user.setEmailValidated(false);
 			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
+			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 			
 			// TODO ENVIAR EMAIL DE VALIDACION
@@ -194,6 +195,30 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	private long addSpecialty(String specialtyName) throws ServiceException {
+		try {
+			Specialty s = new Specialty();
+			s.setName(specialtyName);
+			this.specialtyDAO.save(s);
+			return s.getId();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	private long addSubSpecialty(long specialtyId, String subSpecialtyName) throws ServiceException {
+		try {
+			Specialty s = this.specialtyDAO.getById(Specialty.class, specialtyId);
+			SubSpecialty subSpecialty = new SubSpecialty();
+			subSpecialty.setSpecialty(s);
+			subSpecialty.setName(subSpecialtyName);
+			this.subspecialtyDAO.save(subSpecialty);
+			return subSpecialty.getId();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	private Date getDate(String offerDate, String string) throws ParseException {
 		return new SimpleDateFormat(string).parse(offerDate);
@@ -244,5 +269,11 @@ public class UserServiceImpl implements UserService {
 		r.setCreationDate(s.getCreationDate().toString());
 		r.setLog(s.getLog());
 		return null;
+	}
+	
+	@Override
+	public void initDbWithTestData() throws ServiceException {
+		long l = this.addSpecialty("Cirugia");
+		l = this.addSubSpecialty(l, "Cuello");
 	}
 }

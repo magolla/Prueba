@@ -51,6 +51,9 @@ public class User implements PersistentEntity {
 	@Column(name = "emailValidated")
 	private boolean emailValidated;
 	
+	@Column(name="pass")
+	private String password;
+	
 	/* Formayo yyyyMMdd*/
 	@Column(name = "birthdate")
 	private String birthdate;
@@ -216,6 +219,14 @@ public class User implements PersistentEntity {
 
 	public void setLastLoginDate(Date lastLoginDate) {
 		this.lastLoginDate = lastLoginDate;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

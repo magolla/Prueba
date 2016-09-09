@@ -34,4 +34,6 @@ public interface UserService {
 
 	public List<ActivityLogDTO> getActivityLog() throws ServiceException;
 
+	public void initDbWithTestData() throws ServiceException;
+
 }

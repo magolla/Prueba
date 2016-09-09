@@ -27,35 +27,45 @@ public class TestRegisterLogin {
 		// registro
 		given().config(RestAssured.config().sslConfig(
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-				.body("{\"password\":\"123456\","
+				.body("{\"firstname\":\"marcos\",\"lastname\":\"godoy\","
 						+ "\"email\":\"m"+suffix+"@m.com\","
-						+ "\"deviceId\":\"zyryr23123\",\"phoneNumber\":\"0221232323\"}}")
+						+ "\"deviceId\":\"zyryr23123\",\"mobilePhone\":\"2216412772\","
+						+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
+						+ "\"tacAccepted\":true"
+						+ "}")
 				.post(AP_URL +"/api/user/register")
 				.then().log().body().statusCode(201).body("status", equalTo(201))/*.
 				and().time(lessThan(100L))*/;
 		
+		
 		// Login
 		String jwttoken = given().config(RestAssured.config().sslConfig(
-				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"123456\"}}")
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"zyryr23123\"}")
 				.post(AP_URL +"/api/auth")
 				.then().log().body().statusCode(200).extract().path("token");
 		Assert.assertNotNull(jwttoken);
 		
+		
 		// Update regid
 		given().config(RestAssured.config().sslConfig(
-				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken)).body("{\"androidRegId\":\"123456789\"}}")
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken)).body("{\"androidRegId\":\"123456789\"}")
 		.post(AP_URL +"/api/user/androidRegId")
 		.then().log().body().statusCode(200);
 		
 		// Update regid
 		given().config(RestAssured.config().sslConfig(
-				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken)).body("{\"iosPushId\":\"123456789\"}}")
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken)).body("{\"iosPushId\":\"123456789\"}")
 		.post(AP_URL +"/api/user/iosPushId")
 		.then().log().body().statusCode(200);
 		
-		
-//		login
+//		given().config(RestAssured.config().sslConfig(
+//				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken))
+//			.body("{\"iosPushId\":\"123456789\"}")
+//		.post(AP_URL +"/api/offer/create")
+//		.then().log().body().statusCode(200);
 //		
+		
+		
 //		create job offer
 //		
 //		get offfers
