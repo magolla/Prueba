@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,10 +22,10 @@ public class JobApplication implements PersistentEntity {
 	@Column(name = "creationDate")
 	private Date creationDate;
 	
-	@OneToMany
+	@ManyToOne
 	private JobOffer offer;
 	
-	@OneToMany
+	@ManyToOne
 	private User user;
 	
 	@Column(name = "comment")

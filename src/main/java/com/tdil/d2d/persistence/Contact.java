@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,7 +21,7 @@ public class Contact implements PersistentEntity {
 	@Column(name = "creationDate")
 	private Date creationDate;
 
-	@OneToMany
+	@ManyToOne
 	private ContactMotive motive;
 	
 	@Column(name="comment")

@@ -54,13 +54,13 @@ public class TestRegisterLogin {
 		.then().log().body().statusCode(200);
 		
 		
-		login
-		
-		create job offer
-		
-		get offfers
-		
-		get activity log
+//		login
+//		
+//		create job offer
+//		
+//		get offfers
+//		
+//		get activity log
 		
 		/*
 		// Create Credit Card
