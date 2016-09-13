@@ -1,6 +1,9 @@
 package com.tdil.d2d.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +25,54 @@ public class GeoServiceImpl implements GeoService {
 	@Autowired
 	private GeoDAO geoDAO;
 	
-	public List<GeoLevelDTO> search(String text) {
-		return null;
+	public List<GeoLevelDTO> search(String text) throws ServiceException {
+		try {
+			List<GeoLevelDTO> result = new ArrayList<>();
+			result.addAll(toDto4(geoDAO.listGeo4(text)));
+			result.addAll(toDto3(geoDAO.listGeo3(text)));
+			result.addAll(toDto2(geoDAO.listGeo2(text)));
+			return result;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	private Collection<? extends GeoLevelDTO> toDto4(List<Geo4> levels) {
+		return levels.stream().map(s -> toDto(s)).collect(Collectors.toList());
+	}
+	
+	private Collection<? extends GeoLevelDTO> toDto3(List<Geo3> levels) {
+		return levels.stream().map(s -> toDto(s)).collect(Collectors.toList());
+	}
+	
+	private Collection<? extends GeoLevelDTO> toDto2(List<Geo2> levels) {
+		return levels.stream().map(s -> toDto(s)).collect(Collectors.toList());
+	}
+
+	private GeoLevelDTO toDto(Geo4 s) {
+		GeoLevelDTO result = new GeoLevelDTO();
+		result.setLevel(4);
+		result.setId(s.getId());
+		// TODO setear el path hasta el 2
+		result.setName(s.getName());
+		return result;
+	}
+	
+	private GeoLevelDTO toDto(Geo3 s) {
+		GeoLevelDTO result = new GeoLevelDTO();
+		result.setLevel(3);
+		result.setId(s.getId());
+		// TODO setear el path hasta el 2
+		result.setName(s.getName());
+		return result;
+	}
+	
+	private GeoLevelDTO toDto(Geo2 s) {
+		GeoLevelDTO result = new GeoLevelDTO();
+		result.setLevel(2);
+		result.setId(s.getId());
+		result.setName(s.getName());
+		return result;
 	}
 
 	@Override

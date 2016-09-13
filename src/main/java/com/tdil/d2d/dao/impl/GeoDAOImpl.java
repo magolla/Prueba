@@ -1,8 +1,13 @@
 package com.tdil.d2d.dao.impl;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -23,6 +28,45 @@ public class GeoDAOImpl extends HibernateDaoSupport implements GeoDAO  {
 	@PostConstruct
 	public void initHibernate() {
 		this.setSessionFactory(this.sessionFactory);
+	}
+	
+	@Override
+	public List<Geo2> listGeo2(String text) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Geo2.class);
+			criteria.add(Restrictions.like("name", "%" + text + "%"));
+			criteria.addOrder(Order.asc("name"));
+			criteria.setMaxResults(5);
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
+	public List<Geo3> listGeo3(String text) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Geo3.class);
+			criteria.add(Restrictions.like("name", "%" + text + "%"));
+			criteria.addOrder(Order.asc("name"));
+			criteria.setMaxResults(5);
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
+	public List<Geo4> listGeo4(String text) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Geo4.class);
+			criteria.add(Restrictions.like("name", "%" + text + "%"));
+			criteria.addOrder(Order.asc("name"));
+			criteria.setMaxResults(5);
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
 	}
 	
 	public void save(Geo2 entity) throws DAOException {
