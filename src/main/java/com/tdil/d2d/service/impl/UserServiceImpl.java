@@ -29,14 +29,14 @@ import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.JobOfferDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
-import com.tdil.d2d.dao.SubSpecialtyDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.ActivityLog;
 import com.tdil.d2d.persistence.JobOffer;
+import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
-import com.tdil.d2d.persistence.SubSpecialty;
+import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.AndroidNotificationService;
@@ -54,8 +54,6 @@ public class UserServiceImpl implements UserService {
 	private JobOfferDAO jobDAO;
 	@Autowired
 	private SpecialtyDAO specialtyDAO;
-	@Autowired
-	private SubSpecialtyDAO subspecialtyDAO;
 	@Autowired
 	private ActivityLogDAO activityLogDAO;
 	
@@ -179,14 +177,14 @@ public class UserServiceImpl implements UserService {
 			JobOffer jobOffer = new JobOffer();
 			jobOffer.setOfferent(userDAO.getById(User.class, com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId()));
 			jobOffer.setCreationDate(new Date());
-			jobOffer.setSpecialty(specialtyDAO.getById(Specialty.class,createOfferRequest.getSpecialtyId()));
-			jobOffer.setSubSpecialty(subspecialtyDAO.getById(SubSpecialty.class, createOfferRequest.getSubspecialtyId()));
+//			jobOffer.setSpecialty(specialtyDAO.getById(Specialty.class,createOfferRequest.getSpecialtyId()));
+//			jobOffer.setSubSpecialty(subspecialtyDAO.getById(SubSpecialty.class, createOfferRequest.getSubspecialtyId()));
 			jobOffer.setAddress(createOfferRequest.getAddress());
 			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate(), "YYYYMMDD"));
 			jobOffer.setHour(createOfferRequest.getOfferHour());
 			jobOffer.setPermanent(createOfferRequest.isPermanent());
 			jobOffer.setComment(createOfferRequest.getComment());
-			jobOffer.setTasks(createOfferRequest.getTasks());
+//			jobOffer.setTasks(createOfferRequest.getTasks());
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
@@ -196,29 +194,42 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
-	private long addSpecialty(String specialtyName) throws ServiceException {
+	private long addOccupation(String occupationName) throws ServiceException {
 		try {
-			Specialty s = new Specialty();
-			s.setName(specialtyName);
+			Occupation s = new Occupation();
+			s.setName(occupationName);
 			this.specialtyDAO.save(s);
 			return s.getId();
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
-	
-	private long addSubSpecialty(long specialtyId, String subSpecialtyName) throws ServiceException {
+
+	private long addSpecialty(long occupationId, String specialtyName) throws ServiceException {
 		try {
-			Specialty s = this.specialtyDAO.getById(Specialty.class, specialtyId);
-			SubSpecialty subSpecialty = new SubSpecialty();
-			subSpecialty.setSpecialty(s);
-			subSpecialty.setName(subSpecialtyName);
-			this.subspecialtyDAO.save(subSpecialty);
-			return subSpecialty.getId();
+			Occupation s = this.specialtyDAO.getOccupationById(occupationId);
+			Specialty specialty = new Specialty();
+			specialty.setOccupation(s);
+			specialty.setName(specialtyName);
+			this.specialtyDAO.save(specialty);
+			return specialty.getId();
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
+	private long addTask(long specialtyId, String taskName) throws ServiceException {
+		try {
+			Specialty s = this.specialtyDAO.getSpecialtyById(specialtyId);
+			Task task = new Task();
+			task.setSpecialty(s);
+			task.setName(taskName);
+			this.specialtyDAO.save(task);
+			return task.getId();
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
 
 	private Date getDate(String offerDate, String string) throws ParseException {
 		return new SimpleDateFormat(string).parse(offerDate);
@@ -241,7 +252,7 @@ public class UserServiceImpl implements UserService {
 		// TODO format
 		result.setCreationDate(s.getCreationDate().toString());
 		result.setSpecialtyName(s.getSpecialty().getName());
-		result.setSubspecialtyName(s.getSubSpecialty().getName());
+//		result.setSubspecialtyName(s.getSubSpecialty().getName());
 		result.setAddress(s.getAddress());
 		result.setOfferDate(s.getOfferDate().toString());
 		result.setOfferHour(s.getHour());
@@ -273,7 +284,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void initDbWithTestData() throws ServiceException {
-		long l = this.addSpecialty("Cirugia");
-		l = this.addSubSpecialty(l, "Cuello");
+		long l = this.addOccupation("Medico");
+		l = this.addSpecialty(l, "Alergista");
+		l = this.addTask(l, "reemplazo de consultorio");
 	}
 }

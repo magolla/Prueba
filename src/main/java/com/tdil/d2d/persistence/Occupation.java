@@ -6,12 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "D2D_SPECIALTY")
-public class Specialty implements PersistentEntity {
+@Table(name = "D2D_OCCUPATION")
+public class Occupation implements PersistentEntity {
 
 	@Id
 	@GeneratedValue
@@ -23,9 +22,6 @@ public class Specialty implements PersistentEntity {
 	
 	@Column(name = "name")
 	private String name;
-	
-	@ManyToOne
-	private Occupation occupation;
 
 	public long getId() {
 		return id;
@@ -41,14 +37,6 @@ public class Specialty implements PersistentEntity {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Occupation getOccupation() {
-		return occupation;
-	}
-
-	public void setOccupation(Occupation occupation) {
-		this.occupation = occupation;
 	}
 
 

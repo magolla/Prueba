@@ -10,8 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "D2D_SUBSPECIALTY")
-public class SubSpecialty implements PersistentEntity {
+@Table(name = "D2D_TASK")
+public class Task implements PersistentEntity {
 
 	@Id
 	@GeneratedValue

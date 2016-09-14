@@ -1,13 +1,15 @@
 package com.tdil.d2d.persistence;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,11 +26,15 @@ public class JobOffer implements PersistentEntity {
 	@Column(name = "creationDate")
 	private Date creationDate;
 
-	@OneToOne
+	@ManyToOne
+	private Occupation occupation;
+	
+	@ManyToOne
 	private Specialty specialty;
 
-	@OneToOne
-	private SubSpecialty subSpecialty;
+	@OneToMany
+    @JoinColumn(name="TASK_ID")
+	private Set<Task> tasks;
 	
 	@Column(name="address")
 	private String address;
@@ -45,9 +51,6 @@ public class JobOffer implements PersistentEntity {
 	
 	@Column(name="comment")
 	private String comment;
-	
-	@Column(name="tasks")
-	private String tasks;
 	
 	@Column(name="vacants")
 	private Integer vacants;
@@ -80,14 +83,6 @@ public class JobOffer implements PersistentEntity {
 
 	public void setSpecialty(Specialty specialty) {
 		this.specialty = specialty;
-	}
-
-	public SubSpecialty getSubSpecialty() {
-		return subSpecialty;
-	}
-
-	public void setSubSpecialty(SubSpecialty subSpecialty) {
-		this.subSpecialty = subSpecialty;
 	}
 
 	public String getAddress() {
@@ -130,14 +125,6 @@ public class JobOffer implements PersistentEntity {
 		this.comment = comment;
 	}
 
-	public String getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(String tasks) {
-		this.tasks = tasks;
-	}
-
 	public Integer getVacants() {
 		return vacants;
 	}
@@ -160,6 +147,22 @@ public class JobOffer implements PersistentEntity {
 
 	public void setOfferent(User offerent) {
 		this.offerent = offerent;
+	}
+
+	public Occupation getOccupation() {
+		return occupation;
+	}
+
+	public void setOccupation(Occupation occupation) {
+		this.occupation = occupation;
+	}
+
+	public Set<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(Set<Task> tasks) {
+		this.tasks = tasks;
 	}
 
 
