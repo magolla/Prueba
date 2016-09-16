@@ -17,7 +17,13 @@ public interface SpecialtyDAO {
 	public Specialty getSpecialtyById(long id) throws DAOException;
 	public Task getTaskById(long id) throws DAOException;
 
+	public List<Occupation> listOccupation() throws DAOException;
+	public List<Specialty> listSpecialties(long occupationId) throws DAOException;
+	public List<Task> listTasks(long specialtyId) throws DAOException;
+	
 	public List<Occupation> listOccupation(String text) throws DAOException;
 	public List<Specialty> listSpecialty(String text) throws DAOException;
 	public List<Task> listTask(String text) throws DAOException;
+	public List<Specialty> listSpecialty(long occupationId, String specialty) throws DAOException;
+	public List<Task> listTask(long specialtyId, String task) throws DAOException;
 }

@@ -62,12 +62,34 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 	}
 	
 	@Override
+	public List<Occupation> listOccupation() throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Occupation.class);
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
 	public List<Occupation> listOccupation(String text) throws DAOException {
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Occupation.class);
 			criteria.add(Restrictions.like("name", "%" + text + "%"));
 			criteria.addOrder(Order.asc("name"));
 			criteria.setMaxResults(5);
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
+	public List<Specialty> listSpecialties(long occupationId) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Specialty.class);
+			criteria.add(Restrictions.eq("occupation.id", occupationId));
+			criteria.addOrder(Order.asc("name"));
 			return criteria.list();
 		} catch (Exception e) {
 			throw new DAOException(e);
@@ -88,6 +110,32 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 	}
 	
 	@Override
+	public List<Specialty> listSpecialty(long occupationId, String specialty) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Specialty.class);
+			criteria.add(Restrictions.eq("occupation.id", occupationId));
+			criteria.add(Restrictions.like("name", "%" + specialty + "%"));
+			criteria.addOrder(Order.asc("name"));
+			criteria.setMaxResults(5);
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
+	public List<Task> listTasks(long specialtyId) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Task.class);
+			criteria.add(Restrictions.eq("specialty.id", specialtyId));
+			criteria.addOrder(Order.asc("name"));
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
 	public List<Task> listTask(String text) throws DAOException {
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Task.class);
@@ -100,6 +148,20 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 		}
 	}
 
+	@Override
+	public List<Task> listTask(long specialtyId, String task) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Task.class);
+			criteria.add(Restrictions.eq("specialty.id", specialtyId));
+			criteria.add(Restrictions.like("name", "%" + task + "%"));
+			criteria.addOrder(Order.asc("name"));
+			criteria.setMaxResults(5);
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
 	private void basicSave(PersistentEntity entity) throws DAOException {
 		String invocationDetails= "save("+entity.getClass().getName()+") ";
 		try {

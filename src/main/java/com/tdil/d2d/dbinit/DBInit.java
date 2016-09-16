@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.service.SpecialtyService;
 
 
 public class DBInit {
@@ -20,10 +21,10 @@ public class DBInit {
 	private static final Logger log = LoggerFactory.getLogger(DBInit.class);
 	
 	public static void main(String[] args) throws DAOException {
-		initCategories();
+		initCategories(null);
 	}
 	
-	public static void initCategories(/*PaintOnService service*/) throws DAOException {
+	public static void initCategories(SpecialtyService specialtyService) throws DAOException {
 		// delete previous data
 		//service.removeAllHGTVHomeColors();
 		
@@ -64,6 +65,8 @@ public class DBInit {
 //				String tasks = record.get(2);
 				for (int i = 2; i < record.size(); i ++) {
 					System.out.println(occupation + "-" + specialty + "-" + record.get(i));
+					
+					specialtyService.add(occupation, specialty, record.get(i));
 				}
 				
 //				xxx

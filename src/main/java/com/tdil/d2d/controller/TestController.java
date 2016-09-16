@@ -17,8 +17,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.security.JwtTokenUtil;
 import com.tdil.d2d.security.JwtUser;
+import com.tdil.d2d.service.SpecialtyService;
 import com.tdil.d2d.service.UserService;
 
 /**
@@ -53,6 +55,9 @@ public class TestController {
     @Autowired
     private UserDetailsService userDetailsService;
     
+    @Autowired
+    private SpecialtyService specialtyService;
+    
     @RequestMapping(value = "/api/user", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<JwtUser> getAuthenticatedUser(HttpServletRequest request) {
@@ -73,6 +78,12 @@ public class TestController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> test() {
 		return new ResponseEntity<String>("A", HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value = "/api/initDB", method = RequestMethod.GET)
+    public ResponseEntity<String> initDB(HttpServletRequest request) throws ServiceException {
+    	specialtyService.initDB();
+        return new ResponseEntity<String>("ok", HttpStatus.CREATED);
     }
 
 }
