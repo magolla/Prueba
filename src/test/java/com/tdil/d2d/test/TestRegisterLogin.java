@@ -58,6 +58,31 @@ public class TestRegisterLogin {
 		.post(AP_URL +"/api/user/iosPushId")
 		.then().log().body().statusCode(200);
 		
+		
+		// Ocupaciones
+		int idFirstOccupation = given().config(RestAssured.config().sslConfig(
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+				//.header(new Header("Authorization", jwttoken))
+				.get(AP_URL +"/api/specialties/occupations")
+				.then().log().body().statusCode(200).extract().path("data[0].id");
+		
+		System.out.println(idFirstOccupation);
+		
+		int idFirstSpecialty = given().config(RestAssured.config().sslConfig(
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+				//.header(new Header("Authorization", jwttoken))
+				.get(AP_URL +"/api/specialties/occupation/"+idFirstOccupation+"/specialties")
+				.then().log().body().statusCode(200).extract().path("data[0].id");
+		System.out.println(idFirstSpecialty);
+		
+		int idFirstTask = given().config(RestAssured.config().sslConfig(
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+				//.header(new Header("Authorization", jwttoken))
+				.get(AP_URL +"/api/specialties/specialty/"+idFirstSpecialty+"/tasks")
+				.then().log().body().statusCode(200).extract().path("data[0].id");
+		System.out.println(idFirstTask);
+		
+		
 //		given().config(RestAssured.config().sslConfig(
 //				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken))
 //			.body("{\"iosPushId\":\"123456789\"}")
