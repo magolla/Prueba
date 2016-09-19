@@ -54,7 +54,8 @@ public class GeoServiceImpl implements GeoService {
 		result.setLevel(4);
 		result.setId(s.getId());
 		// TODO setear el path hasta el 2
-		result.setName(s.getName());
+		Geo3 geo3 = s.getGeo3();
+		result.setName(s.getName() + ", " + geo3.getName() + ", " + geo3.getGeo2().getName());
 		return result;
 	}
 	
@@ -63,7 +64,7 @@ public class GeoServiceImpl implements GeoService {
 		result.setLevel(3);
 		result.setId(s.getId());
 		// TODO setear el path hasta el 2
-		result.setName(s.getName());
+		result.setName(s.getName() + ", " + s.getGeo2().getName());
 		return result;
 	}
 	
@@ -77,35 +78,35 @@ public class GeoServiceImpl implements GeoService {
 
 	@Override
 	public void initDbWithTestData() throws ServiceException {
-		try {
-			Geo2 bsas = new Geo2();
-			bsas.setName("Buenos Aires");
-			geoDAO.save(bsas);
-			
-			Geo3 lp = new Geo3();
-			lp.setName("La Plata");
-			lp.setGeo2(bsas);
-			geoDAO.save(lp);
-			
-			Geo4 sl = new Geo4();
-			sl.setName("Altos de San Lorenzo");
-			sl.setGeo3(lp);
-			geoDAO.save(sl);
-			
-			Geo2 caba = new Geo2();
-			caba.setName("Ciudad de Buenos AIres");
-			geoDAO.save(caba);
-			
-			Geo3 reco = new Geo3();
-			reco.setName("Recoleta");
-			reco.setGeo2(caba);
-			geoDAO.save(reco);
-			
-			
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Geo2 bsas = new Geo2();
+//			bsas.setName("Buenos Aires");
+//			geoDAO.save(bsas);
+//			
+//			Geo3 lp = new Geo3();
+//			lp.setName("La Plata");
+//			lp.setGeo2(bsas);
+//			geoDAO.save(lp);
+//			
+//			Geo4 sl = new Geo4();
+//			sl.setName("Altos de San Lorenzo");
+//			sl.setGeo3(lp);
+//			geoDAO.save(sl);
+//			
+//			Geo2 caba = new Geo2();
+//			caba.setName("Ciudad de Buenos AIres");
+//			geoDAO.save(caba);
+//			
+//			Geo3 reco = new Geo3();
+//			reco.setName("Recoleta");
+//			reco.setGeo2(caba);
+//			geoDAO.save(reco);
+//			
+//			
+//		} catch (DAOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	}
 }

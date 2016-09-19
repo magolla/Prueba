@@ -1,15 +1,12 @@
 package com.tdil.d2d.persistence;
 
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -32,9 +29,14 @@ public class JobOffer implements PersistentEntity {
 	@ManyToOne
 	private Specialty specialty;
 
-	@OneToMany
-    @JoinColumn(name="TASK_ID")
-	private Set<Task> tasks;
+	@ManyToOne
+	private Task task;
+	
+	@Column(name = "geoLevelLevel")
+	private int geoLevelLevel;
+	
+	@Column(name = "geoLevelId")
+	private long geoLevelId;
 	
 	@Column(name="address")
 	private String address;
@@ -157,13 +159,28 @@ public class JobOffer implements PersistentEntity {
 		this.occupation = occupation;
 	}
 
-	public Set<Task> getTasks() {
-		return tasks;
+	public Task getTask() {
+		return task;
 	}
 
-	public void setTasks(Set<Task> tasks) {
-		this.tasks = tasks;
+	public void setTask(Task task) {
+		this.task = task;
 	}
 
+	public int getGeoLevelLevel() {
+		return geoLevelLevel;
+	}
+
+	public void setGeoLevelLevel(int geoLevelLevel) {
+		this.geoLevelLevel = geoLevelLevel;
+	}
+
+	public long getGeoLevelId() {
+		return geoLevelId;
+	}
+
+	public void setGeoLevelId(long geoLevelId) {
+		this.geoLevelId = geoLevelId;
+	}
 
 }

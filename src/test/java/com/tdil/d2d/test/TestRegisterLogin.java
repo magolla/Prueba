@@ -9,6 +9,8 @@ import org.junit.Assert;
 import io.restassured.RestAssured;
 import io.restassured.config.SSLConfig;
 import io.restassured.http.Header;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 
 public class TestRegisterLogin {
 
@@ -48,13 +50,15 @@ public class TestRegisterLogin {
 		
 		// Update regid
 		given().config(RestAssured.config().sslConfig(
-				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken)).body("{\"androidRegId\":\"123456789\"}")
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+				.header(new Header("Authorization", jwttoken)).body("{\"androidRegId\":\"123456789\"}")
 		.post(AP_URL +"/api/user/androidRegId")
 		.then().log().body().statusCode(200);
 		
 		// Update regid
 		given().config(RestAssured.config().sslConfig(
-				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken)).body("{\"iosPushId\":\"123456789\"}")
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+				.header(new Header("Authorization", jwttoken)).body("{\"iosPushId\":\"123456789\"}")
 		.post(AP_URL +"/api/user/iosPushId")
 		.then().log().body().statusCode(200);
 		
@@ -67,14 +71,14 @@ public class TestRegisterLogin {
 				.then().log().body().statusCode(200).extract().path("data[0].id");
 		
 		System.out.println(idFirstOccupation);
-		
+		// Especialidades
 		int idFirstSpecialty = given().config(RestAssured.config().sslConfig(
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 				//.header(new Header("Authorization", jwttoken))
 				.get(AP_URL +"/api/specialties/occupation/"+idFirstOccupation+"/specialties")
 				.then().log().body().statusCode(200).extract().path("data[0].id");
 		System.out.println(idFirstSpecialty);
-		
+		// Tareas
 		int idFirstTask = given().config(RestAssured.config().sslConfig(
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 				//.header(new Header("Authorization", jwttoken))
@@ -82,6 +86,28 @@ public class TestRegisterLogin {
 				.then().log().body().statusCode(200).extract().path("data[0].id");
 		System.out.println(idFirstTask);
 		
+		ExtractableResponse<Response> extract = given().config(RestAssured.config().sslConfig(
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+				//.header(new Header("Authorization", jwttoken))
+				.get(AP_URL +"/api/geo/autocomplete?searchString=CABALLITO")
+				.then().log().body().statusCode(200).extract();
+		int idCaballito = extract.path("data[0].id");
+		int idLevel = extract.path("data[0].level");
+		
+		
+		// Creo una oferta
+		given().config(RestAssured.config().sslConfig(
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+				.header(new Header("Authorization", jwttoken))
+				.body("{\"occupationId\":"+idFirstOccupation+",\"specialtyId\":"+idFirstSpecialty+","
+						+ "\"taskId\":"+idFirstTask+","
+						+ "\"geoLevelLevel\":"+idLevel+",\"geoLevelId\":"+idCaballito+","
+						+ "\"address\":\"calle 73 1390\",\"offerDate\":\"20170813\","
+						+ "\"offerHour\":\"1830\",\"permanent\":false,\"comment\":\"NA\","
+						+ "\"tasks\":\"NA\",\"vacants\":1"
+						+ "}")
+				.post(AP_URL +"/api/offer/create")
+				.then().log().body().statusCode(201).body("status", equalTo(201));/*.
 		
 //		given().config(RestAssured.config().sslConfig(
 //				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").header(new Header("Authorization", jwttoken))

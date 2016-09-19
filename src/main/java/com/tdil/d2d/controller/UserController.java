@@ -119,7 +119,12 @@ public class UserController {
     public ResponseEntity<ApiResponse> offerCreate(@Valid @RequestBody CreateJobOfferRequest createOfferRequest) {
     	try {
 			boolean response = this.userService.createJobOffer(createOfferRequest);
-			return new ResponseEntity<ApiResponse>(new ApiResponse(response == true ? HttpStatus.OK.value() : HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.OK);
+			if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);

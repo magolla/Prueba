@@ -1,5 +1,7 @@
 package com.tdil.d2d.controller.api.request;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
@@ -9,11 +11,21 @@ import com.tdil.d2d.esapi.validation.ValidInput;
 
 public class CreateJobOfferRequest extends ApiRequest {
 	
-	@NotEmpty
+	@Min(value = 1)
+	private long occupationId;
+	
+	@Min(value = 1)
 	private long specialtyId;
 	
-	@NotEmpty
-	private long subspecialtyId;
+	@Min(value = 1)
+	private long taskId;
+	
+	@Min(value = 2)
+	@Max(value = 4)
+	private int geoLevelLevel;
+	
+	@Min(value = 1)
+	private long geoLevelId;
 	
 	@NotEmpty
     @Length(max = 100)
@@ -30,7 +42,6 @@ public class CreateJobOfferRequest extends ApiRequest {
 	@Pattern(regexp="[0-9]{4}")
 	private String offerHour;
 	
-	@NotEmpty
 	private boolean permanent;
 	
 	@NotEmpty
@@ -42,23 +53,8 @@ public class CreateJobOfferRequest extends ApiRequest {
 	@ValidInput
 	private String tasks;
 	
+	@Min(value = 1)
 	private int vacants;
-
-	public long getSpecialtyId() {
-		return specialtyId;
-	}
-
-	public void setSpecialtyId(long specialtyId) {
-		this.specialtyId = specialtyId;
-	}
-
-	public long getSubspecialtyId() {
-		return subspecialtyId;
-	}
-
-	public void setSubspecialtyId(long subspecialtyId) {
-		this.subspecialtyId = subspecialtyId;
-	}
 
 	public String getAddress() {
 		return address;
@@ -114,6 +110,46 @@ public class CreateJobOfferRequest extends ApiRequest {
 
 	public void setVacants(int vacants) {
 		this.vacants = vacants;
+	}
+
+	public long getOccupationId() {
+		return occupationId;
+	}
+
+	public void setOccupationId(long occupationId) {
+		this.occupationId = occupationId;
+	}
+
+	public long getSpecialtyId() {
+		return specialtyId;
+	}
+
+	public void setSpecialtyId(long specialtyId) {
+		this.specialtyId = specialtyId;
+	}
+
+	public long getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(long taskId) {
+		this.taskId = taskId;
+	}
+
+	public int getGeoLevelLevel() {
+		return geoLevelLevel;
+	}
+
+	public void setGeoLevelLevel(int geoLevelLevel) {
+		this.geoLevelLevel = geoLevelLevel;
+	}
+
+	public long getGeoLevelId() {
+		return geoLevelId;
+	}
+
+	public void setGeoLevelId(long geoLevelId) {
+		this.geoLevelId = geoLevelId;
 	}
 
 }

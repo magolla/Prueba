@@ -177,10 +177,13 @@ public class UserServiceImpl implements UserService {
 			JobOffer jobOffer = new JobOffer();
 			jobOffer.setOfferent(userDAO.getById(User.class, com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId()));
 			jobOffer.setCreationDate(new Date());
-//			jobOffer.setSpecialty(specialtyDAO.getById(Specialty.class,createOfferRequest.getSpecialtyId()));
-//			jobOffer.setSubSpecialty(subspecialtyDAO.getById(SubSpecialty.class, createOfferRequest.getSubspecialtyId()));
+			jobOffer.setGeoLevelLevel(createOfferRequest.getGeoLevelLevel());
+			jobOffer.setGeoLevelId(createOfferRequest.getGeoLevelId());
+			jobOffer.setOccupation(specialtyDAO.getOccupationById(createOfferRequest.getOccupationId()));
+			jobOffer.setSpecialty(specialtyDAO.getSpecialtyById(createOfferRequest.getSpecialtyId()));
+			jobOffer.setTask(specialtyDAO.getTaskById(createOfferRequest.getTaskId()));
 			jobOffer.setAddress(createOfferRequest.getAddress());
-			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate(), "YYYYMMDD"));
+			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate(), "yyyyMMdd"));
 			jobOffer.setHour(createOfferRequest.getOfferHour());
 			jobOffer.setPermanent(createOfferRequest.isPermanent());
 			jobOffer.setComment(createOfferRequest.getComment());
