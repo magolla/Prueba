@@ -2,11 +2,18 @@ package com.tdil.d2d.persistence;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -72,6 +79,20 @@ public class User implements PersistentEntity {
 	
 	@Column(name = "lastPasswordResetDate")
 	private Date lastPasswordResetDate;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "D2D_USER_SPECIALTY", joinColumns = {
+			@JoinColumn(name = "USER_ID", nullable = false, updatable = false) },
+			inverseJoinColumns = { @JoinColumn(name = "SPECIALTY_ID",
+					nullable = false, updatable = false) })
+	private Set<Specialty> specialties = new HashSet<Specialty>(0);
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "D2D_USER_GEOLOC", joinColumns = {
+			@JoinColumn(name = "USER_ID", nullable = false, updatable = false) },
+			inverseJoinColumns = { @JoinColumn(name = "USERGEOLOC_ID",
+					nullable = false, updatable = false) })
+	private Set<UserGeoLocation> userGeoLocations = new HashSet<UserGeoLocation>(0);
 
 	public long getId() {
 		return id;
@@ -227,6 +248,22 @@ public class User implements PersistentEntity {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Set<Specialty> getSpecialties() {
+		return specialties;
+	}
+
+	public void setSpecialties(Set<Specialty> specialties) {
+		this.specialties = specialties;
+	}
+
+	public Set<UserGeoLocation> getUserGeoLocations() {
+		return userGeoLocations;
+	}
+
+	public void setUserGeoLocations(Set<UserGeoLocation> userGeoLocations) {
+		this.userGeoLocations = userGeoLocations;
 	}
 
 }

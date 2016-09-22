@@ -21,12 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
+import com.tdil.d2d.controller.api.request.AddLocationRequest;
+import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.dao.ActivityLogDAO;
+import com.tdil.d2d.dao.GeoDAO;
 import com.tdil.d2d.dao.JobOfferDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
 import com.tdil.d2d.dao.UserDAO;
@@ -38,6 +41,7 @@ import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
+import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.AndroidNotificationService;
 import com.tdil.d2d.service.CryptographicService;
@@ -56,6 +60,8 @@ public class UserServiceImpl implements UserService {
 	private SpecialtyDAO specialtyDAO;
 	@Autowired
 	private ActivityLogDAO activityLogDAO;
+	@Autowired
+	private GeoDAO geoDAO;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -139,6 +145,33 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
+	@Override
+	public boolean addSpecialty(AddSpecialtyRequest addSpecialtyRequest) throws ServiceException {
+		try {
+			User user = this.userDAO.getById(User.class, RuntimeContext.getCurrentUser().getId());
+			Specialty specialty = this.specialtyDAO.getSpecialtyById(addSpecialtyRequest.getSpecialtyId());
+			user.getSpecialties().add(specialty);
+			this.userDAO.save(user);
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean addLocation(AddLocationRequest addLocationRequest) throws ServiceException {
+		try {
+			User user = this.userDAO.getById(User.class, RuntimeContext.getCurrentUser().getId());
+			UserGeoLocation loc = new UserGeoLocation();
+			loc.setGeoLevelLevel(addLocationRequest.getGeoLevelLevel());
+			loc.setGeoLevelId(addLocationRequest.getGeoLevelId());
+			user.getUserGeoLocations().add(loc);
+			this.userDAO.save(user);
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
 		
 	@Override
 	public void updateLastLoginDate() throws ServiceException {
