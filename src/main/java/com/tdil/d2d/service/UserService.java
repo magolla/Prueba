@@ -3,10 +3,12 @@ package com.tdil.d2d.service;
 import java.util.List;
 
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
+import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
+import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
 import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
@@ -41,5 +43,17 @@ public interface UserService {
 	public boolean addSpecialty(AddSpecialtyRequest addSpecialtyRequest) throws ServiceException;
 
 	public boolean addLocation(AddLocationRequest addLocationRequest) throws ServiceException;
+
+	public List<JobOfferStatusDTO> getMatchedOffers() throws ServiceException;
+
+	public boolean apply(long offerId, ApplyToOfferRequest applyToOffer) throws ServiceException;
+
+	public List<JobApplicationDTO> offerApplications(long offerId) throws ServiceException;
+
+	public JobApplicationDTO offerApplication(long applicationId) throws ServiceException;
+
+	public boolean accept(long offerId, long applicationId) throws ServiceException;
+
+	public boolean reject(long offerId, long applicationId) throws ServiceException;
 
 }

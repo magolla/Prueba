@@ -1,5 +1,6 @@
 package com.tdil.d2d.persistence;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 public class JobOffer implements PersistentEntity {
 	
 	public static String VACANT = "VACANT";
+	public static String CLOSED = "CLOSED";
 
 	@Id
 	@GeneratedValue
@@ -181,6 +183,21 @@ public class JobOffer implements PersistentEntity {
 
 	public void setGeoLevelId(long geoLevelId) {
 		this.geoLevelId = geoLevelId;
+	}
+
+	public boolean isExpired() {
+		// TODO tema hora
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getOfferDate());
+		int hour = Integer.parseInt(this.getHour().substring(0,1));
+		int minutes = Integer.parseInt(this.getHour().substring(2,1));
+		// TODO Auto-generated method stub
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		cal.set(Calendar.MINUTE, minutes);
+		if (cal.after(Calendar.getInstance())) {
+			return true;
+		}
+		return false;
 	}
 
 }

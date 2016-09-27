@@ -1,5 +1,6 @@
 package com.tdil.d2d.dao.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -25,4 +26,19 @@ public class JobOfferDAOImpl  extends GenericDAO<JobOffer> implements JobOfferDA
 			throw new DAOException(e);
 		}
 	}
+	
+	@Override
+	public Collection<JobOffer> getOffers(long specialtyId, long geoLevelId) throws DAOException {
+		try {
+			// TODO NO cerradas, no finalizadas
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
+			criteria.add(Restrictions.eq("specialty.id", specialtyId));
+			criteria.add(Restrictions.eq("geoLevelId", geoLevelId));
+			List<JobOffer> list = criteria.list();
+			return list;
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
 }

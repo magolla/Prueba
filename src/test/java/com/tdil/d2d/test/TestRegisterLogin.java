@@ -70,21 +70,19 @@ public class TestRegisterLogin {
 					.get(AP_URL +"/api/specialties/occupations")
 					.then().log().body().statusCode(200).extract().path("data[0].id");
 			
-			System.out.println(idFirstOccupation);
 			// Especialidades
 			int idFirstSpecialty = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					//.header(new Header("Authorization", jwttoken))
 					.get(AP_URL +"/api/specialties/occupation/"+idFirstOccupation+"/specialties")
 					.then().log().body().statusCode(200).extract().path("data[0].id");
-			System.out.println(idFirstSpecialty);
+
 			// Tareas
 			int idFirstTask = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					//.header(new Header("Authorization", jwttoken))
 					.get(AP_URL +"/api/specialties/specialty/"+idFirstSpecialty+"/tasks")
 					.then().log().body().statusCode(200).extract().path("data[0].id");
-			System.out.println(idFirstTask);
 			
 			ExtractableResponse<Response> extract = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
@@ -119,6 +117,30 @@ public class TestRegisterLogin {
 			Assert.assertNotEquals(0, idOffer);
 			
 			
+			// registro un nuevo usuario
+			suffix = String.valueOf(System.currentTimeMillis() % 1000);
+			
+			// registro
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.body("{\"firstname\":\"marcos\",\"lastname\":\"godoy\","
+							+ "\"email\":\"m"+suffix+"@m.com\","
+							+ "\"deviceId\":\"zyryr23123\",\"mobilePhone\":\"2216412772\","
+							+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
+							+ "\"tacAccepted\":true"
+							+ "}")
+					.post(AP_URL +"/api/user/register")
+					.then().log().body().statusCode(201).body("status", equalTo(201))/*.
+					and().time(lessThan(100L))*/;
+			
+			
+			// Login
+			jwttoken = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"zyryr23123\"}")
+					.post(AP_URL +"/api/auth")
+					.then().log().body().statusCode(200).extract().path("token");
+			Assert.assertNotNull(jwttoken);
+			
 			// Agrego specialidad
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
@@ -132,6 +154,15 @@ public class TestRegisterLogin {
 					.header(new Header("Authorization", jwttoken)).body("{\"geoLevelLevel\":"+idLevel+",\"geoLevelId\":"+idCaballito+"}")
 			.post(AP_URL +"/api/user/location")
 			.then().log().body().statusCode(201);
+			
+			int idMatchedOffer = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttoken))
+					.get(AP_URL +"/api/user/offers/matches")
+					.then().log().body().statusCode(200).extract().path("data[0].id");
+			
+			Assert.assertNotEquals(0, idOffer);
+			
 	/*		
 			
 			
