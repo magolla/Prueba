@@ -189,12 +189,12 @@ public class JobOffer implements PersistentEntity {
 		// TODO tema hora
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(getOfferDate());
-		int hour = Integer.parseInt(this.getHour().substring(0,1));
-		int minutes = Integer.parseInt(this.getHour().substring(2,1));
+		int hour = Integer.parseInt(this.getHour().substring(0,2));
+		int minutes = Integer.parseInt(this.getHour().substring(2));
 		// TODO Auto-generated method stub
 		cal.set(Calendar.HOUR_OF_DAY, hour);
 		cal.set(Calendar.MINUTE, minutes);
-		if (cal.after(Calendar.getInstance())) {
+		if (cal.before(Calendar.getInstance())) {
 			return true;
 		}
 		return false;

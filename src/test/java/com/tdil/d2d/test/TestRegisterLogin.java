@@ -41,24 +41,24 @@ public class TestRegisterLogin {
 			
 			
 			// Login
-			String jwttoken = given().config(RestAssured.config().sslConfig(
+			String jwttokenOfferent = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"zyryr23123\"}")
 					.post(AP_URL +"/api/auth")
 					.then().log().body().statusCode(200).extract().path("token");
-			Assert.assertNotNull(jwttoken);
+			Assert.assertNotNull(jwttokenOfferent);
 			
 			
 			// Update regid
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttoken)).body("{\"androidRegId\":\"123456789\"}")
+					.header(new Header("Authorization", jwttokenOfferent)).body("{\"androidRegId\":\"123456789\"}")
 			.post(AP_URL +"/api/user/androidRegId")
 			.then().log().body().statusCode(200);
 			
 			// Update regid
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttoken)).body("{\"iosPushId\":\"123456789\"}")
+					.header(new Header("Authorization", jwttokenOfferent)).body("{\"iosPushId\":\"123456789\"}")
 			.post(AP_URL +"/api/user/iosPushId")
 			.then().log().body().statusCode(200);
 			
@@ -96,7 +96,7 @@ public class TestRegisterLogin {
 			// Creo una oferta
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttoken))
+					.header(new Header("Authorization", jwttokenOfferent))
 					.body("{\"occupationId\":"+idFirstOccupation+",\"specialtyId\":"+idFirstSpecialty+","
 							+ "\"taskId\":"+idFirstTask+","
 							+ "\"geoLevelLevel\":"+idLevel+",\"geoLevelId\":"+idCaballito+","
@@ -110,20 +110,18 @@ public class TestRegisterLogin {
 			// Consulta de ofertas
 			int idOffer = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttoken))
+					.header(new Header("Authorization", jwttokenOfferent))
 					.get(AP_URL +"/api/user/offers")
 					.then().log().body().statusCode(200).extract().path("data[0].id");
 			
 			Assert.assertNotEquals(0, idOffer);
 			
-			
 			// registro un nuevo usuario
 			suffix = String.valueOf(System.currentTimeMillis() % 1000);
-			
 			// registro
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.body("{\"firstname\":\"marcos\",\"lastname\":\"godoy\","
+					.body("{\"firstname\":\"marcos app\",\"lastname\":\"godoy app\","
 							+ "\"email\":\"m"+suffix+"@m.com\","
 							+ "\"deviceId\":\"zyryr23123\",\"mobilePhone\":\"2216412772\","
 							+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
@@ -132,36 +130,76 @@ public class TestRegisterLogin {
 					.post(AP_URL +"/api/user/register")
 					.then().log().body().statusCode(201).body("status", equalTo(201))/*.
 					and().time(lessThan(100L))*/;
-			
-			
 			// Login
-			jwttoken = given().config(RestAssured.config().sslConfig(
+			String jwttokenApplicant = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"zyryr23123\"}")
 					.post(AP_URL +"/api/auth")
 					.then().log().body().statusCode(200).extract().path("token");
-			Assert.assertNotNull(jwttoken);
-			
+			Assert.assertNotNull(jwttokenApplicant);
 			// Agrego specialidad
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttoken)).body("{\"specialtyId\":"+idFirstSpecialty+"}")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"specialtyId\":"+idFirstSpecialty+"}")
 			.post(AP_URL +"/api/user/specialty")
 			.then().log().body().statusCode(201);
-			
 			// Agrego location
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttoken)).body("{\"geoLevelLevel\":"+idLevel+",\"geoLevelId\":"+idCaballito+"}")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"geoLevelLevel\":"+idLevel+",\"geoLevelId\":"+idCaballito+"}")
 			.post(AP_URL +"/api/user/location")
 			.then().log().body().statusCode(201);
-			
+			// Busco ofertas que matcheen mi perfil
 			int idMatchedOffer = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttoken))
+					.header(new Header("Authorization", jwttokenApplicant))
 					.get(AP_URL +"/api/user/offers/matches")
 					.then().log().body().statusCode(200).extract().path("data[0].id");
-			
 			Assert.assertNotEquals(0, idOffer);
+			// aplico a la oferta
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\"}")
+			.post(AP_URL +"/api/user/offer/"+idOffer+"/apply")
+			.then().log().body().statusCode(201);
+			
+			createUserAndApplyToOffer(idFirstSpecialty, idLevel, idCaballito, idOffer);
+			
+			// El oferente busca los aplicantes
+			ExtractableResponse<Response> applicationsExtract = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenOfferent))
+					.get(AP_URL +"/api/user/offer/"+idOffer+"/applications")
+					.then().log().body().statusCode(200).extract();
+			
+			int idApplication = applicationsExtract.path("data[0].id");
+			int idApplication1 = applicationsExtract.path("data[1].id");
+			
+			Assert.assertNotEquals(0, idApplication);
+			// El oferente ve un postulante
+			ExtractableResponse<Response> applicationExtract = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenOfferent))
+					.get(AP_URL +"/api/user/offer/"+idOffer+"/application/"+idApplication)
+					.then().log().body().statusCode(200).extract();
+			String firstname = applicationExtract.path("data.firstname");
+			String lastname = applicationExtract.path("data.lastname");
+			Assert.assertEquals("marcos app", firstname);
+			Assert.assertEquals("godoy app", lastname);
+			
+			// El oferente rechaza un postulante
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenOfferent))
+			.post(AP_URL +"/api/user/offer/"+idOffer+"/application/"+idApplication1+"/reject")
+			.then().log().body().statusCode(200);
+			
+			// El oferente acepta un postulante
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenOfferent))
+			.post(AP_URL +"/api/user/offer/"+idOffer+"/application/"+idApplication+"/accept")
+			.then().log().body().statusCode(200);
+			
 			
 	/*		
 			
@@ -240,6 +278,55 @@ public class TestRegisterLogin {
 			e.printStackTrace();
 			// TODO: handle exception
 		}
+	}
+
+	private void createUserAndApplyToOffer(int idFirstSpecialty, int idLevel, int idCaballito, int idOffer) {
+		// registro un nuevo usuario
+					String suffix = String.valueOf(System.currentTimeMillis() % 1000);
+					// registro
+					given().config(RestAssured.config().sslConfig(
+							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+							.body("{\"firstname\":\"marcos app\",\"lastname\":\"godoy app\","
+									+ "\"email\":\"m"+suffix+"@m.com\","
+									+ "\"deviceId\":\"zyryr23123\",\"mobilePhone\":\"2216412772\","
+									+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
+									+ "\"tacAccepted\":true"
+									+ "}")
+							.post(AP_URL +"/api/user/register")
+							.then().log().body().statusCode(201).body("status", equalTo(201))/*.
+							and().time(lessThan(100L))*/;
+					// Login
+					String jwttokenApplicant = given().config(RestAssured.config().sslConfig(
+							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"zyryr23123\"}")
+							.post(AP_URL +"/api/auth")
+							.then().log().body().statusCode(200).extract().path("token");
+					Assert.assertNotNull(jwttokenApplicant);
+					// Agrego specialidad
+					given().config(RestAssured.config().sslConfig(
+							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+							.header(new Header("Authorization", jwttokenApplicant)).body("{\"specialtyId\":"+idFirstSpecialty+"}")
+					.post(AP_URL +"/api/user/specialty")
+					.then().log().body().statusCode(201);
+					// Agrego location
+					given().config(RestAssured.config().sslConfig(
+							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+							.header(new Header("Authorization", jwttokenApplicant)).body("{\"geoLevelLevel\":"+idLevel+",\"geoLevelId\":"+idCaballito+"}")
+					.post(AP_URL +"/api/user/location")
+					.then().log().body().statusCode(201);
+					// Busco ofertas que matcheen mi perfil
+					int idMatchedOffer = given().config(RestAssured.config().sslConfig(
+							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+							.header(new Header("Authorization", jwttokenApplicant))
+							.get(AP_URL +"/api/user/offers/matches")
+							.then().log().body().statusCode(200).extract().path("data[0].id");
+					Assert.assertNotEquals(0, idOffer);
+					// aplico a la oferta
+					given().config(RestAssured.config().sslConfig(
+							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+							.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\"}")
+					.post(AP_URL +"/api/user/offer/"+idOffer+"/apply")
+					.then().log().body().statusCode(201);
+		
 	}
 
 }

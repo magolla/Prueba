@@ -6,7 +6,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -46,7 +45,7 @@ public class EmailServiceImpl implements EmailService {
 	        message.setSubject(subject);
 	        message.setText(body);
 
-	        Transport.send(message);
+	        // TODO Transport.send(message);
 
 	        System.out.println("Done");
 
