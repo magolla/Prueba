@@ -9,8 +9,10 @@ import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
+import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
 import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
+import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.exceptions.ServiceException;
@@ -55,5 +57,9 @@ public interface UserService {
 	public boolean accept(long offerId, long applicationId) throws ServiceException;
 
 	public boolean reject(long offerId, long applicationId) throws ServiceException;
+
+	public NotificationConfigurationResponse getNotificationConfiguration() throws ServiceException;
+
+	public boolean setNotificationConfiguration(ConfigureNotificationsRequest notificationConfiguration) throws ServiceException;
 
 }

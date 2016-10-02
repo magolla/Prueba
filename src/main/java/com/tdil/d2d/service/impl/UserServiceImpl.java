@@ -27,14 +27,17 @@ import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
+import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
 import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
+import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.GeoDAO;
 import com.tdil.d2d.dao.JobApplicationDAO;
 import com.tdil.d2d.dao.JobOfferDAO;
+import com.tdil.d2d.dao.NotificationConfigurationDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
@@ -45,6 +48,7 @@ import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
+import com.tdil.d2d.persistence.NotificationConfiguration;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Task;
@@ -68,6 +72,8 @@ public class UserServiceImpl implements UserService {
 	private JobApplicationDAO jobApplicationDAO;
 	@Autowired
 	private SpecialtyDAO specialtyDAO;
+	@Autowired
+	private NotificationConfigurationDAO notificationConfigurationDAO;
 	@Autowired
 	private ActivityLogDAO activityLogDAO;
 	@Autowired
@@ -443,6 +449,62 @@ public class UserServiceImpl implements UserService {
 			// TODO enviar notifacion de rechazo
 			this.jobApplicationDAO.save(application);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.REJECT_OFFER));
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public NotificationConfigurationResponse getNotificationConfiguration() throws ServiceException {
+		try {
+			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(RuntimeContext.getCurrentUser().getId());
+			return toResponse(notificationConfiguration);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	private NotificationConfigurationResponse toResponse(NotificationConfiguration notificationConfiguration) {
+		NotificationConfigurationResponse response = new NotificationConfigurationResponse(200);
+		if (notificationConfiguration != null) {
+			response.setCongress(notificationConfiguration.isCongress());
+			response.setCourses(notificationConfiguration.isCourses());
+			//response.setCreationDate(notificationConfiguration.getCreationDate());
+			response.setGrantOffers(notificationConfiguration.isGrantOffers());
+			//response.setId(notificationConfiguration.getId());
+			response.setNotes(notificationConfiguration.isNotes());
+			response.setNotif9to20(notificationConfiguration.isNotif9to20());
+			response.setNotifAllDay(notificationConfiguration.isNotifAllDay());
+			response.setProductAndServices(notificationConfiguration.isProductAndServices());
+			response.setPromotionsOffers(notificationConfiguration.isPromotionsOffers());
+			response.setPush(notificationConfiguration.isPush());
+			response.setStatus(200);
+		}
+		return response;
+	}
+	
+	@Override
+	public boolean setNotificationConfiguration(ConfigureNotificationsRequest configureNotificationsRequest)
+			throws ServiceException {
+		try {
+			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(RuntimeContext.getCurrentUser().getId());
+			if (notificationConfiguration == null) {
+				notificationConfiguration = new NotificationConfiguration();
+				notificationConfiguration.setUser(getLoggedUser());
+			}
+			notificationConfiguration.setCongress(configureNotificationsRequest.isCongress());
+			notificationConfiguration.setCourses(configureNotificationsRequest.isCourses());
+			//response.setCreationDate(configureNotificationsRequest.getCreationDate());
+			notificationConfiguration.setGrantOffers(configureNotificationsRequest.isGrantOffers());
+			//response.setId(notificationConfiguration.getId());
+			notificationConfiguration.setNotes(configureNotificationsRequest.isNotes());
+			notificationConfiguration.setNotif9to20(configureNotificationsRequest.isNotif9to20());
+			notificationConfiguration.setNotifAllDay(configureNotificationsRequest.isNotifAllDay());
+			notificationConfiguration.setProductAndServices(configureNotificationsRequest.isProductAndServices());
+			notificationConfiguration.setPromotionsOffers(configureNotificationsRequest.isPromotionsOffers());
+			notificationConfiguration.setPush(configureNotificationsRequest.isPush());
+			this.notificationConfigurationDAO.save(notificationConfiguration);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
