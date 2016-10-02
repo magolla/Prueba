@@ -200,7 +200,11 @@ public class TestRegisterLogin {
 			.post(AP_URL +"/api/user/offer/"+idOffer+"/application/"+idApplication+"/accept")
 			.then().log().body().statusCode(200);
 			
-			
+			int idActivity = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenOfferent))
+					.get(AP_URL +"/api/user/log")
+					.then().log().body().statusCode(200).extract().path("data[0].id");
 	/*		
 			
 			

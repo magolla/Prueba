@@ -147,7 +147,7 @@ public class UserController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/log", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/user/log", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<ActivityLogDTO>>> activityLog() {
     	try {
 			List<ActivityLogDTO> myOffers = this.userService.getActivityLog();
