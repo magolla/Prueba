@@ -41,7 +41,7 @@ public class ContactServiceImpl implements ContactService {
 			contact.setMotive(contactDAO.getById(ContactMotive.class, createOfferRequest.getContactMotiveId()));
 			contact.setComment(createOfferRequest.getComment());
 			contactDAO.save(contact);
-			return false;
+			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
