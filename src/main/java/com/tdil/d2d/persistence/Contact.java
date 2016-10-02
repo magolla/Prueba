@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "D2D_JOBOFFER")
+@Table(name = "D2D_CONTACT")
 public class Contact implements PersistentEntity {
 
 	@Id
@@ -33,6 +33,22 @@ public class Contact implements PersistentEntity {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public ContactMotive getMotive() {
+		return motive;
+	}
+
+	public void setMotive(ContactMotive motive) {
+		this.motive = motive;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 

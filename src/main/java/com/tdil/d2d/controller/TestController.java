@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.security.JwtTokenUtil;
 import com.tdil.d2d.security.JwtUser;
+import com.tdil.d2d.service.ContactService;
 import com.tdil.d2d.service.SpecialtyService;
 import com.tdil.d2d.service.UserService;
 
@@ -57,6 +58,8 @@ public class TestController {
     
     @Autowired
     private SpecialtyService specialtyService;
+    @Autowired
+    private ContactService contactService;
     
     @RequestMapping(value = "/api/user", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
@@ -83,6 +86,7 @@ public class TestController {
     @RequestMapping(value = "/api/initDB", method = RequestMethod.GET)
     public ResponseEntity<String> initDB(HttpServletRequest request) throws ServiceException {
     	specialtyService.initDB();
+    	contactService.initDB();
         return new ResponseEntity<String>("ok", HttpStatus.CREATED);
     }
 

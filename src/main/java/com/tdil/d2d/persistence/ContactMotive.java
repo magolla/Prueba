@@ -31,5 +31,13 @@ public class ContactMotive implements PersistentEntity {
 		this.id = id;
 	}
 
+	public String getMotive() {
+		return motive;
+	}
+
+	public void setMotive(String motive) {
+		this.motive = motive;
+	}
+
 
 }

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.service.ContactService;
 import com.tdil.d2d.service.SpecialtyService;
 
 
@@ -29,12 +30,37 @@ public class DBInit {
 		//service.removeAllHGTVHomeColors();
 		
 		List<List<String>> result = new ArrayList<List<String>>();
+		String csvFileName = "specialties.csv";
+		readData(result, csvFileName);
+		
+		for (List<String> record : result) {
+			try {
+//				System.out.println(record);
+				String occupation = record.get(0);
+				String specialty = record.get(1);
+//				String tasks = record.get(2);
+				for (int i = 2; i < record.size(); i ++) {
+					System.out.println(occupation + "-" + specialty + "-" + record.get(i));
+					
+					specialtyService.add(occupation, specialty, record.get(i));
+				}
+				
+//				xxx
+			} catch (Exception e) {
+				System.out.println(record);
+				//System.out.println(e);
+				System.out.println(e.getCause());
+			}
+		}
+	}
+
+	private static void readData(List<List<String>> result, String csvFileName) {
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ",";
 		InputStream inputStream;
 		try {
-			inputStream = DBInit.class.getResourceAsStream("specialties.csv");
+			inputStream = DBInit.class.getResourceAsStream(csvFileName);
 			br = new BufferedReader(new InputStreamReader(inputStream));
 			while ((line = br.readLine()) != null) {
 
@@ -56,19 +82,18 @@ public class DBInit {
 				}
 			}
 		}
+	}
+
+	public static void initContactMotives(ContactService contactService) throws DAOException {
+		List<List<String>> result = new ArrayList<List<String>>();
+		String csvFileName = "contactMotives.csv";
+		readData(result, csvFileName);
 		
 		for (List<String> record : result) {
 			try {
 //				System.out.println(record);
-				String occupation = record.get(0);
-				String specialty = record.get(1);
-//				String tasks = record.get(2);
-				for (int i = 2; i < record.size(); i ++) {
-					System.out.println(occupation + "-" + specialty + "-" + record.get(i));
-					
-					specialtyService.add(occupation, specialty, record.get(i));
-				}
-				
+				String contactMotive = record.get(0);
+				contactService.addContactMotive(contactMotive);
 //				xxx
 			} catch (Exception e) {
 				System.out.println(record);
