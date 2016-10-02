@@ -39,6 +39,7 @@ import com.tdil.d2d.dao.SpecialtyDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.ActivityAction;
 import com.tdil.d2d.persistence.ActivityLog;
 import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
@@ -120,6 +121,7 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 			
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
 			// TODO ENVIAR EMAIL DE VALIDACION
 			
 			try {
@@ -168,6 +170,7 @@ public class UserServiceImpl implements UserService {
 			Specialty specialty = this.specialtyDAO.getSpecialtyById(addSpecialtyRequest.getSpecialtyId());
 			user.getSpecialties().add(specialty);
 			this.userDAO.save(user);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SPECIALTY));
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -183,6 +186,7 @@ public class UserServiceImpl implements UserService {
 			loc.setGeoLevelId(addLocationRequest.getGeoLevelId());
 			user.getUserGeoLocations().add(loc);
 			this.userDAO.save(user);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_GEO_LEVEL));
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -195,6 +199,7 @@ public class UserServiceImpl implements UserService {
 			User user = getLoggedUser();
 			user.setLastLoginDate(new Date());
 			this.userDAO.save(user);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.LOGIN));
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
@@ -240,6 +245,7 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_OFFER));
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -272,6 +278,7 @@ public class UserServiceImpl implements UserService {
 			jobApplication.setOffer(jobOffer);
 			jobApplication.setUser(getLoggedUser());
 			this.jobApplicationDAO.save(jobApplication);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.APPLY_TO_OFFER));
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -411,6 +418,7 @@ public class UserServiceImpl implements UserService {
 			} 
 			this.jobDAO.save(offer);
 			this.jobApplicationDAO.save(application);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.ACCEPT_OFFER));
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -434,6 +442,7 @@ public class UserServiceImpl implements UserService {
 			application.setStatus(JobApplication.REJECTED);
 			// TODO enviar notifacion de rechazo
 			this.jobApplicationDAO.save(application);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.REJECT_OFFER));
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);

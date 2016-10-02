@@ -26,6 +26,16 @@ public class ActivityLog implements PersistentEntity {
 	
 	@Column(name = "log")
 	private String log;
+	
+	public ActivityLog() {
+	}
+
+	public ActivityLog(User user, String log) {
+		super();
+		this.setCreationDate(new Date());
+		this.user = user;
+		this.log = log;
+	}
 
 	public long getId() {
 		return id;
