@@ -552,7 +552,7 @@ public class UserServiceImpl implements UserService {
 		r.setId(s.getId());
 		r.setCreationDate(s.getCreationDate().toString());
 		r.setLog(s.getLog());
-		return null;
+		return r;
 	}
 	
 	@Override

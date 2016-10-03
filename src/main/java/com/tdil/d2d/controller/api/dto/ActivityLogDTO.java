@@ -24,5 +24,25 @@ public class ActivityLogDTO {
 	public void setLog(String log) {
 		this.log = log;
 	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ActivityLogDTO [id=");
+		builder.append(id);
+		builder.append(", ");
+		if (creationDate != null) {
+			builder.append("creationDate=");
+			builder.append(creationDate);
+			builder.append(", ");
+		}
+		if (log != null) {
+			builder.append("log=");
+			builder.append(log);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
 
 }

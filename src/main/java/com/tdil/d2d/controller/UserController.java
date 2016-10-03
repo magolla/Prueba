@@ -153,7 +153,7 @@ public class UserController {
     public ResponseEntity<NotificationConfigurationResponse> getNotication() {
     	try {
     		NotificationConfigurationResponse response = this.userService.getNotificationConfiguration();
-			return new ResponseEntity<NotificationConfigurationResponse>(response, HttpStatus.CREATED);	
+			return new ResponseEntity<NotificationConfigurationResponse>(response, HttpStatus.OK);	
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<NotificationConfigurationResponse>((NotificationConfigurationResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -165,7 +165,7 @@ public class UserController {
     	try {
     		boolean response = this.userService.setNotificationConfiguration(notificationConfiguration);
     		if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.ACCEPTED.value()), HttpStatus.ACCEPTED);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}

@@ -205,7 +205,29 @@ public class TestRegisterLogin {
 					.header(new Header("Authorization", jwttokenOfferent))
 					.get(AP_URL +"/api/user/log")
 					.then().log().body().statusCode(200).extract().path("data[0].id");
+			
+			// Test congress
+			boolean isCongress = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant))
+					.get(AP_URL +"/api/user/notifications")
+					.then().log().body().statusCode(200).extract().path("congress");
+			Assert.assertFalse(isCongress);
+			// Set congress
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"congress\":true}")
+				.post(AP_URL +"/api/user/notifications")
+				.then().log().body().statusCode(200);
+			// Test congress
+			isCongress = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant))
+					.get(AP_URL +"/api/user/notifications")
+					.then().log().body().statusCode(200).extract().path("congress");
+			Assert.assertTrue(isCongress);
 	/*		
+	 */
 			
 			
 	//		create job offer

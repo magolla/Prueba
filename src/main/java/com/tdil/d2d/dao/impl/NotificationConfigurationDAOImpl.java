@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.tdil.d2d.dao.NotificationConfigurationDAO;
 import com.tdil.d2d.exceptions.DAOException;
-import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.NotificationConfiguration;
 
 @Repository
@@ -18,7 +17,7 @@ public class NotificationConfigurationDAOImpl  extends GenericDAO<NotificationCo
 	@Override
 	public NotificationConfiguration getByUser(long userId) throws DAOException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(NotificationConfiguration.class);
 			criteria.add(Restrictions.eq("user.id", userId));
 			List<NotificationConfiguration> list = criteria.list();
 			if (CollectionUtils.isEmpty(list)) {
