@@ -15,4 +15,6 @@ public interface UserDAO {
 
 	public User getUserByEmail(String email) throws DAOException;
 
+	public User getUserByMobilePhone(String mobilePhone) throws DAOException;
+
 }

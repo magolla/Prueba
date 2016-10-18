@@ -32,6 +32,7 @@ import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
+import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.GeoDAO;
@@ -59,6 +60,7 @@ import com.tdil.d2d.service.AndroidNotificationService;
 import com.tdil.d2d.service.CryptographicService;
 import com.tdil.d2d.service.EmailService;
 import com.tdil.d2d.service.UserService;
+import com.tdil.d2d.utils.ServiceLocator;
 
 @Transactional
 @Service
@@ -108,6 +110,15 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	@Override
+	public User getUserByMobilePhone(String mobilePhone) throws ServiceException {
+		try {
+			return this.userDAO.getUserByMobilePhone(mobilePhone);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	@Override
 	public RegistrationResponse register(RegistrationRequest registrationRequest) throws ServiceException {
@@ -122,8 +133,16 @@ public class UserServiceImpl implements UserService {
 			user.setEnabled(true);
 			user.setDeviceId(cryptographicService.encrypt(registrationRequest.getDeviceId(), "", user.getSalt()));
 			//user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(), "", user.getSalt()));
+			user.setMobilePhone(registrationRequest.getMobilePhone());
+			user.setLinePhone(registrationRequest.getLinePhone());
+			user.setPhoneValidated(false);
 			user.setEmailValidated(false);
 			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
+			if (ServiceLocator.isLocalhost()) {
+				user.setMobileHash("9999");
+			} else {
+				user.setMobileHash(RandomStringUtils.randomAlphanumeric(4));
+			}
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 			
@@ -141,6 +160,21 @@ public class UserServiceImpl implements UserService {
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean validate(ValidationRequest validationRequest) throws ServiceException {
+		try {
+			User user = this.userDAO.getUserByMobilePhone(validationRequest.getMobilePhone());
+			if (user != null && user.getMobileHash().equals(validationRequest.getSmsCode())) {
+				user.setPhoneValidated(true);
+				this.userDAO.save(user);
+				return true;
+			}
+			return false;
+		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
 	}

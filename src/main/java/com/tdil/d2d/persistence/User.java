@@ -40,6 +40,9 @@ public class User implements PersistentEntity {
 	@Column(name = "mobilePhone")
 	private String mobilePhone;
 	
+	@Column(name = "mobileHash")
+	private String mobileHash;
+	
 	@Column(name = "linePhone")
 	private String linePhone;
 	
@@ -54,6 +57,9 @@ public class User implements PersistentEntity {
 	
 	@Column(name = "emailHash")
 	private String emailHash;
+	
+	@Column(name = "phoneValidated")
+	private boolean phoneValidated;
 	
 	@Column(name = "emailValidated")
 	private boolean emailValidated;
@@ -264,6 +270,30 @@ public class User implements PersistentEntity {
 
 	public void setUserGeoLocations(Set<UserGeoLocation> userGeoLocations) {
 		this.userGeoLocations = userGeoLocations;
+	}
+
+	public boolean isPhoneValidated() {
+		return phoneValidated;
+	}
+
+	public void setPhoneValidated(boolean phoneValidated) {
+		this.phoneValidated = phoneValidated;
+	}
+
+	public String getLinePhone() {
+		return linePhone;
+	}
+
+	public void setLinePhone(String linePhone) {
+		this.linePhone = linePhone;
+	}
+
+	public String getMobileHash() {
+		return mobileHash;
+	}
+
+	public void setMobileHash(String mobileHash) {
+		this.mobileHash = mobileHash;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.tdil.d2d.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,14 +21,18 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     private com.tdil.d2d.service.UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String mobilePhone) throws UsernameNotFoundException {
         try {
-			User user = userService.getUserByEmail(username);
+			User user = userService.getUserByMobilePhone(mobilePhone);
 
 			if (user == null) {
-			    throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
+			    throw new UsernameNotFoundException(String.format("No user found with username '%s'.", mobilePhone));
 			} else {
-			    return JwtUserFactory.create(user);
+				if (!user.isPhoneValidated()) {
+					throw new DisabledException(String.format("User found with username '%s' without phone validation", mobilePhone));
+				} else {
+					return JwtUserFactory.create(user);
+				}
 			}
 		} catch (ServiceException e) {
 			throw new UsernameNotFoundException(e.getMessage(), e);

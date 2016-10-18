@@ -14,6 +14,7 @@ import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
+import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.User;
@@ -61,5 +62,9 @@ public interface UserService {
 	public NotificationConfigurationResponse getNotificationConfiguration() throws ServiceException;
 
 	public boolean setNotificationConfiguration(ConfigureNotificationsRequest notificationConfiguration) throws ServiceException;
+
+	public boolean validate(ValidationRequest validationRequest) throws ServiceException;
+
+	public User getUserByMobilePhone(String mobilePhone) throws ServiceException;
 
 }

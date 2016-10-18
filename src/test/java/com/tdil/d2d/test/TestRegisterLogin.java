@@ -3,6 +3,7 @@ package com.tdil.d2d.test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
 
@@ -26,12 +27,16 @@ public class TestRegisterLogin {
 			
 			String suffix = String.valueOf(System.currentTimeMillis() % 1000);
 			
+			String mobilePhone = RandomStringUtils.randomNumeric(11);
+			String deviceId = RandomStringUtils.randomAlphabetic(20);
+			String smsCode = "9999";
+			
 			// registro
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.body("{\"firstname\":\"marcos\",\"lastname\":\"godoy\","
 							+ "\"email\":\"m"+suffix+"@m.com\","
-							+ "\"deviceId\":\"zyryr23123\",\"mobilePhone\":\"2216412772\","
+							+ "\"deviceId\":\""+deviceId+"\",\"mobilePhone\":\""+mobilePhone+"\","
 							+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
 							+ "\"tacAccepted\":true"
 							+ "}")
@@ -41,12 +46,23 @@ public class TestRegisterLogin {
 			
 			
 			// Login
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\""+mobilePhone+"\",\"password\":\""+deviceId+"\"}")
+					.post(AP_URL +"/api/auth")
+					.then().log().body().statusCode(401);
+			
+			// Validate
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.body("{\"mobilePhone\":\""+mobilePhone+"\",\"deviceId\":\""+deviceId+"\",\"smsCode\":\""+smsCode+"\"}")
+			.post(AP_URL +"/api/user/validate")
+			.then().log().body().statusCode(200);
+			
 			String jwttokenOfferent = given().config(RestAssured.config().sslConfig(
-					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"zyryr23123\"}")
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\""+mobilePhone+"\",\"password\":\""+deviceId+"\"}")
 					.post(AP_URL +"/api/auth")
 					.then().log().body().statusCode(200).extract().path("token");
 			Assert.assertNotNull(jwttokenOfferent);
-			
 			
 			// Update regid
 			given().config(RestAssured.config().sslConfig(
@@ -117,22 +133,31 @@ public class TestRegisterLogin {
 			Assert.assertNotEquals(0, idOffer);
 			
 			// registro un nuevo usuario
+			String mobilePhone1 = RandomStringUtils.randomNumeric(11);
+			String deviceId1 = RandomStringUtils.randomAlphabetic(20);
 			suffix = String.valueOf(System.currentTimeMillis() % 1000);
 			// registro
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.body("{\"firstname\":\"marcos app\",\"lastname\":\"godoy app\","
 							+ "\"email\":\"m"+suffix+"@m.com\","
-							+ "\"deviceId\":\"zyryr23123\",\"mobilePhone\":\"2216412772\","
+							+ "\"deviceId\":\""+deviceId1+"\",\"mobilePhone\":\""+mobilePhone1+"\","
 							+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
 							+ "\"tacAccepted\":true"
 							+ "}")
 					.post(AP_URL +"/api/user/register")
 					.then().log().body().statusCode(201).body("status", equalTo(201))/*.
 					and().time(lessThan(100L))*/;
+			// Validacion 
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.body("{\"mobilePhone\":\""+mobilePhone1+"\",\"deviceId\":\""+deviceId1+"\",\"smsCode\":\""+smsCode+"\"}")
+			.post(AP_URL +"/api/user/validate")
+			.then().log().body().statusCode(200);
+			
 			// Login
 			String jwttokenApplicant = given().config(RestAssured.config().sslConfig(
-					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"zyryr23123\"}")
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\""+mobilePhone1+"\",\"password\":\""+deviceId1+"\"}")
 					.post(AP_URL +"/api/auth")
 					.then().log().body().statusCode(200).extract().path("token");
 			Assert.assertNotNull(jwttokenApplicant);
@@ -307,6 +332,8 @@ public class TestRegisterLogin {
 	}
 
 	private void createUserAndApplyToOffer(int idFirstSpecialty, int idLevel, int idCaballito, int idOffer) {
+		String mobilePhone1 = RandomStringUtils.randomNumeric(11);
+		String deviceId1 = RandomStringUtils.randomAlphabetic(20);
 		// registro un nuevo usuario
 					String suffix = String.valueOf(System.currentTimeMillis() % 1000);
 					// registro
@@ -314,16 +341,22 @@ public class TestRegisterLogin {
 							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 							.body("{\"firstname\":\"marcos app\",\"lastname\":\"godoy app\","
 									+ "\"email\":\"m"+suffix+"@m.com\","
-									+ "\"deviceId\":\"zyryr23123\",\"mobilePhone\":\"2216412772\","
+									+ "\"deviceId\":\""+deviceId1+"\",\"mobilePhone\":\""+mobilePhone1+"\","
 									+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
 									+ "\"tacAccepted\":true"
 									+ "}")
 							.post(AP_URL +"/api/user/register")
 							.then().log().body().statusCode(201).body("status", equalTo(201))/*.
 							and().time(lessThan(100L))*/;
+					// Validacion 
+					given().config(RestAssured.config().sslConfig(
+							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+							.body("{\"mobilePhone\":\""+mobilePhone1+"\",\"deviceId\":\""+deviceId1+"\",\"smsCode\":\"9999\"}")
+					.post(AP_URL +"/api/user/validate")
+					.then().log().body().statusCode(200);
 					// Login
 					String jwttokenApplicant = given().config(RestAssured.config().sslConfig(
-							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\"m"+suffix+"@m.com\",\"password\":\"zyryr23123\"}")
+							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json").body("{\"username\":\""+mobilePhone1+"\",\"password\":\""+deviceId1+"\"}")
 							.post(AP_URL +"/api/auth")
 							.then().log().body().statusCode(200).extract().path("token");
 					Assert.assertNotNull(jwttokenApplicant);
