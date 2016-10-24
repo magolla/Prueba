@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
 			user.setLastname(registrationRequest.getLastname());
 			//user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 			user.setEnabled(true);
-			user.setDeviceId(cryptographicService.encrypt(registrationRequest.getDeviceId(), "", user.getSalt()));
+			user.setDeviceId(encriptDeviceId(registrationRequest.getDeviceId(), user));
 			//user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(), "", user.getSalt()));
 			user.setMobilePhone(registrationRequest.getMobilePhone());
 			user.setLinePhone(registrationRequest.getLinePhone());
@@ -163,18 +163,24 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
+
+	private String encriptDeviceId(String deviceId, User user) throws InvalidKeyException,
+			NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+		return cryptographicService.encrypt(deviceId, "", user.getSalt());
+	}
 	
 	@Override
 	public boolean validate(ValidationRequest validationRequest) throws ServiceException {
 		try {
 			User user = this.userDAO.getUserByMobilePhone(validationRequest.getMobilePhone());
-			if (user != null && user.getMobileHash().equals(validationRequest.getSmsCode())) {
+			if (user != null && user.getDeviceId().equals(encriptDeviceId(validationRequest.getDeviceId(), user)) 
+					&& user.getMobileHash().equals(validationRequest.getSmsCode())) {
 				user.setPhoneValidated(true);
 				this.userDAO.save(user);
 				return true;
 			}
 			return false;
-		} catch (DAOException e) {
+		} catch (DAOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
 			throw new ServiceException(e);
 		}
 	}
