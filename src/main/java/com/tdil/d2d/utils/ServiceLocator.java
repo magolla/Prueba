@@ -1,5 +1,6 @@
 package com.tdil.d2d.utils;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -58,6 +59,14 @@ public class ServiceLocator {
     
     public static boolean isRC(){
     	return context.getEnvironment().acceptsProfiles(RC);
+    }
+    
+    public static String getTempPath() {
+    	String result = System.getProperty("java.io.tmpdir");
+    	if (result.endsWith(File.separator)) {
+    		result = result.substring(0, result.length() - 1);
+    	}
+    	return result;
     }
 
     /**

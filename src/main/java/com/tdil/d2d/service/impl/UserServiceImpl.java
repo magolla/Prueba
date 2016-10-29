@@ -15,6 +15,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,9 +57,9 @@ import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.security.RuntimeContext;
-import com.tdil.d2d.service.AndroidNotificationService;
 import com.tdil.d2d.service.CryptographicService;
 import com.tdil.d2d.service.EmailService;
+import com.tdil.d2d.service.NotificationService;
 import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.ServiceLocator;
 
@@ -88,7 +89,11 @@ public class UserServiceImpl implements UserService {
 	private CryptographicService cryptographicService;
 	
 	@Autowired
-	private AndroidNotificationService androidNotificationService;
+	@Qualifier(value="androidNotificationServiceImpl")
+	private NotificationService androidNotificationService;
+	@Autowired
+	@Qualifier(value="iosNotificationServiceImpl")
+	private NotificationService iosNotificationService;
 	
 	@Autowired
 	private EmailService emailService;

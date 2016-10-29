@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -15,18 +14,20 @@ import java.util.concurrent.Executors;
 import javax.annotation.PostConstruct;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.communication.ProxyConfiguration;
-import com.tdil.d2d.service.AndroidNotificationService;
+import com.tdil.d2d.persistence.NotificationType;
+import com.tdil.d2d.service.NotificationService;
 import com.tdil.d2d.utils.LoggerManager;
 
 @Transactional
-@Service
-public class AndroidNotificationServiceImpl implements AndroidNotificationService {
+@Service("androidNotificationServiceImpl")
+public class AndroidNotificationServiceImpl implements NotificationService {
     
 	@Value("${proxy.server}")
 	private String proxyServer;
@@ -59,42 +60,22 @@ AIzaSyBYrCBCm1KnrAuntw93AaDL8A9M_J11OiI
 	}
 	
 	@Override
-	public void sendPaymentRequest(long paymentId, long paymentDestinationId, String paymentDestinationDescription,
-			Integer installments, BigDecimal amount, String regId) {
-		JSONObject jsonObject = new JSONObject();
-	    JSONObject data = new JSONObject();
-	    data.put("paymentId", String.valueOf(paymentId));
-	    data.put("paymentDestinationId", String.valueOf(paymentDestinationId));
-	    data.put("paymentDestinationDescription",paymentDestinationDescription);
-	    data.put("installments",String.valueOf(installments));
-	    data.put("amount",String.valueOf(amount));
-	    String title = "Pedido de pago";
-	    String message = paymentDestinationDescription + " pide el pago de " + amount + " en " + installments + " cuota/s";
-	    data.put("title",title);
-	    data.put("message",message);
-	    JSONArray registration_ids = new JSONArray();
-	    registration_ids.put(regId);
-	    jsonObject.put("data",data);
-	    jsonObject.put("registration_ids",registration_ids);
-	    executor.submit(new SendAndroidPushNotification(jsonObject.toString(), regId, this));
+	public void sendNotification(NotificationType type, String title, String message, String regId) {
+		try {
+			JSONObject jsonObject = new JSONObject();
+			JSONObject data = new JSONObject();
+			data.put("title",title);
+			data.put("message",message);
+			JSONArray registration_ids = new JSONArray();
+			registration_ids.put(regId);
+			jsonObject.put("data",data);
+			jsonObject.put("registration_ids",registration_ids);
+			executor.submit(new SendAndroidPushNotification(jsonObject.toString(), regId, this));
+		} catch (JSONException e) {
+			 LoggerManager.error(this, e);
+		}
 	}
-	
-//	public void send(int userId, int notificationId, int type, int level, String title, String message, String regId) {
-//		JSONObject jsonObject = new JSONObject();
-//	    JSONObject data = new JSONObject();
-//	    data.put("nId", String.valueOf(notificationId));
-//	    data.put("type",String.valueOf(type));
-//	    data.put("level",String.valueOf(level));
-//	    data.put("title",title);
-//	    data.put("message",message);
-//	    JSONArray registration_ids = new JSONArray();
-//	    registration_ids.put(regId);
-//	    jsonObject.put("data",data);
-//	    jsonObject.put("registration_ids",registration_ids);
-//	    executor.submit(new SendAndroidPushNotification(jsonObject.toString(), regId, this));
-//	}
-	
-	
+		
 	private void send(SendAndroidPushNotification sendAndroidPushNotification) {
 		try {
 			URL obj = new URL(HTTPS);
