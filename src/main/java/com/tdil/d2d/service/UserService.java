@@ -67,4 +67,7 @@ public interface UserService {
 
 	public User getUserByMobilePhone(String mobilePhone) throws ServiceException;
 
+	public boolean sendTestNotificationAndroid() throws ServiceException;
+	public boolean sendTestNotificationIOS() throws ServiceException;
+
 }

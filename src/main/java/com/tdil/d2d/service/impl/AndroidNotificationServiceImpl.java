@@ -64,6 +64,7 @@ AIzaSyBYrCBCm1KnrAuntw93AaDL8A9M_J11OiI
 		try {
 			JSONObject jsonObject = new JSONObject();
 			JSONObject data = new JSONObject();
+			data.put("type",1); // TODO 
 			data.put("title",title);
 			data.put("message",message);
 			JSONArray registration_ids = new JSONArray();

@@ -14,6 +14,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,7 @@ import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.NotificationConfiguration;
+import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Task;
@@ -551,6 +553,36 @@ public class UserServiceImpl implements UserService {
 			notificationConfiguration.setPush(configureNotificationsRequest.isPush());
 			this.notificationConfigurationDAO.save(notificationConfiguration);
 			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean sendTestNotificationAndroid() throws ServiceException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		String date = sdf.format(new Date());
+		try {
+			User user = getLoggedUser();
+			if (!StringUtils.isEmpty(user.getAndroidRegId())) {
+				androidNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "Title " + date, "Message " + date, user.getAndroidRegId());
+			}
+			return false;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean sendTestNotificationIOS() throws ServiceException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		String date = sdf.format(new Date());
+		try {
+			User user = getLoggedUser();
+			if (!StringUtils.isEmpty(user.getIosPushId())) {
+				iosNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "Title " + date, "Message " + date, user.getIosPushId());
+			}
+			return false;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}

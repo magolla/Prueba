@@ -17,12 +17,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.security.JwtTokenUtil;
 import com.tdil.d2d.security.JwtUser;
 import com.tdil.d2d.service.ContactService;
 import com.tdil.d2d.service.SpecialtyService;
 import com.tdil.d2d.service.UserService;
+import com.tdil.d2d.utils.LoggerManager;
 
 /**
  *
@@ -75,6 +77,38 @@ public class TestController {
     public ResponseEntity<JwtUser> getAuthenticatedUser1(HttpServletRequest request) {
         System.out.println(SecurityContextHolder.getContext().getAuthentication());
         return new ResponseEntity<JwtUser>((JwtUser)null, HttpStatus.CREATED);
+    }
+    
+    @RequestMapping(value = "/api/sendTestNotificationIOS", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<ApiResponse> sendTestNotificationIOS(HttpServletRequest request) {
+    	try {
+    		boolean response = this.userService.sendTestNotificationIOS();
+    		if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/api/sendTestNotificationAndroid", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<ApiResponse> sendTestNotificationAndroid(HttpServletRequest request) {
+    	try {
+    		boolean response = this.userService.sendTestNotificationAndroid();
+    		if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
     }
     
     @RequestMapping(value = "/api/test", method = RequestMethod.GET)
