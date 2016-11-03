@@ -16,6 +16,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
+import com.tdil.d2d.controller.api.response.UserDetailsResponse;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.User;
 
@@ -71,5 +72,7 @@ public interface UserService {
 	public boolean sendTestNotificationIOS() throws ServiceException;
 
 	public User getLoggedUser() throws ServiceException;
+
+	public UserDetailsResponse me() throws ServiceException;
 
 }

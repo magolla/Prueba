@@ -36,6 +36,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
+import com.tdil.d2d.controller.api.response.UserDetailsResponse;
 import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.GeoDAO;
 import com.tdil.d2d.dao.JobApplicationDAO;
@@ -55,6 +56,7 @@ import com.tdil.d2d.persistence.NotificationConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
+import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
@@ -62,6 +64,7 @@ import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.CryptographicService;
 import com.tdil.d2d.service.EmailService;
 import com.tdil.d2d.service.NotificationService;
+import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.ServiceLocator;
 
@@ -99,6 +102,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private SubscriptionService subscriptionService;
 	
 	@Override
 	public User getUserByUsername(String username) throws ServiceException {
@@ -615,6 +621,21 @@ public class UserServiceImpl implements UserService {
 //		result.setApplications(applications);
 		result.setStatus(s.getStatus());
 		return result;
+	}
+	
+	@Override
+	public UserDetailsResponse me() throws ServiceException {
+		User user = getLoggedUser();
+		UserDetailsResponse resp = new UserDetailsResponse(HttpStatus.OK.value());
+		if (resp != null) {
+			Subscription subscription = subscriptionService.getActiveSubscription(user.getId());
+			if (subscription != null) {
+				if (subscription.getSponsorCode() != null && subscription.getSponsorCode().getSponsor() != null);
+					resp.setSponsorName(subscription.getSponsorCode().getSponsor().getName());
+				
+			}
+		}
+		return resp;
 	}
 	
 	@Override

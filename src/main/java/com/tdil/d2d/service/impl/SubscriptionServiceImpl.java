@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.controller.api.request.UseSponsorCodeRequest;
 import com.tdil.d2d.dao.SubscriptionDAO;
+import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
@@ -77,7 +78,27 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return false;
 		}
 	}
-
+	
+	@Override
+	public Subscription getActiveSubscription(long userID) throws ServiceException {
+		try {
+			User user = userService.getLoggedUser();
+			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(user.getId());
+			if (subscriptions == null || subscriptions.isEmpty()) {
+				return null;
+			} else {
+				Subscription subscription = subscriptions.get(0);
+				if (subscription.getExpirationDate().before(new Date())) {
+					return null;
+				} else {
+					return subscription;
+				}
+			}
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+		
 	private Date getExpirationDate(Calendar instance, SponsorCode sponsorCode) {
 		Calendar cal = Calendar.getInstance();
 		cal = sponsorCode.getTimeUnit().add(cal, sponsorCode.getUnits());
