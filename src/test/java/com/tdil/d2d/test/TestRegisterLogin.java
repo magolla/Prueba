@@ -173,6 +173,14 @@ public class TestRegisterLogin {
 					.header(new Header("Authorization", jwttokenApplicant)).body("{\"geoLevelLevel\":"+idLevel+",\"geoLevelId\":"+idCaballito+"}")
 			.post(AP_URL +"/api/user/location")
 			.then().log().body().statusCode(201);
+			
+			// Cargo un codigo de sponsor
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"sponsorCode\":\"TESTCODE\"}")
+			.post(AP_URL +"/api/subscription/sponsor")
+			.then().log().body().statusCode(200);
+			
 			// Busco ofertas que matcheen mi perfil
 			int idMatchedOffer = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
@@ -385,6 +393,7 @@ public class TestRegisterLogin {
 							.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\"}")
 					.post(AP_URL +"/api/user/offer/"+idOffer+"/apply")
 					.then().log().body().statusCode(201);
+					
 		
 	}
 

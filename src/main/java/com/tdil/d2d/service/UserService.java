@@ -70,4 +70,6 @@ public interface UserService {
 	public boolean sendTestNotificationAndroid() throws ServiceException;
 	public boolean sendTestNotificationIOS() throws ServiceException;
 
+	public User getLoggedUser() throws ServiceException;
+
 }

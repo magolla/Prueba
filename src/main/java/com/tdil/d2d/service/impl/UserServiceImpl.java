@@ -305,8 +305,12 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private User getLoggedUser() throws DAOException {
-		return userDAO.getById(User.class, com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
+	public User getLoggedUser() throws ServiceException {
+		try {
+			return userDAO.getById(User.class, com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
 	}
 	
 	@Override
@@ -568,7 +572,7 @@ public class UserServiceImpl implements UserService {
 				androidNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "Title " + date, "Message " + date, user.getAndroidRegId());
 			}
 			return false;
-		} catch (DAOException e) {
+		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -583,7 +587,7 @@ public class UserServiceImpl implements UserService {
 				iosNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "Title " + date, "Message " + date, user.getIosPushId());
 			}
 			return false;
-		} catch (DAOException e) {
+		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
