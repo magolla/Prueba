@@ -26,7 +26,8 @@ import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
-import com.tdil.d2d.controller.api.request.RegistrationRequest;
+import com.tdil.d2d.controller.api.request.RegistrationRequestA;
+import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
@@ -69,8 +70,19 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/api/user/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
+    @RequestMapping(value = "/api/user/registerA", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequestA registrationRequest) {
+    	try {
+			RegistrationResponse response = this.userService.register(registrationRequest);
+			return new ResponseEntity<RegistrationResponse>(response, HttpStatus.CREATED);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<RegistrationResponse>((RegistrationResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/registerB", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequestB registrationRequest) {
     	try {
 			RegistrationResponse response = this.userService.register(registrationRequest);
 			return new ResponseEntity<RegistrationResponse>(response, HttpStatus.CREATED);
@@ -190,7 +202,7 @@ public class UserController {
 		}
     }
     
-    @RequestMapping(value = "/api/user", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/api/user/me", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<UserDetailsResponse>> me() {
     	try {
     		UserDetailsResponse me = this.userService.me();

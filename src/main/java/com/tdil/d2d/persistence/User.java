@@ -43,9 +43,6 @@ public class User implements PersistentEntity {
 	@Column(name = "mobileHash")
 	private String mobileHash;
 	
-	@Column(name = "linePhone")
-	private String linePhone;
-	
 	@Column(name = "tacAccepted")
 	private boolean tacAccepted;
 	
@@ -67,12 +64,11 @@ public class User implements PersistentEntity {
 	@Column(name="pass")
 	private String password;
 	
-	/* Formayo yyyyMMdd*/
-	@Column(name = "birthdate")
-	private String birthdate;
-
 	@Column(name = "enabled")
 	private boolean enabled;
+	
+	@Column(name = "userb")
+	private boolean userb;
 	
 	@Column(name = "deviceId")
 	private String deviceId;
@@ -85,6 +81,9 @@ public class User implements PersistentEntity {
 	
 	@Column(name = "lastPasswordResetDate")
 	private Date lastPasswordResetDate;
+	
+	@Column(name = "companyScreenName", length=256)
+	private String companyScreenName;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "D2D_USER_SPECIALTY", joinColumns = {
@@ -166,14 +165,6 @@ public class User implements PersistentEntity {
 
 	public String getSalt() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(this.getCreationDate());
-	}
-
-	public String getBirthdate() {
-		return birthdate;
-	}
-
-	public void setBirthdate(String birthdate) {
-		this.birthdate = birthdate;
 	}
 
 	public String getEmailHash() {
@@ -280,20 +271,28 @@ public class User implements PersistentEntity {
 		this.phoneValidated = phoneValidated;
 	}
 
-	public String getLinePhone() {
-		return linePhone;
-	}
-
-	public void setLinePhone(String linePhone) {
-		this.linePhone = linePhone;
-	}
-
 	public String getMobileHash() {
 		return mobileHash;
 	}
 
 	public void setMobileHash(String mobileHash) {
 		this.mobileHash = mobileHash;
+	}
+
+	public boolean isUserb() {
+		return userb;
+	}
+
+	public void setUserb(boolean userb) {
+		this.userb = userb;
+	}
+
+	public String getCompanyScreenName() {
+		return companyScreenName;
+	}
+
+	public void setCompanyScreenName(String companyScreenName) {
+		this.companyScreenName = companyScreenName;
 	}
 
 }

@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.tdil.d2d.esapi.validation.ValidInput;
 
-public class RegistrationRequest extends ApiRequest {
+public class RegistrationRequestB extends ApiRequest {
 
 	@NotEmpty
     @Length(min= 2, max = 50)
@@ -28,16 +28,7 @@ public class RegistrationRequest extends ApiRequest {
     @Length(min= 6, max = 20)
 	@ValidInput
 	private String mobilePhone;
-	
-	@NotEmpty
-    @Length(min= 6, max = 20)
-	@ValidInput
-	private String linePhone;
-	
-	@NotEmpty
-    @Length(min= 8, max = 8)
-	private String birthdate;
-	
+		
 	@NotEmpty
     @Length(min= 6, max = 20)
 	@ValidInput
@@ -77,14 +68,6 @@ public class RegistrationRequest extends ApiRequest {
 		this.mobilePhone = mobilePhone;
 	}
 
-	public String getBirthdate() {
-		return birthdate;
-	}
-
-	public void setBirthdate(String birthdate) {
-		this.birthdate = birthdate;
-	}
-
 	public String getDeviceId() {
 		return deviceId;
 	}
@@ -101,14 +84,4 @@ public class RegistrationRequest extends ApiRequest {
 		this.tacAccepted = tacAccepted;
 	}
 
-	public String getLinePhone() {
-		return linePhone;
-	}
-
-	public void setLinePhone(String linePhone) {
-		this.linePhone = linePhone;
-	}
-
-
-	
 }

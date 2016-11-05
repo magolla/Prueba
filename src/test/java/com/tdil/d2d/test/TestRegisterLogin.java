@@ -3,6 +3,10 @@ package com.tdil.d2d.test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
@@ -174,12 +178,35 @@ public class TestRegisterLogin {
 			.post(AP_URL +"/api/user/location")
 			.then().log().body().statusCode(201);
 			
+			// Obtengo datos de subscripciones
+			ExtractableResponse<Response> meExtract = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant))
+					.get(AP_URL +"/api/user/me")
+					.then().log().body().statusCode(200).extract();
+			boolean hasSubscription =(Boolean)meExtract.path("data.hasSubscription");
+			Assert.assertFalse(hasSubscription);
+			
 			// Cargo un codigo de sponsor
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.header(new Header("Authorization", jwttokenApplicant)).body("{\"sponsorCode\":\"TESTCODE\"}")
 			.post(AP_URL +"/api/subscription/sponsor")
 			.then().log().body().statusCode(200);
+			
+			meExtract = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant))
+					.get(AP_URL +"/api/user/me")
+					.then().log().body().statusCode(200).extract();
+			hasSubscription = (Boolean)(meExtract.path("data.hasSubscription"));
+			String sponsor = meExtract.path("data.sponsorName");
+			String subscriptionExpirationDate = meExtract.path("data.subscriptionExpirationDate");
+			Assert.assertTrue(hasSubscription);
+			Assert.assertEquals("TEST", sponsor);
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE, 30);
+			Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), subscriptionExpirationDate);
 			
 			// Busco ofertas que matcheen mi perfil
 			int idMatchedOffer = given().config(RestAssured.config().sslConfig(

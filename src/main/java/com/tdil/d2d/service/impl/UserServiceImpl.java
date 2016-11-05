@@ -33,7 +33,8 @@ import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
 import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
-import com.tdil.d2d.controller.api.request.RegistrationRequest;
+import com.tdil.d2d.controller.api.request.RegistrationRequestA;
+import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -134,7 +135,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public RegistrationResponse register(RegistrationRequest registrationRequest) throws ServiceException {
+	public RegistrationResponse register(RegistrationRequestA registrationRequest) throws ServiceException {
 		try {
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
 			User user = new User();
@@ -147,7 +148,52 @@ public class UserServiceImpl implements UserService {
 			user.setDeviceId(encriptDeviceId(registrationRequest.getDeviceId(), user));
 			//user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(), "", user.getSalt()));
 			user.setMobilePhone(registrationRequest.getMobilePhone());
-			user.setLinePhone(registrationRequest.getLinePhone());
+			user.setUserb(false);
+			user.setPhoneValidated(false);
+			user.setEmailValidated(false);
+			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
+			user.setCompanyScreenName(registrationRequest.getCompanyScreenName());
+			if (ServiceLocator.isLocalhost()) {
+				user.setMobileHash("9999");
+			} else {
+				user.setMobileHash(RandomStringUtils.randomAlphanumeric(4));
+			}
+			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
+			this.userDAO.save(user);
+			
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
+			// TODO ENVIAR EMAIL DE VALIDACION
+			
+			try {
+				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link " + user.getEmailHash();
+				emailService.sendEmail(registrationRequest.getEmail(), EmailServiceImpl.defaultFrom, "Registracion", body);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return response;
+		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
+				| NoSuchAlgorithmException | NoSuchPaddingException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public RegistrationResponse register(RegistrationRequestB registrationRequest) throws ServiceException {
+		try {
+			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
+			User user = new User();
+			user.setCreationDate(new Date());
+			user.setEmail(registrationRequest.getEmail());
+			user.setFirstname(registrationRequest.getFirstname());
+			user.setLastname(registrationRequest.getLastname());
+			//user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+			user.setEnabled(true);
+			user.setDeviceId(encriptDeviceId(registrationRequest.getDeviceId(), user));
+			//user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(), "", user.getSalt()));
+			user.setMobilePhone(registrationRequest.getMobilePhone());
+			user.setUserb(true);
 			user.setPhoneValidated(false);
 			user.setEmailValidated(false);
 			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
@@ -627,12 +673,18 @@ public class UserServiceImpl implements UserService {
 	public UserDetailsResponse me() throws ServiceException {
 		User user = getLoggedUser();
 		UserDetailsResponse resp = new UserDetailsResponse(HttpStatus.OK.value());
+		resp.setFirstname(user.getFirstname());
+		resp.setLastname(user.getLastname());
+		resp.setUserb(user.isUserb());
 		if (resp != null) {
 			Subscription subscription = subscriptionService.getActiveSubscription(user.getId());
 			if (subscription != null) {
-				if (subscription.getSponsorCode() != null && subscription.getSponsorCode().getSponsor() != null);
+				if (subscription.getSponsorCode() != null && subscription.getSponsorCode().getSponsor() != null) {
 					resp.setSponsorName(subscription.getSponsorCode().getSponsor().getName());
-				
+				}
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String date = sdf.format(subscription.getExpirationDate());
+				resp.setSubscriptionExpirationDate(sdf.format(subscription.getExpirationDate()));
 			}
 		}
 		return resp;

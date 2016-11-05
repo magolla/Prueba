@@ -13,7 +13,8 @@ import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
 import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
-import com.tdil.d2d.controller.api.request.RegistrationRequest;
+import com.tdil.d2d.controller.api.request.RegistrationRequestA;
+import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -24,7 +25,8 @@ public interface UserService {
 
 	public User getUserByUsername(String username) throws ServiceException;
 
-	public RegistrationResponse register(RegistrationRequest registrationRequest) throws ServiceException;
+	public RegistrationResponse register(RegistrationRequestA registrationRequest) throws ServiceException;
+	public RegistrationResponse register(RegistrationRequestB registrationRequest) throws ServiceException;
 
 	public boolean updateAndroidRegId(AndroidRegIdRequest registrationRequest) throws ServiceException;
 
