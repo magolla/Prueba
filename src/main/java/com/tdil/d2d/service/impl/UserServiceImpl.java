@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
+import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
@@ -512,6 +513,14 @@ public class UserServiceImpl implements UserService {
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
+	}
+	
+	@Override
+	public MatchesSummaryDTO getMatchedOffersSummary() throws ServiceException {
+		MatchesSummaryDTO result = new MatchesSummaryDTO();
+		result.setPermament(getMatchedPermamentOffers().size());
+		result.setTemporal(getMatchedTemporalOffers().size());
+		return result;
 	}
 	
 	@Override

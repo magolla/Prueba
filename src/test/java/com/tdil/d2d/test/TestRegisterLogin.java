@@ -232,6 +232,17 @@ public class TestRegisterLogin {
 			cal.add(Calendar.DATE, 30);
 //			Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()), subscriptionExpirationDate);
 			
+			// Busco el resumen de ofertas
+			ExtractableResponse<Response> sumamryExtract = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant))
+					.get(AP_URL +"/api/user/offers/matchesSummary")
+					.then().log().body().statusCode(200).extract();
+			int temp = sumamryExtract.path("data.temporal");
+			int perm = sumamryExtract.path("data.permament");
+			Assert.assertTrue(1 < temp);
+			Assert.assertTrue(1 < perm);
+			
 			// Busco ofertas que matcheen mi perfil
 			int idMatchedOffer = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")

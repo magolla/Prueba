@@ -5,6 +5,7 @@ import java.util.List;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
+import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
@@ -54,7 +55,8 @@ public interface UserService {
 	public boolean addSpecialty(AddSpecialtyRequest addSpecialtyRequest) throws ServiceException;
 
 	public boolean addLocation(AddLocationRequest addLocationRequest) throws ServiceException;
-
+	
+	public MatchesSummaryDTO getMatchedOffersSummary() throws ServiceException;
 	public List<JobOfferStatusDTO> getMatchedTemporalOffers() throws ServiceException;
 	public List<JobOfferStatusDTO> getMatchedPermamentOffers() throws ServiceException;
 	public List<JobOfferStatusDTO> getPermamentOffers(SearchOfferRequest searchOfferRequest) throws ServiceException;
@@ -85,6 +87,5 @@ public interface UserService {
 	public UserDetailsResponse me() throws ServiceException;
 
 	public boolean setLicense(SetLicenseRequest setLicenseRequest) throws ServiceException;
-
 
 }

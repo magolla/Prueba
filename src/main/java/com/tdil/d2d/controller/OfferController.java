@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
+import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
 import com.tdil.d2d.controller.api.request.CreatePermanentJobOfferRequest;
 import com.tdil.d2d.controller.api.request.CreateTemporaryJobOfferRequest;
@@ -103,6 +104,17 @@ public class OfferController extends AbstractController {
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/offers/matchesSummary", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<MatchesSummaryDTO>> temporalOffersMatchesSummary() {
+    	try {
+    		MatchesSummaryDTO myOffers = this.userService.getMatchedOffersSummary();
+			return new ResponseEntity<GenericResponse<MatchesSummaryDTO>>(new GenericResponse<MatchesSummaryDTO>(myOffers,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<MatchesSummaryDTO>>((GenericResponse<MatchesSummaryDTO>)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
     
