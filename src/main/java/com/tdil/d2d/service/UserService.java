@@ -17,6 +17,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.SearchOfferRequest;
+import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -82,6 +83,8 @@ public interface UserService {
 	public User getLoggedUser() throws ServiceException;
 
 	public UserDetailsResponse me() throws ServiceException;
+
+	public boolean setLicense(SetLicenseRequest setLicenseRequest) throws ServiceException;
 
 
 }

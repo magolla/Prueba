@@ -38,6 +38,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.SearchOfferRequest;
+import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -295,6 +296,19 @@ public class UserServiceImpl implements UserService {
 			user.getUserGeoLocations().add(loc);
 			this.userDAO.save(user);
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_GEO_LEVEL));
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean setLicense(SetLicenseRequest setLicenseRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			user.setLicense(setLicenseRequest.getLicense());
+			this.userDAO.save(user);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_LICENSE));
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);

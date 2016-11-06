@@ -10,4 +10,5 @@ public interface ActivityAction {
 	String REJECT_OFFER = "REJECT_OFFER";
 	String ADD_GEO_LEVEL = "ADD_GEO_LEVEL";
 	String ADD_SPECIALTY = "ADD_SPECIALTY";
+	String SET_LICENSE = "SET_LICENSE";
 }

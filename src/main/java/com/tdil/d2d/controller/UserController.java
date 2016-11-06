@@ -29,6 +29,7 @@ import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
+import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
@@ -98,6 +99,8 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<RegistrationResponse>((RegistrationResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
+	
+	
     
     // TODO 
 //    profesion (1) - especialidades cada ve que toca graba
@@ -201,6 +204,25 @@ public class UserController extends AbstractController {
 			boolean response = this.userService.addLocation(addLocationRequest);
 			if (response) {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/license", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> setLicense(@Valid @RequestBody SetLicenseRequest setLicenseRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
+    	try {
+			boolean response = this.userService.setLicense(setLicenseRequest);
+			if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}

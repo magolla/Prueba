@@ -194,6 +194,14 @@ public class TestRegisterLogin {
 			.post(AP_URL +"/api/user/location")
 			.then().log().body().statusCode(201);
 			
+			// Seteo Licencia
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"license\":\"1212121221\"}")
+			.post(AP_URL +"/api/user/license")
+			.then().log().body().statusCode(200);
+			
+			
 			// Obtengo datos de subscripciones
 			ExtractableResponse<Response> meExtract = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")

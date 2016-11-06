@@ -86,6 +86,9 @@ public class User implements PersistentEntity {
 	@Column(name = "companyScreenName", length=256)
 	private String companyScreenName;
 	
+	@Column(name = "license", length=256)
+	private String license;
+	
 	//Ver tamaño
 	@Column(name = "base64img")
 	@Lob()
@@ -307,6 +310,14 @@ public class User implements PersistentEntity {
 
 	public void setBase64img(byte[] base64img) {
 		this.base64img = base64img;
+	}
+
+	public String getLicense() {
+		return license;
+	}
+
+	public void setLicense(String license) {
+		this.license = license;
 	}
 
 }
