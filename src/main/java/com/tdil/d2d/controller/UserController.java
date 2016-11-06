@@ -104,15 +104,11 @@ public class UserController extends AbstractController {
     
     // TODO 
 //    profesion (1) - especialidades cada ve que toca graba
-//    matricula grabado
 //    
-//    
-//    intereses labolarales especilidad + tarea combo
+//    intereses labolarales especialidad + tarea combo
 //    tipo de institucion
 //    
 //    my perfil zonas
-//    
-//    mis matches resumen (antes de que los vean)
     
     
     @RequestMapping(value = "/api/user/validate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
