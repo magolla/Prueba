@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,11 +31,13 @@ import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
-import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
+import com.tdil.d2d.controller.api.request.CreatePermanentJobOfferRequest;
+import com.tdil.d2d.controller.api.request.CreateTemporaryJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
+import com.tdil.d2d.controller.api.request.SearchOfferRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -331,7 +334,7 @@ public class UserServiceImpl implements UserService {
 	
 	
 	@Override
-	public boolean createJobOffer(CreateJobOfferRequest createOfferRequest) throws ServiceException {
+	public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest) throws ServiceException {
 		try {
 			JobOffer jobOffer = new JobOffer();
 			jobOffer.setOfferent(getLoggedUser());
@@ -341,10 +344,50 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setOccupation(specialtyDAO.getOccupationById(createOfferRequest.getOccupationId()));
 			jobOffer.setSpecialty(specialtyDAO.getSpecialtyById(createOfferRequest.getSpecialtyId()));
 			jobOffer.setTask(specialtyDAO.getTaskById(createOfferRequest.getTaskId()));
-			jobOffer.setAddress(createOfferRequest.getAddress());
+			// TODO
+//			xxx nuevos campos
+			jobOffer.setCompanyScreenName(createOfferRequest.getCompanyScreenName());
+			jobOffer.setInstitutionType(createOfferRequest.getInstitutionType());
 			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate(), "yyyyMMdd"));
 			jobOffer.setHour(createOfferRequest.getOfferHour());
-			jobOffer.setPermanent(createOfferRequest.isPermanent());
+			jobOffer.setPermanent(false);
+			jobOffer.setComment(createOfferRequest.getComment());
+//			jobOffer.setTasks(createOfferRequest.getTasks());
+			jobOffer.setVacants(createOfferRequest.getVacants());
+			jobOffer.setStatus(JobOffer.VACANT);
+			this.jobDAO.save(jobOffer);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_OFFER));
+			return true;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException {
+		try {
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MONTH, 1);
+			createOfferRequest.setOfferDate(new SimpleDateFormat("yyyyMMdd").format(cal.getTime()));
+			createOfferRequest.setOfferHour("0000");
+			
+			JobOffer jobOffer = new JobOffer();
+			jobOffer.setOfferent(getLoggedUser());
+			jobOffer.setCreationDate(new Date());
+			jobOffer.setGeoLevelLevel(createOfferRequest.getGeoLevelLevel());
+			jobOffer.setGeoLevelId(createOfferRequest.getGeoLevelId());
+			jobOffer.setOccupation(specialtyDAO.getOccupationById(createOfferRequest.getOccupationId()));
+			jobOffer.setSpecialty(specialtyDAO.getSpecialtyById(createOfferRequest.getSpecialtyId()));
+			jobOffer.setTask(specialtyDAO.getTaskById(createOfferRequest.getTaskId()));
+			// TODO
+//			xxx nuevos campos
+			jobOffer.setTitle(createOfferRequest.getTitle());
+			jobOffer.setSubtitle(createOfferRequest.getSubtitle());
+			jobOffer.setCompanyScreenName(createOfferRequest.getCompanyScreenName());
+			jobOffer.setInstitutionType(createOfferRequest.getInstitutionType());
+			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate(), "yyyyMMdd"));
+			jobOffer.setHour(createOfferRequest.getOfferHour());
+			jobOffer.setPermanent(true);
 			jobOffer.setComment(createOfferRequest.getComment());
 //			jobOffer.setTasks(createOfferRequest.getTasks());
 			jobOffer.setVacants(createOfferRequest.getVacants());
@@ -438,7 +481,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
 		try {
-			List<JobOffer> offers = this.jobDAO.getOffers(RuntimeContext.getCurrentUser().getId());
+			List<JobOffer> offers = this.jobDAO.getOpenOffers(RuntimeContext.getCurrentUser().getId());
 			return offers.stream().map(s -> toDTO(s))
 					.collect(Collectors.toList());
 		} catch (DAOException e) {
@@ -447,21 +490,69 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public List<JobOfferStatusDTO> getMatchedOffers() throws ServiceException {
+	public List<JobOfferStatusDTO> getMyOffersClosed() throws ServiceException {
+		try {
+			List<JobOffer> offers = this.jobDAO.getClosedOffers(RuntimeContext.getCurrentUser().getId());
+			return offers.stream().map(s -> toDTO(s))
+					.collect(Collectors.toList());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public List<JobOfferStatusDTO> getMatchedTemporalOffers() throws ServiceException {
+		return getMatchedOffers(false);
+	}
+	
+	@Override
+	public List<JobOfferStatusDTO> getMatchedPermamentOffers() throws ServiceException {
+		return getMatchedOffers(true);
+	}
+	
+	@Override
+	public List<JobOfferStatusDTO> getPermamentOffers(SearchOfferRequest searchOfferRequest) throws ServiceException {
+		// TODO PENDING
 		try {
 			List<JobOffer> result = new ArrayList<>();
 			User user = getLoggedUser();
 			for (Specialty specialty : user.getSpecialties()) {
 				for (UserGeoLocation location : user.getUserGeoLocations()) {
-					result.addAll(this.jobDAO.getOffers(specialty.getId(), location.getGeoLevelId()));
+					result.addAll(this.jobDAO.getOffers(specialty.getId(), location.getGeoLevelId(), true));
 					if (location.getGeoLevelLevel() == 4) {
 						Geo4 geo4 = this.geoDAO.get4ById(Geo4.class, location.getGeoLevelId());
-						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getId()));
-						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getGeo2().getId()));
+						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getId(), true));
+						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getGeo2().getId(), true));
 					}
 					if (location.getGeoLevelLevel() == 3) {
 						Geo3 geo3 = this.geoDAO.get3ById(Geo3.class, location.getGeoLevelId());
-						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo3.getGeo2().getId()));
+						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo3.getGeo2().getId(), true));
+					}
+				}
+			}
+			return result.stream().map(s -> toDTO(s))
+					.collect(Collectors.toList());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	private List<JobOfferStatusDTO> getMatchedOffers(boolean permament) throws ServiceException {
+		// TODO BUG no busca bien
+		try {
+			List<JobOffer> result = new ArrayList<>();
+			User user = getLoggedUser();
+			for (Specialty specialty : user.getSpecialties()) {
+				for (UserGeoLocation location : user.getUserGeoLocations()) {
+					result.addAll(this.jobDAO.getOffers(specialty.getId(), location.getGeoLevelId(), permament));
+					if (location.getGeoLevelLevel() == 4) {
+						Geo4 geo4 = this.geoDAO.get4ById(Geo4.class, location.getGeoLevelId());
+						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getId(), permament));
+						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getGeo2().getId(), permament));
+					}
+					if (location.getGeoLevelLevel() == 3) {
+						Geo3 geo3 = this.geoDAO.get3ById(Geo3.class, location.getGeoLevelId());
+						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo3.getGeo2().getId(), permament));
 					}
 				}
 			}
@@ -653,13 +744,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private JobOfferStatusDTO toDTO(JobOffer s) {
+		// 
+//		XXX nuevos campos
 		JobOfferStatusDTO result = new JobOfferStatusDTO();
 		result.setId(s.getId());
 		// TODO format
 		result.setCreationDate(s.getCreationDate().toString());
 		result.setSpecialtyName(s.getSpecialty().getName());
 //		result.setSubspecialtyName(s.getSubSpecialty().getName());
-		result.setAddress(s.getAddress());
+		result.setComment(s.getComment());
 		result.setOfferDate(s.getOfferDate().toString());
 		result.setOfferHour(s.getHour());
 		result.setVacants(s.getVacants());
@@ -685,6 +778,7 @@ public class UserServiceImpl implements UserService {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				String date = sdf.format(subscription.getExpirationDate());
 				resp.setSubscriptionExpirationDate(sdf.format(subscription.getExpirationDate()));
+				resp.setHasSubscription(true);
 			}
 		}
 		return resp;

@@ -6,7 +6,7 @@ public class JobOfferStatusDTO {
 	private String creationDate;
 	private String specialtyName;
 	private String subspecialtyName;
-	private String address;
+	private String comment;
 	private String offerDate;
 	private String offerHour;
 	
@@ -37,12 +37,6 @@ public class JobOfferStatusDTO {
 	public void setSubspecialtyName(String subspecialtyName) {
 		this.subspecialtyName = subspecialtyName;
 	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
 	public String getOfferDate() {
 		return offerDate;
 	}
@@ -72,6 +66,12 @@ public class JobOfferStatusDTO {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 }

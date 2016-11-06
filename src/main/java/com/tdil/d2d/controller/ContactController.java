@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +26,7 @@ import com.tdil.d2d.utils.LoggerManager;
  *
  */
 @Controller
-public class ContactController {
+public class ContactController extends AbstractController {
     
     @Autowired
     private ContactService service;
@@ -42,7 +43,10 @@ public class ContactController {
     }
     
     @RequestMapping(value = "/api/contact", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> createContact(@Valid @RequestBody CreateContactRequest createOfferRequest) {
+    public ResponseEntity<ApiResponse> createContact(@Valid @RequestBody CreateContactRequest createOfferRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
     	try {
 			boolean response = this.service.createContact(createOfferRequest);
 			if (response) {

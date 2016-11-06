@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.tdil.d2d.esapi.validation.ValidInput;
 
-public class CreateJobOfferRequest extends ApiRequest {
+public class CreateTemporaryJobOfferRequest extends ApiRequest {
 	
 	@Min(value = 1)
 	private long occupationId;
@@ -20,17 +20,21 @@ public class CreateJobOfferRequest extends ApiRequest {
 	@Min(value = 1)
 	private long taskId;
 	
+	// Va a la oferta, se toma inicialmente dlel perfil
+	private String companyScreenName;
+	
+	// Si es publica o privada (no ambas)
+	private InstitutionType institutionType;
+	
+	// Imagen del aviso
+	private String base64Image;
+	
 	@Min(value = 2)
 	@Max(value = 4)
 	private int geoLevelLevel;
 	
 	@Min(value = 1)
 	private long geoLevelId;
-	
-	@NotEmpty
-    @Length(max = 100)
-	@ValidInput
-	private String address;
 	
 	@NotEmpty
     @Length(min= 8, max = 8)
@@ -41,8 +45,6 @@ public class CreateJobOfferRequest extends ApiRequest {
     @Length(min= 4, max = 4)
 	@Pattern(regexp="[0-9]{4}")
 	private String offerHour;
-	
-	private boolean permanent;
 	
 	@NotEmpty
     @Length(max = 100)
@@ -55,14 +57,6 @@ public class CreateJobOfferRequest extends ApiRequest {
 	
 	@Min(value = 1)
 	private int vacants;
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
 
 	public String getOfferDate() {
 		return offerDate;
@@ -78,14 +72,6 @@ public class CreateJobOfferRequest extends ApiRequest {
 
 	public void setOfferHour(String offerHour) {
 		this.offerHour = offerHour;
-	}
-
-	public boolean isPermanent() {
-		return permanent;
-	}
-
-	public void setPermanent(boolean permanent) {
-		this.permanent = permanent;
 	}
 
 	public String getComment() {
@@ -150,6 +136,30 @@ public class CreateJobOfferRequest extends ApiRequest {
 
 	public void setGeoLevelId(long geoLevelId) {
 		this.geoLevelId = geoLevelId;
+	}
+
+	public String getCompanyScreenName() {
+		return companyScreenName;
+	}
+
+	public void setCompanyScreenName(String companyScreenName) {
+		this.companyScreenName = companyScreenName;
+	}
+
+	public InstitutionType getInstitutionType() {
+		return institutionType;
+	}
+
+	public void setInstitutionType(InstitutionType institutionType) {
+		this.institutionType = institutionType;
+	}
+
+	public String getBase64Image() {
+		return base64Image;
+	}
+
+	public void setBase64Image(String base64Image) {
+		this.base64Image = base64Image;
 	}
 
 }

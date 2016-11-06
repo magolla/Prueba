@@ -3,6 +3,7 @@ package com.tdil.d2d.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,7 @@ public class JobApplicationDAOImpl  extends GenericDAO<JobApplication> implement
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobApplication.class);
 			criteria.add(Restrictions.eq("offer.id", offerId));
+			criteria.addOrder(Order.asc("id"));
 			List<JobApplication> list = criteria.list();
 			return list;
 		} catch (Exception e) {

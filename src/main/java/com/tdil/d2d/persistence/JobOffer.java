@@ -5,10 +5,13 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.tdil.d2d.controller.api.request.InstitutionType;
 
 @Entity
 @Table(name = "D2D_JOBOFFER")
@@ -30,9 +33,16 @@ public class JobOffer implements PersistentEntity {
 	
 	@ManyToOne
 	private Specialty specialty;
-
+	
 	@ManyToOne
 	private Task task;
+
+	@Column(name = "institutionType")
+	@Enumerated(javax.persistence.EnumType.STRING)
+	private InstitutionType institutionType;
+	
+	@Column(name="companyScreenName", length=256)
+	private String companyScreenName;
 	
 	@Column(name = "geoLevelLevel")
 	private int geoLevelLevel;
@@ -40,20 +50,22 @@ public class JobOffer implements PersistentEntity {
 	@Column(name = "geoLevelId")
 	private long geoLevelId;
 	
-	@Column(name="address")
-	private String address;
-	
 	@Column(name = "offerDate")
 	private Date offerDate;
 	
 	@Column(name="hour")
 	private String hour;
-
+	
 	@Column(name="permanent")
 	private boolean permanent;
+
+	// Solo si es permanente
+	@Column(name="title")
+	private String title;
+	@Column(name="subtitle")
+	private String subtitle;
 	
-	
-	@Column(name="comment")
+	@Column(name="comment", length=4000)
 	private String comment;
 	
 	@Column(name="vacants")
@@ -87,14 +99,6 @@ public class JobOffer implements PersistentEntity {
 
 	public void setSpecialty(Specialty specialty) {
 		this.specialty = specialty;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public Date getOfferDate() {
@@ -198,6 +202,38 @@ public class JobOffer implements PersistentEntity {
 			return true;
 		}
 		return false;
+	}
+
+	public InstitutionType getInstitutionType() {
+		return institutionType;
+	}
+
+	public void setInstitutionType(InstitutionType institutionType) {
+		this.institutionType = institutionType;
+	}
+
+	public String getCompanyScreenName() {
+		return companyScreenName;
+	}
+
+	public void setCompanyScreenName(String companyScreenName) {
+		this.companyScreenName = companyScreenName;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getSubtitle() {
+		return subtitle;
+	}
+
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
 	}
 
 }

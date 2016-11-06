@@ -11,7 +11,7 @@ public enum SubscriptionTimeUnit {
 		}
 		@Override
 		public Calendar add(Calendar cal, int units) {
-			cal.add(Calendar.DAY_OF_MONTH, units);
+			cal.add(Calendar.DATE, units);
 			return cal;
 		}
 	}

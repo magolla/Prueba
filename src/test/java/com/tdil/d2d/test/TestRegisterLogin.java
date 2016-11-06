@@ -3,9 +3,7 @@ package com.tdil.d2d.test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.BasicConfigurator;
@@ -41,10 +39,9 @@ public class TestRegisterLogin {
 					.body("{\"firstname\":\"marcos\",\"lastname\":\"godoy\","
 							+ "\"email\":\"m"+suffix+"@m.com\","
 							+ "\"deviceId\":\""+deviceId+"\",\"mobilePhone\":\""+mobilePhone+"\","
-							+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
-							+ "\"tacAccepted\":true"
+							+ "\"companyScreenName\":\"MRG\",\"tacAccepted\":true"
 							+ "}")
-					.post(AP_URL +"/api/user/register")
+					.post(AP_URL +"/api/user/registerA")
 					.then().log().body().statusCode(201).body("status", equalTo(201))/*.
 					and().time(lessThan(100L))*/;
 			
@@ -113,28 +110,48 @@ public class TestRegisterLogin {
 			int idLevel = extract.path("data[0].level");
 			
 			
-			// Creo una oferta
+			// Creo una oferta temporal
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.header(new Header("Authorization", jwttokenOfferent))
 					.body("{\"occupationId\":"+idFirstOccupation+",\"specialtyId\":"+idFirstSpecialty+","
 							+ "\"taskId\":"+idFirstTask+","
 							+ "\"geoLevelLevel\":"+idLevel+",\"geoLevelId\":"+idCaballito+","
-							+ "\"address\":\"calle 73 1390\",\"offerDate\":\"20170813\","
-							+ "\"offerHour\":\"1830\",\"permanent\":false,\"comment\":\"NA\","
+							+ "\"offerDate\":\"20170813\","
+							+ "\"offerHour\":\"1830\",\"comment\":\"Temporal\","
+							+ "\"companyScreenName\":\"AA BB\",\"institutionType\":\"PRIVATE\",\"comment\":\"NA\","
 							+ "\"tasks\":\"NA\",\"vacants\":1"
 							+ "}")
-					.post(AP_URL +"/api/offer/create")
+					.post(AP_URL +"/api/temporaryOffer/create")
+					.then().log().body().statusCode(201).body("status", equalTo(201));
+			
+			// Creo una oferta permanente
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenOfferent))
+					.body("{\"occupationId\":"+idFirstOccupation+",\"specialtyId\":"+idFirstSpecialty+","
+							+ "\"taskId\":"+idFirstTask+","
+							+ "\"geoLevelLevel\":"+idLevel+",\"geoLevelId\":"+idCaballito+","
+							+ "\"comment\":\"Permanente\","
+							+ "\"title\":\"Medico clinico\",\"subtitle\":\"Meses de verano\","
+							+ "\"companyScreenName\":\"AA BB\",\"institutionType\":\"PRIVATE\",\"comment\":\"NA\","
+							+ "\"tasks\":\"NA\",\"vacants\":1"
+							+ "}")
+					.post(AP_URL +"/api/permanentOffer/create")
 					.then().log().body().statusCode(201).body("status", equalTo(201));
 			
 			// Consulta de ofertas
-			int idOffer = given().config(RestAssured.config().sslConfig(
+			ExtractableResponse<Response> offerExtract = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.header(new Header("Authorization", jwttokenOfferent))
 					.get(AP_URL +"/api/user/offers")
-					.then().log().body().statusCode(200).extract().path("data[0].id");
-			
-			Assert.assertNotEquals(0, idOffer);
+					.then().log().body().statusCode(200).extract();
+			int idOfferT = offerExtract.path("data[0].id");
+			String comment0 = offerExtract.path("data[0].comment");
+			Assert.assertNotEquals("TEMPORAL", comment0);
+			int idOfferP = offerExtract.path("data[1].id");
+			String comment1 = offerExtract.path("data[1].comment");
+			Assert.assertNotEquals("PERMAMENT", comment1);
 			
 			// registro un nuevo usuario
 			String mobilePhone1 = RandomStringUtils.randomNumeric(11);
@@ -146,10 +163,9 @@ public class TestRegisterLogin {
 					.body("{\"firstname\":\"marcos app\",\"lastname\":\"godoy app\","
 							+ "\"email\":\"m"+suffix+"@m.com\","
 							+ "\"deviceId\":\""+deviceId1+"\",\"mobilePhone\":\""+mobilePhone1+"\","
-							+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
 							+ "\"tacAccepted\":true"
 							+ "}")
-					.post(AP_URL +"/api/user/register")
+					.post(AP_URL +"/api/user/registerB")
 					.then().log().body().statusCode(201).body("status", equalTo(201))/*.
 					and().time(lessThan(100L))*/;
 			// Validacion 
@@ -206,40 +222,63 @@ public class TestRegisterLogin {
 			Assert.assertEquals("TEST", sponsor);
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DATE, 30);
-			Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), subscriptionExpirationDate);
+//			Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()), subscriptionExpirationDate);
 			
 			// Busco ofertas que matcheen mi perfil
 			int idMatchedOffer = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.header(new Header("Authorization", jwttokenApplicant))
-					.get(AP_URL +"/api/user/offers/matches")
+					.get(AP_URL +"/api/user/temporalOffers/matches")
 					.then().log().body().statusCode(200).extract().path("data[0].id");
-			Assert.assertNotEquals(0, idOffer);
+			Assert.assertNotEquals(0, idOfferT);
 			// aplico a la oferta
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\"}")
-			.post(AP_URL +"/api/user/offer/"+idOffer+"/apply")
+			.post(AP_URL +"/api/user/offer/"+idOfferT+"/apply")
 			.then().log().body().statusCode(201);
 			
-			createUserAndApplyToOffer(idFirstSpecialty, idLevel, idCaballito, idOffer);
+			// Busco ofertas permanentes que matcheen mi perfil
+			int idMatchedOfferP = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant))
+					.get(AP_URL +"/api/user/permanentOffers/matches")
+					.then().log().body().statusCode(200).extract().path("data[0].id");
+			// aplico a la oferta
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\"}")
+			.post(AP_URL +"/api/user/offer/"+idOfferP+"/apply")
+			.then().log().body().statusCode(201);
+			
+			createUserAndApplyToOffer(idFirstSpecialty, idLevel, idCaballito, idOfferT);
 			
 			// El oferente busca los aplicantes
 			ExtractableResponse<Response> applicationsExtract = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.header(new Header("Authorization", jwttokenOfferent))
-					.get(AP_URL +"/api/user/offer/"+idOffer+"/applications")
+					.get(AP_URL +"/api/user/offer/"+idOfferT+"/applications")
 					.then().log().body().statusCode(200).extract();
 			
 			int idApplication = applicationsExtract.path("data[0].id");
 			int idApplication1 = applicationsExtract.path("data[1].id");
+			
+			// El oferente busca los aplicantes de la oferta permanente
+			ExtractableResponse<Response> applicationsPExtract = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenOfferent))
+					.get(AP_URL +"/api/user/offer/"+idOfferP+"/applications")
+					.then().log().body().statusCode(200).extract();
+			
+			int idApplicationP = applicationsExtract.path("data[0].id");
+			Assert.assertNotEquals(0, idApplicationP);
 			
 			Assert.assertNotEquals(0, idApplication);
 			// El oferente ve un postulante
 			ExtractableResponse<Response> applicationExtract = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.header(new Header("Authorization", jwttokenOfferent))
-					.get(AP_URL +"/api/user/offer/"+idOffer+"/application/"+idApplication)
+					.get(AP_URL +"/api/user/offer/"+idOfferT+"/application/"+idApplication)
 					.then().log().body().statusCode(200).extract();
 			String firstname = applicationExtract.path("data.firstname");
 			String lastname = applicationExtract.path("data.lastname");
@@ -250,14 +289,14 @@ public class TestRegisterLogin {
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.header(new Header("Authorization", jwttokenOfferent))
-			.post(AP_URL +"/api/user/offer/"+idOffer+"/application/"+idApplication1+"/reject")
+			.post(AP_URL +"/api/user/offer/"+idOfferT+"/application/"+idApplication1+"/reject")
 			.then().log().body().statusCode(200);
 			
 			// El oferente acepta un postulante
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 					.header(new Header("Authorization", jwttokenOfferent))
-			.post(AP_URL +"/api/user/offer/"+idOffer+"/application/"+idApplication+"/accept")
+			.post(AP_URL +"/api/user/offer/"+idOfferT+"/application/"+idApplication+"/accept")
 			.then().log().body().statusCode(200);
 			
 			int idActivity = given().config(RestAssured.config().sslConfig(
@@ -377,10 +416,9 @@ public class TestRegisterLogin {
 							.body("{\"firstname\":\"marcos app\",\"lastname\":\"godoy app\","
 									+ "\"email\":\"m"+suffix+"@m.com\","
 									+ "\"deviceId\":\""+deviceId1+"\",\"mobilePhone\":\""+mobilePhone1+"\","
-									+ "\"linePhone\":\"2214513521\",\"birthdate\":\"19760813\","
 									+ "\"tacAccepted\":true"
 									+ "}")
-							.post(AP_URL +"/api/user/register")
+							.post(AP_URL +"/api/user/registerB")
 							.then().log().body().statusCode(201).body("status", equalTo(201))/*.
 							and().time(lessThan(100L))*/;
 					// Validacion 
@@ -411,7 +449,7 @@ public class TestRegisterLogin {
 					int idMatchedOffer = given().config(RestAssured.config().sslConfig(
 							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
 							.header(new Header("Authorization", jwttokenApplicant))
-							.get(AP_URL +"/api/user/offers/matches")
+							.get(AP_URL +"/api/user/temporalOffers/matches")
 							.then().log().body().statusCode(200).extract().path("data[0].id");
 					Assert.assertNotEquals(0, idOffer);
 					// aplico a la oferta

@@ -29,8 +29,7 @@ public class RegistrationRequestA extends ApiRequest {
 	@ValidInput
 	private String mobilePhone;
 	
-	@NotEmpty
-    @Length(min= 2, max=50)
+    @Length(min= 0, max=50)
 	@ValidInput
 	private String companyScreenName;
 	

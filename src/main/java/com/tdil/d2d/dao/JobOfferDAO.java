@@ -12,9 +12,10 @@ public interface JobOfferDAO {
 
 	public void save(JobOffer jobOffer) throws DAOException;
 
-	public List<JobOffer> getOffers(Long id) throws DAOException;
+	public List<JobOffer> getOpenOffers(Long id) throws DAOException;
+	public List<JobOffer> getClosedOffers(Long id) throws DAOException;
 
-	public Collection<JobOffer> getOffers(long specialtyId, long geoLevelId) throws DAOException;
+	public Collection<JobOffer> getOffers(long specialtyId, long geoLevelId, boolean permanent) throws DAOException;
 
 
 }

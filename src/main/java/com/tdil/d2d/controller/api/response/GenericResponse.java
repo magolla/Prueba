@@ -4,6 +4,10 @@ public class GenericResponse<T> extends ApiResponse {
 
 	private T data;
 	
+	public GenericResponse(int status) {
+		super(status);
+	}
+	
 	public GenericResponse(T data, int status) {
 		super(status);
 		setData(data);

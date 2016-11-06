@@ -10,11 +10,13 @@ import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
-import com.tdil.d2d.controller.api.request.CreateJobOfferRequest;
+import com.tdil.d2d.controller.api.request.CreatePermanentJobOfferRequest;
+import com.tdil.d2d.controller.api.request.CreateTemporaryJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
+import com.tdil.d2d.controller.api.request.SearchOfferRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -38,9 +40,11 @@ public interface UserService {
 
 	public boolean validateEmail(String email, String hash) throws ServiceException;
 
-	public boolean createJobOffer(CreateJobOfferRequest createOfferRequest) throws ServiceException;
+	public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest) throws ServiceException;
+	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException;
 
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException;
+	public List<JobOfferStatusDTO> getMyOffersClosed() throws ServiceException;
 
 	public List<ActivityLogDTO> getActivityLog() throws ServiceException;
 
@@ -50,7 +54,9 @@ public interface UserService {
 
 	public boolean addLocation(AddLocationRequest addLocationRequest) throws ServiceException;
 
-	public List<JobOfferStatusDTO> getMatchedOffers() throws ServiceException;
+	public List<JobOfferStatusDTO> getMatchedTemporalOffers() throws ServiceException;
+	public List<JobOfferStatusDTO> getMatchedPermamentOffers() throws ServiceException;
+	public List<JobOfferStatusDTO> getPermamentOffers(SearchOfferRequest searchOfferRequest) throws ServiceException;
 
 	public boolean apply(long offerId, ApplyToOfferRequest applyToOffer) throws ServiceException;
 
@@ -76,5 +82,6 @@ public interface UserService {
 	public User getLoggedUser() throws ServiceException;
 
 	public UserDetailsResponse me() throws ServiceException;
+
 
 }

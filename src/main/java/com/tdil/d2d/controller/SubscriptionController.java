@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,14 +22,17 @@ import com.tdil.d2d.utils.LoggerManager;
  *
  */
 @Controller
-public class SubscriptionController {
+public class SubscriptionController extends AbstractController {
     
     @Autowired
     private SubscriptionService subscriptionService;
     
     
     @RequestMapping(value = "/api/subscription/sponsor", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> useSponsorCode(@Valid @RequestBody UseSponsorCodeRequest useSponsorCodeRequest) {
+    public ResponseEntity<ApiResponse> useSponsorCode(@Valid @RequestBody UseSponsorCodeRequest useSponsorCodeRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
     	try {
 			boolean response = this.subscriptionService.useSponsorCode(useSponsorCodeRequest);
 			if (response) {

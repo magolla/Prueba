@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -84,6 +85,11 @@ public class User implements PersistentEntity {
 	
 	@Column(name = "companyScreenName", length=256)
 	private String companyScreenName;
+	
+	//Ver tamaño
+	@Column(name = "base64img")
+	@Lob()
+	private byte[] base64img;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "D2D_USER_SPECIALTY", joinColumns = {
@@ -293,6 +299,14 @@ public class User implements PersistentEntity {
 
 	public void setCompanyScreenName(String companyScreenName) {
 		this.companyScreenName = companyScreenName;
+	}
+
+	public byte[] getBase64img() {
+		return base64img;
+	}
+
+	public void setBase64img(byte[] base64img) {
+		this.base64img = base64img;
 	}
 
 }

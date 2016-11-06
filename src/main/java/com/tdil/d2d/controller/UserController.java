@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +43,7 @@ import com.tdil.d2d.utils.LoggerManager;
  *
  */
 @Controller
-public class UserController {
+public class UserController extends AbstractController {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
@@ -71,7 +72,24 @@ public class UserController {
     }
 
     @RequestMapping(value = "/api/user/registerA", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequestA registrationRequest) {
+    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequestA registrationRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<RegistrationResponse>(getErrorResponse(bidingResult, new RegistrationResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
+    	try {
+			RegistrationResponse response = this.userService.register(registrationRequest);
+			return new ResponseEntity<RegistrationResponse>(response, HttpStatus.CREATED);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<RegistrationResponse>((RegistrationResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+
+	@RequestMapping(value = "/api/user/registerB", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequestB registrationRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<RegistrationResponse>(getErrorResponse(bidingResult, new RegistrationResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
     	try {
 			RegistrationResponse response = this.userService.register(registrationRequest);
 			return new ResponseEntity<RegistrationResponse>(response, HttpStatus.CREATED);
@@ -81,19 +99,24 @@ public class UserController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/registerB", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequestB registrationRequest) {
-    	try {
-			RegistrationResponse response = this.userService.register(registrationRequest);
-			return new ResponseEntity<RegistrationResponse>(response, HttpStatus.CREATED);
-		} catch (ServiceException e) {
-			LoggerManager.error(this, e);
-			return new ResponseEntity<RegistrationResponse>((RegistrationResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-    }
+    // TODO 
+//    profesion (1) - especialidades cada ve que toca graba
+//    matricula grabado
+//    
+//    
+//    intereses labolarales especilidad + tarea combo
+//    tipo de institucion
+//    
+//    my perfil zonas
+//    
+//    mis matches resumen (antes de que los vean)
+    
     
     @RequestMapping(value = "/api/user/validate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> register(@Valid @RequestBody ValidationRequest validationRequest) {
+    public ResponseEntity<ApiResponse> register(@Valid @RequestBody ValidationRequest validationRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
     	try {
 			boolean result = this.userService.validate(validationRequest);
 			if (result) {
@@ -108,7 +131,10 @@ public class UserController {
     }
     
     @RequestMapping(value = "/api/user/androidRegId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> androidRegId(@Valid @RequestBody AndroidRegIdRequest androidRegIdRequest) {
+    public ResponseEntity<ApiResponse> androidRegId(@Valid @RequestBody AndroidRegIdRequest androidRegIdRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
     	try {
 			boolean response = this.userService.updateAndroidRegId(androidRegIdRequest);
 			return new ResponseEntity<ApiResponse>(new ApiResponse(response == true ? HttpStatus.OK.value() : HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.OK);
@@ -119,7 +145,10 @@ public class UserController {
     }
     
     @RequestMapping(value = "/api/user/iosPushId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> iosPushId(@Valid @RequestBody IOsPushIdRequest iOsPushIdRequest) {
+    public ResponseEntity<ApiResponse> iosPushId(@Valid @RequestBody IOsPushIdRequest iOsPushIdRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
     	try {
 			boolean response = this.userService.updateIOsPushId(iOsPushIdRequest);
 			return new ResponseEntity<ApiResponse>(new ApiResponse(response == true ? HttpStatus.OK.value() : HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.OK);
@@ -145,7 +174,10 @@ public class UserController {
     }
     
     @RequestMapping(value = "/api/user/specialty", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> addSpecialty(@Valid @RequestBody AddSpecialtyRequest addSpecialtyRequest) {
+    public ResponseEntity<ApiResponse> addSpecialty(@Valid @RequestBody AddSpecialtyRequest addSpecialtyRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
     	try {
 			boolean response = this.userService.addSpecialty(addSpecialtyRequest);
 			if (response) {
@@ -161,7 +193,10 @@ public class UserController {
     }
     
     @RequestMapping(value = "/api/user/location", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> addLocation(@Valid @RequestBody AddLocationRequest addLocationRequest) {
+    public ResponseEntity<ApiResponse> addLocation(@Valid @RequestBody AddLocationRequest addLocationRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
     	try {
 			boolean response = this.userService.addLocation(addLocationRequest);
 			if (response) {
@@ -188,7 +223,10 @@ public class UserController {
     }
     
     @RequestMapping(value = "/api/user/notifications", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> setNotication(@Valid @RequestBody ConfigureNotificationsRequest notificationConfiguration) {
+    public ResponseEntity<ApiResponse> setNotication(@Valid @RequestBody ConfigureNotificationsRequest notificationConfiguration, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
     	try {
     		boolean response = this.userService.setNotificationConfiguration(notificationConfiguration);
     		if (response) {
@@ -212,6 +250,19 @@ public class UserController {
 			return new ResponseEntity<GenericResponse<UserDetailsResponse>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
+    
+    // TODO
+//    terminos y condiciones
+//    
+//    /POST de upload de avatar
+//    
+//    /profile GET
+//    para pantalla mi perfil
+//    
+//    /profile POST
+//    para grabar datos de mi perfil
+//    
+    
     
     @RequestMapping(value = "/api/user/log", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<ActivityLogDTO>>> activityLog() {
