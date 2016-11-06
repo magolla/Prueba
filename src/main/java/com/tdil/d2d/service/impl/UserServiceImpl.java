@@ -1,5 +1,7 @@
 package com.tdil.d2d.service.impl;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -41,6 +43,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.SearchOfferRequest;
+import com.tdil.d2d.controller.api.request.SetAvatarRequest;
 import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
@@ -316,6 +319,29 @@ public class UserServiceImpl implements UserService {
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_LICENSE));
 			return true;
 		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			user.setBase64img(setAvatarRequest.getAvatarBase64().getBytes());
+			this.userDAO.save(user);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_LICENSE));
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public void getAvatar(OutputStream outputStream) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			outputStream.write(user.getBase64img());
+		} catch (IOException e) {
 			throw new ServiceException(e);
 		}
 	}

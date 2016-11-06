@@ -3,8 +3,14 @@ package com.tdil.d2d.test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.Calendar;
 
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
@@ -14,6 +20,7 @@ import io.restassured.config.SSLConfig;
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import sun.misc.BASE64Decoder;
 
 public class TestRegisterLogin {
 
@@ -266,6 +273,31 @@ public class TestRegisterLogin {
 					.header(new Header("Authorization", jwttokenApplicant)).body("{\"taskId\":"+idFirstTask+"}")
 			.post(AP_URL +"/api/user/profile/task/delete")
 			.then().log().body().statusCode(200);
+			
+			// Agrego el avatar
+			String avatar = IOUtils.toString(TestRegisterLogin.class.getResourceAsStream("avatar.txt"));
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"avatarBase64\":\""+avatar+"\"}")
+			.post(AP_URL +"/api/user/profile/avatar")
+			.then().log().body().statusCode(200);
+			// Obtengo el avatar
+			String resultAvatar = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation()))
+					.header(new Header("Authorization", jwttokenApplicant))
+					.get(AP_URL +"/api/user/profile/avatar").asString();
+			Assert.assertEquals(avatar, resultAvatar);
+			String test = resultAvatar.substring(resultAvatar.indexOf("base64,") + 7);
+			System.out.println("Avatar dest " + System.getProperty("java.io.tmpdir"));
+			
+			BASE64Decoder decoder = new BASE64Decoder();
+			byte[] imageByte = decoder.decodeBuffer(test);
+			ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+			BufferedImage image = ImageIO.read(bis);
+			bis.close();
+			// write the image to a file
+			File outputfile = new File(System.getProperty("java.io.tmpdir")+ "/avatar" + System.currentTimeMillis()+ ".png");
+			ImageIO.write(image, "png", outputfile);
 			
 			// Pido el perfil
 			ExtractableResponse<Response> profileExtract = given().config(RestAssured.config().sslConfig(

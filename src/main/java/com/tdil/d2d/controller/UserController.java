@@ -1,10 +1,12 @@
 package com.tdil.d2d.controller;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
+import com.tdil.d2d.controller.api.request.SetAvatarRequest;
 import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
@@ -276,7 +279,6 @@ public class UserController extends AbstractController {
 //    terminos y condiciones
 //    
 //    /POST de upload de avatar
-//    
     
     @RequestMapping(value = "/api/user/profile", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<ProfileResponseDTO>> getProfile() {
@@ -286,6 +288,33 @@ public class UserController extends AbstractController {
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<GenericResponse<ProfileResponseDTO>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/profile/avatar", method = RequestMethod.GET)
+    public void getAvatar(HttpServletResponse response) {
+    	try {
+    		this.userService.getAvatar(response.getOutputStream());
+		} catch (ServiceException | IOException e) {
+			LoggerManager.error(this, e);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/profile/avatar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> setAvatar(@Valid @RequestBody SetAvatarRequest setAvatarRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
+    	try {
+    		boolean response = this.userService.setAvatar(setAvatarRequest);
+    		if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
     

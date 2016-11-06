@@ -1,5 +1,6 @@
 package com.tdil.d2d.service;
 
+import java.io.OutputStream;
 import java.util.List;
 
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
@@ -20,6 +21,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.SearchOfferRequest;
+import com.tdil.d2d.controller.api.request.SetAvatarRequest;
 import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
@@ -96,6 +98,8 @@ public interface UserService {
 	public boolean setInstitutionType(SetInstitutionTypeRequest institutionTypeRequest) throws ServiceException;
 	public boolean addTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException;
 	public boolean removeTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException;
+	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException;
+	public void getAvatar(OutputStream outputStream) throws ServiceException;
 
 
 }
