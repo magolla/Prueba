@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -295,6 +296,15 @@ public class UserController extends AbstractController {
     public void getAvatar(HttpServletResponse response) {
     	try {
     		this.userService.getAvatar(response.getOutputStream());
+		} catch (ServiceException | IOException e) {
+			LoggerManager.error(this, e);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/{userId}/profile/avatar", method = RequestMethod.GET)
+    public void getOtherUserAvatar(@PathVariable long userId, HttpServletResponse response) {
+    	try {
+    		this.userService.getAvatar(userId, response.getOutputStream());
 		} catch (ServiceException | IOException e) {
 			LoggerManager.error(this, e);
 		}

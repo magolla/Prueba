@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.servlet.ServletOutputStream;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -342,6 +343,16 @@ public class UserServiceImpl implements UserService {
 			User user = getLoggedUser();
 			outputStream.write(user.getBase64img());
 		} catch (IOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public void getAvatar(long userId, ServletOutputStream outputStream) throws ServiceException {
+		try {
+			User user = this.userDAO.getById(User.class, userId);
+			outputStream.write(user.getBase64img());
+		} catch (DAOException | IOException e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -871,6 +882,7 @@ public class UserServiceImpl implements UserService {
 	private JobApplicationDTO toDTO(JobApplication s) {
 		JobApplicationDTO result = new JobApplicationDTO();
 		result.setId(s.getId());
+		result.setUserId(s.getUser().getId());
 		result.setFirstname(s.getUser().getFirstname());
 		result.setLastname(s.getUser().getLastname());
 		return result;

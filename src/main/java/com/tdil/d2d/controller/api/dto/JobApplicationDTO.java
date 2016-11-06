@@ -4,7 +4,7 @@ public class JobApplicationDTO {
 
 	private long id;
 	private String creationDate;
-	
+	private long userId;
 	private String firstname;
 	private String lastname;
 	
@@ -31,6 +31,12 @@ public class JobApplicationDTO {
 	}
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+	public long getUserId() {
+		return userId;
+	}
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 	
 }

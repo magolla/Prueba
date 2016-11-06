@@ -3,6 +3,8 @@ package com.tdil.d2d.service;
 import java.io.OutputStream;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
+
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
@@ -100,6 +102,7 @@ public interface UserService {
 	public boolean removeTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException;
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException;
 	public void getAvatar(OutputStream outputStream) throws ServiceException;
+	public void getAvatar(long userId, ServletOutputStream outputStream) throws ServiceException;
 
 
 }
