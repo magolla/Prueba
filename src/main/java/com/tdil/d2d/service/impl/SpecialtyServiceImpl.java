@@ -55,19 +55,19 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 		}
 	}
 
-	private Collection<OccupationDTO> toDtoOccupation(Collection<Occupation> list) {
+	private static Collection<OccupationDTO> toDtoOccupation(Collection<Occupation> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
 	}
 	
-	private Collection<SpecialtyDTO> toDtoSpecialty(List<Specialty> list) {
+	private static Collection<SpecialtyDTO> toDtoSpecialty(Collection<Specialty> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
 	}
 	
-	private Collection<TaskDTO> toDtoTask(List<Task> list) {
+	protected static Collection<TaskDTO> toDtoTask(Collection<Task> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
 	}
 
-	private OccupationDTO toDto(Occupation s) {
+	private static OccupationDTO toDto(Occupation s) {
 		OccupationDTO result = new OccupationDTO();
 		result.setId(s.getId());
 		// TODO setear el path hasta el 2
@@ -75,7 +75,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 		return result;
 	}
 	
-	private SpecialtyDTO toDto(Specialty s) {
+	private static SpecialtyDTO toDto(Specialty s) {
 		SpecialtyDTO result = new SpecialtyDTO();
 		result.setId(s.getId());
 		// TODO setear el path hasta el 2
@@ -83,7 +83,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 		return result;
 	}
 	
-	private TaskDTO toDto(Task s) {
+	private static TaskDTO toDto(Task s) {
 		TaskDTO result = new TaskDTO();
 		result.setId(s.getId());
 		result.setName(s.getName());

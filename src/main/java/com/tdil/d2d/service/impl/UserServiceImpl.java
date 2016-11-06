@@ -27,8 +27,10 @@ import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
+import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
+import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
@@ -39,6 +41,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.SearchOfferRequest;
+import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
@@ -66,6 +69,7 @@ import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
+import com.tdil.d2d.persistence.UserProfile;
 import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.CryptographicService;
 import com.tdil.d2d.service.EmailService;
@@ -314,6 +318,86 @@ public class UserServiceImpl implements UserService {
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
+	}
+	
+	@Override
+	public boolean setInstitutionType(SetInstitutionTypeRequest institutionTypeRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			UserProfile userProfile = this.userDAO.getUserProfile(user);
+			if (userProfile == null) {
+				userProfile = new UserProfile();
+				userProfile.setUser(user);
+			}
+			userProfile.setInstitutionType(institutionTypeRequest.getInstitutionType());
+			this.userDAO.save(userProfile);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.CHANGE_INSTITUTION_TYPE));
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean addTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			UserProfile userProfile = this.userDAO.getUserProfile(user);
+			if (userProfile == null) {
+				userProfile = new UserProfile();
+				userProfile.setUser(user);
+			}
+			Task task = this.specialtyDAO.getTaskById(taskToProfileRequest.getTaskId());
+			userProfile.getTasks().add(task);
+			this.userDAO.save(userProfile);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_TASK_TO_PROFILE));
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean removeTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			UserProfile userProfile = this.userDAO.getUserProfile(user);
+			if (userProfile == null) {
+				userProfile = new UserProfile();
+				userProfile.setUser(user);
+			}
+			Task toRemove = null;
+			for (Task task2 : userProfile.getTasks()) {
+				if (task2.getId() == taskToProfileRequest.getTaskId()) {
+					toRemove = task2;
+				}
+			}
+			if (toRemove != null) {
+				userProfile.getTasks().remove(toRemove);
+				this.userDAO.save(userProfile);
+				activityLogDAO.save(new ActivityLog(user, ActivityAction.REMOVE_TASK_FROM_PROFILE));
+			}
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public ProfileResponseDTO profile() throws ServiceException {
+		ProfileResponseDTO result = new ProfileResponseDTO();
+		try {
+			User user = getLoggedUser();
+			result.setLicense(user.getLicense());
+			UserProfile userProfile = this.userDAO.getUserProfile(user);
+			if (userProfile != null) {
+				result.setInstitutionType(userProfile.getInstitutionType());
+				result.setTasks(SpecialtyServiceImpl.toDtoTask(userProfile.getTasks()));
+			}
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		return result;
 	}
 		
 	@Override

@@ -17,6 +17,7 @@ import io.restassured.response.Response;
 
 public class TestRegisterLogin {
 
+	private static final String LICENSE = "1212121221";
 	private static final String AP_URL = "https://localhost:8443/d2d";
 //	private static final String AP_URL = "http://localhost:8080/d2d";
 
@@ -100,6 +101,12 @@ public class TestRegisterLogin {
 					//.header(new Header("Authorization", jwttoken))
 					.get(AP_URL +"/api/specialties/specialty/"+idFirstSpecialty+"/tasks")
 					.then().log().body().statusCode(200).extract().path("data[0].id");
+			
+			int idSecondTask = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					//.header(new Header("Authorization", jwttoken))
+					.get(AP_URL +"/api/specialties/specialty/"+idFirstSpecialty+"/tasks")
+					.then().log().body().statusCode(200).extract().path("data[1].id");
 			
 			ExtractableResponse<Response> extract = given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
@@ -197,7 +204,7 @@ public class TestRegisterLogin {
 			// Seteo Licencia
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttokenApplicant)).body("{\"license\":\"1212121221\"}")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"license\":\""+LICENSE+"\"}")
 			.post(AP_URL +"/api/user/license")
 			.then().log().body().statusCode(200);
 			
@@ -231,6 +238,47 @@ public class TestRegisterLogin {
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DATE, 30);
 //			Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()), subscriptionExpirationDate);
+			
+			// Perfil
+			// Seteo el tipo de institucion
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"institutionType\":\"BOTH\"}")
+			.post(AP_URL +"/api/user/profile/institutionType")
+			.then().log().body().statusCode(200);
+			
+			// Agrego una tarea al perfil
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"taskId\":"+idFirstTask+"}")
+			.post(AP_URL +"/api/user/profile/task")
+			.then().log().body().statusCode(200);
+			
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"taskId\":"+idSecondTask+"}")
+			.post(AP_URL +"/api/user/profile/task")
+			.then().log().body().statusCode(200);
+			
+			// Quito la primera
+			given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"taskId\":"+idFirstTask+"}")
+			.post(AP_URL +"/api/user/profile/task/delete")
+			.then().log().body().statusCode(200);
+			
+			// Pido el perfil
+			ExtractableResponse<Response> profileExtract = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
+					.header(new Header("Authorization", jwttokenApplicant))
+					.get(AP_URL +"/api/user/profile")
+					.then().log().body().statusCode(200).extract();
+			String license = profileExtract.path("data.license");
+			String inst = profileExtract.path("data.institutionType");
+			int taskId = profileExtract.path("data.tasks[0].id");
+			Assert.assertEquals(LICENSE, license);
+			Assert.assertEquals("BOTH", inst);
+			Assert.assertEquals(idSecondTask, taskId);
 			
 			// Busco el resumen de ofertas
 			ExtractableResponse<Response> sumamryExtract = given().config(RestAssured.config().sslConfig(
@@ -420,7 +468,7 @@ public class TestRegisterLogin {
 			//System.out.println(response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			// TODO: handle exception
+			Assert.fail(e.getMessage());
 		}
 	}
 

@@ -6,8 +6,10 @@ import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
+import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
+import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
@@ -18,6 +20,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.SearchOfferRequest;
+import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
@@ -86,6 +89,13 @@ public interface UserService {
 
 	public UserDetailsResponse me() throws ServiceException;
 
-	public boolean setLicense(SetLicenseRequest setLicenseRequest) throws ServiceException;
+	// Profile
+	public ProfileResponseDTO profile() throws ServiceException;
+	
+	public boolean setLicense(SetLicenseRequest setLicenseRequest) throws ServiceException;	
+	public boolean setInstitutionType(SetInstitutionTypeRequest institutionTypeRequest) throws ServiceException;
+	public boolean addTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException;
+	public boolean removeTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException;
+
 
 }

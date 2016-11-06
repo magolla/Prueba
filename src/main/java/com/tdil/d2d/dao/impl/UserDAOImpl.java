@@ -9,11 +9,13 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.User;
+import com.tdil.d2d.persistence.UserProfile;
 
 @Repository
 public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
@@ -84,4 +86,32 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 		}
 	}
 	
+	@Override
+	public UserProfile getUserProfile(User user) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(UserProfile.class);
+			criteria.add(Restrictions.eq("user.id", user.getId()));
+			List<UserProfile> list = criteria.list();
+			if (CollectionUtils.isEmpty(list)) {
+				return null;
+			} else {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
+	public void save(UserProfile userProfile) throws DAOException {
+		String invocationDetails= "save("+userProfile.getClass().getName()+") ";
+		try {
+			this.getHibernateTemplate().save(userProfile);
+			this.getHibernateTemplate().flush();
+		} catch (DataIntegrityViolationException e) {
+			this.handleException(invocationDetails, e);
+		} catch (Exception e) {
+			this.handleException(invocationDetails, e);
+		}
+	}
 }
