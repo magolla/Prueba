@@ -67,6 +67,7 @@ public interface UserService {
 	public List<JobOfferStatusDTO> getMatchedTemporalOffers() throws ServiceException;
 	public List<JobOfferStatusDTO> getMatchedPermamentOffers() throws ServiceException;
 	public List<JobOfferStatusDTO> getPermamentOffers(SearchOfferRequest searchOfferRequest) throws ServiceException;
+	public void offerApplicationCV(long offerId, long applicationId, ServletOutputStream outputStream) throws ServiceException;
 
 	public boolean apply(long offerId, ApplyToOfferRequest applyToOffer) throws ServiceException;
 
@@ -103,6 +104,7 @@ public interface UserService {
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException;
 	public void getAvatar(OutputStream outputStream) throws ServiceException;
 	public void getAvatar(long userId, ServletOutputStream outputStream) throws ServiceException;
+
 
 
 }

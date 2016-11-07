@@ -1,7 +1,9 @@
 package com.tdil.d2d.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -192,7 +194,15 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    // bajar pdf de candidato
+    @RequestMapping(value = "/api/user/offer/{offerId}/application/{applicationId}/cv", method = RequestMethod.GET)
+    public void offerApplicationCV(@PathVariable long offerId, @PathVariable long applicationId, HttpServletResponse response) {
+    	try {
+    		this.userService.offerApplicationCV(offerId, applicationId, response.getOutputStream());
+		} catch (ServiceException | IOException e) {
+			LoggerManager.error(this, e);
+		}
+    }
+    
     
     @RequestMapping(value = "/api/user/offer/{offerId}/application/{applicationId}/accept", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> acceptOfferApplication(@PathVariable long offerId, @PathVariable long applicationId) {

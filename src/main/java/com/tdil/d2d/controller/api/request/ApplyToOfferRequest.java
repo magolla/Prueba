@@ -14,7 +14,8 @@ public class ApplyToOfferRequest extends ApiRequest {
 	@ValidInput
 	private String cvPlain;
     
-    private byte[] cvPdf;
+    // Codificado en base64
+    private String cvPdf;
     
     private String linkedInCV;
 
@@ -26,11 +27,11 @@ public class ApplyToOfferRequest extends ApiRequest {
 		this.comment = comment;
 	}
 
-	public byte[] getCvPdf() {
+	public String getCvPdf() {
 		return cvPdf;
 	}
 
-	public void setCvPdf(byte[] cvPdf) {
+	public void setCvPdf(String cvPdf) {
 		this.cvPdf = cvPdf;
 	}
 

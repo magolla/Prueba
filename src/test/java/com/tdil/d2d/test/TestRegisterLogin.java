@@ -6,10 +6,12 @@ import static org.hamcrest.Matchers.equalTo;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.BasicConfigurator;
@@ -331,9 +333,12 @@ public class TestRegisterLogin {
 					.then().log().body().statusCode(200).extract().path("data[0].id");
 			Assert.assertNotEquals(0, idOfferT);
 			// aplico a la oferta
+			byte cv[] = IOUtils.toByteArray(TestRegisterLogin.class.getResourceAsStream("cv.pdf"));
+			String encodeBase64CV = Base64.encodeBase64String(cv);
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\"}")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\","
+							+ "\"cvPdf\":\""+encodeBase64CV+"\"}")
 			.post(AP_URL +"/api/user/offer/"+idOfferT+"/apply")
 			.then().log().body().statusCode(201);
 			
@@ -346,11 +351,12 @@ public class TestRegisterLogin {
 			// aplico a la oferta
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\"}")
+					.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\","
+							+ "\"cvPdf\":\""+encodeBase64CV+"\"}")
 			.post(AP_URL +"/api/user/offer/"+idOfferP+"/apply")
 			.then().log().body().statusCode(201);
 			
-			createUserAndApplyToOffer(idFirstSpecialty, idLevel, idCaballito, idOfferT);
+			createUserAndApplyToOffer(idFirstSpecialty, idLevel, idCaballito, idOfferT, encodeBase64CV);
 			
 			// El oferente busca los aplicantes
 			ExtractableResponse<Response> applicationsExtract = given().config(RestAssured.config().sslConfig(
@@ -383,6 +389,19 @@ public class TestRegisterLogin {
 			String lastname = applicationExtract.path("data.lastname");
 			Assert.assertEquals("marcos app", firstname);
 			Assert.assertEquals("godoy app", lastname);
+			
+			// El oferente se baja el pdf de un postulante
+			byte cvDownload[] = given().config(RestAssured.config().sslConfig(
+					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation()))
+					.header(new Header("Authorization", jwttokenApplicant))
+					.get(AP_URL +"/api/user/offer/" +idOfferT+ "/application/"+idApplication+"/cv").asByteArray();
+			System.out.println("CV dest " + System.getProperty("java.io.tmpdir"));
+			
+			bis.close();
+			// write the image to a file
+			File outputfileCV = new File(System.getProperty("java.io.tmpdir")+ "/cv" + System.currentTimeMillis()+ ".pdf");
+			IOUtils.write(cvDownload, new FileOutputStream(outputfileCV));
+			
 			
 			// El oferente rechaza un postulante
 			given().config(RestAssured.config().sslConfig(
@@ -504,7 +523,7 @@ public class TestRegisterLogin {
 		}
 	}
 
-	private void createUserAndApplyToOffer(int idFirstSpecialty, int idLevel, int idCaballito, int idOffer) {
+	private void createUserAndApplyToOffer(int idFirstSpecialty, int idLevel, int idCaballito, int idOffer, String cv) {
 		String mobilePhone1 = RandomStringUtils.randomNumeric(11);
 		String deviceId1 = RandomStringUtils.randomAlphabetic(20);
 		// registro un nuevo usuario
@@ -554,7 +573,8 @@ public class TestRegisterLogin {
 					// aplico a la oferta
 					given().config(RestAssured.config().sslConfig(
 							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-							.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\"}")
+							.header(new Header("Authorization", jwttokenApplicant)).body("{\"comment\":\"comentario\",\"cvPlain\":\"Soy un groso\","
+									+ "\"cvPdf\":\""+cv+"\"}")
 					.post(AP_URL +"/api/user/offer/"+idOffer+"/apply")
 					.then().log().body().statusCode(201);
 					

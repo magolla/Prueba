@@ -17,6 +17,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.servlet.ServletOutputStream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -560,7 +561,7 @@ public class UserServiceImpl implements UserService {
 			
 			JobApplication jobApplication = new JobApplication();
 			jobApplication.setComment(applyToOffer.getComment());
-			jobApplication.setCvAttach(applyToOffer.getCvPdf());
+			jobApplication.setCvAttach(Base64.decodeBase64(applyToOffer.getCvPdf()));
 			jobApplication.setCvPlain(applyToOffer.getCvPlain());
 			jobApplication.setLinkedInCv(applyToOffer.getLinkedInCV());
 			jobApplication.setOffer(jobOffer);
@@ -569,6 +570,17 @@ public class UserServiceImpl implements UserService {
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.APPLY_TO_OFFER));
 			return true;
 		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public void offerApplicationCV(long offerId, long applicationId, ServletOutputStream outputStream)
+			throws ServiceException {
+		try {
+			JobApplication application = this.jobApplicationDAO.getById(JobApplication.class, applicationId);
+			outputStream.write(application.getCvAttach());
+		} catch (DAOException | IOException e) {
 			throw new ServiceException(e);
 		}
 	}
