@@ -22,7 +22,6 @@ import io.restassured.config.SSLConfig;
 import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import sun.misc.BASE64Decoder;
 
 public class TestRegisterLogin {
 
@@ -292,8 +291,7 @@ public class TestRegisterLogin {
 			String test = resultAvatar.substring(resultAvatar.indexOf("base64,") + 7);
 			System.out.println("Avatar dest " + System.getProperty("java.io.tmpdir"));
 			
-			BASE64Decoder decoder = new BASE64Decoder();
-			byte[] imageByte = decoder.decodeBuffer(test);
+			byte[] imageByte = Base64.decodeBase64(test);
 			ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
 			BufferedImage image = ImageIO.read(bis);
 			bis.close();
