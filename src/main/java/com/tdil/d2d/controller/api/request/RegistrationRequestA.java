@@ -34,7 +34,7 @@ public class RegistrationRequestA extends ApiRequest {
 	private String companyScreenName;
 	
 	@NotEmpty
-    @Length(min= 6, max = 20)
+    @Length(min= 6, max = 50)
 	@ValidInput
 	private String deviceId;
 	
