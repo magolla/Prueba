@@ -6,6 +6,7 @@ Bajarse Tomcat7, descomprimirlo en algun directorio.
 
 Bajarse el eclipse Neon
 Agregarle el plugin specialclientstools.appspot.com/wtf_update_site/
+Setearle al plugin que use tomcat 7
 Reiniciar el eclipse
 Agregar al eclipse la variable de 
 Java >> Build Path >> Classpath variables
