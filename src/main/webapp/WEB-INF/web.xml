@@ -69,6 +69,18 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
+	
+	
+	<filter>
+		<filter-name>ReqRespDumpFilter</filter-name>
+		<filter-class>com.tdil.d2d.web.ReqRespDumpFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ReqRespDumpFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+	
+	
 
 	<!--welcome-file-list>
 		<welcome-file>WEB-INF/views/index.jsp</welcome-file>
