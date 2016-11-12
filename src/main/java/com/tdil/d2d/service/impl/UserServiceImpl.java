@@ -354,7 +354,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Base64DTO getAvatarBase64() throws ServiceException {
 		User user = getLoggedUser();
-		return new Base64DTO(new String(user.getBase64img()));
+		if (user.getBase64img() != null) {
+			return new Base64DTO(new String(user.getBase64img()));
+		} else {
+			return new Base64DTO();
+		}
 	}
 	
 	@Override
@@ -371,7 +375,11 @@ public class UserServiceImpl implements UserService {
 	public Base64DTO getAvatarBase64(long userId) throws ServiceException {
 		try {
 			User user = this.userDAO.getById(User.class, userId);
-			return new Base64DTO(new String(user.getBase64img()));
+			if (user.getBase64img() != null) {
+				return new Base64DTO(new String(user.getBase64img()));
+			} else {
+				return new Base64DTO();
+			}
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
@@ -976,7 +984,9 @@ public class UserServiceImpl implements UserService {
 		resp.setMobileNumber(user.getMobilePhone());
 		resp.setEmail(user.getEmail());
 		resp.setCompanyScreenName(user.getCompanyScreenName());
-		resp.setBase64img(new String(user.getBase64img()));
+		if (user.getBase64img() != null) {
+			resp.setBase64img(new String(user.getBase64img()));
+		}
 		resp.setUserb(user.isUserb());
 		if (resp != null) {
 			Subscription subscription = subscriptionService.getActiveSubscription(user.getId());

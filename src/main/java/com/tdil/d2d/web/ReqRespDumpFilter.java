@@ -33,6 +33,7 @@ import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.tdil.d2d.utils.LoggerManager;
 import com.tdil.d2d.utils.ServiceLocator;
 
 public class ReqRespDumpFilter implements Filter {
@@ -46,11 +47,11 @@ public class ReqRespDumpFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		if (ServiceLocator.isProd()) {
+		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		if (ServiceLocator.isProd() || httpServletRequest.getRequestURL().toString().contains("auth")) {
 			chain.doFilter(request, response);
 		} else {
 			try {
-				HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 				HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
 				Map<String, String> requestMap = this.getTypesafeRequestMap(httpServletRequest);
@@ -66,9 +67,10 @@ public class ReqRespDumpFilter implements Filter {
 
 				chain.doFilter(bufferedReqest, bufferedResponse);
 				logMessage.append(" \n[RESPONSE STATUS: ").append(bufferedResponse.getStatus()).append("] \n[RESPONSE BODY:").append(bufferedResponse.getContent()).append("]");
-				logger.warn(logMessage);
+//				logger.warn(logMessage);
+				LoggerManager.warn(this, logMessage.toString());
 			} catch (Throwable a) {
-				logger.error(a);
+				LoggerManager.error(this, a);
 			}
 		}
 	}
