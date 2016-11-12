@@ -13,7 +13,7 @@ public class ValidationRequest extends ApiRequest {
 	private String mobilePhone;
 	
 	@NotEmpty
-    @Length(min= 6, max = 20)
+    @Length(min= 6, max = 50)
 	@ValidInput
 	private String deviceId;
 	

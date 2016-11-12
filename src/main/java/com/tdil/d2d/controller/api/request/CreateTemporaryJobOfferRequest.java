@@ -29,7 +29,7 @@ public class CreateTemporaryJobOfferRequest extends ApiRequest {
 	// Imagen del aviso
 	private String base64Image;
 	
-	@Min(value = 2)
+	@Min(value = 1)
 	@Max(value = 4)
 	private int geoLevelLevel;
 	
