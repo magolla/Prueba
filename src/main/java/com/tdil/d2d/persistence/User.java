@@ -86,6 +86,9 @@ public class User implements PersistentEntity {
 	@Column(name = "companyScreenName", length=256)
 	private String companyScreenName;
 	
+	@Column(name = "companyScreenName", length=2000)
+	private String companyScreenDescription;
+	
 	@Column(name = "license", length=256)
 	private String license;
 	
@@ -318,6 +321,14 @@ public class User implements PersistentEntity {
 
 	public void setLicense(String license) {
 		this.license = license;
+	}
+
+	public String getCompanyScreenDescription() {
+		return companyScreenDescription;
+	}
+
+	public void setCompanyScreenDescription(String companyScreenDescription) {
+		this.companyScreenDescription = companyScreenDescription;
 	}
 
 }

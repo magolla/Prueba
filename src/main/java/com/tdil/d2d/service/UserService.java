@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
+import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
@@ -26,6 +27,8 @@ import com.tdil.d2d.controller.api.request.SearchOfferRequest;
 import com.tdil.d2d.controller.api.request.SetAvatarRequest;
 import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
+import com.tdil.d2d.controller.api.request.SetProfileARequest;
+import com.tdil.d2d.controller.api.request.SetProfileBRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -104,6 +107,12 @@ public interface UserService {
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException;
 	public void getAvatar(OutputStream outputStream) throws ServiceException;
 	public void getAvatar(long userId, ServletOutputStream outputStream) throws ServiceException;
+	public Base64DTO getAvatarBase64() throws ServiceException;
+	public Base64DTO getAvatarBase64(long userId) throws ServiceException;
+
+	public void setProfileA(SetProfileARequest setProfileARequest) throws ServiceException;
+
+	public void setProfileB(SetProfileBRequest setProfileBRequest) throws ServiceException;
 
 
 

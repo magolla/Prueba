@@ -5,6 +5,10 @@ public class UserDetailsResponse extends ApiResponse {
 	private String firstname;
 	private String lastname;
 	private String sponsorName;
+	private String email;
+	private String mobileNumber;
+	private String companyScreenName;
+	private String base64img;
 	private boolean userb;
 	private boolean hasSubscription;
 	private String subscriptionExpirationDate;
@@ -59,6 +63,38 @@ public class UserDetailsResponse extends ApiResponse {
 
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public String getCompanyScreenName() {
+		return companyScreenName;
+	}
+
+	public void setCompanyScreenName(String companyScreenName) {
+		this.companyScreenName = companyScreenName;
+	}
+
+	public String getBase64img() {
+		return base64img;
+	}
+
+	public void setBase64img(String base64img) {
+		this.base64img = base64img;
 	}
 	
 	

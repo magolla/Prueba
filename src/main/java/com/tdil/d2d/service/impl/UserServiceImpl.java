@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
+import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
@@ -48,6 +49,8 @@ import com.tdil.d2d.controller.api.request.SearchOfferRequest;
 import com.tdil.d2d.controller.api.request.SetAvatarRequest;
 import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
+import com.tdil.d2d.controller.api.request.SetProfileARequest;
+import com.tdil.d2d.controller.api.request.SetProfileBRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -349,11 +352,27 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	public Base64DTO getAvatarBase64() throws ServiceException {
+		User user = getLoggedUser();
+		return new Base64DTO(new String(user.getBase64img()));
+	}
+	
+	@Override
 	public void getAvatar(long userId, ServletOutputStream outputStream) throws ServiceException {
 		try {
 			User user = this.userDAO.getById(User.class, userId);
 			outputStream.write(user.getBase64img());
 		} catch (DAOException | IOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public Base64DTO getAvatarBase64(long userId) throws ServiceException {
+		try {
+			User user = this.userDAO.getById(User.class, userId);
+			return new Base64DTO(new String(user.getBase64img()));
+		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -416,6 +435,35 @@ public class UserServiceImpl implements UserService {
 				activityLogDAO.save(new ActivityLog(user, ActivityAction.REMOVE_TASK_FROM_PROFILE));
 			}
 			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public void setProfileA(SetProfileARequest setProfileARequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			user.setFirstname(setProfileARequest.getFirstname());
+			user.setLastname(setProfileARequest.getLastname());
+			user.setEmail(setProfileARequest.getEmail());
+			user.setCompanyScreenName(setProfileARequest.getCompanyScreenName());
+			user.setCompanyScreenDescription(setProfileARequest.getCompanyScreenDescription());
+			this.userDAO.save(user);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public void setProfileB(SetProfileBRequest setProfileBRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			user.setFirstname(setProfileBRequest.getFirstname());
+			user.setLastname(setProfileBRequest.getLastname());
+			user.setEmail(setProfileBRequest.getEmail());
+			user.setUserb(true);
+			this.userDAO.save(user);
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
@@ -925,6 +973,10 @@ public class UserServiceImpl implements UserService {
 		UserDetailsResponse resp = new UserDetailsResponse(HttpStatus.OK.value());
 		resp.setFirstname(user.getFirstname());
 		resp.setLastname(user.getLastname());
+		resp.setMobileNumber(user.getMobilePhone());
+		resp.setEmail(user.getEmail());
+		resp.setCompanyScreenName(user.getCompanyScreenName());
+		resp.setBase64img(new String(user.getBase64img()));
 		resp.setUserb(user.isUserb());
 		if (resp != null) {
 			Subscription subscription = subscriptionService.getActiveSubscription(user.getId());

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
+import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
@@ -37,6 +38,8 @@ import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.SetAvatarRequest;
 import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
+import com.tdil.d2d.controller.api.request.SetProfileARequest;
+import com.tdil.d2d.controller.api.request.SetProfileBRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
@@ -292,6 +295,28 @@ public class UserController extends AbstractController {
 		}
     }
     
+    @RequestMapping(value = "/api/user/profileA", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> setProfileA(@Valid @RequestBody SetProfileARequest setProfileARequest, BindingResult bidingResult) {
+    	try {
+    		this.userService.setProfileA(setProfileARequest);
+    		return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/profileB", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> setProfileB(@Valid @RequestBody SetProfileBRequest setProfileBRequest, BindingResult bidingResult) {
+    	try {
+    		this.userService.setProfileB(setProfileBRequest);
+    		return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
     @RequestMapping(value = "/api/user/profile/avatar", method = RequestMethod.GET)
     public void getAvatar(HttpServletResponse response) {
     	try {
@@ -301,12 +326,34 @@ public class UserController extends AbstractController {
 		}
     }
     
+    @RequestMapping(value = "/api/user/profile/avatarBase64", method = RequestMethod.GET)
+    public ResponseEntity<GenericResponse<Base64DTO>> getAvatarBase64() {
+    	try {
+    		Base64DTO me = this.userService.getAvatarBase64();
+			return new ResponseEntity<GenericResponse<Base64DTO>>(new GenericResponse<Base64DTO>(me,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<Base64DTO>>(new GenericResponse<Base64DTO>(null,HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
     @RequestMapping(value = "/api/user/{userId}/profile/avatar", method = RequestMethod.GET)
     public void getOtherUserAvatar(@PathVariable long userId, HttpServletResponse response) {
     	try {
     		this.userService.getAvatar(userId, response.getOutputStream());
 		} catch (ServiceException | IOException e) {
 			LoggerManager.error(this, e);
+		}
+    }
+    
+    @RequestMapping(value = "/api/user/{userId}/profile/avatarBase64", method = RequestMethod.GET)
+    public ResponseEntity<GenericResponse<Base64DTO>> getOtherUserAvatar(@PathVariable long userId) {
+    	try {
+    		Base64DTO me = this.userService.getAvatarBase64(userId);
+			return new ResponseEntity<GenericResponse<Base64DTO>>(new GenericResponse<Base64DTO>(me,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<Base64DTO>>(new GenericResponse<Base64DTO>(null,HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
     
