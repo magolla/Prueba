@@ -86,7 +86,7 @@ public class User implements PersistentEntity {
 	@Column(name = "companyScreenName", length=256)
 	private String companyScreenName;
 	
-	@Column(name = "companyScreenName", length=2000)
+	@Column(name = "companyScreenDescription", length=2000)
 	private String companyScreenDescription;
 	
 	@Column(name = "license", length=256)
