@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div>
-		<b>ADAPTER WORKS FINE!</b>
+		<b>DOC TO DOC IS WORKING FINE!</b>
 	</div>
 </body>
 </html>
