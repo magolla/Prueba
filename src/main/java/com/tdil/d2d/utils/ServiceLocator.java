@@ -16,6 +16,7 @@ public class ServiceLocator {
     public static final String IC = "ic";
     public static final String RC = "rc";
     public static final String LH = "localhost";
+    public static final String DEV = "dev";
     
     private static ApplicationContext context;
     
@@ -51,7 +52,7 @@ public class ServiceLocator {
     	return context.getEnvironment().acceptsProfiles(PROD);
     }
     public static boolean isLocalhost(){
-    	return context.getEnvironment().acceptsProfiles(LH);
+    	return context.getEnvironment().acceptsProfiles(LH) || context.getEnvironment().acceptsProfiles(DEV);
     }
     public static boolean isIC(){
     	return context.getEnvironment().acceptsProfiles(IC);
