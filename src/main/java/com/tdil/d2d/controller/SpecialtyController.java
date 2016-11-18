@@ -28,7 +28,7 @@ public class SpecialtyController {
     @Autowired
     private SpecialtyService service;
 
-    @RequestMapping(value = "/api/specialties/occupations", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/specialties/occupations", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<Collection<OccupationDTO>>> listOccupations() {
     	try {
 			Collection<OccupationDTO> levels = this.service.listOccupations();
@@ -39,7 +39,7 @@ public class SpecialtyController {
 		}
     }
     
-    @RequestMapping(value = "/api/specialties/occupation/{occupationId}/specialties", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/specialties/occupation/{occupationId}/specialties", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<Collection<SpecialtyDTO>>> listSpecialties(@PathVariable long occupationId) {
     	try {
 			Collection<SpecialtyDTO> levels = this.service.listSpecialties(occupationId);
@@ -50,7 +50,7 @@ public class SpecialtyController {
 		}
     }
     
-    @RequestMapping(value = "/api/specialties/specialty/{specialtyId}/tasks", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/specialties/specialty/{specialtyId}/tasks", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<Collection<TaskDTO>>> listTasks(@PathVariable long specialtyId) {
     	try {
 			Collection<TaskDTO> levels = this.service.listTasks(specialtyId);

@@ -40,7 +40,7 @@
 
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 	
 	<filter>
@@ -57,7 +57,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>ESAPIWebApplicationFirewallFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 	
 	

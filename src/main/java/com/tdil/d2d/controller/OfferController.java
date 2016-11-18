@@ -49,7 +49,7 @@ public class OfferController extends AbstractController {
 
 
     
-    @RequestMapping(value = "/api/temporaryOffer/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/temporaryOffer/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> offerCreate(@Valid @RequestBody CreateTemporaryJobOfferRequest createOfferRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -68,7 +68,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/permanentOffer/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/permanentOffer/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> offerCreate(@Valid @RequestBody CreatePermanentJobOfferRequest createOfferRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -87,7 +87,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/offers", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/offers", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> offers() {
     	try {
 			List<JobOfferStatusDTO> myOffers = this.userService.getMyOffers();
@@ -98,7 +98,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/closedOffers", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/closedOffers", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> closedOffers() {
     	try {
 			List<JobOfferStatusDTO> myOffers = this.userService.getMyOffersClosed();
@@ -109,7 +109,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/offers/matchesSummary", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/offers/matchesSummary", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<MatchesSummaryDTO>> temporalOffersMatchesSummary() {
     	try {
     		MatchesSummaryDTO myOffers = this.userService.getMatchedOffersSummary();
@@ -120,7 +120,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/temporalOffers/matches", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/temporalOffers/matches", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> temporalOffersMatches() {
     	try {
 			List<JobOfferStatusDTO> myOffers = this.userService.getMatchedTemporalOffers();
@@ -131,7 +131,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/permanentOffers/matches", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/permanentOffers/matches", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> permamentOffersMatches() {
     	try {
 			List<JobOfferStatusDTO> myOffers = this.userService.getMatchedPermamentOffers();
@@ -142,7 +142,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/permanentOffers/search", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/permanentOffers/search", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> permamentOffers(@Valid @RequestBody SearchOfferRequest searchOfferRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>(getErrorResponse(bidingResult, new GenericResponse<List<JobOfferStatusDTO>>(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -156,7 +156,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/offer/{offerId}/apply", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/offer/{offerId}/apply", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> apply(@PathVariable long offerId, @Valid @RequestBody ApplyToOfferRequest applyToOffer, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -174,7 +174,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/offer/{offerId}/applications", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/offer/{offerId}/applications", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<JobApplicationDTO>>> offerApplications(@PathVariable long offerId) {
     	try {
     		return new ResponseEntity<GenericResponse<List<JobApplicationDTO>>>(new GenericResponse<List<JobApplicationDTO>>(this.userService.offerApplications(offerId), HttpStatus.OK.value()), HttpStatus.OK);
@@ -184,7 +184,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/offer/{offerId}/application/{applicationId}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/offer/{offerId}/application/{applicationId}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<JobApplicationDTO>> offerApplication(@PathVariable long offerId, @PathVariable long applicationId) {
     	try {
     		return new ResponseEntity<GenericResponse<JobApplicationDTO>>(new GenericResponse<JobApplicationDTO>(this.userService.offerApplication(applicationId), HttpStatus.OK.value()), HttpStatus.OK);
@@ -194,7 +194,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/offer/{offerId}/application/{applicationId}/cv", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/offer/{offerId}/application/{applicationId}/cv", method = RequestMethod.GET)
     public void offerApplicationCV(@PathVariable long offerId, @PathVariable long applicationId, HttpServletResponse response) {
     	try {
     		this.userService.offerApplicationCV(offerId, applicationId, response.getOutputStream());
@@ -204,7 +204,7 @@ public class OfferController extends AbstractController {
     }
     
     
-    @RequestMapping(value = "/api/user/offer/{offerId}/application/{applicationId}/accept", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/offer/{offerId}/application/{applicationId}/accept", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> acceptOfferApplication(@PathVariable long offerId, @PathVariable long applicationId) {
     	try {
     		boolean result = this.userService.accept(offerId, applicationId);
@@ -219,7 +219,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/offer/{offerId}/application/{applicationId}/reject", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/offer/{offerId}/application/{applicationId}/reject", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> rejectOfferApplication(@PathVariable long offerId, @PathVariable long applicationId) {
     	try {
     		boolean result = this.userService.reject(offerId, applicationId);

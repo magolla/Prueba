@@ -63,7 +63,7 @@ public class TestController {
     @Autowired
     private ContactService contactService;
     
-    @RequestMapping(value = "/api/user", method = RequestMethod.GET)
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<JwtUser> getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
@@ -72,14 +72,14 @@ public class TestController {
         return new ResponseEntity<JwtUser>(user, HttpStatus.CREATED);
     }
     
-    @RequestMapping(value = "/api/user1", method = RequestMethod.GET)
+    @RequestMapping(value = "/user1", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<JwtUser> getAuthenticatedUser1(HttpServletRequest request) {
         System.out.println(SecurityContextHolder.getContext().getAuthentication());
         return new ResponseEntity<JwtUser>((JwtUser)null, HttpStatus.CREATED);
     }
     
-    @RequestMapping(value = "/api/sendTestNotificationIOS", method = RequestMethod.GET)
+    @RequestMapping(value = "/sendTestNotificationIOS", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse> sendTestNotificationIOS(HttpServletRequest request) {
     	try {
@@ -95,7 +95,7 @@ public class TestController {
 		}
     }
     
-    @RequestMapping(value = "/api/sendTestNotificationAndroid", method = RequestMethod.GET)
+    @RequestMapping(value = "/sendTestNotificationAndroid", method = RequestMethod.GET)
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse> sendTestNotificationAndroid(HttpServletRequest request) {
     	try {
@@ -111,13 +111,13 @@ public class TestController {
 		}
     }
     
-    @RequestMapping(value = "/api/test", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<String> test() {
-		return new ResponseEntity<String>("A", HttpStatus.CREATED);
-    }
+//    @RequestMapping(value = "/test", method = RequestMethod.GET)
+//    @PreAuthorize("hasRole('USER')")
+//    public ResponseEntity<String> test() {
+//		return new ResponseEntity<String>("A", HttpStatus.CREATED);
+//    }
     
-    @RequestMapping(value = "/api/initDB", method = RequestMethod.GET)
+    @RequestMapping(value = "/initDB", method = RequestMethod.GET)
     public ResponseEntity<String> initDB(HttpServletRequest request) throws ServiceException {
     	specialtyService.initDB();
     	contactService.initDB();

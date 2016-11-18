@@ -26,7 +26,7 @@ public class GeoController {
     @Autowired
     private GeoService geoService;
 
-    @RequestMapping(value = "/api/geo/autocomplete", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/geo/autocomplete", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<GeoLevelDTO>>> autocomplete(@RequestParam("searchString") String searchString) {
     	try {
 			List<GeoLevelDTO> levels = this.geoService.search(searchString);

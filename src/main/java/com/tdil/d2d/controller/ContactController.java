@@ -31,7 +31,7 @@ public class ContactController extends AbstractController {
     @Autowired
     private ContactService service;
     
-    @RequestMapping(value = "/api/contact/motives", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/contact/motives", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<Collection<ContactMotiveDTO>>> listContactMotives() {
     	try {
 			Collection<ContactMotiveDTO> levels = this.service.listContactMotives();
@@ -42,7 +42,7 @@ public class ContactController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/contact", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/contact", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> createContact(@Valid @RequestBody CreateContactRequest createOfferRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);

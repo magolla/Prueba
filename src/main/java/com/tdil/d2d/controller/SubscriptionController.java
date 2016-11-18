@@ -28,7 +28,7 @@ public class SubscriptionController extends AbstractController {
     private SubscriptionService subscriptionService;
     
     
-    @RequestMapping(value = "/api/subscription/sponsor", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/subscription/sponsor", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> useSponsorCode(@Valid @RequestBody UseSponsorCodeRequest useSponsorCodeRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);

@@ -82,7 +82,7 @@ public class UserController extends AbstractController {
         }
     }
 
-    @RequestMapping(value = "/api/user/registerA", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/registerA", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequestA registrationRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<RegistrationResponse>(getErrorResponse(bidingResult, new RegistrationResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -96,7 +96,7 @@ public class UserController extends AbstractController {
 		}
     }
 
-	@RequestMapping(value = "/api/user/registerB", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/user/registerB", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequestB registrationRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<RegistrationResponse>(getErrorResponse(bidingResult, new RegistrationResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -121,7 +121,7 @@ public class UserController extends AbstractController {
 //    my perfil zonas
     
     
-    @RequestMapping(value = "/api/user/validate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/validate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> register(@Valid @RequestBody ValidationRequest validationRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -139,7 +139,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/androidRegId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/androidRegId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> androidRegId(@Valid @RequestBody AndroidRegIdRequest androidRegIdRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -153,7 +153,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/iosPushId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/iosPushId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> iosPushId(@Valid @RequestBody IOsPushIdRequest iOsPushIdRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -182,7 +182,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/specialty", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/specialty", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> addSpecialty(@Valid @RequestBody AddSpecialtyRequest addSpecialtyRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -201,7 +201,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/location", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/location", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> addLocation(@Valid @RequestBody AddLocationRequest addLocationRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -220,7 +220,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/license", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/license", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setLicense(@Valid @RequestBody SetLicenseRequest setLicenseRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -239,7 +239,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/notifications", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/notifications", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationConfigurationResponse> getNotication() {
     	try {
     		NotificationConfigurationResponse response = this.userService.getNotificationConfiguration();
@@ -250,7 +250,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/notifications", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/notifications", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setNotication(@Valid @RequestBody ConfigureNotificationsRequest notificationConfiguration, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -268,7 +268,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/me", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/me", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<UserDetailsResponse>> me() {
     	try {
     		UserDetailsResponse me = this.userService.me();
@@ -284,7 +284,7 @@ public class UserController extends AbstractController {
 //    
 //    /POST de upload de avatar
     
-    @RequestMapping(value = "/api/user/profile", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/profile", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<ProfileResponseDTO>> getProfile() {
     	try {
     		ProfileResponseDTO me = this.userService.profile();
@@ -295,7 +295,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/profileA", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/profileA", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setProfileA(@Valid @RequestBody SetProfileARequest setProfileARequest, BindingResult bidingResult) {
     	try {
     		this.userService.setProfileA(setProfileARequest);
@@ -306,7 +306,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/profileB", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/profileB", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setProfileB(@Valid @RequestBody SetProfileBRequest setProfileBRequest, BindingResult bidingResult) {
     	try {
     		this.userService.setProfileB(setProfileBRequest);
@@ -317,7 +317,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/profile/avatar", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/profile/avatar", method = RequestMethod.GET)
     public void getAvatar(HttpServletResponse response) {
     	try {
     		this.userService.getAvatar(response.getOutputStream());
@@ -326,7 +326,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/profile/avatarBase64", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/profile/avatarBase64", method = RequestMethod.GET)
     public ResponseEntity<GenericResponse<Base64DTO>> getAvatarBase64() {
     	try {
     		Base64DTO me = this.userService.getAvatarBase64();
@@ -337,7 +337,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/{userId}/profile/avatar", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/{userId}/profile/avatar", method = RequestMethod.GET)
     public void getOtherUserAvatar(@PathVariable long userId, HttpServletResponse response) {
     	try {
     		this.userService.getAvatar(userId, response.getOutputStream());
@@ -346,7 +346,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/{userId}/profile/avatarBase64", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/{userId}/profile/avatarBase64", method = RequestMethod.GET)
     public ResponseEntity<GenericResponse<Base64DTO>> getOtherUserAvatar(@PathVariable long userId) {
     	try {
     		Base64DTO me = this.userService.getAvatarBase64(userId);
@@ -357,7 +357,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/profile/avatar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/profile/avatar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setAvatar(@Valid @RequestBody SetAvatarRequest setAvatarRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -375,7 +375,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/profile/institutionType", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/profile/institutionType", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setNotification(@Valid @RequestBody SetInstitutionTypeRequest institutionTypeRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -393,7 +393,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/profile/task", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/profile/task", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> addTask(@Valid @RequestBody AddTaskToProfileRequest taskToProfileRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -411,7 +411,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/profile/task/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/profile/task/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> removeTask(@Valid @RequestBody AddTaskToProfileRequest taskToProfileRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
@@ -429,7 +429,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/api/user/log", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/log", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<ActivityLogDTO>>> activityLog() {
     	try {
 			List<ActivityLogDTO> myOffers = this.userService.getActivityLog();
