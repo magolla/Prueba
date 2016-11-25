@@ -1,6 +1,10 @@
 package com.tdil.d2d.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,6 +63,32 @@ public class SpecialtyController {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<GenericResponse<Collection<TaskDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+    }
+    
+    private static final Comparator<TaskDTO> comparatorTaskDTO = new Comparator<TaskDTO>() {
+        @Override
+        public int compare(TaskDTO o1, TaskDTO o2) {
+            return o1.getName().compareToIgnoreCase(o2.getName());
+        }
+    };
+
+    @RequestMapping(value = "/specialties/{specialtyId}/tasks", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<Collection<TaskDTO>>> listTasks(@PathVariable long[] specialtyId) {
+        try {
+            List<TaskDTO> levels = null;
+            for (long id : specialtyId) {
+                if (levels == null) {
+                    levels = new ArrayList<TaskDTO>(this.service.listTasks(id));
+                } else {
+                    levels.addAll(this.service.listTasks(id));
+                }
+            }
+            Collections.sort(levels, comparatorTaskDTO);
+            return new ResponseEntity<GenericResponse<Collection<TaskDTO>>>(new GenericResponse<Collection<TaskDTO>>(levels,HttpStatus.OK.value()), HttpStatus.OK);
+        } catch (ServiceException e) {
+            LoggerManager.error(this, e);
+            return new ResponseEntity<GenericResponse<Collection<TaskDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     
         

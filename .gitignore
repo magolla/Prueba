@@ -3,3 +3,10 @@
 target/*
 
 /bin
+
+.metadata
+
+.settings
+
+RemoteSystemsTempFiles/*
+/target/

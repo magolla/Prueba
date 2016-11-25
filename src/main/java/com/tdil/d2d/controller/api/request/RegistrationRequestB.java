@@ -30,7 +30,7 @@ public class RegistrationRequestB extends ApiRequest {
 	private String mobilePhone;
 		
 	@NotEmpty
-    @Length(min= 6, max = 20)
+    @Length(min= 6, max = 64)
 	@ValidInput
 	private String deviceId;
 	
