@@ -1,5 +1,6 @@
 package com.tdil.d2d.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.tdil.d2d.dao.JobOfferDAO;
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
 
 @Repository
@@ -20,11 +22,29 @@ public class JobOfferDAOImpl  extends GenericDAO<JobOffer> implements JobOfferDA
 	public List<JobOffer> getOpenOffers(Long userId) throws DAOException {
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
+			Criteria criteria2 = this.getSessionFactory().getCurrentSession().createCriteria(JobApplication.class);
 			criteria.add(Restrictions.eq("offerent.id", userId));
+			
+			
 			criteria.add(Restrictions.eq("status", JobOffer.VACANT));
 			criteria.add(Restrictions.ge("offerDate", new Date()));
 			criteria.addOrder(Order.asc("id"));
 			List<JobOffer> list = criteria.list();
+			List<JobApplication> jobAppList = new ArrayList<JobApplication>();
+			
+			for (int i = 0; i < list.size(); i++) {
+				criteria2.add(Restrictions.eq("offer.id", list.get(i).getId()));
+//				criteria2.setProjection(Projections.rowCount());
+				jobAppList = criteria2.list();
+				
+				list.get(i).setApplications(jobAppList.size());
+				jobAppList.clear();
+				criteria2 = this.getSessionFactory().getCurrentSession().createCriteria(JobApplication.class);
+			}
+			
+			
+			System.out.println();
+			
 			return list;
 		} catch (Exception e) {
 			throw new DAOException(e);

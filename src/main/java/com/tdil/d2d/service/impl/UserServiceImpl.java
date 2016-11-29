@@ -949,29 +949,64 @@ public class UserServiceImpl implements UserService {
 
 	private JobApplicationDTO toDTO(JobApplication s) {
 		JobApplicationDTO result = new JobApplicationDTO();
+		
+		//Application ID
 		result.setId(s.getId());
+		//User ID
 		result.setUserId(s.getUser().getId());
+		//Creation Date
+		result.setCreationDate(s.getCreationDate().toString());
+		//Falta base64Image
+		//-----------------------------------
+		//Linkedin CV
+		result.setLinkedinInCv(s.getLinkedInCv());
+		//Falta cvAttach
+		//-----------------------------------
+		//cvPlain
+		result.setCvPlain(s.getCvPlain());
+		//FirstName
 		result.setFirstname(s.getUser().getFirstname());
+		//LastName
 		result.setLastname(s.getUser().getLastname());
+		//numberPhone
+		result.setMobilePhone(s.getUser().getMobilePhone());
+		//Occupation
+		result.setOccupationName(s.getOffer().getOccupation().getName());
+		//Specialty
+		result.setSpecialtyName(s.getOffer().getSpecialty().getName());
+
+		//FaltaGeolocation
+		//------------------------------------
+		//result.setComment(s.getComment());
 		return result;
 	}
 
 	private JobOfferStatusDTO toDTO(JobOffer s) {
-		// 
-//		XXX nuevos campos
 		JobOfferStatusDTO result = new JobOfferStatusDTO();
 		result.setId(s.getId());
-		// TODO format
-		result.setCreationDate(s.getCreationDate().toString());
-		result.setSpecialtyName(s.getSpecialty().getName());
-//		result.setSubspecialtyName(s.getSubSpecialty().getName());
 		result.setComment(s.getComment());
-		result.setOfferDate(s.getOfferDate().toString());
+		result.setCompanyScreenName(s.getCompanyScreenName());
+		result.setCreationDate(s.getCreationDate().toString());
+		result.setGeoLevelId(s.getGeoLevelId());
+		result.setGeoLevelLevel(s.getGeoLevelLevel());
+		//result.setGeoLevelName(??);
 		result.setOfferHour(s.getHour());
-		result.setVacants(s.getVacants());
-		// TODO 
-//		result.setApplications(applications);
+		result.setInstitutionType(s.getInstitutionType().toString());
+		result.setOfferDate(s.getOfferDate().toString());
+		result.setPermanent(s.isPermanent());
 		result.setStatus(s.getStatus());
+		result.setSubTitle(s.getSubtitle());
+		result.setTitle(s.getTitle());
+		result.setVacants(s.getVacants());
+		result.setOccupation_id(s.getOccupation().getId());
+		result.setOccupationName(s.getOccupation().getName());
+		result.setOfferent_id(s.getOfferent().getId());
+		result.setSpecialty_Id(s.getSpecialty().getId());
+		result.setSpecialtyName(s.getSpecialty().getName());
+		result.setTask_id(s.getTask().getId());
+		result.setTaskName(s.getTask().getName());
+		result.setApplications(s.getApplications());
+		
 		return result;
 	}
 	

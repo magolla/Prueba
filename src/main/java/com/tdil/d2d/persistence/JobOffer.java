@@ -76,6 +76,10 @@ public class JobOffer implements PersistentEntity {
 	
 	@ManyToOne
 	private User offerent;
+	
+	
+	private int applications;
+
 
 	public long getId() {
 		return id;
@@ -234,6 +238,14 @@ public class JobOffer implements PersistentEntity {
 
 	public void setSubtitle(String subtitle) {
 		this.subtitle = subtitle;
+	}
+
+	public int getApplications() {
+		return applications;
+	}
+
+	public void setApplications(int applications) {
+		this.applications = applications;
 	}
 
 }
