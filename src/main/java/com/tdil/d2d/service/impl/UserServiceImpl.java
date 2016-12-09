@@ -34,6 +34,7 @@ import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
+import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
@@ -291,6 +292,22 @@ public class UserServiceImpl implements UserService {
 			User user = getLoggedUser();
 			Specialty specialty = this.specialtyDAO.getSpecialtyById(addSpecialtyRequest.getSpecialtyId());
 			user.getSpecialties().add(specialty);
+			this.userDAO.save(user);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SPECIALTY));
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean addSpecialties(AddSpecialtiesRequest addSpecialtiesRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			for (long id : addSpecialtiesRequest.getSpecialtyId()) {
+				Specialty specialty = this.specialtyDAO.getSpecialtyById(id);
+				user.getSpecialties().add(specialty);
+			}
 			this.userDAO.save(user);
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SPECIALTY));
 			return true;

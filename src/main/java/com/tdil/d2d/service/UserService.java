@@ -12,6 +12,7 @@ import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
+import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
@@ -63,6 +64,7 @@ public interface UserService {
 	public void initDbWithTestData() throws ServiceException;
 
 	public boolean addSpecialty(AddSpecialtyRequest addSpecialtyRequest) throws ServiceException;
+	public boolean addSpecialties(AddSpecialtiesRequest addSpecialtiesRequest) throws ServiceException;
 
 	public boolean addLocation(AddLocationRequest addLocationRequest) throws ServiceException;
 	
