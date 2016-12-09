@@ -12,6 +12,7 @@ public class UserDetailsResponse extends ApiResponse {
 	private boolean userb;
 	private boolean hasSubscription;
 	private String subscriptionExpirationDate;
+	private String licence;
 
 	public UserDetailsResponse(int status) {
 		super(status);
@@ -96,7 +97,13 @@ public class UserDetailsResponse extends ApiResponse {
 	public void setBase64img(String base64img) {
 		this.base64img = base64img;
 	}
-	
-	
+
+	public String getLicence() {
+		return licence;
+	}
+
+	public void setLicence(String licence) {
+		this.licence = licence;
+	}
 
 }

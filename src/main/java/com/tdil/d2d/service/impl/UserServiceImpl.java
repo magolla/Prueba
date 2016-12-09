@@ -52,6 +52,7 @@ import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.SetProfileARequest;
 import com.tdil.d2d.controller.api.request.SetProfileBRequest;
+import com.tdil.d2d.controller.api.request.SetTasksToProfileRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -304,6 +305,8 @@ public class UserServiceImpl implements UserService {
 	public boolean addSpecialties(AddSpecialtiesRequest addSpecialtiesRequest) throws ServiceException {
 		try {
 			User user = getLoggedUser();
+			//TODO ver si hay que vaciar primero las especialidades y en ese caso cambiar el nombre por setSpecialities
+			user.getSpecialties().clear();
 			for (long id : addSpecialtiesRequest.getSpecialtyId()) {
 				Specialty specialty = this.specialtyDAO.getSpecialtyById(id);
 				user.getSpecialties().add(specialty);
@@ -432,6 +435,28 @@ public class UserServiceImpl implements UserService {
 			Task task = this.specialtyDAO.getTaskById(taskToProfileRequest.getTaskId());
 			userProfile.getTasks().add(task);
 			this.userDAO.save(userProfile);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_TASK_TO_PROFILE));
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	public boolean setTasks(SetTasksToProfileRequest tasksToProfileRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			UserProfile userProfile = this.userDAO.getUserProfile(user);
+			if (userProfile == null) {
+				userProfile = new UserProfile();
+				userProfile.setUser(user);
+			}
+			userProfile.getTasks().clear();
+			for (int id : tasksToProfileRequest.getTaskId()) {
+				Task task = this.specialtyDAO.getTaskById(id);
+				userProfile.getTasks().add(task);
+			}
+			this.userDAO.save(userProfile);
+			this.userDAO.save(user);
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_TASK_TO_PROFILE));
 			return true;
 		} catch (DAOException e) {
@@ -1036,6 +1061,8 @@ public class UserServiceImpl implements UserService {
 		resp.setMobileNumber(user.getMobilePhone());
 		resp.setEmail(user.getEmail());
 		resp.setCompanyScreenName(user.getCompanyScreenName());
+		resp.setLicence(user.getLicense());
+		
 		if (user.getBase64img() != null) {
 			resp.setBase64img(new String(user.getBase64img()));
 		}

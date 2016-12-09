@@ -30,6 +30,7 @@ import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.SetProfileARequest;
 import com.tdil.d2d.controller.api.request.SetProfileBRequest;
+import com.tdil.d2d.controller.api.request.SetTasksToProfileRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -105,6 +106,7 @@ public interface UserService {
 	public boolean setLicense(SetLicenseRequest setLicenseRequest) throws ServiceException;	
 	public boolean setInstitutionType(SetInstitutionTypeRequest institutionTypeRequest) throws ServiceException;
 	public boolean addTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException;
+	public boolean setTasks(SetTasksToProfileRequest tasksToProfileRequest) throws ServiceException;
 	public boolean removeTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException;
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException;
 	public void getAvatar(OutputStream outputStream) throws ServiceException;

@@ -41,6 +41,7 @@ import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.SetProfileARequest;
 import com.tdil.d2d.controller.api.request.SetProfileBRequest;
+import com.tdil.d2d.controller.api.request.SetTasksToProfileRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
@@ -420,6 +421,24 @@ public class UserController extends AbstractController {
     	}
     	try {
     		boolean response = this.userService.addTask(taskToProfileRequest);
+    		if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/user/profile/task/setAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> setTask(@Valid @RequestBody SetTasksToProfileRequest tasksToProfileRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
+    	try {
+    		boolean response = this.userService.setTasks(tasksToProfileRequest);
     		if (response) {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
 			} else {
