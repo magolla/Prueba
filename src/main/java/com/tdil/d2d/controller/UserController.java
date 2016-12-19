@@ -27,6 +27,7 @@ import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
+import com.tdil.d2d.controller.api.request.AddLocationsRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
@@ -229,6 +230,25 @@ public class UserController extends AbstractController {
     	}
     	try {
 			boolean response = this.userService.addLocation(addLocationRequest);
+			if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/user/location/addAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> addLocations(@Valid @RequestBody AddLocationsRequest addLocationsRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
+    	try {
+			boolean response = this.userService.addLocations(addLocationsRequest);
 			if (response) {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
 			} else {

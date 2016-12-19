@@ -1,5 +1,12 @@
 package com.tdil.d2d.controller.api.response;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import com.tdil.d2d.controller.api.dto.OccupationDTO;
+import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
+import com.tdil.d2d.controller.api.dto.TaskDTO;
+
 public class UserDetailsResponse extends ApiResponse {
 	
 	private String firstname;
@@ -13,6 +20,10 @@ public class UserDetailsResponse extends ApiResponse {
 	private boolean hasSubscription;
 	private String subscriptionExpirationDate;
 	private String licence;
+	private OccupationDTO occupation;
+	private Collection<SpecialtyDTO> specialities = new HashSet<>();
+	private Collection<TaskDTO> tasks = new HashSet<>();
+	private String institutionType;
 
 	public UserDetailsResponse(int status) {
 		super(status);
@@ -106,4 +117,35 @@ public class UserDetailsResponse extends ApiResponse {
 		this.licence = licence;
 	}
 
+	public Collection<SpecialtyDTO> getSpecialities() {
+		return specialities;
+	}
+
+	public void setSpecialities(Collection<SpecialtyDTO> specialties) {
+		this.specialities = specialties;
+	}
+
+	public OccupationDTO getOccupation() {
+		return occupation;
+	}
+
+	public void setOccupation(OccupationDTO occupation) {
+		this.occupation = occupation;
+	}
+
+	public String getInstitutionType() {
+		return institutionType;
+	}
+
+	public void setInstitutionType(String institutionType) {
+		this.institutionType = institutionType;
+	}
+
+	public Collection<TaskDTO> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(Collection<TaskDTO> tasks) {
+		this.tasks = tasks;
+	}
 }

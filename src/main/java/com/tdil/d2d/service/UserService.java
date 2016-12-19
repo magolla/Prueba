@@ -12,6 +12,7 @@ import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
+import com.tdil.d2d.controller.api.request.AddLocationsRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
@@ -68,6 +69,7 @@ public interface UserService {
 	public boolean addSpecialties(AddSpecialtiesRequest addSpecialtiesRequest) throws ServiceException;
 
 	public boolean addLocation(AddLocationRequest addLocationRequest) throws ServiceException;
+	public boolean addLocations(AddLocationsRequest addLocationsRequest) throws ServiceException;
 	
 	public MatchesSummaryDTO getMatchedOffersSummary() throws ServiceException;
 	public List<JobOfferStatusDTO> getMatchedTemporalOffers() throws ServiceException;

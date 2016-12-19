@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.crypto.BadPaddingException;
@@ -32,8 +33,10 @@ import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
+import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
+import com.tdil.d2d.controller.api.request.AddLocationsRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
@@ -327,6 +330,26 @@ public class UserServiceImpl implements UserService {
 			loc.setGeoLevelLevel(addLocationRequest.getGeoLevelLevel());
 			loc.setGeoLevelId(addLocationRequest.getGeoLevelId());
 			user.getUserGeoLocations().add(loc);
+			this.userDAO.save(user);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_GEO_LEVEL));
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public boolean addLocations(AddLocationsRequest addLocationsRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			user.getUserGeoLocations().clear();
+			for (int i = 0; i < addLocationsRequest.getGeoLevelId().length; i++) {
+				UserGeoLocation loc = new UserGeoLocation();
+				loc.setGeoLevelLevel(addLocationsRequest.getGeoLevelLevel()[i]);
+				loc.setGeoLevelId(addLocationsRequest.getGeoLevelId()[i]);
+				loc.setUser(user);
+				user.getUserGeoLocations().add(loc);
+			}
 			this.userDAO.save(user);
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_GEO_LEVEL));
 			return true;
@@ -1062,6 +1085,26 @@ public class UserServiceImpl implements UserService {
 		resp.setEmail(user.getEmail());
 		resp.setCompanyScreenName(user.getCompanyScreenName());
 		resp.setLicence(user.getLicense());
+		try {
+			UserProfile userProfile = this.userDAO.getUserProfile(user);
+			resp.setInstitutionType(userProfile.getInstitutionType().toString());
+			resp.setTasks(SpecialtyServiceImpl.toDtoTask(userProfile.getTasks()));
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		
+		if (!user.getSpecialties().isEmpty()) {
+			user.getSpecialties().stream().findFirst().ifPresent(new Consumer<Specialty>() {
+				@Override
+				public void accept(Specialty t) {
+					OccupationDTO o = new OccupationDTO();
+					o.setId(t.getOccupation().getId());
+					o.setName(t.getOccupation().getName());
+					resp.setOccupation(o);
+				}
+			});
+			resp.setSpecialities(SpecialtyServiceImpl.toDtoSpecialty(user.getSpecialties()));
+		}
 		
 		if (user.getBase64img() != null) {
 			resp.setBase64img(new String(user.getBase64img()));
