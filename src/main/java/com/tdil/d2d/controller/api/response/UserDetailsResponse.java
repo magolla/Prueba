@@ -7,6 +7,7 @@ import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.dto.TaskDTO;
+import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 
 public class UserDetailsResponse extends ApiResponse {
 	
@@ -26,6 +27,7 @@ public class UserDetailsResponse extends ApiResponse {
 	private Collection<TaskDTO> tasks = new HashSet<>();
 	private String institutionType;
 	private Collection<GeoLevelDTO> geoLevels;
+	private NotificationConfigurationResponse notificationConfigurationResponse;
 
 	public UserDetailsResponse(int status) {
 		super(status);
@@ -157,6 +159,14 @@ public class UserDetailsResponse extends ApiResponse {
 
 	public void setGeoLevels(Collection<GeoLevelDTO> geoLevels) {
 		this.geoLevels = geoLevels;
+	}
+
+	public NotificationConfigurationResponse getNotificationConfigurationResponse() {
+		return notificationConfigurationResponse;
+	}
+
+	public void setNotificationConfigurationResponse(NotificationConfigurationResponse notificationConfigurationResponse) {
+		this.notificationConfigurationResponse = notificationConfigurationResponse;
 	}
 	
 }

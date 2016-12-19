@@ -4,7 +4,6 @@ import com.tdil.d2d.controller.api.response.ApiResponse;
 
 public class NotificationConfigurationResponse extends ApiResponse {
 	
-	
 	private boolean push;
 	private boolean notes;
 	private boolean congress;

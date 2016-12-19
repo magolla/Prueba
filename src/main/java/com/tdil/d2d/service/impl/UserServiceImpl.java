@@ -1121,11 +1121,14 @@ public class UserServiceImpl implements UserService {
 					resp.setSponsorName(subscription.getSponsorCode().getSponsor().getName());
 				}
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				String date = sdf.format(subscription.getExpirationDate());
 				resp.setSubscriptionExpirationDate(sdf.format(subscription.getExpirationDate()));
 				resp.setHasSubscription(true);
 			}
 		}
+		
+		NotificationConfigurationResponse notificationConfigurationResponse = this.getNotificationConfiguration();
+		resp.setNotificationConfigurationResponse(notificationConfigurationResponse);
+		
 		return resp;
 	}
 	
