@@ -3,6 +3,7 @@ package com.tdil.d2d.controller.api.response;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.dto.TaskDTO;
@@ -24,6 +25,7 @@ public class UserDetailsResponse extends ApiResponse {
 	private Collection<SpecialtyDTO> specialities = new HashSet<>();
 	private Collection<TaskDTO> tasks = new HashSet<>();
 	private String institutionType;
+	private Collection<GeoLevelDTO> geoLevels;
 
 	public UserDetailsResponse(int status) {
 		super(status);
@@ -148,4 +150,13 @@ public class UserDetailsResponse extends ApiResponse {
 	public void setTasks(Collection<TaskDTO> tasks) {
 		this.tasks = tasks;
 	}
+
+	public Collection<GeoLevelDTO> getGeoLevels() {
+		return geoLevels;
+	}
+
+	public void setGeoLevels(Collection<GeoLevelDTO> geoLevels) {
+		this.geoLevels = geoLevels;
+	}
+	
 }

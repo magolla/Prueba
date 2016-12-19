@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
+import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
@@ -347,6 +349,7 @@ public class UserServiceImpl implements UserService {
 				UserGeoLocation loc = new UserGeoLocation();
 				loc.setGeoLevelLevel(addLocationsRequest.getGeoLevelLevel()[i]);
 				loc.setGeoLevelId(addLocationsRequest.getGeoLevelId()[i]);
+				loc.setGeoLevelName(addLocationsRequest.getGeoLevelNames()[i]);
 				loc.setUser(user);
 				user.getUserGeoLocations().add(loc);
 			}
@@ -1092,6 +1095,7 @@ public class UserServiceImpl implements UserService {
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
+		resp.setGeoLevels(toDtoGeoLevel(user.getUserGeoLocations()));
 		
 		if (!user.getSpecialties().isEmpty()) {
 			user.getSpecialties().stream().findFirst().ifPresent(new Consumer<Specialty>() {
@@ -1123,6 +1127,17 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return resp;
+	}
+	
+	private static Collection<GeoLevelDTO> toDtoGeoLevel(Collection<UserGeoLocation> list) {
+		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
+	}
+	private static GeoLevelDTO toDto(UserGeoLocation s) {
+		GeoLevelDTO result = new GeoLevelDTO();
+		result.setId(s.getId());
+		result.setLevel(s.getGeoLevelLevel());
+		result.setName(s.getGeoLevelName());
+		return result;
 	}
 	
 	@Override

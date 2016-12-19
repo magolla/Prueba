@@ -4,6 +4,7 @@ public class AddLocationsRequest extends ApiRequest {
 	
 	private int[] geoLevelLevel;
 	private long[] geoLevelId;
+	private String[] geoLevelNames;
 	
 	public int[] getGeoLevelLevel() {
 		return geoLevelLevel;
@@ -21,4 +22,11 @@ public class AddLocationsRequest extends ApiRequest {
 		this.geoLevelId = geoLevelId;
 	}
 
+	public String[] getGeoLevelNames() {
+		return geoLevelNames;
+	}
+
+	public void setGeoLevelNames(String[] geoLevelNames) {
+		this.geoLevelNames = geoLevelNames;
+	}
 }

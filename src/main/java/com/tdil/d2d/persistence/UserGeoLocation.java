@@ -28,6 +28,9 @@ public class UserGeoLocation implements PersistentEntity {
 	@Column(name = "geoLevelId")
 	private long geoLevelId;
 	
+	@Column(name = "geoLevelName")
+	private String geoLevelName;
+	
 	@ManyToOne
 	private User user;
 
@@ -69,6 +72,14 @@ public class UserGeoLocation implements PersistentEntity {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getGeoLevelName() {
+		return geoLevelName;
+	}
+
+	public void setGeoLevelName(String geoLevelName) {
+		this.geoLevelName = geoLevelName;
 	}
 
 }
