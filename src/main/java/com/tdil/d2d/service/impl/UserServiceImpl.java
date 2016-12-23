@@ -345,6 +345,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			user.getUserGeoLocations().clear();
+			//TODO no se están borrando los UserGeoLocations viejos.
 			for (int i = 0; i < addLocationsRequest.getGeoLevelId().length; i++) {
 				UserGeoLocation loc = new UserGeoLocation();
 				loc.setGeoLevelLevel(addLocationsRequest.getGeoLevelLevel()[i]);
@@ -1137,7 +1138,7 @@ public class UserServiceImpl implements UserService {
 	}
 	private static GeoLevelDTO toDto(UserGeoLocation s) {
 		GeoLevelDTO result = new GeoLevelDTO();
-		result.setId(s.getId());
+		result.setId(s.getGeoLevelId());
 		result.setLevel(s.getGeoLevelLevel());
 		result.setName(s.getGeoLevelName());
 		return result;
