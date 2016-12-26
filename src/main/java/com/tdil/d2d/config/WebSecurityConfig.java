@@ -3,6 +3,7 @@ package com.tdil.d2d.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -41,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    	//return new NoOpPasswordEncoder();
+        //return new NoOpPasswordEncoder();
     }
 
     @Bean
@@ -81,10 +82,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js"
                 ).permitAll()
-                .antMatchers("/api/auth/**","/api/user/registerA","/api/user/registerB","/api/user/validate","/api/geo/autocomplete", "/api/initDB",
-                		"/api/specialties/**",
-                		"/api/contact/motives",
-                		"/api/contact").permitAll()
+                .antMatchers("/api/auth/**", "/api/user/registerA", "/api/user/registerB", "/api/user/validate", "/api/geo/autocomplete", "/api/initDB",
+                        "/api/specialties/**",
+                        "/api/contact/motives",
+                        "/api/contact").permitAll()
                 .anyRequest().authenticated();
 
         // Custom JWT based security filter

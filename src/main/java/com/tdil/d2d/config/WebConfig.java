@@ -50,7 +50,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
         return converter;
     }
-    
+
     @Bean(name="messageSource")
 	public ReloadableResourceBundleMessageSource messageSource(){
     	ReloadableResourceBundleMessageSource bean = new ReloadableResourceBundleMessageSource();
@@ -66,7 +66,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
 //        methodInvokingFactoryBean.setArguments(new Object[] {this.log4jLocation});
 //        return methodInvokingFactoryBean;
 //    }
-    
+
     /**
      * Chequeo de declaracion de variables de entorno
      * Si hay una Variable NO definida, El Tomcat NO levanta

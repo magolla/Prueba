@@ -21,314 +21,314 @@ import javax.persistence.Table;
 @Table(name = "D2D_USER")
 public class User implements PersistentEntity {
 
-	@Id
-	@GeneratedValue
-	@Column(name = "id")
-	private long id;
-	
-	@Column(name = "creationDate")
-	private Date creationDate;
-	
-	@Column(name = "lastLoginDate")
-	private Date lastLoginDate;
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private long id;
 
-	@Column(name = "firstname")
-	private String firstname;
+    @Column(name = "creationDate")
+    private Date creationDate;
 
-	@Column(name = "lastname")
-	private String lastname;
-	
-	@Column(name = "mobilePhone")
-	private String mobilePhone;
-	
-	@Column(name = "mobileHash")
-	private String mobileHash;
-	
-	@Column(name = "tacAccepted")
-	private boolean tacAccepted;
-	
-	@Column(name = "tacAcceptDate")
-	private Date tacAcceptDate;
+    @Column(name = "lastLoginDate")
+    private Date lastLoginDate;
 
-	@Column(name = "email")
-	private String email;
-	
-	@Column(name = "emailHash")
-	private String emailHash;
-	
-	@Column(name = "phoneValidated")
-	private boolean phoneValidated;
-	
-	@Column(name = "emailValidated")
-	private boolean emailValidated;
-	
-	@Column(name="pass")
-	private String password;
-	
-	@Column(name = "enabled")
-	private boolean enabled;
-	
-	@Column(name = "userb")
-	private boolean userb;
-	
-	@Column(name = "deviceId")
-	private String deviceId;
+    @Column(name = "firstname")
+    private String firstname;
 
-	@Column(name = "androidRegId", length=256)
-	private String androidRegId;
-	
-	@Column(name = "iosPushId", length=256)
-	private String iosPushId;
-	
-	@Column(name = "lastPasswordResetDate")
-	private Date lastPasswordResetDate;
-	
-	@Column(name = "companyScreenName", length=256)
-	private String companyScreenName;
-	
-	@Column(name = "companyScreenDescription", length=2000)
-	private String companyScreenDescription;
-	
-	@Column(name = "license", length=256)
-	private String license;
-	
-	//Ver tamaño
-	@Column(name = "base64img")
-	@Lob()
-	private byte[] base64img;
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "D2D_USER_SPECIALTY", joinColumns = {
-			@JoinColumn(name = "USER_ID", nullable = false, updatable = false) },
-			inverseJoinColumns = { @JoinColumn(name = "SPECIALTY_ID",
-					nullable = false, updatable = false) })
-	private Set<Specialty> specialties = new HashSet<Specialty>(0);
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "D2D_USER_GEOLOC", joinColumns = {
-			@JoinColumn(name = "USER_ID", nullable = false, updatable = false) },
-			inverseJoinColumns = { @JoinColumn(name = "USERGEOLOC_ID",
-					nullable = false, updatable = false) })
-	private Set<UserGeoLocation> userGeoLocations = new HashSet<UserGeoLocation>(0);
+    @Column(name = "lastname")
+    private String lastname;
 
-	public long getId() {
-		return id;
-	}
+    @Column(name = "mobilePhone", unique = true)
+    private String mobilePhone;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    @Column(name = "mobileHash")
+    private String mobileHash;
 
-	public String getEmail() {
-		return email;
-	}
+    @Column(name = "tacAccepted")
+    private boolean tacAccepted;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    @Column(name = "tacAcceptDate")
+    private Date tacAcceptDate;
 
-	public boolean isEnabled() {
-		return enabled;
-	}
-	
-	public boolean getEnabled() {
-		return enabled;
-	}
+    @Column(name = "email")
+    private String email;
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    @Column(name = "emailHash")
+    private String emailHash;
 
-	public String getFirstname() {
-		return firstname;
-	}
+    @Column(name = "phoneValidated")
+    private boolean phoneValidated;
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
+    @Column(name = "emailValidated")
+    private boolean emailValidated;
 
-	public String getLastname() {
-		return lastname;
-	}
+    @Column(name = "pass")
+    private String password;
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
+    @Column(name = "enabled")
+    private boolean enabled;
 
-	public String isAndroidRegId() {
-		return androidRegId;
-	}
+    @Column(name = "userb")
+    private boolean userb;
 
-	public void setAndroidRegId(String androidRegId) {
-		this.androidRegId = androidRegId;
-	}
+    @Column(name = "deviceId")
+    private String deviceId;
 
-	public String getDeviceId() {
-		return deviceId;
-	}
+    @Column(name = "androidRegId", length = 256)
+    private String androidRegId;
 
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
-	}
+    @Column(name = "iosPushId", length = 256)
+    private String iosPushId;
 
-	public String getAndroidRegId() {
-		return androidRegId;
-	}
+    @Column(name = "lastPasswordResetDate")
+    private Date lastPasswordResetDate;
 
-	public String getSalt() {
-		return new SimpleDateFormat("yyyyMMddHHmmss").format(this.getCreationDate());
-	}
+    @Column(name = "companyScreenName", length = 256)
+    private String companyScreenName;
 
-	public String getEmailHash() {
-		return emailHash;
-	}
+    @Column(name = "companyScreenDescription", length = 2000)
+    private String companyScreenDescription;
 
-	public void setEmailHash(String emailHash) {
-		this.emailHash = emailHash;
-	}
+    @Column(name = "license", length = 256)
+    private String license;
 
-	public boolean isEmailValidated() {
-		return emailValidated;
-	}
+    //Ver tamaño
+    @Column(name = "base64img")
+    @Lob()
+    private byte[] base64img;
 
-	public void setEmailValidated(boolean emailValidated) {
-		this.emailValidated = emailValidated;
-	}
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "D2D_USER_SPECIALTY", joinColumns = {
+            @JoinColumn(name = "USER_ID", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "SPECIALTY_ID",
+                    nullable = false, updatable = false)})
+    private Set<Specialty> specialties = new HashSet<Specialty>(0);
 
-	public String getIosPushId() {
-		return iosPushId;
-	}
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "D2D_USER_GEOLOC", joinColumns = {
+            @JoinColumn(name = "USER_ID", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "USERGEOLOC_ID",
+                    nullable = false, updatable = false)})
+    private Set<UserGeoLocation> userGeoLocations = new HashSet<UserGeoLocation>(0);
 
-	public void setIosPushId(String iosPushId) {
-		this.iosPushId = iosPushId;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public Date getCreationDate() {
-		return creationDate;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getMobilePhone() {
-		return mobilePhone;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setMobilePhone(String mobilePhone) {
-		this.mobilePhone = mobilePhone;
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public boolean isTacAccepted() {
-		return tacAccepted;
-	}
+    public boolean getEnabled() {
+        return enabled;
+    }
 
-	public void setTacAccepted(boolean tacAccepted) {
-		this.tacAccepted = tacAccepted;
-	}
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	public Date getTacAcceptDate() {
-		return tacAcceptDate;
-	}
+    public String getFirstname() {
+        return firstname;
+    }
 
-	public void setTacAcceptDate(Date tacAcceptDate) {
-		this.tacAcceptDate = tacAcceptDate;
-	}
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
 
-	public Date getLastPasswordResetDate() {
-		return lastPasswordResetDate;
-	}
+    public String getLastname() {
+        return lastname;
+    }
 
-	public void setLastPasswordResetDate(Date lastPasswordResetDate) {
-		this.lastPasswordResetDate = lastPasswordResetDate;
-	}
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
 
-	public Date getLastLoginDate() {
-		return lastLoginDate;
-	}
+    public String isAndroidRegId() {
+        return androidRegId;
+    }
 
-	public void setLastLoginDate(Date lastLoginDate) {
-		this.lastLoginDate = lastLoginDate;
-	}
+    public void setAndroidRegId(String androidRegId) {
+        this.androidRegId = androidRegId;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getDeviceId() {
+        return deviceId;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 
-	public Set<Specialty> getSpecialties() {
-		return specialties;
-	}
+    public String getAndroidRegId() {
+        return androidRegId;
+    }
 
-	public void setSpecialties(Set<Specialty> specialties) {
-		this.specialties = specialties;
-	}
+    public String getSalt() {
+        return new SimpleDateFormat("yyyyMMddHHmmss").format(this.getCreationDate());
+    }
 
-	public Set<UserGeoLocation> getUserGeoLocations() {
-		return userGeoLocations;
-	}
+    public String getEmailHash() {
+        return emailHash;
+    }
 
-	public void setUserGeoLocations(Set<UserGeoLocation> userGeoLocations) {
-		this.userGeoLocations = userGeoLocations;
-	}
+    public void setEmailHash(String emailHash) {
+        this.emailHash = emailHash;
+    }
 
-	public boolean isPhoneValidated() {
-		return phoneValidated;
-	}
+    public boolean isEmailValidated() {
+        return emailValidated;
+    }
 
-	public void setPhoneValidated(boolean phoneValidated) {
-		this.phoneValidated = phoneValidated;
-	}
+    public void setEmailValidated(boolean emailValidated) {
+        this.emailValidated = emailValidated;
+    }
 
-	public String getMobileHash() {
-		return mobileHash;
-	}
+    public String getIosPushId() {
+        return iosPushId;
+    }
 
-	public void setMobileHash(String mobileHash) {
-		this.mobileHash = mobileHash;
-	}
+    public void setIosPushId(String iosPushId) {
+        this.iosPushId = iosPushId;
+    }
 
-	public boolean isUserb() {
-		return userb;
-	}
+    public Date getCreationDate() {
+        return creationDate;
+    }
 
-	public void setUserb(boolean userb) {
-		this.userb = userb;
-	}
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
-	public String getCompanyScreenName() {
-		return companyScreenName;
-	}
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
 
-	public void setCompanyScreenName(String companyScreenName) {
-		this.companyScreenName = companyScreenName;
-	}
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
 
-	public byte[] getBase64img() {
-		return base64img;
-	}
+    public boolean isTacAccepted() {
+        return tacAccepted;
+    }
 
-	public void setBase64img(byte[] base64img) {
-		this.base64img = base64img;
-	}
+    public void setTacAccepted(boolean tacAccepted) {
+        this.tacAccepted = tacAccepted;
+    }
 
-	public String getLicense() {
-		return license;
-	}
+    public Date getTacAcceptDate() {
+        return tacAcceptDate;
+    }
 
-	public void setLicense(String license) {
-		this.license = license;
-	}
+    public void setTacAcceptDate(Date tacAcceptDate) {
+        this.tacAcceptDate = tacAcceptDate;
+    }
 
-	public String getCompanyScreenDescription() {
-		return companyScreenDescription;
-	}
+    public Date getLastPasswordResetDate() {
+        return lastPasswordResetDate;
+    }
 
-	public void setCompanyScreenDescription(String companyScreenDescription) {
-		this.companyScreenDescription = companyScreenDescription;
-	}
+    public void setLastPasswordResetDate(Date lastPasswordResetDate) {
+        this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Specialty> getSpecialties() {
+        return specialties;
+    }
+
+    public void setSpecialties(Set<Specialty> specialties) {
+        this.specialties = specialties;
+    }
+
+    public Set<UserGeoLocation> getUserGeoLocations() {
+        return userGeoLocations;
+    }
+
+    public void setUserGeoLocations(Set<UserGeoLocation> userGeoLocations) {
+        this.userGeoLocations = userGeoLocations;
+    }
+
+    public boolean isPhoneValidated() {
+        return phoneValidated;
+    }
+
+    public void setPhoneValidated(boolean phoneValidated) {
+        this.phoneValidated = phoneValidated;
+    }
+
+    public String getMobileHash() {
+        return mobileHash;
+    }
+
+    public void setMobileHash(String mobileHash) {
+        this.mobileHash = mobileHash;
+    }
+
+    public boolean isUserb() {
+        return userb;
+    }
+
+    public void setUserb(boolean userb) {
+        this.userb = userb;
+    }
+
+    public String getCompanyScreenName() {
+        return companyScreenName;
+    }
+
+    public void setCompanyScreenName(String companyScreenName) {
+        this.companyScreenName = companyScreenName;
+    }
+
+    public byte[] getBase64img() {
+        return base64img;
+    }
+
+    public void setBase64img(byte[] base64img) {
+        this.base64img = base64img;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
+
+    public String getCompanyScreenDescription() {
+        return companyScreenDescription;
+    }
+
+    public void setCompanyScreenDescription(String companyScreenDescription) {
+        this.companyScreenDescription = companyScreenDescription;
+    }
 
 }
