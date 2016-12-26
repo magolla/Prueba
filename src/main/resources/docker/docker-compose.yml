@@ -17,10 +17,19 @@ services:
     image: "mysql"
     volumes:
       - ../sql/localidades.sql:/docker-entrypoint-initdb.d/localidades.sql:ro
-    ports:
-      - "3306:3306"
     environment:
        MYSQL_ROOT_PASSWORD: root
        MYSQL_DATABASE: d2d
        MYSQL_USER: root
        MYSQL_PASSWORD: root
+  test:
+      image: "mysql"
+      volumes:
+        - ../sql/localidades.sql:/docker-entrypoint-initdb.d/localidades.sql:ro
+      ports:
+        - "3306:3306"
+      environment:
+         MYSQL_ROOT_PASSWORD: root
+         MYSQL_DATABASE: d2d
+         MYSQL_USER: root
+         MYSQL_PASSWORD: root
