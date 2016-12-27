@@ -1050,7 +1050,7 @@ public class UserServiceImpl implements UserService {
 		return result;
 	}
 
-	private JobOfferStatusDTO toDTO(JobOffer s) {
+	protected JobOfferStatusDTO toDTO(JobOffer s) {
 		JobOfferStatusDTO result = new JobOfferStatusDTO();
 		result.setId(s.getId());
 		result.setComment(s.getComment());
@@ -1075,7 +1075,7 @@ public class UserServiceImpl implements UserService {
 		result.setTask_id(s.getTask().getId());
 		result.setTaskName(s.getTask().getName());
 		result.setApplications(s.getApplications());
-		
+		result.setBase64img(s.getOfferent().getBase64img());
 		return result;
 	}
 	
