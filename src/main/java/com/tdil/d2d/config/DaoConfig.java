@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 public class DaoConfig {
 
 
-    @Bean(name = "userDAO")
-    public UserDAO userDAO() {
-        return new UserDAOImpl();
-    }
-    
+	@Bean(name = "userDAO")
+	public UserDAO userDAO() {
+		return new UserDAOImpl();
+	}
+
 }
