@@ -96,7 +96,7 @@ import com.tdil.d2d.utils.ServiceLocator;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	@Autowired
 	private UserDAO userDAO;
 	@Autowired
@@ -111,26 +111,26 @@ public class UserServiceImpl implements UserService {
 	private ActivityLogDAO activityLogDAO;
 	@Autowired
 	private GeoDAO geoDAO;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private CryptographicService cryptographicService;
-	
+
 	@Autowired
-	@Qualifier(value="androidNotificationServiceImpl")
+	@Qualifier(value = "androidNotificationServiceImpl")
 	private NotificationService androidNotificationService;
 	@Autowired
-	@Qualifier(value="iosNotificationServiceImpl")
+	@Qualifier(value = "iosNotificationServiceImpl")
 	private NotificationService iosNotificationService;
-	
+
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Autowired
 	private SubscriptionService subscriptionService;
-	
+
 	@Override
 	public User getUserByUsername(String username) throws ServiceException {
 		try {
@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public User getUserByEmail(String email) throws ServiceException {
 		try {
@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public User getUserByMobilePhone(String mobilePhone) throws ServiceException {
 		try {
@@ -184,10 +184,10 @@ public class UserServiceImpl implements UserService {
 			}
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
-			
+
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
 			// TODO ENVIAR EMAIL DE VALIDACION
-			
+
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link " + user.getEmailHash();
 				emailService.sendEmail(registrationRequest.getEmail(), EmailServiceImpl.defaultFrom, "Registracion", body);
@@ -195,14 +195,14 @@ public class UserServiceImpl implements UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public RegistrationResponse register(RegistrationRequestB registrationRequest) throws ServiceException {
 		try {
@@ -228,10 +228,10 @@ public class UserServiceImpl implements UserService {
 			}
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
-			
+
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
 			// TODO ENVIAR EMAIL DE VALIDACION
-			
+
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link " + user.getEmailHash();
 				emailService.sendEmail(registrationRequest.getEmail(), EmailServiceImpl.defaultFrom, "Registracion", body);
@@ -239,7 +239,7 @@ public class UserServiceImpl implements UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
@@ -251,12 +251,12 @@ public class UserServiceImpl implements UserService {
 			NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		return cryptographicService.encrypt(deviceId, "", user.getSalt());
 	}
-	
+
 	@Override
 	public boolean validate(ValidationRequest validationRequest) throws ServiceException {
 		try {
 			User user = this.userDAO.getUserByMobilePhone(validationRequest.getMobilePhone());
-			if (user != null && user.getDeviceId().equals(encriptDeviceId(validationRequest.getDeviceId(), user)) 
+			if (user != null && user.getDeviceId().equals(encriptDeviceId(validationRequest.getDeviceId(), user))
 					&& user.getMobileHash().equals(validationRequest.getSmsCode())) {
 				user.setPhoneValidated(true);
 				this.userDAO.save(user);
@@ -279,7 +279,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean updateIOsPushId(IOsPushIdRequest iOsPushIdRequest) throws ServiceException {
 		try {
@@ -291,7 +291,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean addSpecialty(AddSpecialtyRequest addSpecialtyRequest) throws ServiceException {
 		try {
@@ -305,7 +305,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean addSpecialties(AddSpecialtiesRequest addSpecialtiesRequest) throws ServiceException {
 		try {
@@ -323,7 +323,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean addLocation(AddLocationRequest addLocationRequest) throws ServiceException {
 		try {
@@ -339,7 +339,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean addLocations(AddLocationsRequest addLocationsRequest) throws ServiceException {
 		try {
@@ -361,7 +361,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean setLicense(SetLicenseRequest setLicenseRequest) throws ServiceException {
 		try {
@@ -374,11 +374,17 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException {
+		User user = getLoggedUser();
+		return this.setAvatar(user, setAvatarRequest);
+	}
+
+
+	@Override
+	public boolean setAvatar(User user, SetAvatarRequest setAvatarRequest) throws ServiceException {
 		try {
-			User user = getLoggedUser();
 			user.setBase64img(setAvatarRequest.getAvatarBase64().getBytes());
 			this.userDAO.save(user);
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_LICENSE));
@@ -387,7 +393,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public void getAvatar(OutputStream outputStream) throws ServiceException {
 		try {
@@ -397,7 +403,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public Base64DTO getAvatarBase64() throws ServiceException {
 		User user = getLoggedUser();
@@ -407,7 +413,7 @@ public class UserServiceImpl implements UserService {
 			return new Base64DTO();
 		}
 	}
-	
+
 	@Override
 	public void getAvatar(long userId, ServletOutputStream outputStream) throws ServiceException {
 		try {
@@ -417,7 +423,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public Base64DTO getAvatarBase64(long userId) throws ServiceException {
 		try {
@@ -431,7 +437,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean setInstitutionType(SetInstitutionTypeRequest institutionTypeRequest) throws ServiceException {
 		try {
@@ -449,7 +455,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean addTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException {
 		try {
@@ -468,7 +474,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	public boolean setTasks(SetTasksToProfileRequest tasksToProfileRequest) throws ServiceException {
 		try {
 			User user = getLoggedUser();
@@ -490,7 +496,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean removeTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException {
 		try {
@@ -516,7 +522,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public void setProfileA(SetProfileARequest setProfileARequest) throws ServiceException {
 		try {
@@ -531,7 +537,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public void setProfileB(SetProfileBRequest setProfileBRequest) throws ServiceException {
 		try {
@@ -545,7 +551,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public ProfileResponseDTO profile() throws ServiceException {
 		ProfileResponseDTO result = new ProfileResponseDTO();
@@ -562,7 +568,7 @@ public class UserServiceImpl implements UserService {
 		}
 		return result;
 	}
-		
+
 	@Override
 	public void updateLastLoginDate() throws ServiceException {
 		try {
@@ -574,7 +580,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean validateEmail(String email, String hash) throws ServiceException {
 		try {
@@ -593,8 +599,8 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
-	
+
+
 	@Override
 	public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest) throws ServiceException {
 		try {
@@ -624,7 +630,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException {
 		try {
@@ -632,7 +638,7 @@ public class UserServiceImpl implements UserService {
 			cal.add(Calendar.MONTH, 1);
 			createOfferRequest.setOfferDate(new SimpleDateFormat("yyyyMMdd").format(cal.getTime()));
 			createOfferRequest.setOfferHour("0000");
-			
+
 			JobOffer jobOffer = new JobOffer();
 			jobOffer.setOfferent(getLoggedUser());
 			jobOffer.setCreationDate(new Date());
@@ -669,7 +675,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean apply(long offerId, ApplyToOfferRequest applyToOffer) throws ServiceException {
 		try {
@@ -683,7 +689,7 @@ public class UserServiceImpl implements UserService {
 			if (jobOffer.isExpired()) {
 				return false;
 			}
-			
+
 			JobApplication jobApplication = new JobApplication();
 			jobApplication.setComment(applyToOffer.getComment());
 			jobApplication.setCvAttach(Base64.decodeBase64(applyToOffer.getCvPdf()));
@@ -698,7 +704,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public void offerApplicationCV(long offerId, long applicationId, ServletOutputStream outputStream)
 			throws ServiceException {
@@ -733,6 +739,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
+
 	private long addTask(long specialtyId, String taskName) throws ServiceException {
 		try {
 			Specialty s = this.specialtyDAO.getSpecialtyById(specialtyId);
@@ -745,23 +752,28 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 
 	private Date getDate(String offerDate, String string) throws ParseException {
 		return new SimpleDateFormat(string).parse(offerDate);
 	}
-	
+
 	@Override
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
+		return this.getMyOffers(RuntimeContext.getCurrentUser().getId());
+	}
+
+	@Override
+	public List<JobOfferStatusDTO> getMyOffers(long userID) throws ServiceException {
 		try {
-			List<JobOffer> offers = this.jobDAO.getOpenOffers(RuntimeContext.getCurrentUser().getId());
+			List<JobOffer> offers = this.jobDAO.getOpenOffers(userID);
 			return offers.stream().map(s -> toDTO(s))
 					.collect(Collectors.toList());
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public List<JobOfferStatusDTO> getMyOffersClosed() throws ServiceException {
 		try {
@@ -772,7 +784,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public MatchesSummaryDTO getMatchedOffersSummary() throws ServiceException {
 		MatchesSummaryDTO result = new MatchesSummaryDTO();
@@ -780,17 +792,17 @@ public class UserServiceImpl implements UserService {
 		result.setTemporal(getMatchedTemporalOffers().size());
 		return result;
 	}
-	
+
 	@Override
 	public List<JobOfferStatusDTO> getMatchedTemporalOffers() throws ServiceException {
 		return getMatchedOffers(false);
 	}
-	
+
 	@Override
 	public List<JobOfferStatusDTO> getMatchedPermamentOffers() throws ServiceException {
 		return getMatchedOffers(true);
 	}
-	
+
 	@Override
 	public List<JobOfferStatusDTO> getPermamentOffers(SearchOfferRequest searchOfferRequest) throws ServiceException {
 		// TODO PENDING
@@ -843,7 +855,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public List<JobApplicationDTO> offerApplications(long offerId) throws ServiceException {
 		try {
@@ -858,7 +870,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public JobApplicationDTO offerApplication(long applicationId) throws ServiceException {
 		try {
@@ -871,7 +883,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean accept(long offerId, long applicationId) throws ServiceException {
 		try {
@@ -896,7 +908,7 @@ public class UserServiceImpl implements UserService {
 				offer.setStatus(JobOffer.CLOSED);
 				// enviar notificaciones a los que quedan afuera
 				// enviar notificacion al que aceptaron
-			} 
+			}
 			this.jobDAO.save(offer);
 			this.jobApplicationDAO.save(application);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.ACCEPT_OFFER));
@@ -929,7 +941,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public NotificationConfigurationResponse getNotificationConfiguration() throws ServiceException {
 		try {
@@ -958,7 +970,7 @@ public class UserServiceImpl implements UserService {
 		}
 		return response;
 	}
-	
+
 	@Override
 	public boolean setNotificationConfiguration(ConfigureNotificationsRequest configureNotificationsRequest)
 			throws ServiceException {
@@ -985,7 +997,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean sendTestNotificationAndroid() throws ServiceException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -1000,7 +1012,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean sendTestNotificationIOS() throws ServiceException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -1018,7 +1030,7 @@ public class UserServiceImpl implements UserService {
 
 	private JobApplicationDTO toDTO(JobApplication s) {
 		JobApplicationDTO result = new JobApplicationDTO();
-		
+
 		//Application ID
 		result.setId(s.getId());
 		//User ID
@@ -1078,7 +1090,7 @@ public class UserServiceImpl implements UserService {
 		result.setBase64img(s.getOfferent().getBase64img());
 		return result;
 	}
-	
+
 	@Override
 	public UserDetailsResponse me() throws ServiceException {
 		User user = getLoggedUser();
@@ -1097,7 +1109,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 		resp.setGeoLevels(toDtoGeoLevel(user.getUserGeoLocations()));
-		
+
 		if (!user.getSpecialties().isEmpty()) {
 			user.getSpecialties().stream().findFirst().ifPresent(new Consumer<Specialty>() {
 				@Override
@@ -1110,7 +1122,7 @@ public class UserServiceImpl implements UserService {
 			});
 			resp.setSpecialities(SpecialtyServiceImpl.toDtoSpecialty(user.getSpecialties()));
 		}
-		
+
 		if (user.getBase64img() != null) {
 			resp.setBase64img(new String(user.getBase64img()));
 		}
@@ -1126,16 +1138,17 @@ public class UserServiceImpl implements UserService {
 				resp.setHasSubscription(true);
 			}
 		}
-		
+
 		NotificationConfigurationResponse notificationConfigurationResponse = this.getNotificationConfiguration();
 		resp.setNotificationConfigurationResponse(notificationConfigurationResponse);
-		
+
 		return resp;
 	}
-	
+
 	private static Collection<GeoLevelDTO> toDtoGeoLevel(Collection<UserGeoLocation> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
 	}
+
 	private static GeoLevelDTO toDto(UserGeoLocation s) {
 		GeoLevelDTO result = new GeoLevelDTO();
 		result.setId(s.getGeoLevelId());
@@ -1143,7 +1156,7 @@ public class UserServiceImpl implements UserService {
 		result.setName(s.getGeoLevelName());
 		return result;
 	}
-	
+
 	@Override
 	public List<ActivityLogDTO> getActivityLog() throws ServiceException {
 		try {
@@ -1162,7 +1175,7 @@ public class UserServiceImpl implements UserService {
 		r.setLog(s.getLog());
 		return r;
 	}
-	
+
 	@Override
 	public void initDbWithTestData() throws ServiceException {
 		long l = this.addOccupation("Medico");

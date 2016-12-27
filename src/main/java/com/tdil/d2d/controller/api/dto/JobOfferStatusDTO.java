@@ -168,4 +168,8 @@ public class  JobOfferStatusDTO{
 	public void setBase64img(byte[] base64img) {
 		this.base64img = base64img;
 	}
+
+	public byte[] getBase64img() {
+		return base64img;
+	}
 }
