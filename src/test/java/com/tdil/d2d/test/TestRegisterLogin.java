@@ -26,8 +26,8 @@ import io.restassured.response.Response;
 public class TestRegisterLogin {
 
 	private static final String LICENSE = "1212121221";
-	private static final String AP_URL = "https://localhost:8443/d2d";
-//	private static final String AP_URL = "http://localhost:8080/d2d";
+//	private static final String AP_URL = "https://localhost:8443/d2d";
+	private static final String AP_URL = "http://localhost:8080/d2d";
 
 	@org.junit.Test
 	public void test() {

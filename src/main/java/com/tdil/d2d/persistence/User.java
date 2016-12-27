@@ -25,10 +25,10 @@ public class User implements PersistentEntity {
 	@GeneratedValue
 	@Column(name = "id")
 	private long id;
-	
+
 	@Column(name = "creationDate")
 	private Date creationDate;
-	
+
 	@Column(name = "lastLoginDate")
 	private Date lastLoginDate;
 
@@ -37,78 +37,78 @@ public class User implements PersistentEntity {
 
 	@Column(name = "lastname")
 	private String lastname;
-	
-	@Column(name = "mobilePhone")
+
+	@Column(name = "mobilePhone", unique = true)
 	private String mobilePhone;
-	
+
 	@Column(name = "mobileHash")
 	private String mobileHash;
-	
+
 	@Column(name = "tacAccepted")
 	private boolean tacAccepted;
-	
+
 	@Column(name = "tacAcceptDate")
 	private Date tacAcceptDate;
 
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "emailHash")
 	private String emailHash;
-	
+
 	@Column(name = "phoneValidated")
 	private boolean phoneValidated;
-	
+
 	@Column(name = "emailValidated")
 	private boolean emailValidated;
-	
-	@Column(name="pass")
+
+	@Column(name = "pass")
 	private String password;
-	
+
 	@Column(name = "enabled")
 	private boolean enabled;
-	
+
 	@Column(name = "userb")
 	private boolean userb;
-	
+
 	@Column(name = "deviceId")
 	private String deviceId;
 
-	@Column(name = "androidRegId", length=256)
+	@Column(name = "androidRegId", length = 256)
 	private String androidRegId;
-	
-	@Column(name = "iosPushId", length=256)
+
+	@Column(name = "iosPushId", length = 256)
 	private String iosPushId;
-	
+
 	@Column(name = "lastPasswordResetDate")
 	private Date lastPasswordResetDate;
-	
-	@Column(name = "companyScreenName", length=256)
+
+	@Column(name = "companyScreenName", length = 256)
 	private String companyScreenName;
-	
-	@Column(name = "companyScreenDescription", length=2000)
+
+	@Column(name = "companyScreenDescription", length = 2000)
 	private String companyScreenDescription;
-	
-	@Column(name = "license", length=256)
+
+	@Column(name = "license", length = 256)
 	private String license;
-	
+
 	//Ver tamaño
 	@Column(name = "base64img")
 	@Lob()
 	private byte[] base64img;
-	
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "D2D_USER_SPECIALTY", joinColumns = {
-			@JoinColumn(name = "USER_ID", nullable = false, updatable = false) },
-			inverseJoinColumns = { @JoinColumn(name = "SPECIALTY_ID",
-					nullable = false, updatable = false) })
+			@JoinColumn(name = "USER_ID", nullable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name = "SPECIALTY_ID",
+					nullable = false, updatable = false)})
 	private Set<Specialty> specialties = new HashSet<Specialty>(0);
-	
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "D2D_USER_GEOLOC", joinColumns = {
-			@JoinColumn(name = "USER_ID", nullable = false, updatable = false) },
-			inverseJoinColumns = { @JoinColumn(name = "USERGEOLOC_ID",
-					nullable = false, updatable = false) })
+			@JoinColumn(name = "USER_ID", nullable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name = "USERGEOLOC_ID",
+					nullable = false, updatable = false)})
 	private Set<UserGeoLocation> userGeoLocations = new HashSet<UserGeoLocation>(0);
 
 	public long getId() {
@@ -130,7 +130,7 @@ public class User implements PersistentEntity {
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
+
 	public boolean getEnabled() {
 		return enabled;
 	}
