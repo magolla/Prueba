@@ -416,7 +416,9 @@ public class UserController extends AbstractController {
 			}
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
-			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+			ApiResponse apiResponse = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			apiResponse.addError(e.getLocalizedMessage());
+			return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
 
