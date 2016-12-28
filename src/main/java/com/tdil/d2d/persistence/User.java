@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "D2D_USER")
@@ -93,6 +94,7 @@ public class User implements PersistentEntity {
 	private String license;
 
 	//Ver tamaño
+	@Size(max = 262144)
 	@Column(name = "base64img")
 	@Lob()
 	private byte[] base64img;
