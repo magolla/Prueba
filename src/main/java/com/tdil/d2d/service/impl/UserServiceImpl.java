@@ -380,7 +380,7 @@ public class UserServiceImpl implements UserService {
             User user = getLoggedUser();
             user.setBase64img(setAvatarRequest.getAvatarBase64().getBytes());
             this.userDAO.save(user);
-            activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_LICENSE));
+            activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_AVATAR));
             return true;
         } catch (DAOException e) {
             throw new ServiceException(e);
@@ -617,7 +617,7 @@ public class UserServiceImpl implements UserService {
             jobOffer.setVacants(createOfferRequest.getVacants());
             jobOffer.setStatus(JobOffer.VACANT);
             this.jobDAO.save(jobOffer);
-            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_OFFER));
+            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
             return true;
         } catch (Exception e) {
             throw new ServiceException(e);
@@ -654,7 +654,7 @@ public class UserServiceImpl implements UserService {
             jobOffer.setVacants(createOfferRequest.getVacants());
             jobOffer.setStatus(JobOffer.VACANT);
             this.jobDAO.save(jobOffer);
-            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_OFFER));
+            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
             return true;
         } catch (Exception e) {
             throw new ServiceException(e);
@@ -906,6 +906,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    
+    /* ESTE MÉTODO ESTÁ DEPRECADO YA QUE NO SE VAN A RECHAZAR PERFILES POR AHORA */
     @Override
     public boolean reject(long offerId, long applicationId) throws ServiceException {
         try {
