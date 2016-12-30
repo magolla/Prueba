@@ -12,6 +12,7 @@ import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
+import com.tdil.d2d.controller.api.request.AddLocationsRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
@@ -58,6 +59,9 @@ public interface UserService {
 	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException;
 
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException;
+
+	List<JobOfferStatusDTO> getMyOffers(long userID) throws ServiceException;
+
 	public List<JobOfferStatusDTO> getMyOffersClosed() throws ServiceException;
 
 	public List<ActivityLogDTO> getActivityLog() throws ServiceException;
@@ -68,6 +72,7 @@ public interface UserService {
 	public boolean addSpecialties(AddSpecialtiesRequest addSpecialtiesRequest) throws ServiceException;
 
 	public boolean addLocation(AddLocationRequest addLocationRequest) throws ServiceException;
+	public boolean addLocations(AddLocationsRequest addLocationsRequest) throws ServiceException;
 	
 	public MatchesSummaryDTO getMatchedOffersSummary() throws ServiceException;
 	public List<JobOfferStatusDTO> getMatchedTemporalOffers() throws ServiceException;
@@ -109,6 +114,7 @@ public interface UserService {
 	public boolean setTasks(SetTasksToProfileRequest tasksToProfileRequest) throws ServiceException;
 	public boolean removeTask(AddTaskToProfileRequest taskToProfileRequest) throws ServiceException;
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException;
+	boolean setAvatar(User user,SetAvatarRequest setAvatarRequest) throws ServiceException;
 	public void getAvatar(OutputStream outputStream) throws ServiceException;
 	public void getAvatar(long userId, ServletOutputStream outputStream) throws ServiceException;
 	public Base64DTO getAvatarBase64() throws ServiceException;

@@ -59,7 +59,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
 	}
 	
-	private static Collection<SpecialtyDTO> toDtoSpecialty(Collection<Specialty> list) {
+	protected static Collection<SpecialtyDTO> toDtoSpecialty(Collection<Specialty> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
 	}
 	

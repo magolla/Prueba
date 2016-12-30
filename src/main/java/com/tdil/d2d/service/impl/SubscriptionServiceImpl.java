@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.controller.api.request.UseSponsorCodeRequest;
+import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.ActivityAction;
+import com.tdil.d2d.persistence.ActivityLog;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
@@ -31,6 +34,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+    private ActivityLogDAO activityLogDAO;
 	
 	@Override
 	public boolean useSponsorCode(UseSponsorCodeRequest useSponsorCodeRequest) throws ServiceException {
@@ -65,7 +71,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			}
 			sponsorCode.setRemainingUses(sponsorCode.getRemainingUses() - 1);
 			subscriptionDAO.saveSponsorCode(sponsorCode);
-
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SUBSCRIPTION));
 			Subscription subscription = new Subscription();
 			subscription.setSponsorCode(sponsorCode);
 			subscription.setExpirationDate(getExpirationDate(Calendar.getInstance(), sponsorCode));

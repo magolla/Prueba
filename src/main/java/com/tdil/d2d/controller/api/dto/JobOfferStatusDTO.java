@@ -25,7 +25,8 @@ public class  JobOfferStatusDTO{
 	private String taskName;
 	private long offerent_id;
 	private Integer applications;
-	
+	private byte[] base64img;
+
 	public long getId() {
 		return id;
 	}
@@ -164,7 +165,11 @@ public class  JobOfferStatusDTO{
 	public void setApplications(Integer applications) {
 		this.applications = applications;
 	}
-	
-	
-	
+	public void setBase64img(byte[] base64img) {
+		this.base64img = base64img;
+	}
+
+	public byte[] getBase64img() {
+		return base64img;
+	}
 }

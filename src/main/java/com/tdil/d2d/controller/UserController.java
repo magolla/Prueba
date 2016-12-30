@@ -27,6 +27,7 @@ import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
+import com.tdil.d2d.controller.api.request.AddLocationsRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
@@ -64,10 +65,10 @@ public class UserController extends AbstractController {
     private static final String UNKNOWN_HOST = "unknown";
 
     public static String HOSTNAME;
-    
+
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -94,7 +95,9 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<RegistrationResponse>(response, HttpStatus.CREATED);
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
-			return new ResponseEntity<RegistrationResponse>((RegistrationResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+            RegistrationResponse response = new RegistrationResponse(0);
+            response.addError(e.getLocalizedMessage());
+			return new ResponseEntity<RegistrationResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
 
@@ -107,13 +110,15 @@ public class UserController extends AbstractController {
 			RegistrationResponse response = this.userService.register(registrationRequest);
 			return new ResponseEntity<RegistrationResponse>(response, HttpStatus.CREATED);
 		} catch (ServiceException e) {
-			LoggerManager.error(this, e);
-			return new ResponseEntity<RegistrationResponse>((RegistrationResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+            LoggerManager.error(this, e);
+            RegistrationResponse response = new RegistrationResponse(0);
+            response.addError(e.getLocalizedMessage());
+            return new ResponseEntity<RegistrationResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-	
-	
-    
+
+
+
     // TODO 
 //    profesion (1) - especialidades cada ve que toca graba
 //    
@@ -121,8 +126,8 @@ public class UserController extends AbstractController {
 //    tipo de institucion
 //    
 //    my perfil zonas
-    
-    
+
+
     @RequestMapping(value = "/user/validate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> register(@Valid @RequestBody ValidationRequest validationRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -131,7 +136,7 @@ public class UserController extends AbstractController {
     	try {
 			boolean result = this.userService.validate(validationRequest);
 			if (result) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -140,7 +145,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/androidRegId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> androidRegId(@Valid @RequestBody AndroidRegIdRequest androidRegIdRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -154,7 +159,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/iosPushId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> iosPushId(@Valid @RequestBody IOsPushIdRequest iOsPushIdRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -168,7 +173,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/validateEmail", method = RequestMethod.GET)
     public ModelAndView validateEmail(@RequestParam("email") String email, @RequestParam("hash") String hash) {
     	try {
@@ -183,7 +188,7 @@ public class UserController extends AbstractController {
 			return new ModelAndView("emailNotValidated");
 		}
     }
-    
+
     @RequestMapping(value = "/user/specialty", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> addSpecialty(@Valid @RequestBody AddSpecialtyRequest addSpecialtyRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -192,17 +197,17 @@ public class UserController extends AbstractController {
     	try {
 			boolean response = this.userService.addSpecialty(addSpecialtyRequest);
 			if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-			
+
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/specialty/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> addSpecialties(@Valid @RequestBody AddSpecialtiesRequest addSpecialtiesRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -211,17 +216,17 @@ public class UserController extends AbstractController {
     	try {
 			boolean response = this.userService.addSpecialties(addSpecialtiesRequest);
 			if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-			
+
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/location", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> addLocation(@Valid @RequestBody AddLocationRequest addLocationRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -230,17 +235,36 @@ public class UserController extends AbstractController {
     	try {
 			boolean response = this.userService.addLocation(addLocationRequest);
 			if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-			
+
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
+    @RequestMapping(value = "/user/location/addAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> addLocations(@Valid @RequestBody AddLocationsRequest addLocationsRequest, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
+    	try {
+			boolean response = this.userService.addLocations(addLocationsRequest);
+			if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+
     @RequestMapping(value = "/user/license", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setLicense(@Valid @RequestBody SetLicenseRequest setLicenseRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -249,28 +273,28 @@ public class UserController extends AbstractController {
     	try {
 			boolean response = this.userService.setLicense(setLicenseRequest);
 			if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-			
+
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/notifications", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NotificationConfigurationResponse> getNotication() {
     	try {
     		NotificationConfigurationResponse response = this.userService.getNotificationConfiguration();
-			return new ResponseEntity<NotificationConfigurationResponse>(response, HttpStatus.OK);	
+			return new ResponseEntity<NotificationConfigurationResponse>(response, HttpStatus.OK);
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<NotificationConfigurationResponse>((NotificationConfigurationResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/notifications", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setNotication(@Valid @RequestBody ConfigureNotificationsRequest notificationConfiguration, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -279,7 +303,7 @@ public class UserController extends AbstractController {
     	try {
     		boolean response = this.userService.setNotificationConfiguration(notificationConfiguration);
     		if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -288,7 +312,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/me", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<UserDetailsResponse>> me() {
     	try {
@@ -299,12 +323,12 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<GenericResponse<UserDetailsResponse>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     // TODO
 //    terminos y condiciones
 //    
 //    /POST de upload de avatar
-    
+
     @RequestMapping(value = "/user/profile", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<ProfileResponseDTO>> getProfile() {
     	try {
@@ -315,7 +339,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<GenericResponse<ProfileResponseDTO>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/profileA", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setProfileA(@Valid @RequestBody SetProfileARequest setProfileARequest, BindingResult bidingResult) {
     	try {
@@ -326,7 +350,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/profileB", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setProfileB(@Valid @RequestBody SetProfileBRequest setProfileBRequest, BindingResult bidingResult) {
     	try {
@@ -337,7 +361,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/profile/avatar", method = RequestMethod.GET)
     public void getAvatar(HttpServletResponse response) {
     	try {
@@ -346,7 +370,7 @@ public class UserController extends AbstractController {
 			LoggerManager.error(this, e);
 		}
     }
-    
+
     @RequestMapping(value = "/user/profile/avatarBase64", method = RequestMethod.GET)
     public ResponseEntity<GenericResponse<Base64DTO>> getAvatarBase64() {
     	try {
@@ -357,7 +381,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<GenericResponse<Base64DTO>>(new GenericResponse<Base64DTO>(null,HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/{userId}/profile/avatar", method = RequestMethod.GET)
     public void getOtherUserAvatar(@PathVariable long userId, HttpServletResponse response) {
     	try {
@@ -366,7 +390,7 @@ public class UserController extends AbstractController {
 			LoggerManager.error(this, e);
 		}
     }
-    
+
     @RequestMapping(value = "/user/{userId}/profile/avatarBase64", method = RequestMethod.GET)
     public ResponseEntity<GenericResponse<Base64DTO>> getOtherUserAvatar(@PathVariable long userId) {
     	try {
@@ -377,7 +401,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<GenericResponse<Base64DTO>>(new GenericResponse<Base64DTO>(null,HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/profile/avatar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setAvatar(@Valid @RequestBody SetAvatarRequest setAvatarRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -386,16 +410,18 @@ public class UserController extends AbstractController {
     	try {
     		boolean response = this.userService.setAvatar(setAvatarRequest);
     		if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
-			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+			ApiResponse apiResponse = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			apiResponse.addError(e.getLocalizedMessage());
+			return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/profile/institutionType", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setNotification(@Valid @RequestBody SetInstitutionTypeRequest institutionTypeRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -404,7 +430,7 @@ public class UserController extends AbstractController {
     	try {
     		boolean response = this.userService.setInstitutionType(institutionTypeRequest);
     		if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -413,7 +439,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/profile/task", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> addTask(@Valid @RequestBody AddTaskToProfileRequest taskToProfileRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -422,7 +448,7 @@ public class UserController extends AbstractController {
     	try {
     		boolean response = this.userService.addTask(taskToProfileRequest);
     		if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -431,7 +457,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/profile/task/setAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> setTask(@Valid @RequestBody SetTasksToProfileRequest tasksToProfileRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -440,7 +466,7 @@ public class UserController extends AbstractController {
     	try {
     		boolean response = this.userService.setTasks(tasksToProfileRequest);
     		if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -449,7 +475,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/profile/task/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> removeTask(@Valid @RequestBody AddTaskToProfileRequest taskToProfileRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
@@ -458,7 +484,7 @@ public class UserController extends AbstractController {
     	try {
     		boolean response = this.userService.removeTask(taskToProfileRequest);
     		if (response) {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -467,7 +493,7 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/user/log", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<ActivityLogDTO>>> activityLog() {
     	try {
@@ -478,11 +504,11 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<GenericResponse<List<ActivityLogDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
-    
+
     @RequestMapping(value = "/test111", method = RequestMethod.GET)
     public ModelAndView test() {
 		return new ModelAndView("index");
 
     }
-    
+
 }
