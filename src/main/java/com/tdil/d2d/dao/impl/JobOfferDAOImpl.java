@@ -24,9 +24,6 @@ public class JobOfferDAOImpl  extends GenericDAO<JobOffer> implements JobOfferDA
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
 			Criteria criteria2 = this.getSessionFactory().getCurrentSession().createCriteria(JobApplication.class);
 			criteria.add(Restrictions.eq("offerent.id", userId));
-			
-			
-			criteria.add(Restrictions.eq("status", JobOffer.VACANT));
 			criteria.add(Restrictions.ge("offerDate", new Date()));
 			criteria.addOrder(Order.asc("id"));
 			List<JobOffer> list = criteria.list();
@@ -41,7 +38,6 @@ public class JobOfferDAOImpl  extends GenericDAO<JobOffer> implements JobOfferDA
 				jobAppList.clear();
 				criteria2 = this.getSessionFactory().getCurrentSession().createCriteria(JobApplication.class);
 			}
-			
 			
 			System.out.println();
 			
