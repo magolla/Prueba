@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -172,6 +173,12 @@ public class UserController extends AbstractController {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+    }
+    
+    @RequestMapping(value = "/user/linkedin/auth/step1", method = RequestMethod.GET)
+    public ResponseEntity<GenericResponse<String>> linkedinAuthStep1(HttpServletResponse response, HttpServletRequest request) {
+		String code = request.getParameter("code");
+		return new ResponseEntity<GenericResponse<String>>(new GenericResponse<String>(code, HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user/validateEmail", method = RequestMethod.GET)
