@@ -597,8 +597,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest) throws ServiceException {
         try {
+        	
             JobOffer jobOffer = new JobOffer();
             jobOffer.setOfferent(getLoggedUser());
+            jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
             jobOffer.setCreationDate(new Date());
             jobOffer.setGeoLevelLevel(createOfferRequest.getGeoLevelLevel());
             jobOffer.setGeoLevelId(createOfferRequest.getGeoLevelId());
@@ -609,7 +611,7 @@ public class UserServiceImpl implements UserService {
 //			xxx nuevos campos
             jobOffer.setCompanyScreenName(createOfferRequest.getCompanyScreenName());
             jobOffer.setInstitutionType(createOfferRequest.getInstitutionType());
-            jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate(), "yyyyMMdd"));
+            jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate() + " " + createOfferRequest.getOfferHour() , "yyyyMMdd HHmm"));
             jobOffer.setHour(createOfferRequest.getOfferHour());
             jobOffer.setPermanent(false);
             jobOffer.setComment(createOfferRequest.getComment());
@@ -634,6 +636,7 @@ public class UserServiceImpl implements UserService {
 
             JobOffer jobOffer = new JobOffer();
             jobOffer.setOfferent(getLoggedUser());
+            jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
             jobOffer.setCreationDate(new Date());
             jobOffer.setGeoLevelLevel(createOfferRequest.getGeoLevelLevel());
             jobOffer.setGeoLevelId(createOfferRequest.getGeoLevelId());
@@ -1093,8 +1096,13 @@ public class UserServiceImpl implements UserService {
         resp.setLicence(user.getLicense());
         try {
             UserProfile userProfile = this.userDAO.getUserProfile(user);
-            resp.setInstitutionType(userProfile.getInstitutionType().toString());
-            resp.setTasks(SpecialtyServiceImpl.toDtoTask(userProfile.getTasks()));
+            if(userProfile == null) {
+            	resp.setInstitutionType(null);
+            	resp.setTasks(null);
+            } else {
+            	resp.setInstitutionType(userProfile.getInstitutionType().toString());
+            	resp.setTasks(SpecialtyServiceImpl.toDtoTask(userProfile.getTasks()));
+            }
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -1172,4 +1180,16 @@ public class UserServiceImpl implements UserService {
         l = this.addSpecialty(l, "Alergista");
         l = this.addTask(l, "reemplazo de consultorio");
     }
+
+	@Override
+	public List<JobOfferStatusDTO> getMyOffers(long userID) throws ServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean setAvatar(User user, SetAvatarRequest setAvatarRequest) throws ServiceException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
