@@ -6,7 +6,7 @@ import java.util.List;
 public class ApiResponse<T> {
 
 
-	private T data;
+	protected T data;
 	private int status;
 	private List<String> errors = new ArrayList<>();
 

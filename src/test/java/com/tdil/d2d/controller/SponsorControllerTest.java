@@ -1,30 +1,21 @@
 package com.tdil.d2d.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tdil.d2d.controller.api.request.GenerateSponsorCodesRequest;
+import com.tdil.d2d.controller.api.request.CreateSponsorRequest;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
-import com.tdil.d2d.persistence.SubscriptionTimeUnit;
 import io.restassured.RestAssured;
 import io.restassured.config.SSLConfig;
 import io.restassured.http.Header;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
 
-
-public class SponsorCodeControllerIntegrationTest extends AbstractDTDTest {
-
-	private ObjectMapper mapper = new ObjectMapper();
-
+public class SponsorControllerTest extends AbstractDTDTest {
 
 	@Test
-	public void testGenerateSponsorCodes() {
+	public void test() {
 
 		RegistrationRequestA registrationA = createRegistrationRequestA(suffix, mobilePhone, deviceId);
 
@@ -48,19 +39,16 @@ public class SponsorCodeControllerIntegrationTest extends AbstractDTDTest {
 		Assert.assertNotNull(jwttokenOfferent);
 
 
-		GenerateSponsorCodesRequest request = new GenerateSponsorCodesRequest();
-		request.setCodesCount(1);
-		request.setSponsorId(1);
-		request.setTimeUnits(SubscriptionTimeUnit.DAY.toString());
-		request.setUnits(1);
+		CreateSponsorRequest createSponsorRequest = new CreateSponsorRequest("FARMACO");
 
 
 		given().config(RestAssured.config().sslConfig(
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation()))
 				.contentType(MediaType.APPLICATION_JSON.toString())
-				.body(toJson(request))
+				.body(toJson(createSponsorRequest))
 				.header(new Header("Authorization", jwttokenOfferent))
-				.post(API_URL + "/api/codes/generate")
+				.body(toJson(createSponsorRequest))
+				.post(API_URL + "/api/sponsors")
 				.then().log().body().statusCode(200).body("status", equalTo(200));
 
 
@@ -68,9 +56,10 @@ public class SponsorCodeControllerIntegrationTest extends AbstractDTDTest {
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation()))
 				.contentType(MediaType.APPLICATION_JSON.toString())
 				.header(new Header("Authorization", jwttokenOfferent))
-				.get(API_URL + "/api/codes/1")
+				.get(API_URL + "/api/sponsors")
 				.then().log().body().statusCode(200).body("status", equalTo(200));
+
+
 	}
-
 
 }
