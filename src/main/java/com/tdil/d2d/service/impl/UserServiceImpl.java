@@ -345,7 +345,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			user.getUserGeoLocations().clear();
-			//TODO no se están borrando los UserGeoLocations viejos.
+			//TODO no se estÃ¡n borrando los UserGeoLocations viejos.
 			for (int i = 0; i < addLocationsRequest.getGeoLevelId().length; i++) {
 				UserGeoLocation loc = new UserGeoLocation();
 				loc.setGeoLevelLevel(addLocationsRequest.getGeoLevelLevel()[i]);
@@ -387,7 +387,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			user.setBase64img(setAvatarRequest.getAvatarBase64().getBytes());
 			this.userDAO.save(user);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_LICENSE));
+            activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_AVATAR));
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -624,7 +624,7 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_OFFER));
+            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -661,7 +661,7 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_OFFER));
+            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -918,6 +918,7 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+    /* ESTE MÉTODO ESTÁ DEPRECADO YA QUE NO SE VAN A RECHAZAR PERFILES POR AHORA */
 	@Override
 	public boolean reject(long offerId, long applicationId) throws ServiceException {
 		try {
@@ -933,7 +934,6 @@ public class UserServiceImpl implements UserService {
 			}
 			JobApplication application = this.jobApplicationDAO.getById(JobApplication.class, applicationId);
 			application.setStatus(JobApplication.REJECTED);
-			// TODO enviar notifacion de rechazo
 			this.jobApplicationDAO.save(application);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.REJECT_OFFER));
 			return true;
