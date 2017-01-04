@@ -4,10 +4,15 @@ services:
     image: "tomcat:7.0.73-jre8-alpine"
     ports:
       - "8080:8080"
+      - "8000:8000"
       - "8443:8443"
 
     environment:
       JAVA_OPTS: -Dlog4j.configurationFile=conf/app/localhost/log4j2.xml -Dspring.profiles.active=docker -Duser.timezone=GMT-0
+      JPDA_ADDRESS: 8000
+      JPDA_TRANSPORT: dt_socket
+
+    command: /usr/local/tomcat/bin/catalina.sh jpda run
 
     volumes:
           - ./tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml:ro

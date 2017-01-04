@@ -98,6 +98,7 @@ import com.tdil.d2d.utils.ServiceLocator;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
+
 	private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
@@ -265,6 +266,7 @@ public class UserServiceImpl implements UserService {
 	public boolean validate(ValidationRequest validationRequest) throws ServiceException {
 		try {
 			User user = this.userDAO.getUserByMobilePhone(validationRequest.getMobilePhone());
+			logger.info("User found = {}", user.getId());
 			if (user != null && user.getDeviceId().equals(encriptDeviceId(validationRequest.getDeviceId(), user))
 					&& user.getMobileHash().equals(validationRequest.getSmsCode())) {
 				user.setPhoneValidated(true);
@@ -390,7 +392,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException {
 		User user = getLoggedUser();
-		return this.setAvatar(user,setAvatarRequest);
+		return this.setAvatar(user, setAvatarRequest);
 	}
 
 	@Override
@@ -758,7 +760,8 @@ public class UserServiceImpl implements UserService {
 		return new SimpleDateFormat(string).parse(offerDate);
 	}
 
-	@Override public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
+	@Override
+	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
 		long id = RuntimeContext.getCurrentUser().getId();
 		return this.getMyOffers(id);
 	}
@@ -1084,25 +1087,25 @@ public class UserServiceImpl implements UserService {
 
 		return result;
 	}
-	
-	@Override
-    public UserDetailsResponse me() throws ServiceException {
-        User user = getLoggedUser();
-        return getUserDetailsResponse(user);
-    }
 
-    @Override
-    public UserDetailsResponse getUser(long id) throws ServiceException {
-    	User user = null;
-        try {
-            user = this.userDAO.getById(User.class, id);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-        return getUserDetailsResponse(user);
-    }
-    
-    private UserDetailsResponse getUserDetailsResponse(User user) throws ServiceException {
+	@Override
+	public UserDetailsResponse me() throws ServiceException {
+		User user = getLoggedUser();
+		return getUserDetailsResponse(user);
+	}
+
+	@Override
+	public UserDetailsResponse getUser(long id) throws ServiceException {
+		User user = null;
+		try {
+			user = this.userDAO.getById(User.class, id);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		return getUserDetailsResponse(user);
+	}
+
+	private UserDetailsResponse getUserDetailsResponse(User user) throws ServiceException {
 		UserDetailsResponse resp = new UserDetailsResponse(HttpStatus.OK.value());
 		resp.setFirstname(user.getFirstname());
 		resp.setLastname(user.getLastname());
@@ -1157,7 +1160,7 @@ public class UserServiceImpl implements UserService {
 		resp.setNotificationConfigurationResponse(notificationConfigurationResponse);
 
 		return resp;
-    }
+	}
 
 	private static Collection<GeoLevelDTO> toDtoGeoLevel(Collection<UserGeoLocation> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());

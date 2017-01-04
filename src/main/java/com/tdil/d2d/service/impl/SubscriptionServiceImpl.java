@@ -4,12 +4,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.tdil.d2d.exceptions.DTDException;
+import com.tdil.d2d.exceptions.ExceptionDefinition;
+import com.tdil.d2d.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tdil.d2d.controller.api.request.UseSponsorCodeRequest;
 import com.tdil.d2d.dao.ActivityLogDAO;
+import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
@@ -29,21 +32,30 @@ import com.tdil.d2d.utils.ServiceLocator;
 @Service()
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-	@Autowired
-	private SubscriptionDAO subscriptionDAO;
+	private final SessionService sessionService;
+	private final SubscriptionDAO subscriptionDAO;
+	private final ActivityLogDAO activityLogDAO;
 
 	@Autowired
-	private UserService userService;
+	public SubscriptionServiceImpl(SessionService sessionService, SubscriptionDAO subscriptionDAO, ActivityLogDAO activityLogDAO) {
+		this.sessionService = sessionService;
+		this.subscriptionDAO = subscriptionDAO;
+		this.activityLogDAO = activityLogDAO;
+	}
 
-	@Autowired
-	private ActivityLogDAO activityLogDAO;
-
+	/**
+	 * Deprecado, utilizar {@link com.tdil.d2d.service.SponsorCodeService.consumeSponsorCode()}
+	 *
+	 * @param useSponsorCodeRequest
+	 * @return
+	 * @throws ServiceException
+	 */
+	@Deprecated
 	@Override
-	public boolean useSponsorCode(UseSponsorCodeRequest useSponsorCodeRequest) throws ServiceException {
+	public boolean useSponsorCode(RedeemSponsorCodeRequest useSponsorCodeRequest) throws ServiceException {
 		try {
-			User user = userService.getLoggedUser();
-			SponsorCode sponsorCode = subscriptionDAO.getSponsorCode(SponsorCode.class,
-					useSponsorCodeRequest.getSponsorCode());
+			User user = sessionService.getUserLoggedIn();
+			SponsorCode sponsorCode = subscriptionDAO.getSponsorCode(SponsorCode.class, useSponsorCodeRequest.getSponsorCode());
 			// si es rc, y es de test, genero datos de test
 			// Busco un sponsor code con ese codigo
 			if (sponsorCode == null && !ServiceLocator.isProd()
@@ -55,7 +67,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 					subscriptionDAO.saveSponsor(sponsor);
 				}
 				sponsorCode = new SponsorCode();
-				sponsorCode.setRemainingUses(10);
+//				sponsorCode.setRemainingUses(10);
 				sponsorCode.setSponsor(sponsor);
 				sponsorCode.setUnits(30);
 				sponsorCode.setTimeUnit(SubscriptionTimeUnit.DAY);
@@ -64,14 +76,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			if (sponsorCode == null) {
 				return false;
 			}
-			if (sponsorCode.getRemainingUses() < 1) {
-				return false;
-			}
+//			if (sponsorCode.getRemainingUses() < 1) {
+//				return false;
+//			}
 			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(user.getId());
 			if (hasSubscription(subscriptions, sponsorCode)) {
 				return false;
 			}
-			sponsorCode.setRemainingUses(sponsorCode.getRemainingUses() - 1);
+//			sponsorCode.setRemainingUses(sponsorCode.getRemainingUses() - 1);
 			subscriptionDAO.saveSponsorCode(sponsorCode);
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SUBSCRIPTION));
 			Subscription subscription = new Subscription();
@@ -88,22 +100,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
-	public Subscription getActiveSubscription(long userID) throws ServiceException {
+	public Subscription getActiveSubscription(long userID) {
 		try {
-			User user = userService.getLoggedUser();
+			User user = sessionService.getUserLoggedIn();
 			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(user.getId());
 			if (subscriptions == null || subscriptions.isEmpty()) {
-				return null;
+				throw new DTDException(ExceptionDefinition.DTD_2003, String.valueOf(userID));
 			} else {
 				Subscription subscription = subscriptions.get(0);
 				if (subscription.getExpirationDate().before(new Date())) {
-					return null;
+					throw new DTDException(ExceptionDefinition.DTD_2003, String.valueOf(userID));
 				} else {
 					return subscription;
 				}
 			}
 		} catch (DAOException e) {
-			throw new ServiceException(e);
+			throw new DTDException(ExceptionDefinition.DTD_2002, e, String.valueOf(userID));
 		}
 	}
 
