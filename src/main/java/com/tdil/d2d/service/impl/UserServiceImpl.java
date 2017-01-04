@@ -606,6 +606,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			JobOffer jobOffer = new JobOffer();
 			jobOffer.setOfferent(getLoggedUser());
+            jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
 			jobOffer.setCreationDate(new Date());
 			jobOffer.setGeoLevelLevel(createOfferRequest.getGeoLevelLevel());
 			jobOffer.setGeoLevelId(createOfferRequest.getGeoLevelId());
@@ -616,7 +617,7 @@ public class UserServiceImpl implements UserService {
 //			xxx nuevos campos
 			jobOffer.setCompanyScreenName(createOfferRequest.getCompanyScreenName());
 			jobOffer.setInstitutionType(createOfferRequest.getInstitutionType());
-			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate(), "yyyyMMdd"));
+            jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate() + " " + createOfferRequest.getOfferHour() , "yyyyMMdd HHmm"));
 			jobOffer.setHour(createOfferRequest.getOfferHour());
 			jobOffer.setPermanent(false);
 			jobOffer.setComment(createOfferRequest.getComment());
@@ -638,9 +639,9 @@ public class UserServiceImpl implements UserService {
 			cal.add(Calendar.MONTH, 1);
 			createOfferRequest.setOfferDate(new SimpleDateFormat("yyyyMMdd").format(cal.getTime()));
 			createOfferRequest.setOfferHour("0000");
-
 			JobOffer jobOffer = new JobOffer();
 			jobOffer.setOfferent(getLoggedUser());
+            jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
 			jobOffer.setCreationDate(new Date());
 			jobOffer.setGeoLevelLevel(createOfferRequest.getGeoLevelLevel());
 			jobOffer.setGeoLevelId(createOfferRequest.getGeoLevelId());
@@ -1103,8 +1104,13 @@ public class UserServiceImpl implements UserService {
 		resp.setLicence(user.getLicense());
 		try {
 			UserProfile userProfile = this.userDAO.getUserProfile(user);
-			resp.setInstitutionType(userProfile.getInstitutionType().toString());
-			resp.setTasks(SpecialtyServiceImpl.toDtoTask(userProfile.getTasks()));
+            if(userProfile == null) {
+                resp.setInstitutionType(null);
+                resp.setTasks(null);
+            } else {
+                resp.setInstitutionType(userProfile.getInstitutionType().toString());
+                resp.setTasks(SpecialtyServiceImpl.toDtoTask(userProfile.getTasks()));
+            }
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
