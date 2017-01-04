@@ -3,6 +3,7 @@ package com.tdil.d2d.controller;
 import javax.validation.Valid;
 
 import com.tdil.d2d.controller.api.dto.SubscriptionDTO;
+import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.SessionService;
@@ -72,7 +73,7 @@ public class SubscriptionController extends AbstractController {
 
 		SubscriptionDTO dto = new SubscriptionDTO(subscription);
 
-		return ResponseEntity.ok(new ApiResponse<SubscriptionDTO>(200, dto));
+		return ResponseEntity.ok(new GenericResponse<>(200, dto));
 	}
 
 }

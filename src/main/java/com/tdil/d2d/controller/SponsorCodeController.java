@@ -3,6 +3,7 @@ package com.tdil.d2d.controller;
 import com.tdil.d2d.controller.api.request.GenerateSponsorCodesRequest;
 import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.controller.api.response.ApiResponse;
+import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ExceptionDefinition;
 import com.tdil.d2d.exceptions.ServiceException;
@@ -40,7 +41,7 @@ public class SponsorCodeController extends AbstractController {
 	@RequestMapping(value = "/codes/{sponsorId}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ApiResponse> listSponsorCodes(@Valid @PathVariable long sponsorId) {
 		List<SponsorCode> codes = this.sponsorCodeService.listSponsorCodesBySponsorId(sponsorId);
-		ApiResponse<List<SponsorCode>> apiResponse = new ApiResponse(200, codes);
+		GenericResponse<List<SponsorCode>> apiResponse = new GenericResponse<>(200, codes);
 		return ResponseEntity.ok(apiResponse);
 	}
 
@@ -52,7 +53,7 @@ public class SponsorCodeController extends AbstractController {
 				generateSponsorCodesRequest.getCodesCount(),
 				generateSponsorCodesRequest.getUnits(),
 				SubscriptionTimeUnit.valueOf(generateSponsorCodesRequest.getTimeUnits()));
-		ApiResponse<List<SponsorCode>> apiResponse = new ApiResponse(200, codes);
+		GenericResponse<List<SponsorCode>> apiResponse = new GenericResponse<>(200, codes);
 		return ResponseEntity.ok(apiResponse);
 
 	}
@@ -61,7 +62,7 @@ public class SponsorCodeController extends AbstractController {
 	public ResponseEntity<ApiResponse> redeemSponsorCode(@Valid @RequestBody RedeemSponsorCodeRequest redeemSponsorCodeRequest, BindingResult bidingResult) {
 
 		this.sponsorCodeService.consumeSponsorCode(this.sessionService.getUserLoggedIn(), redeemSponsorCodeRequest.getSponsorCode());
-		ApiResponse<List<SponsorCode>> apiResponse = new ApiResponse(200, "ok");
+		GenericResponse<String> apiResponse = new GenericResponse<>(200, "ok");
 		return ResponseEntity.ok(apiResponse);
 
 	}

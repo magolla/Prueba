@@ -16,10 +16,10 @@ public class Sponsor implements PersistentEntity {
 	@GeneratedValue
 	@Column(name = "id")
 	private long id;
-	
+
 	@Column(name = "creationDate")
 	private Date creationDate;
-	
+
 	@Column(name = "name")
 	private String name;
 
@@ -40,4 +40,11 @@ public class Sponsor implements PersistentEntity {
 	}
 
 
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
 }
