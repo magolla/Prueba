@@ -18,25 +18,32 @@ public class SponsorCode implements PersistentEntity {
 	@GeneratedValue
 	@Column(name = "id")
 	private long id;
-	
+
 	@Column(name = "creationDate")
 	private Date creationDate;
-	
-	@Column(name = "code")
+
+	@Column(name = "consumeDate")
+	private Date consumeDate;
+
+	@Column(name = "code", unique = true)
 	private String code;
-	
-	@Column(name = "remainingUses")
-	private int remainingUses;
-	
+
+
 	@Column(name = "units")
 	private int units;
-	
-	@Column(name="timeUnit")
+
+	@Column(name = "enabled", nullable = false, columnDefinition = "boolean default true")
+	private boolean enabled;
+
+	@Column(name = "timeUnit")
 	@Enumerated(javax.persistence.EnumType.STRING)
 	private SubscriptionTimeUnit timeUnit;
-	
+
 	@ManyToOne
 	private Sponsor sponsor;
+
+	@ManyToOne
+	private User consumer;
 
 	public long getId() {
 		return id;
@@ -60,14 +67,6 @@ public class SponsorCode implements PersistentEntity {
 
 	public void setCode(String code) {
 		this.code = code;
-	}
-
-	public int getRemainingUses() {
-		return remainingUses;
-	}
-
-	public void setRemainingUses(int remainingUses) {
-		this.remainingUses = remainingUses;
 	}
 
 	public int getUnits() {
@@ -95,4 +94,27 @@ public class SponsorCode implements PersistentEntity {
 	}
 
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public void setConsumer(User consumer) {
+		this.consumer = consumer;
+	}
+
+	public User getConsumer() {
+		return this.consumer;
+	}
+
+	public Date getConsumeDate() {
+		return consumeDate;
+	}
+
+	public void setConsumeDate(Date consumeDate) {
+		this.consumeDate = consumeDate;
+	}
 }

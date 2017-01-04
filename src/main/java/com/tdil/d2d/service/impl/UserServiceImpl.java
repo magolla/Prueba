@@ -22,6 +22,8 @@ import javax.servlet.ServletOutputStream;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -96,6 +98,8 @@ import com.tdil.d2d.utils.ServiceLocator;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
+
+	private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
 	private UserDAO userDAO;
@@ -256,6 +260,7 @@ public class UserServiceImpl implements UserService {
 	public boolean validate(ValidationRequest validationRequest) throws ServiceException {
 		try {
 			User user = this.userDAO.getUserByMobilePhone(validationRequest.getMobilePhone());
+			logger.info("User found = {}", user.getId());
 			if (user != null && user.getDeviceId().equals(encriptDeviceId(validationRequest.getDeviceId(), user))
 					&& user.getMobileHash().equals(validationRequest.getSmsCode())) {
 				user.setPhoneValidated(true);
