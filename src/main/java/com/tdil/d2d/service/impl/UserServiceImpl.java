@@ -356,6 +356,8 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			user.getUserGeoLocations().clear();
+
+			// TODO no se estÃ¡n borrando los UserGeoLocations viejos.
 			for (int i = 0; i < addLocationsRequest.getGeoLevelId().length; i++) {
 				UserGeoLocation loc = new UserGeoLocation();
 				loc.setGeoLevelLevel(addLocationsRequest.getGeoLevelLevel()[i]);
@@ -384,7 +386,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException {
 		User user = getLoggedUser();
@@ -637,7 +639,6 @@ public class UserServiceImpl implements UserService {
 			cal.add(Calendar.MONTH, 1);
 			createOfferRequest.setOfferDate(new SimpleDateFormat("yyyyMMdd").format(cal.getTime()));
 			createOfferRequest.setOfferHour("0000");
-
 			JobOffer jobOffer = new JobOffer();
 			jobOffer.setOfferent(getLoggedUser());
 			jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
@@ -904,7 +905,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/*
-	 * ESTE M�TODO EST� DEPRECADO YA QUE NO SE VAN A RECHAZAR PERFILES POR AHORA
+	 * <<<<<<< HEAD ESTE MÉTODO ESTÁ DEPRECADO YA QUE NO SE VAN A RECHAZAR
+	 * PERFILES POR AHORA ======= ESTE M�TODO EST� DEPRECADO YA QUE NO SE VAN A
+	 * RECHAZAR PERFILES POR AHORA >>>>>>> master
 	 */
 	@Override
 	public boolean reject(long offerId, long applicationId) throws ServiceException {
@@ -921,7 +924,6 @@ public class UserServiceImpl implements UserService {
 			}
 			JobApplication application = this.jobApplicationDAO.getById(JobApplication.class, applicationId);
 			application.setStatus(JobApplication.REJECTED);
-			// TODO enviar notifacion de rechazo
 			this.jobApplicationDAO.save(application);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.REJECT_OFFER));
 			return true;
@@ -1178,7 +1180,7 @@ public class UserServiceImpl implements UserService {
 		l = this.addSpecialty(l, "Alergista");
 		l = this.addTask(l, "reemplazo de consultorio");
 	}
-	
+
 	@Override
 	public List<JobOfferStatusDTO> getMyOffers(long userId) throws ServiceException {
 		try {
@@ -1188,7 +1190,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean setAvatar(User user, SetAvatarRequest setAvatarRequest) throws ServiceException {
 		try {

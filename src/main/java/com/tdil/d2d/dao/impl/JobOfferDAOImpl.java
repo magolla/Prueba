@@ -16,7 +16,7 @@ import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
 
 @Repository
-public class JobOfferDAOImpl  extends GenericDAO<JobOffer> implements JobOfferDAO {
+public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO {
 
 	@Override
 	public List<JobOffer> getOpenOffers(Long userId) throws DAOException {
@@ -28,25 +28,25 @@ public class JobOfferDAOImpl  extends GenericDAO<JobOffer> implements JobOfferDA
 			criteria.addOrder(Order.asc("id"));
 			List<JobOffer> list = criteria.list();
 			List<JobApplication> jobAppList = new ArrayList<JobApplication>();
-			
+
 			for (int i = 0; i < list.size(); i++) {
 				criteria2.add(Restrictions.eq("offer.id", list.get(i).getId()));
-//				criteria2.setProjection(Projections.rowCount());
+				// criteria2.setProjection(Projections.rowCount());
 				jobAppList = criteria2.list();
-				
+
 				list.get(i).setApplications(jobAppList.size());
 				jobAppList.clear();
 				criteria2 = this.getSessionFactory().getCurrentSession().createCriteria(JobApplication.class);
 			}
-			
+
 			System.out.println();
-			
+
 			return list;
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public List<JobOffer> getClosedOffers(Long userId) throws DAOException {
 		try {
@@ -61,7 +61,7 @@ public class JobOfferDAOImpl  extends GenericDAO<JobOffer> implements JobOfferDA
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public Collection<JobOffer> getOffers(long specialtyId, long geoLevelId, boolean permanent) throws DAOException {
 		try {
@@ -77,5 +77,4 @@ public class JobOfferDAOImpl  extends GenericDAO<JobOffer> implements JobOfferDA
 			throw new DAOException(e);
 		}
 	}
-	
 }
