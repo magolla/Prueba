@@ -28,24 +28,26 @@ import com.tdil.d2d.utils.ServiceLocator;
 @Transactional
 @Service()
 public class SubscriptionServiceImpl implements SubscriptionService {
-    
+
 	@Autowired
 	private SubscriptionDAO subscriptionDAO;
-	
+
 	@Autowired
 	private UserService userService;
 
-    @Autowired
-    private ActivityLogDAO activityLogDAO;
-	
+	@Autowired
+	private ActivityLogDAO activityLogDAO;
+
 	@Override
 	public boolean useSponsorCode(UseSponsorCodeRequest useSponsorCodeRequest) throws ServiceException {
 		try {
 			User user = userService.getLoggedUser();
-			SponsorCode sponsorCode = subscriptionDAO.getSponsorCode(SponsorCode.class, useSponsorCodeRequest.getSponsorCode());
+			SponsorCode sponsorCode = subscriptionDAO.getSponsorCode(SponsorCode.class,
+					useSponsorCodeRequest.getSponsorCode());
 			// si es rc, y es de test, genero datos de test
 			// Busco un sponsor code con ese codigo
-			if (sponsorCode == null && !ServiceLocator.isProd() && useSponsorCodeRequest.getSponsorCode().startsWith("TEST")) {
+			if (sponsorCode == null && !ServiceLocator.isProd()
+					&& useSponsorCodeRequest.getSponsorCode().startsWith("TEST")) {
 				Sponsor sponsor = subscriptionDAO.getSponsorByName(Sponsor.class, "TEST");
 				if (sponsor == null) {
 					sponsor = new Sponsor();
@@ -71,7 +73,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			}
 			sponsorCode.setRemainingUses(sponsorCode.getRemainingUses() - 1);
 			subscriptionDAO.saveSponsorCode(sponsorCode);
-            activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SUBSCRIPTION));
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SUBSCRIPTION));
 			Subscription subscription = new Subscription();
 			subscription.setSponsorCode(sponsorCode);
 			subscription.setExpirationDate(getExpirationDate(Calendar.getInstance(), sponsorCode));
@@ -84,7 +86,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public Subscription getActiveSubscription(long userID) throws ServiceException {
 		try {
@@ -104,7 +106,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			throw new ServiceException(e);
 		}
 	}
-		
+
 	private Date getExpirationDate(Calendar instance, SponsorCode sponsorCode) {
 		Calendar cal = Calendar.getInstance();
 		cal = sponsorCode.getTimeUnit().add(cal, sponsorCode.getUnits());
