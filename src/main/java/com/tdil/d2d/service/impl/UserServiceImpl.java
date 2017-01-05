@@ -353,6 +353,8 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			user.getUserGeoLocations().clear();
+
+			// TODO no se estÃ¡n borrando los UserGeoLocations viejos.
 			for (int i = 0; i < addLocationsRequest.getGeoLevelId().length; i++) {
 				UserGeoLocation loc = new UserGeoLocation();
 				loc.setGeoLevelLevel(addLocationsRequest.getGeoLevelLevel()[i]);
@@ -384,8 +386,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException {
+		User user = getLoggedUser();
+		return this.setAvatar(user, setAvatarRequest);
+	}
+
+	@Override
+	public boolean setAvatar(User user, SetAvatarRequest setAvatarRequest) throws ServiceException {
 		try {
-			User user = getLoggedUser();
 			user.setBase64img(setAvatarRequest.getAvatarBase64().getBytes());
 			this.userDAO.save(user);
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_AVATAR));
@@ -641,7 +648,6 @@ public class UserServiceImpl implements UserService {
 			cal.add(Calendar.MONTH, 1);
 			createOfferRequest.setOfferDate(new SimpleDateFormat("yyyyMMdd").format(cal.getTime()));
 			createOfferRequest.setOfferHour("0000");
-
 			JobOffer jobOffer = new JobOffer();
 			jobOffer.setOfferent(getLoggedUser());
 			jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
@@ -764,6 +770,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
 		try {
+			// esta dió conflicto y no supe cual quedarme: PABLO. List<JobOffer> offers = this.jobDAO.getOpenOffers(userID);
 			List<JobOffer> offers = this.jobDAO.getOpenOffers(RuntimeContext.getCurrentUser().getId());
 			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
@@ -913,7 +920,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/*
+<<<<<<< HEAD
+	 * ESTE MÉTODO ESTÁ DEPRECADO YA QUE NO SE VAN A RECHAZAR PERFILES POR AHORA
+=======
 	 * ESTE M�TODO EST� DEPRECADO YA QUE NO SE VAN A RECHAZAR PERFILES POR AHORA
+>>>>>>> master
 	 */
 	@Override
 	public boolean reject(long offerId, long applicationId) throws ServiceException {
@@ -930,7 +941,6 @@ public class UserServiceImpl implements UserService {
 			}
 			JobApplication application = this.jobApplicationDAO.getById(JobApplication.class, applicationId);
 			application.setStatus(JobApplication.REJECTED);
-			// TODO enviar notifacion de rechazo
 			this.jobApplicationDAO.save(application);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.REJECT_OFFER));
 			return true;
@@ -1192,11 +1202,5 @@ public class UserServiceImpl implements UserService {
 	public List<JobOfferStatusDTO> getMyOffers(long userID) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public boolean setAvatar(User user, SetAvatarRequest setAvatarRequest) throws ServiceException {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }
