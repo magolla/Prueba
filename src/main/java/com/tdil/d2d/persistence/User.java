@@ -98,6 +98,9 @@ public class User implements PersistentEntity {
 	@Column(name = "base64img")
 	@Lob()
 	private byte[] base64img;
+	
+	@Column(name = "CV", length = 2000)
+    private String cv;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "D2D_USER_SPECIALTY", joinColumns = {
@@ -332,5 +335,13 @@ public class User implements PersistentEntity {
 	public void setCompanyScreenDescription(String companyScreenDescription) {
 		this.companyScreenDescription = companyScreenDescription;
 	}
+	
+	public String getCV() {
+        return cv;
+    }
+
+    public void setCV(String cv) {
+        this.cv = cv;
+    }
 
 }

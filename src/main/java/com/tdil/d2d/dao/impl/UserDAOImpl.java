@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.User;
+import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
 
 @Repository
@@ -114,4 +115,33 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 			this.handleException(invocationDetails, e);
 		}
 	}
+	
+	@Override
+    public UserLinkedinProfile getUserLinkedinProfile(User user) throws DAOException {
+        try {
+            Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(UserLinkedinProfile.class);
+            criteria.add(Restrictions.eq("user.id", user.getId()));
+            List<UserLinkedinProfile> list = criteria.list();
+            if (CollectionUtils.isEmpty(list)) {
+                return null;
+            } else {
+                return list.get(0);
+            }
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    @Override
+    public void save(UserLinkedinProfile linkedinProfile) throws DAOException {
+        String invocationDetails= "save(" + linkedinProfile.getClass().getName() + ") ";
+        try {
+            this.getHibernateTemplate().save(linkedinProfile);
+            this.getHibernateTemplate().flush();
+        } catch (DataIntegrityViolationException e) {
+            this.handleException(invocationDetails, e);
+        } catch (Exception e) {
+            this.handleException(invocationDetails, e);
+        }
+    }
 }

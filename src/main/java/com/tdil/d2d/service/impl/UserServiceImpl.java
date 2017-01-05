@@ -60,6 +60,7 @@ import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.SetProfileARequest;
 import com.tdil.d2d.controller.api.request.SetProfileBRequest;
 import com.tdil.d2d.controller.api.request.SetTasksToProfileRequest;
+import com.tdil.d2d.controller.api.request.UserLinkedinProfileRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -86,6 +87,7 @@ import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
+import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
 import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.CryptographicService;
@@ -409,7 +411,7 @@ public class UserServiceImpl implements UserService {
 		if (user.getBase64img() != null) {
 			return new Base64DTO(new String(user.getBase64img()));
 		} else {
-			return new Base64DTO();
+			return new Base64DTO("");
 		}
 	}
 
@@ -1030,7 +1032,7 @@ public class UserServiceImpl implements UserService {
 		// User ID
 		result.setUserId(s.getUser().getId());
 		// Creation Date
-		result.setCreationDate(s.getCreationDate().toString());
+		result.setCreationDate(s.getCreationDate() != null ? s.getCreationDate().toString() : "");
 		// Falta base64Image
 		// -----------------------------------
 		// Linkedin CV
@@ -1097,10 +1099,7 @@ public class UserServiceImpl implements UserService {
 		resp.setLicence(user.getLicense());
 		try {
 			UserProfile userProfile = this.userDAO.getUserProfile(user);
-			if (userProfile == null) {
-				resp.setInstitutionType(null);
-				resp.setTasks(null);
-			} else {
+			if (userProfile != null) {
 				resp.setInstitutionType(userProfile.getInstitutionType().toString());
 				resp.setTasks(SpecialtyServiceImpl.toDtoTask(userProfile.getTasks()));
 			}
@@ -1141,6 +1140,14 @@ public class UserServiceImpl implements UserService {
 		NotificationConfigurationResponse notificationConfigurationResponse = this.getNotificationConfiguration();
 		resp.setNotificationConfigurationResponse(notificationConfigurationResponse);
 
+		try {
+			resp.setHasLinkedinProfile(this.userDAO.getUserLinkedinProfile(user) != null);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+
+		resp.setCV(user.getCV());
+
 		return resp;
 	}
 
@@ -1150,7 +1157,7 @@ public class UserServiceImpl implements UserService {
 
 	private static GeoLevelDTO toDto(UserGeoLocation s) {
 		GeoLevelDTO result = new GeoLevelDTO();
-		result.setId(s.getId());
+		result.setId(s.getGeoLevelId());
 		result.setLevel(s.getGeoLevelLevel());
 		result.setName(s.getGeoLevelName());
 		return result;
@@ -1198,6 +1205,45 @@ public class UserServiceImpl implements UserService {
 			this.userDAO.save(user);
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_AVATAR));
 			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public void updateUserLinkedinProfile(UserLinkedinProfileRequest userLinkedinProfileRequest) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			UserLinkedinProfile linkedinProfile = this.userDAO.getUserLinkedinProfile(user);
+			if (linkedinProfile == null) {
+				linkedinProfile = new UserLinkedinProfile();
+				linkedinProfile.setUser(user);
+				linkedinProfile.setCreationDate(new Date());
+			}
+			linkedinProfile.setAccessToken(userLinkedinProfileRequest.getAccessToken());
+			Calendar c = Calendar.getInstance();
+			c.add(Calendar.SECOND, userLinkedinProfileRequest.getExpiresIn());
+			linkedinProfile.setExpiresOn(c.getTime());
+			linkedinProfile.setFirstName(userLinkedinProfileRequest.getFirstName());
+			linkedinProfile.setLastName(userLinkedinProfileRequest.getLastName());
+			linkedinProfile.setEmail(userLinkedinProfileRequest.getEmail());
+			linkedinProfile.setHeadLine(userLinkedinProfileRequest.getHeadLine());
+			linkedinProfile.setIndustry(userLinkedinProfileRequest.getIndustry());
+			linkedinProfile.setPublicProfileURL(userLinkedinProfileRequest.getPublicProfileURL());
+			linkedinProfile.setPositionsJson(userLinkedinProfileRequest.getPositionsJson());
+
+			this.userDAO.save(linkedinProfile);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public void setCV(String cv) throws ServiceException {
+		User user = this.getLoggedUser();
+		user.setCV(cv);
+		try {
+			this.userDAO.save(user);
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
