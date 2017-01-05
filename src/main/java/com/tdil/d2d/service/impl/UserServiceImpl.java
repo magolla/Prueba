@@ -353,6 +353,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			user.getUserGeoLocations().clear();
+
 			// TODO no se estÃ¡n borrando los UserGeoLocations viejos.
 			for (int i = 0; i < addLocationsRequest.getGeoLevelId().length; i++) {
 				UserGeoLocation loc = new UserGeoLocation();
@@ -610,6 +611,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest) throws ServiceException {
 		try {
+
 			JobOffer jobOffer = new JobOffer();
 			jobOffer.setOfferent(getLoggedUser());
 			jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
@@ -767,13 +769,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
-		return this.getMyOffers(RuntimeContext.getCurrentUser().getId());
-	}
-
-	@Override
-	public List<JobOfferStatusDTO> getMyOffers(long userID) throws ServiceException {
 		try {
-			List<JobOffer> offers = this.jobDAO.getOpenOffers(userID);
+			// esta dió conflicto y no supe cual quedarme: PABLO. List<JobOffer> offers = this.jobDAO.getOpenOffers(userID);
+			List<JobOffer> offers = this.jobDAO.getOpenOffers(RuntimeContext.getCurrentUser().getId());
 			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -922,7 +920,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/*
+<<<<<<< HEAD
 	 * ESTE MÉTODO ESTÁ DEPRECADO YA QUE NO SE VAN A RECHAZAR PERFILES POR AHORA
+=======
+	 * ESTE M�TODO EST� DEPRECADO YA QUE NO SE VAN A RECHAZAR PERFILES POR AHORA
+>>>>>>> master
 	 */
 	@Override
 	public boolean reject(long offerId, long applicationId) throws ServiceException {
@@ -1071,7 +1073,7 @@ public class UserServiceImpl implements UserService {
 		return result;
 	}
 
-	protected JobOfferStatusDTO toDTO(JobOffer s) {
+	private JobOfferStatusDTO toDTO(JobOffer s) {
 		JobOfferStatusDTO result = new JobOfferStatusDTO();
 		result.setId(s.getId());
 		result.setComment(s.getComment());
@@ -1096,7 +1098,7 @@ public class UserServiceImpl implements UserService {
 		result.setTask_id(s.getTask().getId());
 		result.setTaskName(s.getTask().getName());
 		result.setApplications(s.getApplications());
-		result.setBase64img(s.getOfferent().getBase64img());
+
 		return result;
 	}
 
@@ -1165,7 +1167,7 @@ public class UserServiceImpl implements UserService {
 
 	private static GeoLevelDTO toDto(UserGeoLocation s) {
 		GeoLevelDTO result = new GeoLevelDTO();
-		result.setId(s.getGeoLevelId());
+		result.setId(s.getId());
 		result.setLevel(s.getGeoLevelLevel());
 		result.setName(s.getGeoLevelName());
 		return result;
@@ -1194,5 +1196,11 @@ public class UserServiceImpl implements UserService {
 		long l = this.addOccupation("Medico");
 		l = this.addSpecialty(l, "Alergista");
 		l = this.addTask(l, "reemplazo de consultorio");
+	}
+
+	@Override
+	public List<JobOfferStatusDTO> getMyOffers(long userID) throws ServiceException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
