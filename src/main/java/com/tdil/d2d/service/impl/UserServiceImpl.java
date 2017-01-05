@@ -22,6 +22,8 @@ import javax.servlet.ServletOutputStream;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -96,6 +98,7 @@ import com.tdil.d2d.utils.ServiceLocator;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
+	private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
 	private UserDAO userDAO;
@@ -381,18 +384,11 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-
+	
 	@Override
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException {
-		try {
-			User user = getLoggedUser();
-			user.setBase64img(setAvatarRequest.getAvatarBase64().getBytes());
-			this.userDAO.save(user);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_AVATAR));
-			return true;
-		} catch (DAOException e) {
-			throw new ServiceException(e);
-		}
+		User user = getLoggedUser();
+		return this.setAvatar(user,setAvatarRequest);
 	}
 
 	@Override
@@ -761,14 +757,9 @@ public class UserServiceImpl implements UserService {
 		return new SimpleDateFormat(string).parse(offerDate);
 	}
 
-	@Override
-	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
-		try {
-			List<JobOffer> offers = this.jobDAO.getOpenOffers(RuntimeContext.getCurrentUser().getId());
-			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
-		} catch (DAOException e) {
-			throw new ServiceException(e);
-		}
+	@Override public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
+		long id = RuntimeContext.getCurrentUser().getId();
+		return this.getMyOffers(id);
 	}
 
 	@Override
@@ -1187,16 +1178,26 @@ public class UserServiceImpl implements UserService {
 		l = this.addSpecialty(l, "Alergista");
 		l = this.addTask(l, "reemplazo de consultorio");
 	}
-
+	
 	@Override
-	public List<JobOfferStatusDTO> getMyOffers(long userID) throws ServiceException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<JobOfferStatusDTO> getMyOffers(long userId) throws ServiceException {
+		try {
+			List<JobOffer> offers = this.jobDAO.getOpenOffers(userId);
+			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
 	}
-
+	
 	@Override
 	public boolean setAvatar(User user, SetAvatarRequest setAvatarRequest) throws ServiceException {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			user.setBase64img(setAvatarRequest.getAvatarBase64().getBytes());
+			this.userDAO.save(user);
+			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_AVATAR));
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
 	}
 }

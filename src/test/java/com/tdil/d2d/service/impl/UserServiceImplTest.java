@@ -1,31 +1,26 @@
 package com.tdil.d2d.service.impl;
 
-import com.tdil.d2d.config.*;
-import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
-import com.tdil.d2d.controller.api.request.InstitutionType;
-import com.tdil.d2d.controller.api.request.RegistrationRequestA;
-import com.tdil.d2d.controller.api.request.SetAvatarRequest;
-import com.tdil.d2d.controller.api.response.RegistrationResponse;
-import com.tdil.d2d.dao.ActivityLogDAO;
-import com.tdil.d2d.dao.JobOfferDAO;
-import com.tdil.d2d.dao.UserDAO;
-import com.tdil.d2d.exceptions.DAOException;
-import com.tdil.d2d.exceptions.ServiceException;
-import com.tdil.d2d.persistence.*;
-import com.tdil.d2d.security.JwtUser;
-import com.tdil.d2d.security.RuntimeContext;
-import com.tdil.d2d.service.EmailService;
-import com.tdil.d2d.service.UserService;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.mockito.invocation.InvocationOnMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -33,22 +28,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
-import java.util.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyByte;
-import static org.mockito.Mockito.*;
+import com.tdil.d2d.config.PersistenceConfiguration;
+import com.tdil.d2d.config.WebSecurityConfig;
+import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
+import com.tdil.d2d.controller.api.request.InstitutionType;
+import com.tdil.d2d.controller.api.request.RegistrationRequestA;
+import com.tdil.d2d.controller.api.request.SetAvatarRequest;
+import com.tdil.d2d.dao.ActivityLogDAO;
+import com.tdil.d2d.dao.JobOfferDAO;
+import com.tdil.d2d.dao.UserDAO;
+import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.JobOffer;
+import com.tdil.d2d.persistence.Occupation;
+import com.tdil.d2d.persistence.Specialty;
+import com.tdil.d2d.persistence.Task;
+import com.tdil.d2d.persistence.User;
+import com.tdil.d2d.service.EmailService;
+import com.tdil.d2d.service.UserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebSecurityConfig.class, PersistenceConfiguration.class, UserServiceImplTest.TestConfiguration.class})
@@ -184,10 +186,9 @@ public class UserServiceImplTest {
 		userService.setAvatar(users.get(1l), avatarRequest);
 
 		List<JobOfferStatusDTO> offers = userService.getMyOffers(1l);
-
+		logger.info(avatarRequest.getAvatarBase64());
+		logger.info(offers);
+		logger.info(offers.get(0).getId());
 		assertEquals(avatarRequest.getAvatarBase64(), new String(offers.get(0).getBase64img()));
-
-
 	}
-
 }
