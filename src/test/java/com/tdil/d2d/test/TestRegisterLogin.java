@@ -45,7 +45,7 @@ public class TestRegisterLogin {
 			// registro
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.body("{\"firstname\":\"marcos\",\"lastname\":\"godoy\","
+					.body("{\"firstname\":\"José\",\"lastname\":\"Tester\","
 							+ "\"email\":\"m"+suffix+"@m.com\","
 							+ "\"deviceId\":\""+deviceId+"\",\"mobilePhone\":\""+mobilePhone+"\","
 							+ "\"companyScreenName\":\"MRG\",\"tacAccepted\":true"
@@ -175,7 +175,7 @@ public class TestRegisterLogin {
 			// registro
 			given().config(RestAssured.config().sslConfig(
 					new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-					.body("{\"firstname\":\"marcos app\",\"lastname\":\"godoy app\","
+					.body("{\"firstname\":\"José\",\"lastname\":\"Tester\","
 							+ "\"email\":\"m"+suffix+"@m.com\","
 							+ "\"deviceId\":\""+deviceId1+"\",\"mobilePhone\":\""+mobilePhone1+"\","
 							+ "\"tacAccepted\":true"
@@ -385,8 +385,8 @@ public class TestRegisterLogin {
 					.then().log().body().statusCode(200).extract();
 			String firstname = applicationExtract.path("data.firstname");
 			String lastname = applicationExtract.path("data.lastname");
-			Assert.assertEquals("marcos app", firstname);
-			Assert.assertEquals("godoy app", lastname);
+			Assert.assertEquals("José", firstname);
+			Assert.assertEquals("Tester", lastname);
 			
 			// El oferente se baja el pdf de un postulante
 			byte cvDownload[] = given().config(RestAssured.config().sslConfig(
@@ -529,7 +529,7 @@ public class TestRegisterLogin {
 					// registro
 					given().config(RestAssured.config().sslConfig(
 							new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-							.body("{\"firstname\":\"marcos app\",\"lastname\":\"godoy app\","
+							.body("{\"firstname\":\"José\",\"lastname\":\"Tester\","
 									+ "\"email\":\"m"+suffix+"@m.com\","
 									+ "\"deviceId\":\""+deviceId1+"\",\"mobilePhone\":\""+mobilePhone1+"\","
 									+ "\"tacAccepted\":true"

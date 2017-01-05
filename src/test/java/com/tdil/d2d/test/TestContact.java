@@ -28,7 +28,7 @@ public class TestContact {
 		
 		given().config(RestAssured.config().sslConfig(
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation())).contentType("application/json")
-				.body("{\"contactMotiveId\":"+idFirstContactMotive+",\"comment\":\"godoy app\"}")
+				.body("{\"contactMotiveId\":"+idFirstContactMotive+",\"comment\":\"Tester app\"}")
 				.post(AP_URL +"/api/contact")
 				.then().log().body().statusCode(201).body("status", equalTo(201));
 						
