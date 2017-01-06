@@ -1,32 +1,24 @@
 package com.tdil.d2d.service.impl;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
+import com.tdil.d2d.dao.ActivityLogDAO;
+import com.tdil.d2d.dao.SubscriptionDAO;
+import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ExceptionDefinition;
+import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.*;
 import com.tdil.d2d.service.SessionService;
+import com.tdil.d2d.service.SubscriptionService;
+import com.tdil.d2d.utils.LoggerManager;
+import com.tdil.d2d.utils.ServiceLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tdil.d2d.dao.ActivityLogDAO;
-import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
-import com.tdil.d2d.dao.SubscriptionDAO;
-import com.tdil.d2d.exceptions.DAOException;
-import com.tdil.d2d.exceptions.ServiceException;
-import com.tdil.d2d.persistence.ActivityAction;
-import com.tdil.d2d.persistence.ActivityLog;
-import com.tdil.d2d.persistence.Sponsor;
-import com.tdil.d2d.persistence.SponsorCode;
-import com.tdil.d2d.persistence.Subscription;
-import com.tdil.d2d.persistence.SubscriptionTimeUnit;
-import com.tdil.d2d.persistence.User;
-import com.tdil.d2d.service.SubscriptionService;
-import com.tdil.d2d.service.UserService;
-import com.tdil.d2d.utils.LoggerManager;
-import com.tdil.d2d.utils.ServiceLocator;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Transactional
 @Service()
@@ -44,7 +36,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	/**
-	 * Deprecado, utilizar {@link com.tdil.d2d.service.SponsorCodeService.consumeSponsorCode()}
+	 * Deprecado, utilizar {@link com.tdil.d2d.service.SponsorCodeService}.consumeSponsorCode()
 	 *
 	 * @param useSponsorCodeRequest
 	 * @return

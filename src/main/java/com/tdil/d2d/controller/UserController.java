@@ -121,7 +121,6 @@ public class UserController extends AbstractController {
 		}
 	}
 
-
 	// TODO
 //    profesion (1) - especialidades cada ve que toca graba
 //    
@@ -328,6 +327,7 @@ public class UserController extends AbstractController {
 		}
 	}
 
+
 	@RequestMapping(value = "/user/{userId}/get", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<UserDetailsResponse>> getUser(@PathVariable long userId) {
 		try {
@@ -345,6 +345,7 @@ public class UserController extends AbstractController {
 //    /POST de upload de avatar
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
 	public ResponseEntity<GenericResponse<ProfileResponseDTO>> getProfile() {
 		try {
 			ProfileResponseDTO me = this.userService.profile();
