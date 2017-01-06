@@ -3,13 +3,20 @@ package com.tdil.d2d.controller.api.response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApiResponse {
+public class ApiResponse<T> {
 
+
+	protected T data;
 	private int status;
 	private List<String> errors = new ArrayList<>();
-	
+
 	public ApiResponse(int status) {
 		this.status = status;
+	}
+
+	public ApiResponse(int status, T data) {
+		this.status = status;
+		this.data = data;
 	}
 
 	public int getStatus() {
@@ -27,9 +34,9 @@ public class ApiResponse {
 	public void setErrors(List<String> errors) {
 		this.errors = errors;
 	}
-	
+
 	public void addError(String error) {
 		this.errors.add(error);
 	}
-	
+
 }

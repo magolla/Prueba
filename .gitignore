@@ -10,3 +10,6 @@ target/*
 
 RemoteSystemsTempFiles/*
 /target/
+
+/build/
+node_modules/
