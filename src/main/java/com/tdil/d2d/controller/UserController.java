@@ -324,6 +324,17 @@ public class UserController extends AbstractController {
 		}
     }
 
+    @RequestMapping(value = "/user/{userId}/get", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<UserDetailsResponse>> getUser(@PathVariable long userId) {
+    	try {
+    		UserDetailsResponse me = this.userService.getUser(userId);
+			return new ResponseEntity<GenericResponse<UserDetailsResponse>>(new GenericResponse<UserDetailsResponse>(me,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<UserDetailsResponse>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+
     // TODO
 //    terminos y condiciones
 //    

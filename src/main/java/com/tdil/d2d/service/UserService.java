@@ -104,6 +104,8 @@ public interface UserService {
 	public User getLoggedUser() throws ServiceException;
 
 	public UserDetailsResponse me() throws ServiceException;
+	
+	public UserDetailsResponse getUser(long id) throws ServiceException;
 
 	// Profile
 	public ProfileResponseDTO profile() throws ServiceException;

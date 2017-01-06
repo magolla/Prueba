@@ -1084,10 +1084,25 @@ public class UserServiceImpl implements UserService {
 
 		return result;
 	}
-
+	
 	@Override
-	public UserDetailsResponse me() throws ServiceException {
-		User user = getLoggedUser();
+    public UserDetailsResponse me() throws ServiceException {
+        User user = getLoggedUser();
+        return getUserDetailsResponse(user);
+    }
+
+    @Override
+    public UserDetailsResponse getUser(long id) throws ServiceException {
+    	User user = null;
+        try {
+            user = this.userDAO.getById(User.class, id);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+        return getUserDetailsResponse(user);
+    }
+    
+    private UserDetailsResponse getUserDetailsResponse(User user) throws ServiceException {
 		UserDetailsResponse resp = new UserDetailsResponse(HttpStatus.OK.value());
 		resp.setFirstname(user.getFirstname());
 		resp.setLastname(user.getLastname());
@@ -1142,7 +1157,7 @@ public class UserServiceImpl implements UserService {
 		resp.setNotificationConfigurationResponse(notificationConfigurationResponse);
 
 		return resp;
-	}
+    }
 
 	private static Collection<GeoLevelDTO> toDtoGeoLevel(Collection<UserGeoLocation> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
