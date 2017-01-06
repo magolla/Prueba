@@ -1,5 +1,13 @@
 package com.tdil.d2d.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.SubscriptionDAO;
@@ -7,18 +15,17 @@ import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ExceptionDefinition;
 import com.tdil.d2d.exceptions.ServiceException;
-import com.tdil.d2d.persistence.*;
+import com.tdil.d2d.persistence.ActivityAction;
+import com.tdil.d2d.persistence.ActivityLog;
+import com.tdil.d2d.persistence.Sponsor;
+import com.tdil.d2d.persistence.SponsorCode;
+import com.tdil.d2d.persistence.Subscription;
+import com.tdil.d2d.persistence.SubscriptionTimeUnit;
+import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.SessionService;
 import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.utils.LoggerManager;
 import com.tdil.d2d.utils.ServiceLocator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @Transactional
 @Service()
@@ -97,7 +104,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			User user = sessionService.getUserLoggedIn();
 			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(user.getId());
 			if (subscriptions == null || subscriptions.isEmpty()) {
-				throw new DTDException(ExceptionDefinition.DTD_2003, String.valueOf(userID));
+//				throw new DTDException(ExceptionDefinition.DTD_2003, String.valueOf(userID));
+				return null;
 			} else {
 				Subscription subscription = subscriptions.get(0);
 				if (subscription.getExpirationDate().before(new Date())) {
