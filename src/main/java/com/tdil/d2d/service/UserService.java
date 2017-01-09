@@ -34,6 +34,7 @@ import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.SetProfileARequest;
 import com.tdil.d2d.controller.api.request.SetProfileBRequest;
 import com.tdil.d2d.controller.api.request.SetTasksToProfileRequest;
+import com.tdil.d2d.controller.api.request.UserLinkedinProfileRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
@@ -127,7 +128,11 @@ public interface UserService {
 	public void setProfileA(SetProfileARequest setProfileARequest) throws ServiceException;
 
 	public void setProfileB(SetProfileBRequest setProfileBRequest) throws ServiceException;
-
+	
+	public void updateUserLinkedinProfile(UserLinkedinProfileRequest userLinkedinProfileRequest) throws ServiceException;
+	
+    public void setCV(String cv) throws ServiceException;
+    
 	public String createMercadoPagoPreference(CreatePreferenceMPRequest createPreferenceMPRequest) throws ServiceException;
 
 	public boolean createPayment(CreatePaymentRequest createPaymentRequest) throws ServiceException;

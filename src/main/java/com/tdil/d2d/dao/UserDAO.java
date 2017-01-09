@@ -2,6 +2,7 @@ package com.tdil.d2d.dao;
 
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.User;
+import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
 
 public interface UserDAO {
@@ -19,6 +20,11 @@ public interface UserDAO {
 	public User getUserByMobilePhone(String mobilePhone) throws DAOException;
 
 	public UserProfile getUserProfile(User user) throws DAOException;
+	
 	public void save(UserProfile userProfile) throws DAOException;
+	
+	public UserLinkedinProfile getUserLinkedinProfile(User user) throws DAOException;
+
+    public void save(UserLinkedinProfile linkedinProfile) throws DAOException;
 
 }

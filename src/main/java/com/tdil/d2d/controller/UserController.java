@@ -5,7 +5,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -47,6 +49,7 @@ import com.tdil.d2d.controller.api.request.SetLicenseRequest;
 import com.tdil.d2d.controller.api.request.SetProfileARequest;
 import com.tdil.d2d.controller.api.request.SetProfileBRequest;
 import com.tdil.d2d.controller.api.request.SetTasksToProfileRequest;
+import com.tdil.d2d.controller.api.request.UserLinkedinProfileRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
@@ -270,6 +273,40 @@ public class UserController extends AbstractController {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+    }
+    
+    @RequestMapping(value = "/user/linkedin/auth/step1", method = RequestMethod.GET)
+    public ResponseEntity<GenericResponse<String>> linkedinAuthStep1(HttpServletResponse response, HttpServletRequest request) {
+        String code = request.getParameter("code");
+        return new ResponseEntity<GenericResponse<String>>(new GenericResponse<String>(code, HttpStatus.OK.value()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user/linkedin/profile", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> setUserLinkedinProfile(@Valid @RequestBody UserLinkedinProfileRequest userLinkedinProfileRequest, BindingResult bidingResult) {
+        if (bidingResult.hasErrors()) {
+            return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+        }
+        try {
+            this.userService.updateUserLinkedinProfile(userLinkedinProfileRequest);
+            return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
+        } catch (ServiceException e) {
+            LoggerManager.error(this, e);
+            return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/user/cv", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> setCV(@Valid @RequestBody Map<String, Object> cv, BindingResult bidingResult) {
+        if (bidingResult.hasErrors()) {
+            return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+        }
+        try {
+            this.userService.setCV(cv.get("cv").toString());
+            return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
+        } catch (ServiceException e) {
+            LoggerManager.error(this, e);
+            return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/user/license", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

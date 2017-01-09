@@ -28,6 +28,8 @@ public class UserDetailsResponse extends ApiResponse {
 	private String institutionType;
 	private Collection<GeoLevelDTO> geoLevels;
 	private NotificationConfigurationResponse notificationConfigurationResponse;
+	private boolean hasLinkedinProfile;
+    private String cv;
 
 	public UserDetailsResponse(int status) {
 		super(status);
@@ -167,6 +169,22 @@ public class UserDetailsResponse extends ApiResponse {
 
 	public void setNotificationConfigurationResponse(NotificationConfigurationResponse notificationConfigurationResponse) {
 		this.notificationConfigurationResponse = notificationConfigurationResponse;
+	}
+	
+	public boolean isHasLinkedinProfile() {
+		return hasLinkedinProfile;
+	}
+
+	public void setHasLinkedinProfile(boolean hasLinkedinProfile) {
+		this.hasLinkedinProfile = hasLinkedinProfile;
+	}
+
+	public String getCV() {
+		return cv;
+	}
+
+	public void setCV(String cv) {
+        this.cv = cv;
 	}
 	
 }
