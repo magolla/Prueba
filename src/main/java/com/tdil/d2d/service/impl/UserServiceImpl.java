@@ -953,6 +953,29 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	@Override
+	public boolean close(long offerId) throws ServiceException {
+		try {
+			JobOffer offer = this.jobDAO.getById(JobOffer.class, offerId);
+			if (JobOffer.CLOSED.equals(offer.getStatus())) {
+				return false;
+			}
+			if (offer.isExpired()) {
+				return false;
+			}
+			if (offer.getOfferent().getId() != RuntimeContext.getCurrentUser().getId()) {
+				return false;
+			}
+			offer.setStatus(JobOffer.CLOSED);
+			this.jobDAO.save(offer);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.CLOSED_OFFER));
+			//TODO: Enviar notificacion a los apliccants avisando que se cerro el aviso
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	@Override
 	public NotificationConfigurationResponse getNotificationConfiguration() throws ServiceException {

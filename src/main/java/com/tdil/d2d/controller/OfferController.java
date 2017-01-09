@@ -234,4 +234,20 @@ public class OfferController extends AbstractController {
 		}
     }
     
+    
+    @RequestMapping(value = "/user/offer/{offerId}/close", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> closeOfferApplication(@PathVariable long offerId) {
+    	try {
+    		boolean result = this.userService.close(offerId);
+			if (result) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
 }

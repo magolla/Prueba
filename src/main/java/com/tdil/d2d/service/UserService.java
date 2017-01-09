@@ -92,6 +92,8 @@ public interface UserService {
 	public boolean accept(long offerId, long applicationId) throws ServiceException;
 
 	public boolean reject(long offerId, long applicationId) throws ServiceException;
+	
+	public boolean close(long offerId) throws ServiceException;
 
 	public NotificationConfigurationResponse getNotificationConfiguration() throws ServiceException;
 
