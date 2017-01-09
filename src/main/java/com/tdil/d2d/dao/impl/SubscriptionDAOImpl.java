@@ -6,8 +6,12 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -18,18 +22,26 @@ import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Repository
-public class SubscriptionDAOImpl extends HibernateDaoSupport implements SubscriptionDAO  {
+public class SubscriptionDAOImpl extends HibernateDaoSupport implements SubscriptionDAO {
+
+	private SessionFactory sessionFactory;
+
+	private Logger logger = LoggerFactory.getLogger(SubscriptionDAOImpl.class);
 
 	@Autowired
-	private SessionFactory sessionFactory;
-	
+	public SubscriptionDAOImpl(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@PostConstruct
 	public void initHibernate() {
 		this.setSessionFactory(this.sessionFactory);
 	}
-	
+
 	@Override
 	public Sponsor getSponsorByName(Class<Sponsor> class1, String name) throws DAOException {
 		try {
@@ -45,7 +57,19 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			throw new DAOException(e);
 		}
 	}
-	
+
+	@Override
+	public Sponsor getSponsorById(long id) {
+		return (Sponsor) this.getSessionFactory().getCurrentSession().get(Sponsor.class, id);
+	}
+
+	@Override
+	public List<SponsorCode> saveSponsorCode(List<SponsorCode> codes) {
+		codes.forEach(elem -> this.getHibernateTemplate().saveOrUpdate(elem));
+		this.getHibernateTemplate().flush();
+		return codes;
+	}
+
 	@Override
 	public SponsorCode getSponsorCode(Class<SponsorCode> aClass, String code) throws DAOException {
 		try {
@@ -61,12 +85,12 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public void saveSponsor(Sponsor sponsor) throws DAOException {
-		String invocationDetails= "save("+sponsor.getClass().getName()+") ";
+		String invocationDetails = "save(" + sponsor.getClass().getName() + ") ";
 		try {
-			this.getHibernateTemplate().save(sponsor);
+			this.getHibernateTemplate().saveOrUpdate(sponsor);
 			this.getHibernateTemplate().flush();
 		} catch (DataIntegrityViolationException e) {
 			this.handleException(invocationDetails, e);
@@ -74,12 +98,12 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			this.handleException(invocationDetails, e);
 		}
 	}
-	
+
 	@Override
 	public void saveSponsorCode(SponsorCode sponsorCode) throws DAOException {
-		String invocationDetails= "save("+sponsorCode.getClass().getName()+") ";
+		String invocationDetails = "save(" + sponsorCode.getClass().getName() + ") ";
 		try {
-			this.getHibernateTemplate().save(sponsorCode);
+			this.getHibernateTemplate().saveOrUpdate(sponsorCode);
 			this.getHibernateTemplate().flush();
 		} catch (DataIntegrityViolationException e) {
 			this.handleException(invocationDetails, e);
@@ -87,10 +111,10 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			this.handleException(invocationDetails, e);
 		}
 	}
-	
+
 	@Override
 	public void saveSubscription(Subscription subscription) throws DAOException {
-		String invocationDetails= "save("+subscription.getClass().getName()+") ";
+		String invocationDetails = "save(" + subscription.getClass().getName() + ") ";
 		try {
 			this.getHibernateTemplate().save(subscription);
 			this.getHibernateTemplate().flush();
@@ -100,7 +124,7 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			this.handleException(invocationDetails, e);
 		}
 	}
-	
+
 	@Override
 	public List<Subscription> listSubscriptions(Long userId) throws DAOException {
 		try {
@@ -112,7 +136,16 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			throw new DAOException(e);
 		}
 	}
-	
+
+	@Override
+	public List<SponsorCode> listSponsorCodes(Long sponsorId) {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SponsorCode.class);
+		criteria.add(Restrictions.eq("sponsor.id", sponsorId));
+		List<SponsorCode> codes = criteria.list();
+		logger.info("Sponsor codes found: {}", codes.size());
+		return codes;
+	}
+
 	protected void handleException(String invocationDetails, Exception e) throws DAOException {
 //		LoggerManager.error(this, e.getMessage(), e);
 		throw new DAOException(e.getMessage(), e);

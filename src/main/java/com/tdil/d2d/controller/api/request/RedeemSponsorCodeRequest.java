@@ -5,10 +5,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.tdil.d2d.esapi.validation.ValidInput;
 
-public class UseSponsorCodeRequest extends ApiRequest {
-	
+public class RedeemSponsorCodeRequest extends ApiRequest {
+
 	@NotEmpty
-    @Length(min= 2, max = 50)
+	@Length(min = 2, max = 32)
 	@ValidInput
 	private String sponsorCode;
 
@@ -19,5 +19,5 @@ public class UseSponsorCodeRequest extends ApiRequest {
 	public void setSponsorCode(String sponsorCode) {
 		this.sponsorCode = sponsorCode;
 	}
-	
+
 }

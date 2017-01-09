@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +36,8 @@ import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
+import com.tdil.d2d.controller.api.request.CreatePaymentRequest;
+import com.tdil.d2d.controller.api.request.CreatePreferenceMPRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
@@ -60,18 +64,20 @@ import com.tdil.d2d.utils.LoggerManager;
 @Controller
 public class UserController extends AbstractController {
 
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
 
-    private static final String UNKNOWN_HOST = "unknown";
+	private static final String UNKNOWN_HOST = "unknown";
 
-    public static String HOSTNAME;
+	public static String HOSTNAME;
+
+	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -118,7 +124,7 @@ public class UserController extends AbstractController {
 		}
     }
 
-
+ 
 
     // TODO 
 //    profesion (1) - especialidades cada ve que toca graba
@@ -136,6 +142,7 @@ public class UserController extends AbstractController {
     	}
     	try {
 			boolean result = this.userService.validate(validationRequest);
+			logger.info("User is valid? {}", result);
 			if (result) {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
@@ -331,6 +338,18 @@ public class UserController extends AbstractController {
 		}
     }
 
+
+	@RequestMapping(value = "/user/{userId}/get", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<UserDetailsResponse>> getUser(@PathVariable long userId) {
+		try {
+			UserDetailsResponse me = this.userService.getUser(userId);
+			return new ResponseEntity<GenericResponse<UserDetailsResponse>>(new GenericResponse<UserDetailsResponse>(me, HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<UserDetailsResponse>>((GenericResponse) null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
     // TODO
 //    terminos y condiciones
 //    
@@ -516,6 +535,31 @@ public class UserController extends AbstractController {
     public ModelAndView test() {
 		return new ModelAndView("index");
 
+    }
+    
+    @RequestMapping(value = "/user/mercadopago/preference", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> createPreference(@Valid @RequestBody CreatePreferenceMPRequest createPreferenceMPRequest, BindingResult bidingResult) {
+    	try {
+			return new ResponseEntity<String>(this.userService.createMercadoPagoPreference(createPreferenceMPRequest), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return null;
+		}
+    }
+    
+    @RequestMapping(value = "/user/mercadopago/payment", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> createPayment(@Valid @RequestBody CreatePaymentRequest createPaymentRequest, BindingResult bidingResult) {
+    	try {
+			boolean response = this.userService.createPayment(createPaymentRequest);
+			if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return null;
+		}
     }
 
 }
