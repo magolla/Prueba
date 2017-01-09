@@ -19,7 +19,9 @@ import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
+import com.tdil.d2d.controller.api.request.CreatePaymentRequest;
 import com.tdil.d2d.controller.api.request.CreatePermanentJobOfferRequest;
+import com.tdil.d2d.controller.api.request.CreatePreferenceMPRequest;
 import com.tdil.d2d.controller.api.request.CreateTemporaryJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
@@ -105,6 +107,8 @@ public interface UserService {
 	public User getLoggedUser() throws ServiceException;
 
 	public UserDetailsResponse me() throws ServiceException;
+	
+	public UserDetailsResponse getUser(long id) throws ServiceException;
 
 	// Profile
 	public ProfileResponseDTO profile() throws ServiceException;
@@ -128,4 +132,9 @@ public interface UserService {
 	public void updateUserLinkedinProfile(UserLinkedinProfileRequest userLinkedinProfileRequest) throws ServiceException;
 	
     public void setCV(String cv) throws ServiceException;
+    
+	public String createMercadoPagoPreference(CreatePreferenceMPRequest createPreferenceMPRequest) throws ServiceException;
+
+	public boolean createPayment(CreatePaymentRequest createPaymentRequest) throws ServiceException;
+
 }

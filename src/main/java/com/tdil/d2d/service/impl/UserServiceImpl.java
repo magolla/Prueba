@@ -2,6 +2,7 @@ package com.tdil.d2d.service.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -22,15 +23,18 @@ import javax.servlet.ServletOutputStream;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mercadopago.MP;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
@@ -47,7 +51,9 @@ import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
+import com.tdil.d2d.controller.api.request.CreatePaymentRequest;
 import com.tdil.d2d.controller.api.request.CreatePermanentJobOfferRequest;
+import com.tdil.d2d.controller.api.request.CreatePreferenceMPRequest;
 import com.tdil.d2d.controller.api.request.CreateTemporaryJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
@@ -69,6 +75,7 @@ import com.tdil.d2d.dao.GeoDAO;
 import com.tdil.d2d.dao.JobApplicationDAO;
 import com.tdil.d2d.dao.JobOfferDAO;
 import com.tdil.d2d.dao.NotificationConfigurationDAO;
+import com.tdil.d2d.dao.PaymentDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
@@ -82,6 +89,7 @@ import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.NotificationConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.persistence.Occupation;
+import com.tdil.d2d.persistence.Payment;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.Task;
@@ -100,8 +108,15 @@ import com.tdil.d2d.utils.ServiceLocator;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
+
 	private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
+	@Value("${mercadopago.client_id}")
+	private String clientId;
+	
+	@Value("${mercadopago.secret_id}")
+	private String secretId;
+	
 	@Autowired
 	private UserDAO userDAO;
 	@Autowired
@@ -118,6 +133,9 @@ public class UserServiceImpl implements UserService {
 	private GeoDAO geoDAO;
 
 	@Autowired
+    private PaymentDAO paymentDAO;
+    
+    @Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
@@ -267,6 +285,7 @@ public class UserServiceImpl implements UserService {
 	public boolean validate(ValidationRequest validationRequest) throws ServiceException {
 		try {
 			User user = this.userDAO.getUserByMobilePhone(validationRequest.getMobilePhone());
+			logger.info("User found = {}", user.getId());
 			if (user != null && user.getDeviceId().equals(encriptDeviceId(validationRequest.getDeviceId(), user))
 					&& user.getMobileHash().equals(validationRequest.getSmsCode())) {
 				user.setPhoneValidated(true);
@@ -760,7 +779,8 @@ public class UserServiceImpl implements UserService {
 		return new SimpleDateFormat(string).parse(offerDate);
 	}
 
-	@Override public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
+    @Override
+    public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
 		long id = RuntimeContext.getCurrentUser().getId();
 		return this.getMyOffers(id);
 	}
@@ -1083,13 +1103,28 @@ public class UserServiceImpl implements UserService {
 		result.setTask_id(s.getTask().getId());
 		result.setTaskName(s.getTask().getName());
 		result.setApplications(s.getApplications());
-
+		result.setBase64img(s.getOfferent().getBase64img());
 		return result;
 	}
 
 	@Override
 	public UserDetailsResponse me() throws ServiceException {
 		User user = getLoggedUser();
+		return getUserDetailsResponse(user);
+	}
+
+	@Override
+	public UserDetailsResponse getUser(long id) throws ServiceException {
+		User user = null;
+		try {
+			user = this.userDAO.getById(User.class, id);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		return getUserDetailsResponse(user);
+	}
+
+	private UserDetailsResponse getUserDetailsResponse(User user) throws ServiceException {
 		UserDetailsResponse resp = new UserDetailsResponse(HttpStatus.OK.value());
 		resp.setFirstname(user.getFirstname());
 		resp.setLastname(user.getLastname());
@@ -1247,5 +1282,62 @@ public class UserServiceImpl implements UserService {
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
+	}
+	
+	
+	@Override
+	public String createMercadoPagoPreference(CreatePreferenceMPRequest createPreferenceMPRequest) throws ServiceException {
+		
+
+        User user = getLoggedUser();
+		MP mp = new MP (clientId, secretId);
+		JSONObject createPreferenceResult;
+		try {
+			createPreferenceResult = mp.createPreference("{'items':"
+					+ "[{"
+					+ "		'title':'" + createPreferenceMPRequest.getItem() + "',"
+					+ "		'quantity':1,"
+					+ "		'currency_id':'ARS',"
+					+ "		'unit_price':" + createPreferenceMPRequest.getPrice() + " "
+					+ "}],"
+					+ "'payer': "
+					+ "	{"					
+					+ "     'name': " + user.getFirstname() + ","
+					+ "     'surname': " + user.getLastname() + ","
+					+ "	    'email': " + user.getEmail() + ""
+					+ "	},"
+					+ "'payment_methods': { " //allow only credit cards
+					+      "'excluded_payment_types': "
+					+ "		[{"
+					+          "'id': 'ticket'"
+					+ " 	 },"
+					+ "      {"
+					+          "'id': 'atm'"
+					+ " 	 },"
+					+ "      {"
+					+          "'id': 'bank_transfer'"
+					+         "}]"
+					+ "}}");
+			
+			return createPreferenceResult.toString();
+		} catch (Exception e) {
+             throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public boolean createPayment(CreatePaymentRequest createPaymentRequest) throws ServiceException {
+		try {
+            User user = getLoggedUser();
+            String idPayment = createPaymentRequest.getIdPaymentMP();
+            String item = createPaymentRequest.getItem();
+            BigDecimal price = new BigDecimal(createPaymentRequest.getPrice());
+            paymentDAO.save(new Payment(idPayment, item, price, user));
+            
+            //TODO create suscription?
+            return true;
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
 	}
 }
