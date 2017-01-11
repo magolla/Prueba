@@ -8,6 +8,7 @@ public interface ActivityAction {
 	String APPLY_TO_OFFER = "Aplicaste a una Oferta";
 	String ACCEPT_OFFER = "Has sido aceptado para la oferta";
 	String REJECT_OFFER = "Has sido rechazado para la oferta";
+	String CLOSED_OFFER = "La oferta ha sido cerrada";
 	String ADD_GEO_LEVEL = "Agregaste una zona en tu perfil";
 	String ADD_SPECIALTY = "Agregaste una especialidad a tu perfil";
 	String SET_AVATAR = "Agregaste o modificaste tu imagen de perfil";

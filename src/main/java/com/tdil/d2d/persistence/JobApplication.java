@@ -17,6 +17,7 @@ public class JobApplication implements PersistentEntity {
 	public static String PENDING = "PENDING";
 	public static String ACEPTED = "ACEPTED";
 	public static String REJECTED = "REJECTED";
+	public static String CLOSED = "CLOSED";
 	
 	@Id
 	@GeneratedValue

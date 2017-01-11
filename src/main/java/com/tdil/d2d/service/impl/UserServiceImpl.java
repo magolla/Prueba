@@ -655,6 +655,39 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public boolean editJobOffer(CreateTemporaryJobOfferRequest createOfferRequest, long offerId) throws ServiceException {
+		try {
+
+			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
+			jobOffer.setOfferent(getLoggedUser());
+			jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
+			jobOffer.setCreationDate(new Date());
+			jobOffer.setGeoLevelLevel(createOfferRequest.getGeoLevelLevel());
+			jobOffer.setGeoLevelId(createOfferRequest.getGeoLevelId());
+			jobOffer.setOccupation(specialtyDAO.getOccupationById(createOfferRequest.getOccupationId()));
+			jobOffer.setSpecialty(specialtyDAO.getSpecialtyById(createOfferRequest.getSpecialtyId()));
+			jobOffer.setTask(specialtyDAO.getTaskById(createOfferRequest.getTaskId()));
+			// TODO
+			// xxx nuevos campos
+			jobOffer.setCompanyScreenName(createOfferRequest.getCompanyScreenName());
+			jobOffer.setInstitutionType(createOfferRequest.getInstitutionType());
+			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate() + " " + createOfferRequest.getOfferHour(),
+					"yyyyMMdd HHmm"));
+			jobOffer.setHour(createOfferRequest.getOfferHour());
+			jobOffer.setPermanent(false);
+			jobOffer.setComment(createOfferRequest.getComment());
+			// jobOffer.setTasks(createOfferRequest.getTasks());
+			jobOffer.setVacants(createOfferRequest.getVacants());
+			jobOffer.setStatus(JobOffer.VACANT);
+			this.jobDAO.save(jobOffer);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
+			return true;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
 	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException {
 		try {
 			Calendar cal = Calendar.getInstance();
@@ -959,6 +992,29 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	@Override
+	public boolean close(long offerId) throws ServiceException {
+		try {
+			JobOffer offer = this.jobDAO.getById(JobOffer.class, offerId);
+			if (JobOffer.CLOSED.equals(offer.getStatus())) {
+				return false;
+			}
+			if (offer.isExpired()) {
+				return false;
+			}
+			if (offer.getOfferent().getId() != RuntimeContext.getCurrentUser().getId()) {
+				return false;
+			}
+			offer.setStatus(JobOffer.CLOSED);
+			this.jobDAO.save(offer);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.CLOSED_OFFER));
+			//TODO: Enviar notificacion a los apliccants avisando que se cerro el aviso
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	@Override
 	public NotificationConfigurationResponse getNotificationConfiguration() throws ServiceException {
@@ -1095,6 +1151,7 @@ public class UserServiceImpl implements UserService {
 
 	private JobOfferStatusDTO toDTO(JobOffer s) {
 		JobOfferStatusDTO result = new JobOfferStatusDTO();
+		
 		result.setId(s.getId());
 		result.setComment(s.getComment());
 		result.setCompanyScreenName(s.getCompanyScreenName());
