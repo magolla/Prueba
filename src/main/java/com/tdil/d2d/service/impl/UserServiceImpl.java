@@ -82,6 +82,7 @@ import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.ActivityAction;
 import com.tdil.d2d.persistence.ActivityLog;
+import com.tdil.d2d.persistence.Geo2;
 import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.JobApplication;
@@ -654,6 +655,39 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public boolean editJobOffer(CreateTemporaryJobOfferRequest createOfferRequest, long offerId) throws ServiceException {
+		try {
+
+			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
+			jobOffer.setOfferent(getLoggedUser());
+			jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
+			jobOffer.setCreationDate(new Date());
+			jobOffer.setGeoLevelLevel(createOfferRequest.getGeoLevelLevel());
+			jobOffer.setGeoLevelId(createOfferRequest.getGeoLevelId());
+			jobOffer.setOccupation(specialtyDAO.getOccupationById(createOfferRequest.getOccupationId()));
+			jobOffer.setSpecialty(specialtyDAO.getSpecialtyById(createOfferRequest.getSpecialtyId()));
+			jobOffer.setTask(specialtyDAO.getTaskById(createOfferRequest.getTaskId()));
+			// TODO
+			// xxx nuevos campos
+			jobOffer.setCompanyScreenName(createOfferRequest.getCompanyScreenName());
+			jobOffer.setInstitutionType(createOfferRequest.getInstitutionType());
+			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate() + " " + createOfferRequest.getOfferHour(),
+					"yyyyMMdd HHmm"));
+			jobOffer.setHour(createOfferRequest.getOfferHour());
+			jobOffer.setPermanent(false);
+			jobOffer.setComment(createOfferRequest.getComment());
+			// jobOffer.setTasks(createOfferRequest.getTasks());
+			jobOffer.setVacants(createOfferRequest.getVacants());
+			jobOffer.setStatus(JobOffer.VACANT);
+			this.jobDAO.save(jobOffer);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
+			return true;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
 	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException {
 		try {
 			Calendar cal = Calendar.getInstance();
@@ -1103,13 +1137,43 @@ public class UserServiceImpl implements UserService {
 
 	private JobOfferStatusDTO toDTO(JobOffer s) {
 		JobOfferStatusDTO result = new JobOfferStatusDTO();
+		
+		String name = "";
+		
+		if(s.getGeoLevelLevel() == 2) {
+			Geo2 geo = new Geo2();
+			try {
+				geo = geoDAO.get2ById(Geo2.class, s.getGeoLevelId());
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
+			name = geo.getName();
+		} else if(s.getGeoLevelLevel() == 3) {
+			Geo3 geo = new Geo3();
+			try {
+				geo = geoDAO.get3ById(Geo3.class, s.getGeoLevelId());
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
+			name = geo.getName();
+		} else {
+			Geo4 geo = new Geo4();
+			try {
+				geo = geoDAO.get4ById(Geo4.class, s.getGeoLevelId());
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
+			name = geo.getName();
+		}
+		
+		
 		result.setId(s.getId());
 		result.setComment(s.getComment());
 		result.setCompanyScreenName(s.getCompanyScreenName());
 		result.setCreationDate(s.getCreationDate().toString());
 		result.setGeoLevelId(s.getGeoLevelId());
 		result.setGeoLevelLevel(s.getGeoLevelLevel());
-		// result.setGeoLevelName(??);
+		result.setGeoLevelName(name);
 		result.setOfferHour(s.getHour());
 		result.setInstitutionType(s.getInstitutionType().toString());
 		result.setOfferDate(s.getOfferDate().toString());

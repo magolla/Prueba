@@ -59,6 +59,7 @@ public interface UserService {
 	public boolean validateEmail(String email, String hash) throws ServiceException;
 
 	public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest) throws ServiceException;
+	public boolean editJobOffer(CreateTemporaryJobOfferRequest createOfferRequest, long offerId) throws ServiceException;
 	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException;
 
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException;
