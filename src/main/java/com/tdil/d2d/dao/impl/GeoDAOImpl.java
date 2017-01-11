@@ -18,6 +18,7 @@ import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Geo2;
 import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
+import com.tdil.d2d.persistence.GeoLevel;
 
 @Repository
 public class GeoDAOImpl extends HibernateDaoSupport implements GeoDAO  {
@@ -103,19 +104,33 @@ public class GeoDAOImpl extends HibernateDaoSupport implements GeoDAO  {
 		}
 	}
 	
-	public Geo2 get2ById(Class<Geo2> aClass, long id) throws DAOException {
-		return (Geo2)this.sessionFactory.getCurrentSession().get(aClass, id);
+	private Geo2 get2ById(long id) throws DAOException {
+		return (Geo2)this.sessionFactory.getCurrentSession().get(Geo2.class, id);
 	}
-	public Geo3 get3ById(Class<Geo3> aClass, long id) throws DAOException {
-		return (Geo3)this.sessionFactory.getCurrentSession().get(aClass, id);
+	private Geo3 get3ById(long id) throws DAOException {
+		return (Geo3)this.sessionFactory.getCurrentSession().get(Geo3.class, id);
 	}
-	public Geo4 get4ById(Class<Geo4> aClass, long id) throws DAOException {
-		return (Geo4)this.sessionFactory.getCurrentSession().get(aClass, id);
+	private Geo4 get4ById(long id) throws DAOException {
+		return (Geo4)this.sessionFactory.getCurrentSession().get(Geo4.class, id);
 	}
 	
 	protected void handleException(String invocationDetails, Exception e) throws DAOException {
 //		LoggerManager.error(this, e.getMessage(), e);
 		throw new DAOException(e.getMessage(), e);
 	}
+
+	@Override
+	public GeoLevel getGeoByIdAndLevel(long geoLevelId, int geoLevelLevel) throws DAOException {
+		if (geoLevelLevel == 2) {
+			return this.get2ById(geoLevelId);
+		} else if (geoLevelLevel == 3) {
+			return this.get3ById(geoLevelId);
+		} if (geoLevelLevel == 4) {
+			return this.get4ById(geoLevelId);
+		}
+		return null;
+	}
+	
+	
 
 }

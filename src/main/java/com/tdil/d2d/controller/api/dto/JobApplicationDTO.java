@@ -14,7 +14,9 @@ public class JobApplicationDTO {
 	private String mobilePhone;
 	private String occupationName;
 	private String specialtyName;
-//	private String geolocationName;
+	private long geoLevelId;
+	private int geoLevelLevel;
+	private String geoLevelName;
 	private String comment;
 
 	public long getId() {
@@ -82,6 +84,24 @@ public class JobApplicationDTO {
 	}
 	public void setSpecialtyName(String specialtyName) {
 		this.specialtyName = specialtyName;
+	}
+	public long getGeoLevelId() {
+		return geoLevelId;
+	}
+	public void setGeoLevelId(long geoLevelId) {
+		this.geoLevelId = geoLevelId;
+	}
+	public int getGeoLevelLevel() {
+		return geoLevelLevel;
+	}
+	public void setGeoLevelLevel(int geoLevelLevel) {
+		this.geoLevelLevel = geoLevelLevel;
+	}
+	public String getGeoLevelName() {
+		return geoLevelName;
+	}
+	public void setGeoLevelName(String geoLevelName) {
+		this.geoLevelName = geoLevelName;
 	}
 	
 }
