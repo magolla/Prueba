@@ -187,7 +187,8 @@ public class UserServiceImpl implements UserService {
 		try {
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
 			User user = new User();
-			user.setCreationDate(new Date());
+			Date registrationDate = new Date();
+			user.setCreationDate(registrationDate);
 			user.setEmail(registrationRequest.getEmail());
 			user.setFirstname(registrationRequest.getFirstname());
 			user.setLastname(registrationRequest.getLastname());
@@ -202,6 +203,8 @@ public class UserServiceImpl implements UserService {
 			user.setEmailValidated(false);
 			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
 			user.setCompanyScreenName(registrationRequest.getCompanyScreenName());
+			user.setTacAccepted(registrationRequest.isTacAccepted());
+			user.setTacAcceptDate(registrationDate);
 			if (ServiceLocator.isLocalhost()) {
 				user.setMobileHash("9999");
 			} else {
@@ -235,7 +238,8 @@ public class UserServiceImpl implements UserService {
 		try {
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
 			User user = new User();
-			user.setCreationDate(new Date());
+			Date registrationDate = new Date();
+			user.setCreationDate(registrationDate);
 			user.setEmail(registrationRequest.getEmail());
 			user.setFirstname(registrationRequest.getFirstname());
 			user.setLastname(registrationRequest.getLastname());
@@ -249,6 +253,8 @@ public class UserServiceImpl implements UserService {
 			user.setPhoneValidated(false);
 			user.setEmailValidated(false);
 			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
+			user.setTacAccepted(registrationRequest.isTacAccepted());
+			user.setTacAcceptDate(registrationDate);
 			if (ServiceLocator.isLocalhost()) {
 				user.setMobileHash("9999");
 			} else {
