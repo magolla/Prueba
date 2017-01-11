@@ -82,7 +82,6 @@ import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.ActivityAction;
 import com.tdil.d2d.persistence.ActivityLog;
-import com.tdil.d2d.persistence.Geo2;
 import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.JobApplication;
@@ -1138,42 +1137,19 @@ public class UserServiceImpl implements UserService {
 	private JobOfferStatusDTO toDTO(JobOffer s) {
 		JobOfferStatusDTO result = new JobOfferStatusDTO();
 		
-		String name = "";
-		
-		if(s.getGeoLevelLevel() == 2) {
-			Geo2 geo = new Geo2();
-			try {
-				geo = geoDAO.get2ById(Geo2.class, s.getGeoLevelId());
-			} catch (DAOException e) {
-				e.printStackTrace();
-			}
-			name = geo.getName();
-		} else if(s.getGeoLevelLevel() == 3) {
-			Geo3 geo = new Geo3();
-			try {
-				geo = geoDAO.get3ById(Geo3.class, s.getGeoLevelId());
-			} catch (DAOException e) {
-				e.printStackTrace();
-			}
-			name = geo.getName();
-		} else {
-			Geo4 geo = new Geo4();
-			try {
-				geo = geoDAO.get4ById(Geo4.class, s.getGeoLevelId());
-			} catch (DAOException e) {
-				e.printStackTrace();
-			}
-			name = geo.getName();
-		}
-		
-		
 		result.setId(s.getId());
 		result.setComment(s.getComment());
 		result.setCompanyScreenName(s.getCompanyScreenName());
 		result.setCreationDate(s.getCreationDate().toString());
 		result.setGeoLevelId(s.getGeoLevelId());
 		result.setGeoLevelLevel(s.getGeoLevelLevel());
-		result.setGeoLevelName(name);
+		GeoLevel geoLevel;
+ 		try {
+ 			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getGeoLevelId(), s.getGeoLevelLevel());
+ 			result.setGeoLevelName(geoLevel.getName());
+ 		} catch (DAOException e) {
+ 			throw new RuntimeException(e);
+ 		}
 		result.setOfferHour(s.getHour());
 		result.setInstitutionType(s.getInstitutionType().toString());
 		result.setOfferDate(s.getOfferDate().toString());
