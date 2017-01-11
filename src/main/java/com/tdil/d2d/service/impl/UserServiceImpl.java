@@ -667,8 +667,6 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setOccupation(specialtyDAO.getOccupationById(createOfferRequest.getOccupationId()));
 			jobOffer.setSpecialty(specialtyDAO.getSpecialtyById(createOfferRequest.getSpecialtyId()));
 			jobOffer.setTask(specialtyDAO.getTaskById(createOfferRequest.getTaskId()));
-			// TODO
-			// xxx nuevos campos
 			jobOffer.setCompanyScreenName(createOfferRequest.getCompanyScreenName());
 			jobOffer.setInstitutionType(createOfferRequest.getInstitutionType());
 			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate() + " " + createOfferRequest.getOfferHour(),
@@ -724,6 +722,43 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	
+	@Override
+	public boolean editJobOffer(CreatePermanentJobOfferRequest createOfferRequest,long offerId) throws ServiceException {
+		try {
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MONTH, 1);
+			createOfferRequest.setOfferDate(new SimpleDateFormat("yyyyMMdd").format(cal.getTime()));
+			createOfferRequest.setOfferHour("0000");
+			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
+			jobOffer.setOfferent(getLoggedUser());
+			jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
+			jobOffer.setCreationDate(new Date());
+			jobOffer.setGeoLevelLevel(createOfferRequest.getGeoLevelLevel());
+			jobOffer.setGeoLevelId(createOfferRequest.getGeoLevelId());
+			jobOffer.setOccupation(specialtyDAO.getOccupationById(createOfferRequest.getOccupationId()));
+			jobOffer.setSpecialty(specialtyDAO.getSpecialtyById(createOfferRequest.getSpecialtyId()));
+			jobOffer.setTask(specialtyDAO.getTaskById(createOfferRequest.getTaskId()));
+			// TODO
+			// xxx nuevos campos
+			jobOffer.setTitle(createOfferRequest.getTitle());
+			jobOffer.setSubtitle(createOfferRequest.getSubtitle());
+			jobOffer.setCompanyScreenName(createOfferRequest.getCompanyScreenName());
+			jobOffer.setInstitutionType(createOfferRequest.getInstitutionType());
+			jobOffer.setOfferDate(getDate(createOfferRequest.getOfferDate(), "yyyyMMdd"));
+			jobOffer.setHour(createOfferRequest.getOfferHour());
+			jobOffer.setPermanent(true);
+			jobOffer.setComment(createOfferRequest.getComment());
+			// jobOffer.setTasks(createOfferRequest.getTasks());
+			jobOffer.setVacants(createOfferRequest.getVacants());
+			jobOffer.setStatus(JobOffer.VACANT);
+			this.jobDAO.save(jobOffer);
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
+			return true;
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
 	public User getLoggedUser() throws ServiceException {
 		try {
 			return userDAO.getById(User.class, com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());

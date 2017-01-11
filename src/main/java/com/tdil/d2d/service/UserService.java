@@ -61,6 +61,7 @@ public interface UserService {
 	public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest) throws ServiceException;
 	public boolean editJobOffer(CreateTemporaryJobOfferRequest createOfferRequest, long offerId) throws ServiceException;
 	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException;
+	public boolean editJobOffer(CreatePermanentJobOfferRequest createOfferRequest, long offerId) throws ServiceException;
 
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException;
 
