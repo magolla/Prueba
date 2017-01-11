@@ -214,7 +214,7 @@ public class UserServiceImpl implements UserService {
 			this.userDAO.save(user);
 
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
-			// TODO ENVIAR EMAIL DE VALIDACION
+			// TODO ENVIAR SMS DE VALIDACION
 
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link "
@@ -264,7 +264,7 @@ public class UserServiceImpl implements UserService {
 			this.userDAO.save(user);
 
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
-			// TODO ENVIAR EMAIL DE VALIDACION
+			// TODO ENVIAR SMS DE VALIDACION
 
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link "
