@@ -84,6 +84,7 @@ import com.tdil.d2d.persistence.ActivityAction;
 import com.tdil.d2d.persistence.ActivityLog;
 import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
+import com.tdil.d2d.persistence.GeoLevel;
 import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.NotificationConfiguration;
@@ -714,11 +715,13 @@ public class UserServiceImpl implements UserService {
 
 			JobApplication jobApplication = new JobApplication();
 			jobApplication.setComment(applyToOffer.getComment());
-			jobApplication.setCvAttach(Base64.decodeBase64(applyToOffer.getCvPdf()));
-			jobApplication.setCvPlain(applyToOffer.getCvPlain());
-			jobApplication.setLinkedInCv(applyToOffer.getLinkedInCV());
+			jobApplication.setCvAttach(Base64.decodeBase64(applyToOffer.getCvPdf())); //TODO debería salir del profile
+			jobApplication.setCvPlain(applyToOffer.getCvPlain()); //TODO debería salir del profile
+			User user = getLoggedUser();
+			UserLinkedinProfile linkedinProfile = this.userDAO.getUserLinkedinProfile(user);
+			jobApplication.setLinkedInCv(linkedinProfile.getPublicProfileURL());
 			jobApplication.setOffer(jobOffer);
-			jobApplication.setUser(getLoggedUser());
+			jobApplication.setUser(user);
 			this.jobApplicationDAO.save(jobApplication);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.APPLY_TO_OFFER));
 			return true;
@@ -822,13 +825,15 @@ public class UserServiceImpl implements UserService {
 			for (Specialty specialty : user.getSpecialties()) {
 				for (UserGeoLocation location : user.getUserGeoLocations()) {
 					result.addAll(this.jobDAO.getOffers(specialty.getId(), location.getGeoLevelId(), true));
+					GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(location.getGeoLevelId(), location.getGeoLevelLevel());
 					if (location.getGeoLevelLevel() == 4) {
-						Geo4 geo4 = this.geoDAO.get4ById(Geo4.class, location.getGeoLevelId());
+						Geo4 geo4 = (Geo4) geoLevel;
 						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getId(), true));
-						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getGeo2().getId(), true));
+						result.addAll(
+								this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getGeo2().getId(), true));
 					}
 					if (location.getGeoLevelLevel() == 3) {
-						Geo3 geo3 = this.geoDAO.get3ById(Geo3.class, location.getGeoLevelId());
+						Geo3 geo3 = (Geo3) geoLevel;
 						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo3.getGeo2().getId(), true));
 					}
 				}
@@ -847,14 +852,15 @@ public class UserServiceImpl implements UserService {
 			for (Specialty specialty : user.getSpecialties()) {
 				for (UserGeoLocation location : user.getUserGeoLocations()) {
 					result.addAll(this.jobDAO.getOffers(specialty.getId(), location.getGeoLevelId(), permament));
+					GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(location.getGeoLevelId(), location.getGeoLevelLevel());
 					if (location.getGeoLevelLevel() == 4) {
-						Geo4 geo4 = this.geoDAO.get4ById(Geo4.class, location.getGeoLevelId());
+						Geo4 geo4 = (Geo4) geoLevel;
 						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getId(), permament));
 						result.addAll(
 								this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getGeo2().getId(), permament));
 					}
 					if (location.getGeoLevelLevel() == 3) {
-						Geo3 geo3 = this.geoDAO.get3ById(Geo3.class, location.getGeoLevelId());
+						Geo3 geo3 = (Geo3) geoLevel;
 						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo3.getGeo2().getId(), permament));
 					}
 				}
@@ -1071,8 +1077,17 @@ public class UserServiceImpl implements UserService {
 		result.setOccupationName(s.getOffer().getOccupation().getName());
 		// Specialty
 		result.setSpecialtyName(s.getOffer().getSpecialty().getName());
-
-		// FaltaGeolocation
+		
+		//geolevel
+		result.setGeoLevelId(s.getOffer().getGeoLevelId());
+		result.setGeoLevelLevel(s.getOffer().getGeoLevelLevel());
+		GeoLevel geoLevel;
+		try {
+			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getOffer().getGeoLevelId(), s.getOffer().getGeoLevelLevel());
+			result.setGeoLevelName(geoLevel.getName());
+		} catch (DAOException e) {
+			throw new RuntimeException(e);
+		}
 		// ------------------------------------
 		// result.setComment(s.getComment());
 		return result;
@@ -1086,7 +1101,13 @@ public class UserServiceImpl implements UserService {
 		result.setCreationDate(s.getCreationDate().toString());
 		result.setGeoLevelId(s.getGeoLevelId());
 		result.setGeoLevelLevel(s.getGeoLevelLevel());
-		// result.setGeoLevelName(??);
+		GeoLevel geoLevel;
+		try {
+			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getGeoLevelId(), s.getGeoLevelLevel());
+			result.setGeoLevelName(geoLevel.getName());
+		} catch (DAOException e) {
+			throw new RuntimeException(e);
+		}
 		result.setOfferHour(s.getHour());
 		result.setInstitutionType(s.getInstitutionType().toString());
 		result.setOfferDate(s.getOfferDate().toString());

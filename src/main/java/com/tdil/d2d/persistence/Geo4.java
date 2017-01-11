@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "D2D_GEO4")
-public class Geo4 implements PersistentEntity {
+public class Geo4 implements GeoLevel, PersistentEntity {
 
 	@Id
 	@GeneratedValue
