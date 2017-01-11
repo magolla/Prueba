@@ -1144,12 +1144,12 @@ public class UserServiceImpl implements UserService {
 		result.setGeoLevelId(s.getGeoLevelId());
 		result.setGeoLevelLevel(s.getGeoLevelLevel());
 		GeoLevel geoLevel;
- 		try {
- 			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getGeoLevelId(), s.getGeoLevelLevel());
- 			result.setGeoLevelName(geoLevel.getName());
- 		} catch (DAOException e) {
- 			throw new RuntimeException(e);
- 		}
+		try {
+			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getGeoLevelId(), s.getGeoLevelLevel());
+			result.setGeoLevelName(geoLevel.getName());
+		} catch (DAOException e) {
+			throw new RuntimeException(e);
+		}
 		result.setOfferHour(s.getHour());
 		result.setInstitutionType(s.getInstitutionType().toString());
 		result.setOfferDate(s.getOfferDate().toString());
