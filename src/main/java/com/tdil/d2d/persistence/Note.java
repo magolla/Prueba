@@ -3,6 +3,7 @@ package com.tdil.d2d.persistence;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "D2D_NOTE")
@@ -23,13 +24,14 @@ public class Note implements PersistentEntity {
 	private String content;
 
 
-	@OneToMany
-	private List<Occupation> occupations;
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<Occupation> occupations;
 
-	@OneToMany
-	private List<Specialty> specialties;
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<Specialty> specialties;
 
-	@Column(name="category")
+	@Enumerated(EnumType.STRING)
+	@Column(name = "category")
 	private NoteCategory category;
 
 	@Column(name = "is_active")
@@ -77,19 +79,19 @@ public class Note implements PersistentEntity {
 		this.content = content;
 	}
 
-	public List<Occupation> getOccupations() {
+	public Set<Occupation> getOccupations() {
 		return occupations;
 	}
 
-	public void setOccupations(List<Occupation> occupations) {
+	public void setOccupations(Set<Occupation> occupations) {
 		this.occupations = occupations;
 	}
 
-	public List<Specialty> getSpecialties() {
+	public Set<Specialty> getSpecialties() {
 		return specialties;
 	}
 
-	public void setSpecialties(List<Specialty> specialties) {
+	public void setSpecialties(Set<Specialty> specialties) {
 		this.specialties = specialties;
 	}
 
@@ -131,5 +133,13 @@ public class Note implements PersistentEntity {
 
 	public void setExpirationDate(Date expirationDate) {
 		this.expirationDate = expirationDate;
+	}
+
+	public void addOccupation(Occupation occupation) {
+		this.getOccupations().add(occupation);
+	}
+
+	public void addSpeciality(Specialty specialty) {
+		this.getSpecialties().add(specialty);
 	}
 }

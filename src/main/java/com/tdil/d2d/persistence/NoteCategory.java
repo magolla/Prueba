@@ -1,5 +1,7 @@
 package com.tdil.d2d.persistence;
 
+import javax.persistence.Enumerated;
+
 public enum NoteCategory {
 
 	CAT_1("Cursos, congresos y jornadas"),
@@ -17,6 +19,11 @@ public enum NoteCategory {
 
 	public String getDescription() {
 		return description;
+	}
+
+	@Override
+	public String toString() {
+		return this.name();
 	}
 
 }

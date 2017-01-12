@@ -19,48 +19,50 @@ import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.PersistentEntity;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Task;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	@PostConstruct
 	public void initHibernate() {
 		this.setSessionFactory(this.sessionFactory);
 	}
-	
+
 	@Override
 	public void save(Occupation occupation) throws DAOException {
 		basicSave(occupation);
 	}
-	
+
 	@Override
 	public void save(Specialty specialty) throws DAOException {
 		basicSave(specialty);
 	}
-	
+
 	@Override
 	public void save(Task task) throws DAOException {
 		basicSave(task);
 	}
-	
+
 	@Override
 	public Occupation getOccupationById(long id) throws DAOException {
-		return (Occupation)this.sessionFactory.getCurrentSession().get(Occupation.class, id);
+		return (Occupation) this.sessionFactory.getCurrentSession().get(Occupation.class, id);
 	}
-	
+
 	@Override
 	public Specialty getSpecialtyById(long id) throws DAOException {
-		return (Specialty)this.sessionFactory.getCurrentSession().get(Specialty.class, id);
+		return (Specialty) this.sessionFactory.getCurrentSession().get(Specialty.class, id);
 	}
-	
+
 	@Override
 	public Task getTaskById(long id) throws DAOException {
-		return (Task)this.sessionFactory.getCurrentSession().get(Task.class, id);
+		return (Task) this.sessionFactory.getCurrentSession().get(Task.class, id);
 	}
-	
+
 	@Override
 	public List<Occupation> listOccupation() throws DAOException {
 		try {
@@ -70,7 +72,7 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public List<Occupation> listOccupation(String text) throws DAOException {
 		try {
@@ -83,7 +85,7 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public List<Specialty> listSpecialties(long occupationId) throws DAOException {
 		try {
@@ -95,7 +97,7 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public List<Specialty> listSpecialty(String text) throws DAOException {
 		try {
@@ -108,7 +110,7 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public List<Specialty> listSpecialty(long occupationId, String specialty) throws DAOException {
 		try {
@@ -122,7 +124,7 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public List<Task> listTasks(long specialtyId) throws DAOException {
 		try {
@@ -134,7 +136,7 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public List<Task> listTask(String text) throws DAOException {
 		try {
@@ -161,9 +163,9 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			throw new DAOException(e);
 		}
 	}
-	
+
 	private void basicSave(PersistentEntity entity) throws DAOException {
-		String invocationDetails= "save("+entity.getClass().getName()+") ";
+		String invocationDetails = "save(" + entity.getClass().getName() + ") ";
 		try {
 			this.getHibernateTemplate().save(entity);
 			this.getHibernateTemplate().flush();
@@ -173,7 +175,7 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			this.handleException(invocationDetails, e);
 		}
 	}
-	
+
 	protected void handleException(String invocationDetails, Exception e) throws DAOException {
 //		LoggerManager.error(this, e.getMessage(), e);
 		throw new DAOException(e.getMessage(), e);
