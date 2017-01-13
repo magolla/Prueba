@@ -288,4 +288,14 @@ public class OfferController extends AbstractController {
 		}
     }
     
+    @RequestMapping(value = "/user/getPermanentOffersOpen", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> getPermanentOffersOpen() {
+    	try {
+			List<JobOfferStatusDTO> myOffers = this.userService.getPermanentOffersOpen();
+			return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>(new GenericResponse<List<JobOfferStatusDTO>>(myOffers,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
 }
