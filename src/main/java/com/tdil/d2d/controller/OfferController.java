@@ -242,7 +242,7 @@ public class OfferController extends AbstractController {
     }
     
     
-    @RequestMapping(value = "/user/offer/{offerId}/application/{applicationId}/accept", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/offer/{offerId}/application/{applicationId}/accept", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> acceptOfferApplication(@PathVariable long offerId, @PathVariable long applicationId) {
     	try {
     		boolean result = this.userService.accept(offerId, applicationId);
