@@ -2,7 +2,6 @@ package com.tdil.d2d.service.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -863,6 +862,11 @@ public class UserServiceImpl implements UserService {
 		return this.getMyOffers(id);
 	}
 
+    @Override
+    public List<JobOfferStatusDTO> getPermanentOffersOpen() throws ServiceException {
+		return this.getAllPermanentOffersOpen();
+	}
+    
 	@Override
 	public List<JobOfferStatusDTO> getMyOffersClosed() throws ServiceException {
 		try {
@@ -1158,15 +1162,7 @@ public class UserServiceImpl implements UserService {
 		// Creation Date
 		result.setCreationDate(s.getCreationDate() != null ? s.getCreationDate().toString() : "");
 		// Base64Image
-		byte[] array = s.getUser().getBase64img();
-		String base64String;
-		try {
-			base64String = new String(array, "UTF8");
-			result.setBase64Image(base64String);
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}
-		
+		result.setBase64Image(new String(s.getUser().getBase64img()));
 		// Linkedin CV
 		result.setLinkedinInCv(s.getLinkedInCv());
 		// Falta cvAttach
@@ -1356,6 +1352,16 @@ public class UserServiceImpl implements UserService {
 	public List<JobOfferStatusDTO> getMyOffers(long userId) throws ServiceException {
 		try {
 			List<JobOffer> offers = this.jobDAO.getOpenOffers(userId);
+			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public List<JobOfferStatusDTO> getAllPermanentOffersOpen() throws ServiceException {
+		try {
+			List<JobOffer> offers = this.jobDAO.getAllPermanentOffersOpen();
 			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
 			throw new ServiceException(e);

@@ -60,4 +60,20 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 			throw new DAOException(e);
 		}
 	}
+	
+	@Override
+	public List<JobOffer> getAllPermanentOffersOpen() throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
+			criteria.add(Restrictions.eq("permanent", true));
+			criteria.add(Restrictions.eq("status", JobOffer.VACANT));
+			criteria.add(Restrictions.ge("offerDate", new Date()));
+			
+			criteria.addOrder(Order.asc("id"));
+			List<JobOffer> list = criteria.list();
+			return list;
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 }
