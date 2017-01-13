@@ -20,6 +20,8 @@ public class SearchOfferRequest extends ApiRequest {
 	
 	@Min(value = 0)
 	private long geoLevelId;
+	
+	// TODO: intitutionType
 
 	public long getOccupationId() {
 		return occupationId;
