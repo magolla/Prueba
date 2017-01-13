@@ -64,6 +64,8 @@ public interface UserService {
 	public boolean editJobOffer(CreatePermanentJobOfferRequest createOfferRequest, long offerId) throws ServiceException;
 
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException;
+	
+	public List<JobOfferStatusDTO> getPermanentOffersOpen() throws ServiceException;
 
 	List<JobOfferStatusDTO> getMyOffers(long userID) throws ServiceException;
 
@@ -140,5 +142,8 @@ public interface UserService {
 	public String createMercadoPagoPreference(CreatePreferenceMPRequest createPreferenceMPRequest) throws ServiceException;
 
 	public boolean createPayment(CreatePaymentRequest createPaymentRequest) throws ServiceException;
+
+	List<JobOfferStatusDTO> getAllPermanentOffersOpen() throws ServiceException;
+
 
 }

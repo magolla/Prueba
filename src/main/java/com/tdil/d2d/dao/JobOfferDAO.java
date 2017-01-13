@@ -14,6 +14,7 @@ public interface JobOfferDAO {
 
 	public List<JobOffer> getOpenOffers(Long id) throws DAOException;
 	public List<JobOffer> getClosedOffers(Long id) throws DAOException;
+	public List<JobOffer> getAllPermanentOffersOpen() throws DAOException;
 
 	public Collection<JobOffer> getOffers(long specialtyId, long geoLevelId, boolean permanent) throws DAOException;
 
