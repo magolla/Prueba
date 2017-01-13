@@ -21,7 +21,8 @@ public class SearchOfferRequest extends ApiRequest {
 	@Min(value = 0)
 	private long geoLevelId;
 	
-	// TODO: intitutionType
+	@Min(value = 0)
+	private InstitutionType institutionType;
 
 	public long getOccupationId() {
 		return occupationId;
@@ -61,6 +62,14 @@ public class SearchOfferRequest extends ApiRequest {
 
 	public void setGeoLevelId(long geoLevelId) {
 		this.geoLevelId = geoLevelId;
+	}
+
+	public InstitutionType getInstitutionType() {
+		return institutionType;
+	}
+
+	public void setInstitutionType(InstitutionType institutionType) {
+		this.institutionType = institutionType;
 	}
 	
 }
