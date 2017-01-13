@@ -10,6 +10,9 @@ public class ApiResponse<T> {
 	private int status;
 	private List<String> errors = new ArrayList<>();
 
+	public ApiResponse() {
+	}
+
 	public ApiResponse(int status) {
 		this.status = status;
 	}
