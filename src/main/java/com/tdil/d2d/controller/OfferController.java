@@ -27,6 +27,7 @@ import com.tdil.d2d.controller.api.request.CreateTemporaryJobOfferRequest;
 import com.tdil.d2d.controller.api.request.SearchOfferRequest;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.controller.api.response.UserDetailsResponse;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.security.JwtTokenUtil;
 import com.tdil.d2d.service.UserService;
@@ -298,4 +299,16 @@ public class OfferController extends AbstractController {
 			return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
+    
+    
+    @RequestMapping(value = "/user/{offerId}/getApprovedCandidateForOffer", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<UserDetailsResponse>> getUser(@PathVariable long offerId) {
+		try {
+			UserDetailsResponse me = this.userService.getApprovedCandidateForOffer(offerId);
+			return new ResponseEntity<GenericResponse<UserDetailsResponse>>(new GenericResponse<UserDetailsResponse>(me, HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<UserDetailsResponse>>((GenericResponse) null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
