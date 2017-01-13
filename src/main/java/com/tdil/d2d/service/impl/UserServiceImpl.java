@@ -1002,6 +1002,8 @@ public class UserServiceImpl implements UserService {
 				// TODO: enviar notificaciones a los que quedan afuera
 				// TODO: enviar notificacion al que aceptaron
 			}
+			offer.setJobApplication_id((int) (long) application.getId());
+			
 			this.jobDAO.save(offer);
 			this.jobApplicationDAO.save(application);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.ACCEPT_OFFER));
@@ -1471,6 +1473,18 @@ public class UserServiceImpl implements UserService {
             
             //TODO create suscription?
             return true;
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+	}
+
+	@Override
+	public UserDetailsResponse getApprovedCandidateForOffer(long id) throws ServiceException {
+		try {
+			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, id);
+			JobApplication jobApplication = this.jobApplicationDAO.getById(JobApplication.class, jobOffer.getJobApplication_id());
+			User user = this.userDAO.getById(User.class, jobApplication.getUser().getId());
+			return getUserDetailsResponse(user);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

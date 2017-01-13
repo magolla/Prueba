@@ -144,6 +144,7 @@ public interface UserService {
 	public boolean createPayment(CreatePaymentRequest createPaymentRequest) throws ServiceException;
 
 	List<JobOfferStatusDTO> getAllPermanentOffersOpen() throws ServiceException;
+	public UserDetailsResponse getApprovedCandidateForOffer(long id) throws ServiceException;
 
 
 }

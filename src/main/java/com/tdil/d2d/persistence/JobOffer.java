@@ -80,6 +80,16 @@ public class JobOffer implements PersistentEntity {
 	
 	private int applications;
 
+	@Column(name="jobApplication_id")
+	private Integer jobApplication_id;
+
+	public Integer getJobApplication_id() {
+		return jobApplication_id;
+	}
+
+	public void setJobApplication_id(Integer jobApplication_id) {
+		this.jobApplication_id = jobApplication_id;
+	}
 
 	public long getId() {
 		return id;
@@ -247,5 +257,7 @@ public class JobOffer implements PersistentEntity {
 	public void setApplications(int applications) {
 		this.applications = applications;
 	}
+
+	
 
 }
