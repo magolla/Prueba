@@ -289,7 +289,7 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/user/getPermanentOffersOpen", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getPermanentOffersOpen", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> getPermanentOffersOpen() {
     	try {
 			List<JobOfferStatusDTO> myOffers = this.userService.getPermanentOffersOpen();
