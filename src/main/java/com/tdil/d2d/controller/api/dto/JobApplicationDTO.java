@@ -5,7 +5,7 @@ public class JobApplicationDTO {
 	private long id;
 	private long userId;
 	private String creationDate;
-	//falta imagen base 64
+	private String base64Image;
 	private String linkedinInCv;
 	//falta cvAttach
 	private String cvPlain;
@@ -102,6 +102,12 @@ public class JobApplicationDTO {
 	}
 	public void setGeoLevelName(String geoLevelName) {
 		this.geoLevelName = geoLevelName;
+	}
+	public String getBase64Image() {
+		return base64Image;
+	}
+	public void setBase64Image(String base64Image) {
+		this.base64Image = base64Image;
 	}
 	
 }

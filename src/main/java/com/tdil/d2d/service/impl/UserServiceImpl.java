@@ -2,6 +2,7 @@ package com.tdil.d2d.service.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -1156,8 +1157,16 @@ public class UserServiceImpl implements UserService {
 		result.setUserId(s.getUser().getId());
 		// Creation Date
 		result.setCreationDate(s.getCreationDate() != null ? s.getCreationDate().toString() : "");
-		// Falta base64Image
-		// -----------------------------------
+		// Base64Image
+		byte[] array = s.getUser().getBase64img();
+		String base64String;
+		try {
+			base64String = new String(array, "UTF8");
+			result.setBase64Image(base64String);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		
 		// Linkedin CV
 		result.setLinkedinInCv(s.getLinkedInCv());
 		// Falta cvAttach
@@ -1178,6 +1187,7 @@ public class UserServiceImpl implements UserService {
 		//geolevel
 		result.setGeoLevelId(s.getOffer().getGeoLevelId());
 		result.setGeoLevelLevel(s.getOffer().getGeoLevelLevel());
+		
 		GeoLevel geoLevel;
 		try {
 			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getOffer().getGeoLevelId(), s.getOffer().getGeoLevelLevel());
@@ -1185,8 +1195,8 @@ public class UserServiceImpl implements UserService {
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
-		// ------------------------------------
-		// result.setComment(s.getComment());
+		 
+		result.setComment(s.getComment());
 		return result;
 	}
 
