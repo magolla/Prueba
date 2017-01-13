@@ -1,6 +1,6 @@
 package com.tdil.d2d.controller.api.dto;
 
-public class  JobOfferStatusDTO{
+public class JobOfferStatusDTO{
 
 	private long id;
 	private String comment;

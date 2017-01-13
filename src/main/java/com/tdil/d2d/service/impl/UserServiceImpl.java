@@ -995,8 +995,8 @@ public class UserServiceImpl implements UserService {
 			offer.setVacants(offer.getVacants() - 1);
 			if (offer.getVacants() == 0) {
 				offer.setStatus(JobOffer.CLOSED);
-				// enviar notificaciones a los que quedan afuera
-				// enviar notificacion al que aceptaron
+				// TODO: enviar notificaciones a los que quedan afuera
+				// TODO: enviar notificacion al que aceptaron
 			}
 			this.jobDAO.save(offer);
 			this.jobApplicationDAO.save(application);
