@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -115,6 +116,9 @@ public class User implements PersistentEntity {
 			inverseJoinColumns = {@JoinColumn(name = "USERGEOLOC_ID",
 					nullable = false, updatable = false)})
 	private Set<UserGeoLocation> userGeoLocations = new HashSet<UserGeoLocation>(0);
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	private Media pdfCV;
 
 	public long getId() {
 		return id;
@@ -343,5 +347,21 @@ public class User implements PersistentEntity {
     public void setCV(String cv) {
         this.cv = cv;
     }
+
+	public String getCv() {
+		return cv;
+	}
+
+	public void setCv(String cv) {
+		this.cv = cv;
+	}
+
+	public Media getPdfCV() {
+		return pdfCV;
+	}
+
+	public void setPdfCV(Media pdfCV) {
+		this.pdfCV = pdfCV;
+	}
 
 }
