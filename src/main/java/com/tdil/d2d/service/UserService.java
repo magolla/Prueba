@@ -151,5 +151,4 @@ public interface UserService {
 	List<JobOfferStatusDTO> getAllPermanentOffersOpen() throws ServiceException;
 	public UserDetailsResponse getApprovedCandidateForOffer(long id) throws ServiceException;
 
-
 }
