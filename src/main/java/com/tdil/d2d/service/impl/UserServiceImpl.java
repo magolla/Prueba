@@ -50,6 +50,7 @@ import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
+import com.tdil.d2d.controller.api.request.Base64Request;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
 import com.tdil.d2d.controller.api.request.CreatePaymentRequest;
 import com.tdil.d2d.controller.api.request.CreatePermanentJobOfferRequest;
@@ -87,6 +88,8 @@ import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.GeoLevel;
 import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
+import com.tdil.d2d.persistence.Media;
+import com.tdil.d2d.persistence.MediaType;
 import com.tdil.d2d.persistence.NotificationConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.persistence.Occupation;
@@ -1488,5 +1491,28 @@ public class UserServiceImpl implements UserService {
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
+	}
+
+	@Override
+	public void setPdfCV(Base64Request base64Request) throws ServiceException {
+		try {
+			User user = getLoggedUser();
+			Media media = new Media();
+			media.setType(MediaType.PDF_CV);
+			media.setData(Base64.decodeBase64(base64Request.getData()));
+			user.setPdfCV(media);
+			this.userDAO.save(user);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public Base64DTO getPdfCVBase64() throws ServiceException {
+		User user = getLoggedUser();
+		Base64DTO base64dto = new Base64DTO(
+			new String(Base64.encodeBase64(user.getPdfCV().getData()))
+		);
+		return base64dto;
 	}
 }
