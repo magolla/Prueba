@@ -21,7 +21,6 @@ public class SearchOfferRequest extends ApiRequest {
 	@Min(value = 0)
 	private long geoLevelId;
 	
-	@Min(value = 0)
 	private InstitutionType institutionType;
 
 	public long getOccupationId() {
