@@ -18,6 +18,7 @@ import com.tdil.d2d.controller.api.request.AddSpecialtyRequest;
 import com.tdil.d2d.controller.api.request.AddTaskToProfileRequest;
 import com.tdil.d2d.controller.api.request.AndroidRegIdRequest;
 import com.tdil.d2d.controller.api.request.ApplyToOfferRequest;
+import com.tdil.d2d.controller.api.request.Base64Request;
 import com.tdil.d2d.controller.api.request.ConfigureNotificationsRequest;
 import com.tdil.d2d.controller.api.request.CreatePaymentRequest;
 import com.tdil.d2d.controller.api.request.CreatePermanentJobOfferRequest;
@@ -136,5 +137,9 @@ public interface UserService {
 	public String createMercadoPagoPreference(CreatePreferenceMPRequest createPreferenceMPRequest) throws ServiceException;
 
 	public boolean createPayment(CreatePaymentRequest createPaymentRequest) throws ServiceException;
+	
+	public void setPdfCV(Base64Request base64Request) throws ServiceException;
+
+	public Base64DTO getPdfCVBase64() throws ServiceException;
 
 }
