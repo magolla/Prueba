@@ -50,17 +50,26 @@ public class NoteControllerTest extends AbstractDTDTest {
 		note.setCategory(NoteCategory.CAT_1.toString());
 		note.setExpirationDate(new Date());
 
-		given().config(RestAssured.config().sslConfig(
+		int id = given().config(RestAssured.config().sslConfig(
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation()))
 				.contentType(MediaType.APPLICATION_JSON.toString())
 				.body(toJson(note))
 				.header(new Header("Authorization", jwttokenOfferent))
 				.body(toJson(note))
 				.post(API_URL + "/api/notes")
-				.then().log().body().statusCode(200).body("status", equalTo(200));
+				.then().log().body().statusCode(200).body("status", equalTo(200)).extract().path("data.id");
+
+		int occupationId = given().config(RestAssured.config().sslConfig(
+				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation()))
+				.contentType(MediaType.APPLICATION_JSON.toString())
+				.body(toJson(note))
+				.header(new Header("Authorization", jwttokenOfferent))
+				.body(toJson(note))
+				.post(API_URL + "/api/specialties/occupations")
+				.then().log().body().statusCode(200).body("status", equalTo(200)).extract().path("data.id");
 
 		IdRequest request = new IdRequest();
-		request.setId(1l);
+		request.setId(Long.valueOf(occupationId));
 
 		given().config(RestAssured.config().sslConfig(
 				new SSLConfig().allowAllHostnames().relaxedHTTPSValidation()))
@@ -68,7 +77,7 @@ public class NoteControllerTest extends AbstractDTDTest {
 				.body(toJson(note))
 				.header(new Header("Authorization", jwttokenOfferent))
 				.body(toJson(request))
-				.post(API_URL + "/api/notes/1/occupations")
+				.post(API_URL + "/api/notes/" + id + "/occupations")
 				.then().log().body().statusCode(200).body("status", equalTo(200));
 
 		given().config(RestAssured.config().sslConfig(
@@ -77,7 +86,7 @@ public class NoteControllerTest extends AbstractDTDTest {
 				.body(toJson(note))
 				.header(new Header("Authorization", jwttokenOfferent))
 				.body(toJson(request))
-				.post(API_URL + "/api/notes/1/specialities")
+				.post(API_URL + "/api/notes/" + id + "/specialities")
 				.then().log().body().statusCode(200).body("status", equalTo(200));
 
 

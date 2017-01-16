@@ -41,6 +41,9 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 	@Override
 	public List<Note> getNotes(Map<String, Object> params) {
 		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Note.class);
+		if (!params.containsKey("active")) {
+			params.put("active", true);
+		}
 		params.forEach((key, value) -> {
 			if (key.equals("category")) {
 				criteria.add(Restrictions.eq(key, NoteCategory.valueOf((String) value)));
