@@ -796,10 +796,14 @@ public class UserServiceImpl implements UserService {
 			jobApplication.setCvPlain(applyToOffer.getCvPlain()); //TODO debería salir del profile
 			User user = getLoggedUser();
 			UserLinkedinProfile linkedinProfile = this.userDAO.getUserLinkedinProfile(user);
-			jobApplication.setLinkedInCv(linkedinProfile.getPublicProfileURL());
+			if(linkedinProfile != null) {
+				jobApplication.setLinkedInCv(linkedinProfile.getPublicProfileURL());
+			}
 			jobApplication.setOffer(jobOffer);
 			jobApplication.setUser(user);
 			this.jobApplicationDAO.save(jobApplication);
+			jobOffer.setApplications(jobOffer.getApplications() + 1);
+			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.APPLY_TO_OFFER));
 			return true;
 		} catch (Exception e) {
@@ -1167,11 +1171,15 @@ public class UserServiceImpl implements UserService {
 		// Creation Date
 		result.setCreationDate(s.getCreationDate() != null ? s.getCreationDate().toString() : "");
 		// Base64Image
-		result.setBase64Image(new String(s.getUser().getBase64img()));
+		if(s.getUser().getBase64img() != null) {
+			result.setBase64Image(new String(s.getUser().getBase64img()));
+		}
 		// Linkedin CV
 		result.setLinkedinInCv(s.getLinkedInCv());
 		// Falta cvAttach
-		// -----------------------------------
+		if(s.getCvAttach() != null) {
+			result.setCvAttach(new String(s.getCvAttach()));
+		}
 		// cvPlain
 		result.setCvPlain(s.getCvPlain());
 		// FirstName

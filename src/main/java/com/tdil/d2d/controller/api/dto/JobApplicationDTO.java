@@ -7,7 +7,7 @@ public class JobApplicationDTO {
 	private String creationDate;
 	private String base64Image;
 	private String linkedinInCv;
-	//falta cvAttach
+	private String cvAttach;
 	private String cvPlain;
 	private String firstname;
 	private String lastname;
@@ -108,6 +108,12 @@ public class JobApplicationDTO {
 	}
 	public void setBase64Image(String base64Image) {
 		this.base64Image = base64Image;
+	}
+	public String getCvAttach() {
+		return cvAttach;
+	}
+	public void setCvAttach(String cvAttach) {
+		this.cvAttach = cvAttach;
 	}
 	
 }
