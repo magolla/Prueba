@@ -81,4 +81,11 @@ public class NoteServiceImpl implements NoteService {
 			throw new DTDException(ExceptionDefinition.DTD_2004, e);
 		}
 	}
+
+	@Override
+	public void disableNote(Long id) {
+		Note note = this.getNoteById(id);
+		note.setActive(false);
+		this.save(note);
+	}
 }

@@ -88,7 +88,6 @@ public class NoteControllerTest extends AbstractDTDTest {
 				.get(API_URL + "/api/notes?category=CAT_1")
 				.then().log().body().statusCode(200).body("status", equalTo(200));
 
-
 	}
 
 }

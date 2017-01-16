@@ -33,7 +33,7 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 
 	@Override
 	public Note save(Note note) {
-		this.getHibernateTemplate().save(note);
+		this.getHibernateTemplate().saveOrUpdate(note);
 		this.getHibernateTemplate().flush();
 		return note;
 	}

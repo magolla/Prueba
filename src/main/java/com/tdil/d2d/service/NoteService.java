@@ -23,4 +23,6 @@ public interface NoteService {
 	Occupation addOccupation(Long id, Long occupationId);
 
 	Specialty addSpeciality(Long id, Long specialityId);
+
+	void disableNote(Long id);
 }

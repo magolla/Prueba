@@ -3,11 +3,9 @@ package com.tdil.d2d.controller;
 import com.tdil.d2d.controller.api.dto.NoteDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
-import com.tdil.d2d.controller.api.request.IdRequest;
 import com.tdil.d2d.controller.api.request.CreateNoteRequest;
+import com.tdil.d2d.controller.api.request.IdRequest;
 import com.tdil.d2d.controller.api.response.GenericResponse;
-import com.tdil.d2d.dao.SpecialtyDAO;
-import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.NoteCategory;
 import com.tdil.d2d.persistence.Occupation;
@@ -19,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.parser.DTD;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +30,7 @@ public class NoteController {
 	@Autowired
 	private NoteService noteService;
 
-	@RequestMapping(value = "/notes", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notes", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<Note>> save(@RequestBody CreateNoteRequest request) {
 
 		Note note = fromRequest(request);
@@ -43,7 +40,7 @@ public class NoteController {
 		return ResponseEntity.ok(new GenericResponse<>(200, result));
 	}
 
-	@RequestMapping(value = "/notes", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notes", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotes(@RequestParam Map<String, Object> params) {
 		List<Note> notes = this.noteService.getNotes(params);
 
@@ -52,36 +49,42 @@ public class NoteController {
 		return ResponseEntity.ok(new GenericResponse<>(200, response));
 	}
 
-	@RequestMapping(value = "/notes/{id}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notes/{id}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<NoteDTO>> getNoteById(@PathVariable("id") Long id) {
 		Note note = this.noteService.getNoteById(id);
 		return ResponseEntity.ok(new GenericResponse<>(200, toDTO(note)));
 	}
 
-	@RequestMapping(value = "/notes/{id}/occupations", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notes/{id}/occupations", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<OccupationDTO>> addOccupationToNote(@PathVariable("id") Long id, @RequestBody IdRequest request) {
 		Occupation addedOccupation = this.noteService.addOccupation(id, request.getId());
 		return ResponseEntity.ok(new GenericResponse<>(200, toOccupationDTO(addedOccupation)));
 	}
 
-	@RequestMapping(value = "/notes/{id}/specialities", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notes/{id}/specialities", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<SpecialtyDTO>> addSpecialityToNote(@PathVariable("id") Long id, @Valid @RequestBody IdRequest request) {
 		Specialty addedSpeciality = this.noteService.addSpeciality(id, request.getId());
 		return ResponseEntity.ok(new GenericResponse<>(200, toSpecialityDTO(addedSpeciality)));
 	}
 
-	@RequestMapping(value = "/notes/{id}/occupations", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notes/{id}/occupations", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<OccupationDTO>>> getNoteOccupations(@PathVariable("id") Long id) {
 		Set<Occupation> occupations = this.noteService.getOccupations(id);
 		List<OccupationDTO> response = occupations.stream().map(elem -> toOccupationDTO(elem)).collect(Collectors.toList());
 		return ResponseEntity.ok(new GenericResponse<>(200, response));
 	}
 
-	@RequestMapping(value = "/notes/{id}/specialities", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notes/{id}/specialities", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<SpecialtyDTO>>> getNoteSpecialities(@PathVariable("id") Long id) {
 		Set<Specialty> specialities = this.noteService.getSpecialities(id);
 		List<SpecialtyDTO> response = specialities.stream().map(elem -> toSpecialityDTO(elem)).collect(Collectors.toList());
 		return ResponseEntity.ok(new GenericResponse<>(200, response));
+	}
+
+	@RequestMapping(value = "/notes/{id}", method = {RequestMethod.DELETE}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<String>> disableNote(@PathVariable("id") Long id) {
+		this.noteService.disableNote(id);
+		return ResponseEntity.ok(new GenericResponse<>(200, id.toString()));
 	}
 
 	private SpecialtyDTO toSpecialityDTO(Specialty elem) {
