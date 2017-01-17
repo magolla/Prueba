@@ -300,7 +300,6 @@ public class OfferController extends AbstractController {
 		}
     }
     
-    
     @RequestMapping(value = "/user/{offerId}/getApprovedCandidateForOffer", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<UserDetailsResponse>> getUser(@PathVariable long offerId) {
 		try {
@@ -312,10 +311,9 @@ public class OfferController extends AbstractController {
 		}
 	}
     
-    @RequestMapping(value = "/user/{offerId}/aldreadyApplied/{userId}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/{offerId}/alreadyApplied/{userId}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
    	public ResponseEntity<GenericResponse<Boolean>> aldreadyApply(@PathVariable long offerId, @PathVariable long userId) {
-   		boolean aldreadyApplied = this.userService.searchIfApplied(offerId,userId);
-		return new ResponseEntity<GenericResponse<Boolean>>(new GenericResponse<Boolean>(aldreadyApplied, HttpStatus.OK.value()), HttpStatus.OK);
+   		boolean alreadyApplied = this.userService.searchIfApplied(offerId,userId);
+		return new ResponseEntity<GenericResponse<Boolean>>(new GenericResponse<Boolean>(alreadyApplied, HttpStatus.OK.value()), HttpStatus.OK);
    	}
-    
 }
