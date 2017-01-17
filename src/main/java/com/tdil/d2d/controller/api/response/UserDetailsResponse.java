@@ -11,6 +11,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 
 public class UserDetailsResponse extends ApiResponse {
 	
+	private String userId;
 	private String firstname;
 	private String lastname;
 	private String sponsorName;
@@ -185,6 +186,14 @@ public class UserDetailsResponse extends ApiResponse {
 
 	public void setCV(String cv) {
         this.cv = cv;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 }

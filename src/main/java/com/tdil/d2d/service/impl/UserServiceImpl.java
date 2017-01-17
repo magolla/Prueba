@@ -1263,6 +1263,7 @@ public class UserServiceImpl implements UserService {
 
 	private UserDetailsResponse getUserDetailsResponse(User user) throws ServiceException {
 		UserDetailsResponse resp = new UserDetailsResponse(HttpStatus.OK.value());
+		resp.setUserId(String.valueOf(user.getId()));
 		resp.setFirstname(user.getFirstname());
 		resp.setLastname(user.getLastname());
 		resp.setMobileNumber(user.getMobilePhone());
