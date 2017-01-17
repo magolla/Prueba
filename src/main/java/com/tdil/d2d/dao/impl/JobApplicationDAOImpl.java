@@ -26,4 +26,18 @@ public class JobApplicationDAOImpl  extends GenericDAO<JobApplication> implement
 			throw new DAOException(e);
 		}
 	}
+	
+	@Override
+	public List<JobApplication> getJobApplicationsByUserAndOffer(long offerId,long userId) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobApplication.class);
+			criteria.add(Restrictions.eq("offer.id", offerId));
+			criteria.add(Restrictions.eq("user.id", userId));
+			criteria.addOrder(Order.asc("id"));
+			List<JobApplication> list = criteria.list();
+			return list;
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 }

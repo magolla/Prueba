@@ -13,4 +13,6 @@ public interface JobApplicationDAO {
 
 	public List<JobApplication> getJobApplications(long offerId) throws DAOException;
 
+	List<JobApplication> getJobApplicationsByUserAndOffer(long offerId, long userId) throws DAOException;
+
 }

@@ -1000,7 +1000,6 @@ public class UserServiceImpl implements UserService {
 			if (offer.getOfferent().getId() != RuntimeContext.getCurrentUser().getId()) {
 				return false;
 			}
-			// TODO ver que no aplique dos veces
 			JobApplication application = this.jobApplicationDAO.getById(JobApplication.class, applicationId);
 			application.setStatus(JobApplication.ACEPTED);
 			offer.setVacants(offer.getVacants() - 1);
@@ -1522,5 +1521,20 @@ public class UserServiceImpl implements UserService {
 			new String(Base64.encodeBase64(user.getPdfCV().getData()))
 		);
 		return base64dto;
+	}
+
+	@Override
+	public boolean searchIfApplied(long offerId, long userId) {
+		try {
+			List<JobApplication> jobApplication = this.jobApplicationDAO.getJobApplicationsByUserAndOffer(offerId, userId);
+			if(jobApplication.isEmpty()) {
+				return false;
+			} else {
+				return true;
+			}
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

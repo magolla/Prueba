@@ -311,4 +311,11 @@ public class OfferController extends AbstractController {
 			return new ResponseEntity<GenericResponse<UserDetailsResponse>>((GenericResponse) null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+    
+    @RequestMapping(value = "/user/{offerId}/aldreadyApplied/{userId}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+   	public ResponseEntity<GenericResponse<Boolean>> aldreadyApply(@PathVariable long offerId, @PathVariable long userId) {
+   		boolean aldreadyApplied = this.userService.searchIfApplied(offerId,userId);
+		return new ResponseEntity<GenericResponse<Boolean>>(new GenericResponse<Boolean>(aldreadyApplied, HttpStatus.OK.value()), HttpStatus.OK);
+   	}
+    
 }
