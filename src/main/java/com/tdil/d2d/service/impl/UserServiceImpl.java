@@ -1538,4 +1538,16 @@ public class UserServiceImpl implements UserService {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean switchToB() {
+		try {	
+			User user = getLoggedUser();
+			user.setUserb(true);
+			this.userDAO.save(user);
+		} catch (DAOException | ServiceException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
 }

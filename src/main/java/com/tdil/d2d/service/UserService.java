@@ -153,4 +153,6 @@ public interface UserService {
 
 	public boolean searchIfApplied(long offerId, long userId);
 
+	public boolean switchToB();
+
 }
