@@ -274,7 +274,7 @@ public class OfferController extends AbstractController {
     }
     
     
-    @RequestMapping(value = "/user/offer/{offerId}/close", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/offer/{offerId}/close", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> closeOfferApplication(@PathVariable long offerId) {
     	try {
     		boolean result = this.userService.close(offerId);
