@@ -316,14 +316,5 @@ public class OfferController extends AbstractController {
    		boolean alreadyApplied = this.userService.searchIfApplied(offerId,userId);
 		return new ResponseEntity<GenericResponse<Boolean>>(new GenericResponse<Boolean>(alreadyApplied, HttpStatus.OK.value()), HttpStatus.OK);
    	}
-    
-    @RequestMapping(value = "/user/switchToB", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> switchToB() {
-    	boolean response = this.userService.switchToB();
-		if (response) {
-			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
-		} else {
-			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-    }
+  
 }

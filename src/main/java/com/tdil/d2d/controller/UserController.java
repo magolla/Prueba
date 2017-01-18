@@ -620,4 +620,13 @@ public class UserController extends AbstractController {
 		}
     }
 
+    @RequestMapping(value = "/user/switchToB", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> switchToB() {
+    	boolean response = this.userService.switchToB();
+		if (response) {
+			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
+		} else {
+			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
 }
