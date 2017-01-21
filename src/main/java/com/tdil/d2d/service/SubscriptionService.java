@@ -10,6 +10,8 @@ public interface SubscriptionService {
 
 	public Subscription getActiveSubscription(long userID);
 
+	public Subscription register(int duration) throws ServiceException;
+
 
 }
 

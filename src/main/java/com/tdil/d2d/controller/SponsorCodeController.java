@@ -1,31 +1,29 @@
 package com.tdil.d2d.controller;
 
-import com.tdil.d2d.controller.api.request.GenerateSponsorCodesRequest;
-import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
-import com.tdil.d2d.controller.api.response.ApiResponse;
-import com.tdil.d2d.controller.api.response.GenericResponse;
-import com.tdil.d2d.exceptions.DTDException;
-import com.tdil.d2d.exceptions.ExceptionDefinition;
-import com.tdil.d2d.exceptions.ServiceException;
-import com.tdil.d2d.persistence.SponsorCode;
-import com.tdil.d2d.persistence.SubscriptionTimeUnit;
-import com.tdil.d2d.service.SessionService;
-import com.tdil.d2d.service.SponsorCodeService;
-import com.tdil.d2d.service.SubscriptionService;
-import com.tdil.d2d.service.UserService;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
+import com.tdil.d2d.controller.api.request.GenerateSponsorCodesRequest;
+import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
+import com.tdil.d2d.controller.api.response.ApiResponse;
+import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.persistence.SponsorCode;
+import com.tdil.d2d.persistence.SubscriptionTimeUnit;
+import com.tdil.d2d.service.SessionService;
+import com.tdil.d2d.service.SponsorCodeService;
 
 @Controller
 public class SponsorCodeController extends AbstractController {
@@ -61,8 +59,13 @@ public class SponsorCodeController extends AbstractController {
 	@RequestMapping(value = "/codes/redeem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ApiResponse> redeemSponsorCode(@Valid @RequestBody RedeemSponsorCodeRequest redeemSponsorCodeRequest, BindingResult bidingResult) {
 
-		this.sponsorCodeService.consumeSponsorCode(this.sessionService.getUserLoggedIn(), redeemSponsorCodeRequest.getSponsorCode());
-		GenericResponse<String> apiResponse = new GenericResponse<>(200, "ok");
+		SponsorCode sponsor = this.sponsorCodeService.consumeSponsorCode(this.sessionService.getUserLoggedIn(), redeemSponsorCodeRequest.getSponsorCode());
+		if(sponsor==null){
+			GenericResponse<String> apiResponse = new GenericResponse<>(400, "invalid_code");
+			return ResponseEntity.ok(apiResponse);
+
+		}
+		GenericResponse<Long> apiResponse = new GenericResponse<>(200, sponsor.getSponsor().getId());
 		return ResponseEntity.ok(apiResponse);
 
 	}

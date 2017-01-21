@@ -1,5 +1,7 @@
 package com.tdil.d2d.controller.api.request;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class CreatePaymentRequest extends ApiRequest {	
@@ -12,6 +14,9 @@ public class CreatePaymentRequest extends ApiRequest {
 	
 	@NotEmpty
 	private String idPaymentMP;
+	
+	@NotNull
+	private int subscriptionDuration;
 	
 	public String getItem() {
 		return item;
@@ -36,5 +41,15 @@ public class CreatePaymentRequest extends ApiRequest {
 	public void setIdPaymentMP(String idPaymentMP) {
 		this.idPaymentMP = idPaymentMP;
 	}
+
+	public int getSubscriptionDuration() {
+		return subscriptionDuration;
+	}
+
+	public void setSubscriptionDuration(int subscriptionDuration) {
+		this.subscriptionDuration = subscriptionDuration;
+	}
+	
+	
 
 }

@@ -1,20 +1,25 @@
 package com.tdil.d2d.service.impl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ExceptionDefinition;
-import com.tdil.d2d.persistence.*;
+import com.tdil.d2d.persistence.Sponsor;
+import com.tdil.d2d.persistence.SponsorCode;
+import com.tdil.d2d.persistence.Subscription;
+import com.tdil.d2d.persistence.SubscriptionTimeUnit;
+import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.SponsorCodeService;
 import com.tdil.d2d.utils.SponsorCodeGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class SponsorCodeServiceImpl implements SponsorCodeService {
@@ -57,6 +62,10 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 	public SponsorCode consumeSponsorCode(User user, String code) {
 		try {
 			SponsorCode sponsorCode = this.subscriptionDAO.getSponsorCode(SponsorCode.class, code);
+			
+			if(sponsorCode==null || !sponsorCode.isEnabled()){
+				return null;
+			}
 			sponsorCode.setEnabled(false);
 			sponsorCode.setConsumer(user);
 			sponsorCode.setConsumeDate(new Date());

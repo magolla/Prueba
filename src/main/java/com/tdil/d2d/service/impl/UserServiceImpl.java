@@ -1445,7 +1445,7 @@ public class UserServiceImpl implements UserService {
 					+ "[{"
 					+ "		'title':'" + createPreferenceMPRequest.getItem() + "',"
 					+ "		'quantity':1,"
-					+ "		'currency_id':'ARS',"
+					+ "		'currency_id':'USD',"
 					+ "		'unit_price':" + createPreferenceMPRequest.getPrice() + " "
 					+ "}],"
 					+ "'payer': "
@@ -1481,8 +1481,7 @@ public class UserServiceImpl implements UserService {
             String item = createPaymentRequest.getItem();
             BigDecimal price = new BigDecimal(createPaymentRequest.getPrice());
             paymentDAO.save(new Payment(idPayment, item, price, user));
-            
-            //TODO create suscription?
+            subscriptionService.register(createPaymentRequest.getSubscriptionDuration());
             return true;
         } catch (DAOException e) {
             throw new ServiceException(e);

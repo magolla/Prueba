@@ -9,8 +9,9 @@ public enum ExceptionDefinition {
 	// DTD_2xxx: Service Exceptions
 	DTD_2001("DTD_2001: Error trying to retrieve logged in user"),
 	DTD_2002("DTD_2002: Error trying to get active subscriptions for user <<%s>>"),
-	DTD_2003("DTD_2003: Not subscription available for user <<%s>>");
-
+	DTD_2003("DTD_2003: Not subscription available for user <<%s>>"),
+	DTD_2004("DTD_2004: Error trying to create suscription");
+	
 	// DTD_3xxx: Controller Exceptions
 
 

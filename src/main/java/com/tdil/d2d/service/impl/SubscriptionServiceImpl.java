@@ -36,14 +36,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private final ActivityLogDAO activityLogDAO;
 
 	@Autowired
-	public SubscriptionServiceImpl(SessionService sessionService, SubscriptionDAO subscriptionDAO, ActivityLogDAO activityLogDAO) {
+	public SubscriptionServiceImpl(SessionService sessionService, SubscriptionDAO subscriptionDAO,
+			ActivityLogDAO activityLogDAO) {
 		this.sessionService = sessionService;
 		this.subscriptionDAO = subscriptionDAO;
 		this.activityLogDAO = activityLogDAO;
 	}
 
 	/**
-	 * Deprecado, utilizar {@link com.tdil.d2d.service.SponsorCodeService}.consumeSponsorCode()
+	 * Deprecado, utilizar
+	 * {@link com.tdil.d2d.service.SponsorCodeService}.consumeSponsorCode()
 	 *
 	 * @param useSponsorCodeRequest
 	 * @return
@@ -54,7 +56,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	public boolean useSponsorCode(RedeemSponsorCodeRequest useSponsorCodeRequest) throws ServiceException {
 		try {
 			User user = sessionService.getUserLoggedIn();
-			SponsorCode sponsorCode = subscriptionDAO.getSponsorCode(SponsorCode.class, useSponsorCodeRequest.getSponsorCode());
+			SponsorCode sponsorCode = subscriptionDAO.getSponsorCode(SponsorCode.class,
+					useSponsorCodeRequest.getSponsorCode());
 			// si es rc, y es de test, genero datos de test
 			// Busco un sponsor code con ese codigo
 			if (sponsorCode == null && !ServiceLocator.isProd()
@@ -66,7 +69,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 					subscriptionDAO.saveSponsor(sponsor);
 				}
 				sponsorCode = new SponsorCode();
-//				sponsorCode.setRemainingUses(10);
+				// sponsorCode.setRemainingUses(10);
 				sponsorCode.setSponsor(sponsor);
 				sponsorCode.setUnits(30);
 				sponsorCode.setTimeUnit(SubscriptionTimeUnit.DAY);
@@ -75,14 +78,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			if (sponsorCode == null) {
 				return false;
 			}
-//			if (sponsorCode.getRemainingUses() < 1) {
-//				return false;
-//			}
+			// if (sponsorCode.getRemainingUses() < 1) {
+			// return false;
+			// }
 			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(user.getId());
 			if (hasSubscription(subscriptions, sponsorCode)) {
 				return false;
 			}
-//			sponsorCode.setRemainingUses(sponsorCode.getRemainingUses() - 1);
+			// sponsorCode.setRemainingUses(sponsorCode.getRemainingUses() - 1);
 			subscriptionDAO.saveSponsorCode(sponsorCode);
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SUBSCRIPTION));
 			Subscription subscription = new Subscription();
@@ -104,7 +107,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			User user = sessionService.getUserLoggedIn();
 			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(user.getId());
 			if (subscriptions == null || subscriptions.isEmpty()) {
-//				throw new DTDException(ExceptionDefinition.DTD_2003, String.valueOf(userID));
+				// throw new DTDException(ExceptionDefinition.DTD_2003,
+				// String.valueOf(userID));
 				return null;
 			} else {
 				Subscription subscription = subscriptions.get(0);
@@ -132,5 +136,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Subscription register(int duration) {
+		try {
+			Subscription subscription = new Subscription();
+			User user = sessionService.getUserLoggedIn();
+
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MONTH, duration);
+			subscription.setExpirationDate(cal.getTime());
+			subscription.setUser(user);
+			subscription.setCreationDate(new Date());
+			subscriptionDAO.saveSubscription(subscription);
+			return subscription;
+		} catch (DAOException e) {
+			LoggerManager.error(this, e);
+			throw new DTDException(ExceptionDefinition.DTD_2004, e, String.valueOf(duration));
+		}
 	}
 }
