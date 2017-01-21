@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.ws.rs.QueryParam;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @Controller
 public class NoteController {
 
+	public static final int DEFAULT_PAGE_SIZE = 10;
 	@Autowired
 	private NoteService noteService;
 
@@ -42,7 +44,11 @@ public class NoteController {
 
 	@RequestMapping(value = "/notes", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotes(@RequestParam Map<String, Object> params) {
-		List<Note> notes = this.noteService.getNotes(params);
+
+		int size = (int) params.getOrDefault("size", DEFAULT_PAGE_SIZE);
+		int page = (int) params.getOrDefault("page", 0);
+
+		List<Note> notes = this.noteService.getNotes(page, size, params);
 
 		List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
 

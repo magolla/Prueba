@@ -66,7 +66,7 @@ public class NoteControllerTest extends AbstractDTDTest {
 				.header(new Header("Authorization", jwttokenOfferent))
 				.body(toJson(note))
 				.post(API_URL + "/api/specialties/occupations")
-				.then().log().body().statusCode(200).body("status", equalTo(200)).extract().path("data.id");
+				.then().log().body().statusCode(200).body("status", equalTo(200)).extract().path("data[0].id");
 
 		IdRequest request = new IdRequest();
 		request.setId(Long.valueOf(occupationId));

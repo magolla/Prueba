@@ -39,7 +39,7 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 	}
 
 	@Override
-	public List<Note> getNotes(Map<String, Object> params) {
+	public List<Note> getNotes(int page, int size, Map<String, Object> params) {
 		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Note.class);
 		if (!params.containsKey("active")) {
 			params.put("active", true);
@@ -51,6 +51,8 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 				criteria.add(Restrictions.eq(key, value));
 			}
 		});
+		criteria.setFirstResult(page * size);
+		criteria.setMaxResults(size);
 		return criteria.list();
 	}
 

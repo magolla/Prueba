@@ -35,8 +35,8 @@ public class NoteServiceImpl implements NoteService {
 	}
 
 	@Override
-	public List<Note> getNotes(Map<String, Object> params) {
-		return this.noteDAO.getNotes(params);
+	public List<Note> getNotes(int page, int size, Map<String, Object> params) {
+		return this.noteDAO.getNotes(page, size, params);
 	}
 
 	@Override

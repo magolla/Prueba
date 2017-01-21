@@ -12,7 +12,7 @@ public interface NoteService {
 
 	Note save(Note note);
 
-	List<Note> getNotes(Map<String, Object> params);
+	List<Note> getNotes(int page, int size, Map<String, Object> params);
 
 	Note getNoteById(Long id);
 
