@@ -1,12 +1,10 @@
 package com.tdil.d2d.controller;
 
-import com.tdil.d2d.controller.api.dto.SponsorDTO;
-import com.tdil.d2d.controller.api.request.CreateSponsorRequest;
-import com.tdil.d2d.controller.api.response.ApiResponse;
-import com.tdil.d2d.controller.api.response.GenericResponse;
-import com.tdil.d2d.dao.GeoDAO;
-import com.tdil.d2d.persistence.Sponsor;
-import com.tdil.d2d.service.SponsorService;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.tdil.d2d.controller.api.dto.SponsorDTO;
+import com.tdil.d2d.controller.api.request.CreateSponsorRequest;
+import com.tdil.d2d.controller.api.response.ApiResponse;
+import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.persistence.Sponsor;
+import com.tdil.d2d.service.SponsorService;
 
 @Controller
 public class SponsorController {
@@ -32,7 +33,7 @@ public class SponsorController {
 	@RequestMapping(value = "/sponsors", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ApiResponse> createSponsor(@Valid @RequestBody CreateSponsorRequest request) {
 		logger.info("Executing createSponsor");
-		Sponsor sponsor = this.sponsorService.createSponsor(request.getName());
+		Sponsor sponsor = this.sponsorService.createSponsor(request.getName(), request.getBase64img());
 		GenericResponse<Sponsor> response = new GenericResponse<>(200, sponsor);
 		return ResponseEntity.ok(response);
 	}

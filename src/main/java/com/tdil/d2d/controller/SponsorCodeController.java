@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.tdil.d2d.controller.api.dto.ReedemCodeDTO;
 import com.tdil.d2d.controller.api.request.GenerateSponsorCodesRequest;
 import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.persistence.SponsorCode;
+import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.SubscriptionTimeUnit;
 import com.tdil.d2d.service.SessionService;
 import com.tdil.d2d.service.SponsorCodeService;
@@ -59,13 +61,13 @@ public class SponsorCodeController extends AbstractController {
 	@RequestMapping(value = "/codes/redeem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ApiResponse> redeemSponsorCode(@Valid @RequestBody RedeemSponsorCodeRequest redeemSponsorCodeRequest, BindingResult bidingResult) {
 
-		SponsorCode sponsor = this.sponsorCodeService.consumeSponsorCode(this.sessionService.getUserLoggedIn(), redeemSponsorCodeRequest.getSponsorCode());
-		if(sponsor==null){
+		Subscription suscription = this.sponsorCodeService.consumeSponsorCode(this.sessionService.getUserLoggedIn(), redeemSponsorCodeRequest.getSponsorCode());
+		if(suscription==null){
 			GenericResponse<String> apiResponse = new GenericResponse<>(400, "invalid_code");
 			return ResponseEntity.ok(apiResponse);
 
 		}
-		GenericResponse<Long> apiResponse = new GenericResponse<>(200, sponsor.getSponsor().getId());
+		GenericResponse<ReedemCodeDTO> apiResponse = new GenericResponse<>(200, new ReedemCodeDTO(suscription));
 		return ResponseEntity.ok(apiResponse);
 
 	}

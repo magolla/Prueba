@@ -1,11 +1,18 @@
 package com.tdil.d2d.service.impl;
 
-import com.tdil.d2d.dao.SubscriptionDAO;
-import com.tdil.d2d.dao.UserDAO;
-import com.tdil.d2d.exceptions.DAOException;
-import com.tdil.d2d.persistence.*;
-import com.tdil.d2d.service.SponsorCodeService;
-import com.tdil.d2d.utils.SponsorCodeGenerator;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,16 +20,16 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import com.tdil.d2d.dao.SubscriptionDAO;
+import com.tdil.d2d.dao.UserDAO;
+import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.Sponsor;
+import com.tdil.d2d.persistence.SponsorCode;
+import com.tdil.d2d.persistence.Subscription;
+import com.tdil.d2d.persistence.SubscriptionTimeUnit;
+import com.tdil.d2d.persistence.User;
+import com.tdil.d2d.service.SponsorCodeService;
+import com.tdil.d2d.utils.SponsorCodeGenerator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SponsorCodeServiceImplTest {
@@ -98,11 +105,10 @@ public class SponsorCodeServiceImplTest {
 	public void testUseSponsorCode() throws DAOException {
 
 		SponsorCode code = this.sponsorCodeService.generateSponsorCodes(1, 1, 1, SubscriptionTimeUnit.DAY).get(0);
-		SponsorCode sponsorCode = this.sponsorCodeService.consumeSponsorCode(user, code.getCode());
-		assertEquals(false, sponsorCode.isEnabled());
-		assertNotNull(sponsorCode.getConsumeDate());
-		assertEquals(user, sponsorCode.getConsumer());
-		verify(subscriptionDAO).saveSubscription(any(Subscription.class));
+		Subscription suscription = this.sponsorCodeService.consumeSponsorCode(user, code.getCode());
+		assertEquals(false, suscription.getSponsorCode().isEnabled());
+		assertNotNull(suscription.getSponsorCode().getConsumeDate());
+		assertEquals(user, suscription.getSponsorCode().getConsumer());
 	}
 
 }

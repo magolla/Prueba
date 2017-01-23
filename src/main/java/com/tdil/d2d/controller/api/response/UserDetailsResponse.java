@@ -15,6 +15,7 @@ public class UserDetailsResponse extends ApiResponse {
 	private String firstname;
 	private String lastname;
 	private String sponsorName;
+	private String sponsorImage;
 	private String email;
 	private String mobileNumber;
 	private String companyScreenName;
@@ -195,5 +196,14 @@ public class UserDetailsResponse extends ApiResponse {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
+	public String getSponsorImage() {
+		return sponsorImage;
+	}
+
+	public void setSponsorImage(String sponsorImage) {
+		this.sponsorImage = sponsorImage;
+	}
+	
 	
 }

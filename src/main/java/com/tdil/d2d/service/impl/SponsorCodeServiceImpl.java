@@ -59,7 +59,7 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 	}
 
 	@Override
-	public SponsorCode consumeSponsorCode(User user, String code) {
+	public Subscription consumeSponsorCode(User user, String code) {
 		try {
 			SponsorCode sponsorCode = this.subscriptionDAO.getSponsorCode(SponsorCode.class, code);
 			
@@ -78,7 +78,7 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 			subscription.setCreationDate(new Date());
 			subscriptionDAO.saveSubscription(subscription);
 
-			return sponsorCode;
+			return subscription;
 		} catch (DAOException e) {
 			throw new DTDException(ExceptionDefinition.DTD_1000, e, code);
 		}

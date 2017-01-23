@@ -1,8 +1,8 @@
 package com.tdil.d2d.service;
 
-import com.tdil.d2d.persistence.Sponsor;
-
 import java.util.List;
+
+import com.tdil.d2d.persistence.Sponsor;
 
 public interface SponsorService {
 
@@ -16,5 +16,5 @@ public interface SponsorService {
 
 	List<Sponsor> getAllSponsors();
 
-	Sponsor createSponsor(String name);
+	Sponsor createSponsor(String name, String image);
 }
