@@ -595,7 +595,7 @@ public class UserController extends AbstractController {
 
     }
     
-    @RequestMapping(value = "/user/mercadopago/preference", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/mercadopago/preference", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> createPreference(@Valid @RequestBody CreatePreferenceMPRequest createPreferenceMPRequest, BindingResult bidingResult) {
     	try {
 			return new ResponseEntity<String>(this.userService.createMercadoPagoPreference(createPreferenceMPRequest), HttpStatus.OK);
