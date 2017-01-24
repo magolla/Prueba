@@ -113,7 +113,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			} else {
 				Subscription subscription = subscriptions.get(0);
 				if (subscription.getExpirationDate().before(new Date())) {
-					throw new DTDException(ExceptionDefinition.DTD_2003, String.valueOf(userID));
+					return null;
 				} else {
 					return subscription;
 				}
