@@ -2,7 +2,6 @@ package com.tdil.d2d.exceptions;
 
 public enum ExceptionDefinition {
 
-
 	// DTD_1xxx: Persistence Exceptions
 	DTD_1000("DTD_1000: Error trying to consume <<%s>> sponsor code"),
 
@@ -11,9 +10,8 @@ public enum ExceptionDefinition {
 	DTD_2002("DTD_2002: Error trying to get active subscriptions for user <<%s>>"),
 	DTD_2003("DTD_2003: Not subscription available for user <<%s>>"),
 	DTD_2004("DTD_2004: Error trying to create suscription");
-	
-	// DTD_3xxx: Controller Exceptions
 
+	// DTD_3xxx: Controller Exceptions
 
 	//
 	private final String message;
