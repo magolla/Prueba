@@ -1,6 +1,7 @@
 package com.tdil.d2d.dao;
 
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
@@ -26,5 +27,7 @@ public interface UserDAO {
 	public UserLinkedinProfile getUserLinkedinProfile(User user) throws DAOException;
 
     public void save(UserLinkedinProfile linkedinProfile) throws DAOException;
+    
+    public void save(Media media) throws DAOException;
 
 }

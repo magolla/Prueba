@@ -326,7 +326,7 @@ public class UserController extends AbstractController {
 		}
     }
     
-    @RequestMapping(value = "/user/cv/pdf", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/cv/pdf", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<Base64DTO>> getPdfCV() {
     	try {
     		Base64DTO pdfCV = this.userService.getPdfCVBase64();
