@@ -8,8 +8,9 @@ public enum ExceptionDefinition {
 	DTD_2001("DTD_2001: Error trying to retrieve logged in user"),
 	DTD_2002("DTD_2002: Error trying to get active subscriptions for user <<%s>>"),
 	DTD_2003("DTD_2003: Not subscription available for user <<%s>>"),
-	DTD_2004("DTD_2004: Cannot add occupation to note"),
-	DTD_2005("DTD_2005: Cannot add speciality to note");
+	DTD_2004("DTD_2004: Error trying to create suscription"),
+	DTD_2005("DTD_2005: Cannot add occupation to note"),
+	DTD_2006("DTD_2006: Cannot add speciality to note");
 
 	// DTD_3xxx: Controller Exceptions
 
