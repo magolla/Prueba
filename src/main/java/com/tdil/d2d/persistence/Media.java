@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -21,6 +22,7 @@ public class Media implements PersistentEntity {
 	private MediaType type;
 	
 	@Column(name = "data")
+	@Lob()
 	private byte[] data;
 
 	public long getId() {

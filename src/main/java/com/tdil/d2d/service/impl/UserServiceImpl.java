@@ -1508,6 +1508,7 @@ public class UserServiceImpl implements UserService {
 			media.setType(MediaType.PDF_CV);
 			media.setData(Base64.decodeBase64(base64Request.getData()));
 			user.setPdfCV(media);
+			this.userDAO.save(media);
 			this.userDAO.save(user);
 		} catch (DAOException e) {
 			throw new ServiceException(e);

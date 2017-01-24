@@ -22,7 +22,7 @@ public class GenericDAO<T> extends HibernateDaoSupport {
 	public void save(T entity) throws DAOException {
 		String invocationDetails= "save("+entity.getClass().getName()+") ";
 		try {
-			this.getHibernateTemplate().save(entity);
+			this.getHibernateTemplate().saveOrUpdate(entity);
 			this.getHibernateTemplate().flush();
 		} catch (DataIntegrityViolationException e) {
 			this.handleException(invocationDetails, e);
