@@ -61,7 +61,7 @@ public class DBInit {
 		InputStream inputStream;
 		try {
 			inputStream = DBInit.class.getResourceAsStream(csvFileName);
-			br = new BufferedReader(new InputStreamReader(inputStream));
+			br = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
 			while ((line = br.readLine()) != null) {
 
 				// use comma as separator
