@@ -13,12 +13,12 @@ public class GenericDAO<T> extends HibernateDaoSupport {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	@PostConstruct
 	public void initHibernate() {
 		this.setSessionFactory(this.sessionFactory);
 	}
-	
+
 	public void save(T entity) throws DAOException {
 		String invocationDetails= "save("+entity.getClass().getName()+") ";
 		try {
@@ -30,11 +30,11 @@ public class GenericDAO<T> extends HibernateDaoSupport {
 			this.handleException(invocationDetails, e);
 		}
 	}
-	
+
 	public T getById(Class<T> aClass, long id) throws DAOException {
 		return (T)this.sessionFactory.getCurrentSession().get(aClass, id);
 	}
-	
+
 	protected void handleException(String invocationDetails, Exception e) throws DAOException {
 //		LoggerManager.error(this, e.getMessage(), e);
 		throw new DAOException(e.getMessage(), e);

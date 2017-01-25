@@ -20,7 +20,7 @@ import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
 
 @Repository
-public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
+public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
 	@Override
 	public User getUserByUsername(String username) throws DAOException {
@@ -37,7 +37,7 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public User getUserByEmail(String email) throws DAOException {
 		try {
@@ -53,7 +53,7 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public User getUserByMobilePhone(String mobilePhone) throws DAOException {
 		try {
@@ -69,7 +69,7 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public User getLastLoginUser() throws DAOException {
 		DetachedCriteria maxDateQuery = DetachedCriteria.forClass(User.class);
@@ -78,7 +78,7 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 		maxDateQuery.setProjection(proj);
 
 		Criteria crit = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
-		crit.add(Subqueries.propertiesEq(new String[] {"lastLoginDate"}, maxDateQuery));
+		crit.add(Subqueries.propertiesEq(new String[]{"lastLoginDate"}, maxDateQuery));
 
 		List<User> dtlList = crit.list();
 		if (dtlList.size() > 0) {
@@ -87,7 +87,7 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public UserProfile getUserProfile(User user) throws DAOException {
 		try {
@@ -103,10 +103,23 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 	}
-	
+
+	@Override
+	public void save(User entity) throws DAOException {
+		String invocationDetails = "save(" + entity.getClass().getName() + ") ";
+		try {
+			this.getHibernateTemplate().saveOrUpdate(entity);
+			this.getHibernateTemplate().flush();
+		} catch (DataIntegrityViolationException e) {
+			this.handleException(invocationDetails, e);
+		} catch (Exception e) {
+			this.handleException(invocationDetails, e);
+		}
+	}
+
 	@Override
 	public void save(UserProfile userProfile) throws DAOException {
-		String invocationDetails= "save("+userProfile.getClass().getName()+") ";
+		String invocationDetails = "save(" + userProfile.getClass().getName() + ") ";
 		try {
 			this.getHibernateTemplate().save(userProfile);
 			this.getHibernateTemplate().flush();
@@ -116,22 +129,22 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
 			this.handleException(invocationDetails, e);
 		}
 	}
-	
+
 	@Override
-    public UserLinkedinProfile getUserLinkedinProfile(User user) throws DAOException {
-        try {
-            Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(UserLinkedinProfile.class);
-            criteria.add(Restrictions.eq("user.id", user.getId()));
-            List<UserLinkedinProfile> list = criteria.list();
-            if (CollectionUtils.isEmpty(list)) {
-                return null;
-            } else {
-                return list.get(0);
-            }
-        } catch (Exception e) {
-            throw new DAOException(e);
-        }
-    }
+	public UserLinkedinProfile getUserLinkedinProfile(User user) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(UserLinkedinProfile.class);
+			criteria.add(Restrictions.eq("user.id", user.getId()));
+			List<UserLinkedinProfile> list = criteria.list();
+			if (CollectionUtils.isEmpty(list)) {
+				return null;
+			} else {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 
     @Override
     public void save(UserLinkedinProfile linkedinProfile) throws DAOException {
@@ -145,7 +158,7 @@ public class UserDAOImpl  extends GenericDAO<User> implements UserDAO {
             this.handleException(invocationDetails, e);
         }
     }
-    
+
     @Override
     public void save(Media media) throws DAOException {
         String invocationDetails= "save(" + Media.class.getName() + ") ";

@@ -20,7 +20,7 @@ public class UserControllerTest extends AbstractDTDTest {
 
 
 	@Test
-	public void test() {
+	public void testA() {
 
 		RegistrationRequestA registrationA = createRegistrationRequestA(suffix, mobilePhone, deviceId);
 
