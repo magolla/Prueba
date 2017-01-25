@@ -2,6 +2,10 @@ package com.tdil.d2d.controller.api.response;
 
 public class GenericResponse<T> extends ApiResponse<T> {
 
+	public GenericResponse() {
+		super();
+	}
+
 	public GenericResponse(int status) {
 		super(status);
 	}

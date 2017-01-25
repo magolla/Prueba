@@ -117,10 +117,10 @@ public class UserServiceImpl implements UserService {
 
 	@Value("${mercadopago.client_id}")
 	private String clientId;
-	
+
 	@Value("${mercadopago.secret_id}")
 	private String secretId;
-	
+
 	@Autowired
 	private UserDAO userDAO;
 	@Autowired
@@ -137,9 +137,9 @@ public class UserServiceImpl implements UserService {
 	private GeoDAO geoDAO;
 
 	@Autowired
-    private PaymentDAO paymentDAO;
-    
-    @Autowired
+	private PaymentDAO paymentDAO;
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService {
 	public RegistrationResponse register(RegistrationRequestA registrationRequest) throws ServiceException {
 		try {
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
-			User user = new User();
+			User user = getOrCreateUser(registrationRequest.getMobilePhone());
 			Date registrationDate = new Date();
 			user.setCreationDate(registrationDate);
 			user.setEmail(registrationRequest.getEmail());
@@ -200,7 +200,6 @@ public class UserServiceImpl implements UserService {
 			user.setDeviceId(encriptDeviceId(registrationRequest.getDeviceId(), user));
 			// user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(),
 			// "", user.getSalt()));
-			user.setMobilePhone(registrationRequest.getMobilePhone());
 			user.setUserb(false);
 			user.setPhoneValidated(false);
 			user.setEmailValidated(false);
@@ -240,7 +239,7 @@ public class UserServiceImpl implements UserService {
 	public RegistrationResponse register(RegistrationRequestB registrationRequest) throws ServiceException {
 		try {
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
-			User user = new User();
+			User user = getOrCreateUser(registrationRequest.getMobilePhone());
 			Date registrationDate = new Date();
 			user.setCreationDate(registrationDate);
 			user.setEmail(registrationRequest.getEmail());
@@ -284,6 +283,15 @@ public class UserServiceImpl implements UserService {
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
 			throw new ServiceException(e);
 		}
+	}
+
+	private User getOrCreateUser(String mobilePhone) throws ServiceException {
+		User user = this.getUserByMobilePhone(mobilePhone);
+		if (user == null) {
+			user = new User();
+			user.setMobilePhone(mobilePhone);
+		}
+		return user;
 	}
 
 	private String encriptDeviceId(String deviceId, User user) throws InvalidKeyException, NoSuchAlgorithmException,
@@ -421,7 +429,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean setAvatar(SetAvatarRequest setAvatarRequest) throws ServiceException {
 		User user = getLoggedUser();
-		return this.setAvatar(user,setAvatarRequest);
+		return this.setAvatar(user, setAvatarRequest);
 	}
 
 	@Override
@@ -693,7 +701,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException {
 		try {
@@ -731,9 +739,9 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	
+
 	@Override
-	public boolean editJobOffer(CreatePermanentJobOfferRequest createOfferRequest,long offerId) throws ServiceException {
+	public boolean editJobOffer(CreatePermanentJobOfferRequest createOfferRequest, long offerId) throws ServiceException {
 		try {
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MONTH, 1);
@@ -863,8 +871,8 @@ public class UserServiceImpl implements UserService {
 		return new SimpleDateFormat(string).parse(offerDate);
 	}
 
-    @Override
-    public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
+	@Override
+	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException {
 		long id = RuntimeContext.getCurrentUser().getId();
 		return this.getMyOffers(id);
 	}
@@ -873,7 +881,7 @@ public class UserServiceImpl implements UserService {
     public List<JobOfferStatusDTO> getPermanentOffersOpen() throws ServiceException {
 		return this.getAllPermanentOffersOpen();
 	}
-    
+
 	@Override
 	public List<JobOfferStatusDTO> getMyOffersClosed() throws ServiceException {
 		try {
@@ -1009,7 +1017,7 @@ public class UserServiceImpl implements UserService {
 				// TODO: enviar notificacion al que aceptaron
 			}
 			offer.setJobApplication_id((int) (long) application.getId());
-			
+
 			this.jobDAO.save(offer);
 			this.jobApplicationDAO.save(application);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.ACCEPT_OFFER));
@@ -1046,7 +1054,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean close(long offerId) throws ServiceException {
 		try {
@@ -1191,11 +1199,11 @@ public class UserServiceImpl implements UserService {
 		result.setOccupationName(s.getOffer().getOccupation().getName());
 		// Specialty
 		result.setSpecialtyName(s.getOffer().getSpecialty().getName());
-		
+
 		//geolevel
 		result.setGeoLevelId(s.getOffer().getGeoLevelId());
 		result.setGeoLevelLevel(s.getOffer().getGeoLevelLevel());
-		
+
 		GeoLevel geoLevel;
 		try {
 			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getOffer().getGeoLevelId(), s.getOffer().getGeoLevelLevel());
@@ -1203,14 +1211,14 @@ public class UserServiceImpl implements UserService {
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}
-		 
+
 		result.setComment(s.getComment());
 		return result;
 	}
 
 	private JobOfferStatusDTO toDTO(JobOffer s) {
 		JobOfferStatusDTO result = new JobOfferStatusDTO();
-		
+
 		result.setId(s.getId());
 		result.setComment(s.getComment());
 		result.setCompanyScreenName(s.getCompanyScreenName());
@@ -1374,7 +1382,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public List<JobOfferStatusDTO> getAllPermanentOffersOpen() throws ServiceException {
 		try {
@@ -1396,7 +1404,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public void updateUserLinkedinProfile(UserLinkedinProfileRequest userLinkedinProfileRequest) throws ServiceException {
 		try {
@@ -1435,11 +1443,11 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
-	
+
+
 	@Override
 	public String createMercadoPagoPreference(CreatePreferenceMPRequest createPreferenceMPRequest) throws ServiceException {
-		
+
 
         User user = getLoggedUser();
 		MP mp = new MP (clientId, secretId);
@@ -1453,7 +1461,7 @@ public class UserServiceImpl implements UserService {
 					+ "		'unit_price':" + createPreferenceMPRequest.getPrice() + " "
 					+ "}],"
 					+ "'payer': "
-					+ "	{"					
+					+ "	{"
 					+ "     'name': " + user.getFirstname() + ","
 					+ "     'surname': " + user.getLastname() + ","
 					+ "	    'email': " + user.getEmail() + ""
@@ -1470,7 +1478,7 @@ public class UserServiceImpl implements UserService {
 					+          "'id': 'bank_transfer'"
 					+         "}]"
 					+ "}}");
-			
+
 			return createPreferenceResult.toString();
 		} catch (Exception e) {
              throw new ServiceException(e);
@@ -1542,10 +1550,10 @@ public class UserServiceImpl implements UserService {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean switchToB() {
-		try {	
+		try {
 			User user = getLoggedUser();
 			user.setUserb(true);
 			this.userDAO.save(user);
