@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService {
 	public RegistrationResponse register(RegistrationRequestA registrationRequest) throws ServiceException {
 		try {
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
-			User user = new User();
+			User user = getOrCreateUser(registrationRequest.getMobilePhone());
 			Date registrationDate = new Date();
 			user.setCreationDate(registrationDate);
 			user.setEmail(registrationRequest.getEmail());
@@ -239,7 +239,7 @@ public class UserServiceImpl implements UserService {
 	public RegistrationResponse register(RegistrationRequestB registrationRequest) throws ServiceException {
 		try {
 			RegistrationResponse response = new RegistrationResponse(HttpStatus.CREATED.value());
-			User user = new User();
+			User user = getOrCreateUser(registrationRequest.getMobilePhone());
 			Date registrationDate = new Date();
 			user.setCreationDate(registrationDate);
 			user.setEmail(registrationRequest.getEmail());
@@ -283,6 +283,15 @@ public class UserServiceImpl implements UserService {
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
 			throw new ServiceException(e);
 		}
+	}
+
+	private User getOrCreateUser(String mobilePhone) throws ServiceException {
+		User user = this.getUserByMobilePhone(mobilePhone);
+		if (user == null) {
+			user = new User();
+			user.setMobilePhone(mobilePhone);
+		}
+		return user;
 	}
 
 	private String encriptDeviceId(String deviceId, User user) throws InvalidKeyException, NoSuchAlgorithmException,
@@ -692,7 +701,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException {
 		try {
@@ -730,9 +739,9 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	
+
 	@Override
-	public boolean editJobOffer(CreatePermanentJobOfferRequest createOfferRequest,long offerId) throws ServiceException {
+	public boolean editJobOffer(CreatePermanentJobOfferRequest createOfferRequest, long offerId) throws ServiceException {
 		try {
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MONTH, 1);
@@ -1045,7 +1054,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public boolean close(long offerId) throws ServiceException {
 		try {
@@ -1438,7 +1447,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String createMercadoPagoPreference(CreatePreferenceMPRequest createPreferenceMPRequest) throws ServiceException {
-		
+
 
         User user = getLoggedUser();
 		MP mp = new MP (clientId, secretId);
@@ -1452,7 +1461,7 @@ public class UserServiceImpl implements UserService {
 					+ "		'unit_price':" + createPreferenceMPRequest.getPrice() + " "
 					+ "}],"
 					+ "'payer': "
-					+ "	{"					
+					+ "	{"
 					+ "     'name': " + user.getFirstname() + ","
 					+ "     'surname': " + user.getLastname() + ","
 					+ "	    'email': " + user.getEmail() + ""
@@ -1469,7 +1478,7 @@ public class UserServiceImpl implements UserService {
 					+          "'id': 'bank_transfer'"
 					+         "}]"
 					+ "}}");
-			
+
 			return createPreferenceResult.toString();
 		} catch (Exception e) {
              throw new ServiceException(e);
