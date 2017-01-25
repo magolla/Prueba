@@ -31,6 +31,7 @@ public class UserDetailsResponse extends ApiResponse {
 	private Collection<GeoLevelDTO> geoLevels;
 	private NotificationConfigurationResponse notificationConfigurationResponse;
 	private boolean hasLinkedinProfile;
+	private String linkedinProfileUrl;
     private String cv;
 
 	public UserDetailsResponse(int status) {
@@ -205,5 +206,11 @@ public class UserDetailsResponse extends ApiResponse {
 		this.sponsorImage = sponsorImage;
 	}
 	
+	public String getLinkedinProfileUrl() {
+		return linkedinProfileUrl;
+	}
 	
+	public void setLinkedinProfileUrl(String linkedinProfileUrl) {
+		this.linkedinProfileUrl = linkedinProfileUrl;
+	}
 }

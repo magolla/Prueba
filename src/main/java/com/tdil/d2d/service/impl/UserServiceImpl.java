@@ -1314,7 +1314,11 @@ public class UserServiceImpl implements UserService {
 		resp.setNotificationConfigurationResponse(notificationConfigurationResponse);
 
 		try {
-			resp.setHasLinkedinProfile(this.userDAO.getUserLinkedinProfile(user) != null);
+			UserLinkedinProfile userLinkedinProfile = this.userDAO.getUserLinkedinProfile(user);
+			resp.setHasLinkedinProfile(userLinkedinProfile != null);
+			if(resp.isHasLinkedinProfile()) {
+				resp.setLinkedinProfileUrl(userLinkedinProfile.getPublicProfileURL());
+			}
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
