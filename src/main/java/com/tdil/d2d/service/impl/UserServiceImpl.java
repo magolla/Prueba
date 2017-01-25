@@ -939,7 +939,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private List<JobOfferStatusDTO> getMatchedOffers(boolean permament) throws ServiceException {
-		// TODO BUG no busca bien
+		// TODO: BUG no busca bien
+		/* No veo que esté matcheando bien todos los niveles, tampoco matchea el institutionType */
 		try {
 			List<JobOffer> result = new ArrayList<>();
 			User user = getLoggedUser();
