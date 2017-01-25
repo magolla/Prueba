@@ -49,7 +49,7 @@ public class CreatePermanentJobOfferRequest extends ApiRequest {
 	private String offerHour;
 	
 	@NotEmpty
-    @Length(max = 100)
+    @Length(max = 4000)
 	private String comment;
 	
 	@NotEmpty
