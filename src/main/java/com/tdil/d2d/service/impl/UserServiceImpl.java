@@ -394,9 +394,11 @@ public class UserServiceImpl implements UserService {
 	public boolean addLocations(AddLocationsRequest addLocationsRequest) throws ServiceException {
 		try {
 			User user = getLoggedUser();
+			
+			userDAO.deleteUserGeoLocations(user);
+			
 			user.getUserGeoLocations().clear();
 
-			// TODO no se estÃ¡n borrando los UserGeoLocations viejos.
 			for (int i = 0; i < addLocationsRequest.getGeoLevelId().length; i++) {
 				UserGeoLocation loc = new UserGeoLocation();
 				loc.setGeoLevelLevel(addLocationsRequest.getGeoLevelLevel()[i]);

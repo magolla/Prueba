@@ -30,4 +30,6 @@ public interface UserDAO {
     
     public void save(Media media) throws DAOException;
 
+	public void deleteUserGeoLocations(User user) throws DAOException;
+
 }

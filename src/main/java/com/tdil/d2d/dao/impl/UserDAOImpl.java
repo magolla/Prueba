@@ -16,6 +16,7 @@ import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.User;
+import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
 
@@ -171,4 +172,21 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
             this.handleException(invocationDetails, e);
         }
     }
+
+	@Override
+	public void deleteUserGeoLocations(User user) throws DAOException{
+		 String invocationDetails= "deleteUserGeoLocations(" + user.getClass().getName() + ") ";
+		try {
+			
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(UserGeoLocation.class);
+			criteria.add(Restrictions.eq("user.id", user.getId()));
+			List<UserGeoLocation> list = criteria.list();
+			
+			for(UserGeoLocation geoLocation : list){
+				this.getHibernateTemplate().delete(geoLocation);
+			}
+		} catch (Exception e) {
+	          this.handleException(invocationDetails, e);
+	    }
+	}
 }
