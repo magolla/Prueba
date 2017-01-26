@@ -2,16 +2,12 @@ package com.tdil.d2d.controller.api.request;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.tdil.d2d.esapi.validation.ValidInput;
-
 public class ApplyToOfferRequest extends ApiRequest {
 	
-    @Length(max = 256)
-	@ValidInput
+    @Length(max = 4000)
 	private String comment;
     
-    @Length(max = 2048)
-	@ValidInput
+    @Length(max = 4000)
 	private String cvPlain;
     
     // Codificado en base64
