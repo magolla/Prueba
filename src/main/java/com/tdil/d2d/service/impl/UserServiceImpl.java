@@ -1144,7 +1144,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			if (!StringUtils.isEmpty(user.getAndroidRegId())) {
-				androidNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "Title " + date,
+				androidNotificationService.sendNotification(NotificationType.NEW_APPLICATION, null, "Title " + date,
 						"Message " + date, user.getAndroidRegId());
 			}
 			return false;
@@ -1160,7 +1160,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			if (!StringUtils.isEmpty(user.getIosPushId())) {
-				iosNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "Title " + date,
+				iosNotificationService.sendNotification(NotificationType.NEW_APPLICATION, null, "Title " + date,
 						"Message " + date, user.getIosPushId());
 			}
 			return false;

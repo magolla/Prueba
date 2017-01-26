@@ -2,7 +2,7 @@ package com.tdil.d2d.service.impl;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,16 +32,31 @@ public class IOSNotificationServiceImpl implements NotificationService {
 	}
 	
 	@Override
-	public void sendNotification(NotificationType type, String title, String message, String regId) {
-		PushNotificationPayload payload = PushNotificationPayload.combined(message, 0, null);
-		// TODO ver como agregar a la notificación los datos custom del tipo
-		// (type), nivel (level) y titulo (title).
+	public void sendNotification(NotificationType notificationType, String originObjectID, String title, String message, String regId) {
+		try {
+			if (originObjectID == null) {
+				originObjectID = "-1";
+			}
+			PushNotificationPayload payload = PushNotificationPayload.fromJSON(
+				  "{"
+				+ "	\"data\": {"
+				+ "		\"alert\": \""+message+"\","
+				+ "		\"sound\": \"\","
+				+ "		\"cdata\": {"
+				+ "			\"type\": " + String.valueOf(notificationType.getIntValue()) + ","
+				+ "			\"oid\": \""+ originObjectID +"\""
+				+ "		}"
+				+ "	 }"
+				+ "}"
+			);
+			// limpio el deviceId de los posibles espacios que pueda tener
+			regId = regId.replaceAll(" ", "");
+			executor.submit(new SendIOSPushNotification(payload, 0, regId));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
-		// limpio el deviceId de los posibles espacios que pueda tener
-		regId = regId.replaceAll(" ", "");
-		executor.submit(new SendIOSPushNotification(payload, 0, regId));
 	}
-
 	public static void send(int userId, int type, int level, String title, String message, String deviceId) {
 		
 	}
