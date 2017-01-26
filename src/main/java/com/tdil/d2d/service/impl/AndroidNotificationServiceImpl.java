@@ -41,7 +41,8 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 	private ProxyConfiguration proxyConfiguration;
 	
 	private ExecutorService executor = Executors.newFixedThreadPool(5);
-	
+	//TODO PARSARLO a Firebase Cloud Messaging
+	//https://developers.google.com/cloud-messaging/android/android-migrate-fcm
 	public static String HTTPS = "https://android.googleapis.com/gcm/send";
 	
 	/*
@@ -60,8 +61,9 @@ AIzaSyBYrCBCm1KnrAuntw93AaDL8A9M_J11OiI
 	}
 	
 	@Override
-	public void sendNotification(NotificationType type, String title, String message, String regId) {
+	public void sendNotification(NotificationType notificationType, String originObjectID, String title, String message, String regId) {
 		try {
+			//TODO Agregar el notificationType y el originObjectID a la notificaciÃƒÂ³n
 			JSONObject jsonObject = new JSONObject();
 			JSONObject data = new JSONObject();
 			data.put("type",1); // TODO 
@@ -89,7 +91,7 @@ AIzaSyBYrCBCm1KnrAuntw93AaDL8A9M_J11OiI
 		      conn.setRequestMethod("POST");
 		      conn.setRequestProperty("Content-Type", "application/json");
 		      conn.setRequestProperty("Accept-Encoding", "application/json");
-		      //Se pasa el Api key como parametro de la cabecera de la petici�n http
+		      //Se pasa el Api key como parametro de la cabecera de la peticiï¿½n http
 		      conn.setRequestProperty("Authorization","key=" +this.apikey);
 		      if(sendAndroidPushNotification.getJson()!=null){
 		        conn.setDoOutput(true);
