@@ -322,6 +322,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			user.setAndroidRegId(androidRegIdRequest.getAndroidRegId());
+			user.setIosPushId(null);
 			this.userDAO.save(user);
 			return true;
 		} catch (DAOException e) {
@@ -334,6 +335,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			user.setIosPushId(iOsPushIdRequest.getIosPushId());
+			user.setAndroidRegId(null);
 			this.userDAO.save(user);
 			return true;
 		} catch (DAOException e) {

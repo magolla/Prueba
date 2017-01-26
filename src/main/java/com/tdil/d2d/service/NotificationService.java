@@ -6,3 +6,4 @@ public interface NotificationService {
 
 	public void sendNotification(NotificationType notificationType, String originObjectID, String title, String message, String regId);
 }
+//notificationService.sendNotification(NotificationType.MATCH, null, “titulo”, “mesnaje”, “12312312332312312312312312”);
