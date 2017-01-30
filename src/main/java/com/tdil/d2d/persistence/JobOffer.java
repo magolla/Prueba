@@ -203,7 +203,7 @@ public class JobOffer implements PersistentEntity {
 		this.geoLevelId = geoLevelId;
 	}
 
-	public boolean isExpired() {
+	public Boolean isExpired() {
 		// TODO tema hora
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(getOfferDate());
@@ -217,6 +217,8 @@ public class JobOffer implements PersistentEntity {
 		}
 		return false;
 	}
+	
+	public void setExpired(Boolean expired){}
 
 	public InstitutionType getInstitutionType() {
 		return institutionType;
@@ -257,7 +259,4 @@ public class JobOffer implements PersistentEntity {
 	public void setApplications(int applications) {
 		this.applications = applications;
 	}
-
-	
-
 }

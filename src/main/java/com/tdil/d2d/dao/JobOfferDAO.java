@@ -3,6 +3,7 @@ package com.tdil.d2d.dao;
 import java.util.Collection;
 import java.util.List;
 
+import com.tdil.d2d.controller.api.dto.SearchOfferDTO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.JobOffer;
 
@@ -18,5 +19,6 @@ public interface JobOfferDAO {
 
 	public Collection<JobOffer> getOffers(long specialtyId, long geoLevelId, boolean permanent) throws DAOException;
 
+	public Collection<JobOffer> getOffersBy(SearchOfferDTO searchOfferDTO) throws DAOException;
 
 }

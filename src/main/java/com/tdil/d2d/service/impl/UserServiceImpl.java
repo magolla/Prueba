@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,7 @@ import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
+import com.tdil.d2d.controller.api.dto.SearchOfferDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddLocationsRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
@@ -57,6 +60,7 @@ import com.tdil.d2d.controller.api.request.CreatePermanentJobOfferRequest;
 import com.tdil.d2d.controller.api.request.CreatePreferenceMPRequest;
 import com.tdil.d2d.controller.api.request.CreateTemporaryJobOfferRequest;
 import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
+import com.tdil.d2d.controller.api.request.InstitutionType;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
@@ -916,26 +920,37 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<JobOfferStatusDTO> getPermamentOffers(SearchOfferRequest searchOfferRequest) throws ServiceException {
-		// TODO PENDING
 		try {
 			List<JobOffer> result = new ArrayList<>();
-			User user = getLoggedUser();
-			for (Specialty specialty : user.getSpecialties()) {
-				for (UserGeoLocation location : user.getUserGeoLocations()) {
-					result.addAll(this.jobDAO.getOffers(specialty.getId(), location.getGeoLevelId(), true));
-					GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(location.getGeoLevelId(), location.getGeoLevelLevel());
-					if (location.getGeoLevelLevel() == 4) {
-						Geo4 geo4 = (Geo4) geoLevel;
-						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getId(), true));
-						result.addAll(
-								this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getGeo2().getId(), true));
-					}
-					if (location.getGeoLevelLevel() == 3) {
-						Geo3 geo3 = (Geo3) geoLevel;
-						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo3.getGeo2().getId(), true));
-					}
-				}
+			SearchOfferDTO searchOfferDTO = new SearchOfferDTO();
+			
+			if(!Long.valueOf(0).equals(searchOfferRequest.getGeoLevelId())) {
+				UserGeoLocation geoLocation = new UserGeoLocation();
+				geoLocation.setGeoLevelId(searchOfferRequest.getGeoLevelId());
+				geoLocation.setGeoLevelLevel(searchOfferRequest.getGeoLevelLevel());
+				
+				Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
+				geoLocations.add(geoLocation);
+				
+				List<Long> geos = this.getGeoLevels(geoLocations);
+				
+				searchOfferDTO.setGeos(geos);
+			}			
+			if(!Long.valueOf(0).equals(searchOfferRequest.getSpecialtyId())) {
+				searchOfferDTO.getSpecialities().add(searchOfferRequest.getSpecialtyId());
 			}
+			if(!Long.valueOf(0).equals(searchOfferRequest.getOccupationId())) {
+				searchOfferDTO.getOccupations().add(searchOfferRequest.getOccupationId());
+			}
+			if(!Long.valueOf(0).equals(searchOfferRequest.getTaskId())) {
+				searchOfferDTO.getTasks().add(searchOfferRequest.getTaskId());
+			}
+			searchOfferDTO.setInstitutionType(searchOfferRequest.getInstitutionType());
+			
+			searchOfferDTO.setPermanent(true);
+			
+			result = (List<JobOffer>) this.jobDAO.getOffersBy(searchOfferDTO);
+			
 			return result.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -943,33 +958,61 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private List<JobOfferStatusDTO> getMatchedOffers(boolean permament) throws ServiceException {
-		// TODO: BUG no busca bien
-		/* No veo que esté matcheando bien todos los niveles, tampoco matchea el institutionType */
 		try {
 			List<JobOffer> result = new ArrayList<>();
 			User user = getLoggedUser();
-			for (Specialty specialty : user.getSpecialties()) {
-				for (UserGeoLocation location : user.getUserGeoLocations()) {
-					result.addAll(this.jobDAO.getOffers(specialty.getId(), location.getGeoLevelId(), permament));
-					GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(location.getGeoLevelId(), location.getGeoLevelLevel());
-					if (location.getGeoLevelLevel() == 4) {
-						Geo4 geo4 = (Geo4) geoLevel;
-						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getId(), permament));
-						result.addAll(
-								this.jobDAO.getOffers(specialty.getId(), geo4.getGeo3().getGeo2().getId(), permament));
-					}
-					if (location.getGeoLevelLevel() == 3) {
-						Geo3 geo3 = (Geo3) geoLevel;
-						result.addAll(this.jobDAO.getOffers(specialty.getId(), geo3.getGeo2().getId(), permament));
-					}
-				}
+			
+			List<Long> geos = this.getGeoLevels(user.getUserGeoLocations());
+			
+			SearchOfferDTO searchOfferDTO = new SearchOfferDTO();
+			searchOfferDTO.setGeos(geos);
+			
+			UserProfile userProfile = this.userDAO.getUserProfile(user);
+			if (userProfile != null) {
+				searchOfferDTO.setInstitutionType(userProfile.getInstitutionType());
+				searchOfferDTO.setTasks(getTasks(userProfile.getTasks()));
 			}
+			
+			searchOfferDTO.setPermanent(permament);
+			
+			result = (List<JobOffer>) this.jobDAO.getOffersBy(searchOfferDTO);
+			
 			return result.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
 	}
-
+	
+	private List<Long> getGeoLevels(Set<UserGeoLocation> userGeoLocations) throws DAOException {
+		List<Long> geos = new ArrayList<Long>();
+		
+		for (UserGeoLocation location : userGeoLocations) {
+			geos.add(location.getGeoLevelId());
+			GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(location.getGeoLevelId(), location.getGeoLevelLevel());
+			if (location.getGeoLevelLevel() == 4) {
+				Geo4 geo4 = (Geo4) geoLevel;
+				geos.add(geo4.getGeo3().getId());
+				geos.add(geo4.getGeo3().getGeo2().getId());
+			}
+			if (location.getGeoLevelLevel() == 3) {
+				Geo3 geo3 = (Geo3) geoLevel;
+				geos.add(geo3.getGeo2().getId());
+			}
+		}
+		
+		return geos;
+	}
+	
+	private List<Long> getTasks(Set<Task> taskObjects) throws DAOException {
+		List<Long> tasks = new ArrayList<Long>();
+		
+		for (Task taskObject : taskObjects) {
+			tasks.add(taskObject.getId());
+		}
+		
+		return tasks;
+	}
+	
 	@Override
 	public List<JobApplicationDTO> offerApplications(long offerId) throws ServiceException {
 		try {
@@ -1391,7 +1434,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<JobOfferStatusDTO> getAllPermanentOffersOpen() throws ServiceException {
 		try {
-			List<JobOffer> offers = this.jobDAO.getAllPermanentOffersOpen();
+			SearchOfferDTO searchOfferDTO = new SearchOfferDTO();
+			searchOfferDTO.setPermanent(true);
+			searchOfferDTO.setInstitutionType(InstitutionType.BOTH);
+			
+			Collection<JobOffer> offers = this.jobDAO.getOffersBy(searchOfferDTO);
 			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
 			throw new ServiceException(e);
