@@ -9,6 +9,7 @@ import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
+import com.tdil.d2d.controller.api.dto.MatchedUserDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
@@ -102,6 +103,8 @@ public interface UserService {
 
 	public NotificationConfigurationResponse getNotificationConfiguration() throws ServiceException;
 
+	public NotificationConfigurationResponse getNotificationConfiguration(Long userId) throws ServiceException;
+
 	public boolean setNotificationConfiguration(ConfigureNotificationsRequest notificationConfiguration) throws ServiceException;
 
 	public boolean validate(ValidationRequest validationRequest) throws ServiceException;
@@ -155,4 +158,7 @@ public interface UserService {
 
 	public boolean switchToB();
 
+	public List<MatchedUserDTO> getMatchedUsers(Long offerId) throws ServiceException;
+
+	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException;
 }

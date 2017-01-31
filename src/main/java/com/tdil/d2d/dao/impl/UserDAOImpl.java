@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -12,8 +13,10 @@ import org.hibernate.criterion.Subqueries;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import com.tdil.d2d.controller.api.request.InstitutionType;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
@@ -188,5 +191,42 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 		} catch (Exception e) {
 	          this.handleException(invocationDetails, e);
 	    }
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getMatchedUsers(JobOffer offer, List<Long> locations) throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct user ");
+			queryString.append("FROM UserProfile userProfile ");
+			queryString.append("JOIN userProfile.user user ");
+			queryString.append("JOIN user.userGeoLocations location ");
+			queryString.append("WHERE (userProfile.institutionType = :both OR userProfile.institutionType = :institutionType) ");
+			queryString.append("AND :task in elements(userProfile.tasks) ");
+			queryString.append("AND user.userb = true ");
+			
+			if(!locations.isEmpty()) {
+				queryString.append("AND (");
+				String OR = "";
+				for (Long location : locations) {
+					//queryString.append(OR + location + " in elements(userProfile.user.userGeoLocations.id) ");
+					queryString.append(OR + "location.geoLevelId = " + location + " ");
+					OR = "OR ";
+				}
+				queryString.append(") ");
+			}
+			
+			queryString.append("order by userProfile.user.lastLoginDate desc");
+
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameter("both", InstitutionType.BOTH);
+			query.setParameter("institutionType", offer.getInstitutionType());
+			query.setParameter("task", offer.getTask());
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
 	}
 }

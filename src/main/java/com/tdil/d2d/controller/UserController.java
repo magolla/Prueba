@@ -629,4 +629,20 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
+
+	@RequestMapping(value = "/user/offer/{offerId}/notify", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+   	public ResponseEntity<ApiResponse> notifyNewOfferToMatchedUsers(@PathVariable long offerId) {
+		try {
+			boolean response = this.userService.notifyToMatchedUsers(offerId);
+			if (response) {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);	
+			} else {
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return null;
+		}
+		
+    }
 }

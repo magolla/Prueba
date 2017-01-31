@@ -316,5 +316,15 @@ public class OfferController extends AbstractController {
    		boolean alreadyApplied = this.userService.searchIfApplied(offerId,userId);
 		return new ResponseEntity<GenericResponse<Boolean>>(new GenericResponse<Boolean>(alreadyApplied, HttpStatus.OK.value()), HttpStatus.OK);
    	}
-  
+ 
+    @RequestMapping(value = "/user/offer/{offerId}/matches", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+   	public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> getMatchedUsers(@PathVariable long offerId) {
+    	try {
+			List<JobOfferStatusDTO> myOffers = this.userService.getMatchedPermamentOffers();
+			return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>(new GenericResponse<List<JobOfferStatusDTO>>(myOffers,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+   	}
 }

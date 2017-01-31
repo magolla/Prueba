@@ -42,6 +42,7 @@ import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
+import com.tdil.d2d.controller.api.dto.MatchedUserDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
@@ -673,6 +674,9 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
+			
+			//this.notifyToMatchedUsers(jobOffer.getId());
+			
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -704,6 +708,7 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
+
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -741,6 +746,9 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
+			
+			//this.notifyToMatchedUsers(jobOffer.getId());
+			
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -779,6 +787,7 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
+
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -1131,6 +1140,17 @@ public class UserServiceImpl implements UserService {
 		try {
 			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO
 					.getByUser(RuntimeContext.getCurrentUser().getId());
+			return toResponse(notificationConfiguration);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public NotificationConfigurationResponse getNotificationConfiguration(Long userId) throws ServiceException {
+		try {
+			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO
+					.getByUser(userId);
 			return toResponse(notificationConfiguration);
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -1614,4 +1634,59 @@ public class UserServiceImpl implements UserService {
 		}
 		return true;
 	}
+
+	@Override
+	public List<MatchedUserDTO> getMatchedUsers(Long offerId) throws ServiceException {
+		try {
+			List<User> result = new ArrayList<>();
+			
+			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
+			
+			UserGeoLocation geoLocation = new UserGeoLocation();
+			geoLocation.setGeoLevelId(jobOffer.getGeoLevelId());
+			geoLocation.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
+			
+			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
+			geoLocations.add(geoLocation);
+			
+			List<Long> geos = this.getGeoLevels(geoLocations);
+			
+			result = userDAO.getMatchedUsers(jobOffer, geos);
+			
+			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
+			for (User matchedUser : result) {
+				MatchedUserDTO matchedUserDTO = toMatchedUserDto(matchedUser);
+				matchedUserDTOs.add(matchedUserDTO);
+			}
+			
+			return matchedUserDTOs;
+			
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	private MatchedUserDTO toMatchedUserDto(User user) throws ServiceException {
+		MatchedUserDTO result = new MatchedUserDTO();
+		result.setUserId(user.getId());
+		result.setFirstname(user.getFirstname());
+		result.setLastname(user.getLastname());
+		result.setEmail(user.getEmail());
+		result.setMobilePhone(user.getMobilePhone());
+
+		NotificationConfigurationResponse notificationConfigurationResponse = this.getNotificationConfiguration(user.getId());
+		result.setNotificationConfigurationResponse(notificationConfigurationResponse);
+		return result;
+	}
+	
+	@Override
+	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException {
+		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
+		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
+			//TODO PUSH Notification!!
+			System.out.println("Notify new match to " + matchedUserDTO.getUserId());
+		}
+		return true;
+	}
+		
 }

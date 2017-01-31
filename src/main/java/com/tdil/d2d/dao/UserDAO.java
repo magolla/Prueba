@@ -1,6 +1,9 @@
 package com.tdil.d2d.dao;
 
+import java.util.List;
+
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
@@ -32,4 +35,5 @@ public interface UserDAO {
 
 	public void deleteUserGeoLocations(User user) throws DAOException;
 
+	public List<User> getMatchedUsers(JobOffer offer, List<Long> locations) throws DAOException;
 }
