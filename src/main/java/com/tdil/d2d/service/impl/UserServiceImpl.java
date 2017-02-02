@@ -1689,4 +1689,13 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 		
+	@Override
+	public List<Long> getOfferIdsByDate(Date date) throws ServiceException {
+		try {
+			List<Long> jobIds = this.jobDAO.getOfferIdsByDate(date);
+			return jobIds;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
 }

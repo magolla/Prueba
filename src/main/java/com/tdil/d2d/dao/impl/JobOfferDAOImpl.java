@@ -1,5 +1,7 @@
 package com.tdil.d2d.dao.impl;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -132,5 +134,46 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+	}
+	
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Long> getOfferIdsByDate(Date date) throws DAOException {
+		
+		Calendar calendarFrom = Calendar.getInstance();
+		calendarFrom.setTime(date);
+		calendarFrom.set(Calendar.HOUR_OF_DAY, 0);
+		calendarFrom.set(Calendar.MINUTE, 0);
+		calendarFrom.set(Calendar.SECOND, 0);
+		calendarFrom.set(Calendar.MILLISECOND, 0);
+		
+		Calendar calendarTo = Calendar.getInstance();
+		calendarTo.setTime(date);
+		calendarTo.set(Calendar.HOUR_OF_DAY, 23);
+		calendarTo.set(Calendar.MINUTE, 59);
+		calendarTo.set(Calendar.SECOND, 59);
+		calendarTo.set(Calendar.MILLISECOND, 999);
+		
+		Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT distinct offer.id ");
+		queryString.append("FROM JobOffer offer ");
+		queryString.append("WHERE offer.status = :status ");
+		queryString.append("AND offer.vacants > 0 ");
+		queryString.append("AND offer.creationDate > :fromDate ");
+		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("AND offer.offerDate > (:nowDate) ");
+		queryString.append("order by offer.id asc");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("status", JobOffer.VACANT);
+		query.setString("fromDate", formatter.format(calendarFrom.getTime()));
+		query.setString("toDate", formatter.format(calendarTo.getTime()));
+		query.setCalendarDate("nowDate", Calendar.getInstance());
+
+		return query.list();
 	}
 }

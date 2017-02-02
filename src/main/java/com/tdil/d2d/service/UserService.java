@@ -1,6 +1,7 @@
 package com.tdil.d2d.service;
 
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
@@ -161,4 +162,6 @@ public interface UserService {
 	public List<MatchedUserDTO> getMatchedUsers(Long offerId) throws ServiceException;
 
 	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException;
+	
+	public List<Long> getOfferIdsByDate(Date date) throws ServiceException;
 }
