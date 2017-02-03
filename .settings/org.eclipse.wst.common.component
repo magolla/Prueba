@@ -295,6 +295,15 @@
     <dependent-module archiveName="jersey-apache-client-1.18.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/sun/jersey/contribs/jersey-apache-client/1.18.1/jersey-apache-client-1.18.1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
+    <dependent-module archiveName="quartz-2.2.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/quartz-scheduler/quartz/2.2.1/quartz-2.2.1.jar">
+      <dependency-type>uses</dependency-type>
+    </dependent-module>
+    <dependent-module archiveName="c3p0-0.9.1.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/c3p0/c3p0/0.9.1.1/c3p0-0.9.1.1.jar">
+      <dependency-type>uses</dependency-type>
+    </dependent-module>
+    <dependent-module archiveName="quartz-jobs-2.2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/quartz-scheduler/quartz-jobs/2.2.0/quartz-jobs-2.2.0.jar">
+      <dependency-type>uses</dependency-type>
+    </dependent-module>
     <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
     <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>
   </wb-module>
