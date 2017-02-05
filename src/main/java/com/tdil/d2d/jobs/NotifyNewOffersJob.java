@@ -1,7 +1,6 @@
 package com.tdil.d2d.jobs;
 
-import java.util.Date;
-import java.util.List;
+import java.util.Collection;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -9,6 +8,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.service.UserService;
 
@@ -26,11 +26,12 @@ public class NotifyNewOffersJob implements Job {
 		//Do injection with spring
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		try {
-			List<Long> offerIds = userService.getOfferIdsByDate(new Date());
+			Collection<JobOfferStatusDTO> offers = userService.getAllPermanentOffersOpen();
+			offers.addAll(userService.getAllTemporalOffersOpen());
 			
-			for (Long offerId : offerIds) {
+			for (JobOfferStatusDTO offer : offers) {
 				//TODO Check if he has already been notified
-				userService.notifyToMatchedUsers(offerId);
+				userService.notifyToMatchedUsers(offer.getId());
 			}
 		} catch (ServiceException e) {
 			e.printStackTrace();

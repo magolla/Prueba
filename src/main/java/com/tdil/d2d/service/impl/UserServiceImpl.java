@@ -44,6 +44,7 @@ import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchedUserDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
+import com.tdil.d2d.controller.api.dto.NotificationDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.dto.SearchOfferDTO;
@@ -81,6 +82,7 @@ import com.tdil.d2d.dao.GeoDAO;
 import com.tdil.d2d.dao.JobApplicationDAO;
 import com.tdil.d2d.dao.JobOfferDAO;
 import com.tdil.d2d.dao.NotificationConfigurationDAO;
+import com.tdil.d2d.dao.NotificationDAO;
 import com.tdil.d2d.dao.PaymentDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
 import com.tdil.d2d.dao.UserDAO;
@@ -95,6 +97,7 @@ import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
+import com.tdil.d2d.persistence.Notification;
 import com.tdil.d2d.persistence.NotificationConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.persistence.Occupation;
@@ -136,6 +139,8 @@ public class UserServiceImpl implements UserService {
 	private SpecialtyDAO specialtyDAO;
 	@Autowired
 	private NotificationConfigurationDAO notificationConfigurationDAO;
+	@Autowired
+	private NotificationDAO notificationDAO;
 	@Autowired
 	private ActivityLogDAO activityLogDAO;
 	@Autowired
@@ -1466,6 +1471,20 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public List<JobOfferStatusDTO> getAllTemporalOffersOpen() throws ServiceException {
+		try {
+			SearchOfferDTO searchOfferDTO = new SearchOfferDTO();
+			searchOfferDTO.setPermanent(false);
+			searchOfferDTO.setInstitutionType(InstitutionType.BOTH);
+			
+			Collection<JobOffer> offers = this.jobDAO.getOffersBy(searchOfferDTO);
+			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
 	public boolean setAvatar(User user, SetAvatarRequest setAvatarRequest) throws ServiceException {
 		try {
 			user.setBase64img(setAvatarRequest.getAvatarBase64().getBytes());
@@ -1683,8 +1702,36 @@ public class UserServiceImpl implements UserService {
 	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException {
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
 		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
-			//TODO PUSH Notification!!
-			System.out.println("Notify new match to " + matchedUserDTO.getUserId());
+			
+			boolean alreadyApplied = this.searchIfApplied(offerId,matchedUserDTO.getUserId());
+			
+			if(!alreadyApplied) {
+				Notification notification = notificationDAO.getByUserOffer(matchedUserDTO.getUserId(), offerId);
+				
+				//Si es null, nunca fue notificado por esta oferta
+				if(notification == null) {
+					//TODO PUSH Notification!!
+					System.out.println("Notify new match to " + matchedUserDTO.getUserId());
+					
+					
+					try {
+						
+						User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
+						JobOffer offer = jobDAO.getById(JobOffer.class, offerId);
+						
+						notification = new Notification();
+						notification.setCreationDate(new Date());
+						notification.setAction(NotificationDTO.ACTION_MATCH_NOTIFICATION);
+						notification.setUser(user);
+						notification.setOffer(offer);
+						notification.setSeen(false);
+						
+						this.notificationDAO.save(notification);
+					} catch (DAOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 		return true;
 	}

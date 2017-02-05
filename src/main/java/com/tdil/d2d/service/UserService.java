@@ -153,6 +153,9 @@ public interface UserService {
 	public Base64DTO getPdfCVBase64() throws ServiceException;
 
 	List<JobOfferStatusDTO> getAllPermanentOffersOpen() throws ServiceException;
+
+	List<JobOfferStatusDTO> getAllTemporalOffersOpen() throws ServiceException;
+	
 	public UserDetailsResponse getApprovedCandidateForOffer(long id) throws ServiceException;
 
 	public boolean searchIfApplied(long offerId, long userId);
