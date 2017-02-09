@@ -8,6 +8,7 @@ import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
+import com.tdil.d2d.persistence.ValidationCode;
 
 public interface UserDAO {
 	
@@ -36,4 +37,8 @@ public interface UserDAO {
 	public void deleteUserGeoLocations(User user) throws DAOException;
 
 	public List<User> getMatchedUsers(JobOffer offer, List<Long> locations) throws DAOException;
+
+	public ValidationCode getValidationCode(String mobilePhone, String smsCode) throws DAOException;
+
+	public void save(ValidationCode validationCode)  throws DAOException ;
 }

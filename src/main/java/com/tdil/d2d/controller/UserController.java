@@ -44,6 +44,7 @@ import com.tdil.d2d.controller.api.request.IOsPushIdRequest;
 import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
+import com.tdil.d2d.controller.api.request.SendSMSRequest;
 import com.tdil.d2d.controller.api.request.SetAvatarRequest;
 import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
@@ -139,7 +140,7 @@ public class UserController extends AbstractController {
 
 
     @RequestMapping(value = "/user/validate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> register(@Valid @RequestBody ValidationRequest validationRequest, BindingResult bidingResult) {
+    public ResponseEntity<ApiResponse> validate(@Valid @RequestBody ValidationRequest validationRequest, BindingResult bidingResult) {
     	if (bidingResult.hasErrors()) {
     		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
     	}
@@ -151,6 +152,20 @@ public class UserController extends AbstractController {
 			} else {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
+    @RequestMapping(value = "/user/send", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> sendSMS(@Valid @RequestBody SendSMSRequest request, BindingResult bidingResult) {
+    	if (bidingResult.hasErrors()) {
+    		return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
+    	}
+    	try {
+			this.userService.sendSMS(request);
+			return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);
 			return new ResponseEntity<ApiResponse>((ApiResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);

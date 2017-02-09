@@ -31,6 +31,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.SearchOfferRequest;
+import com.tdil.d2d.controller.api.request.SendSMSRequest;
 import com.tdil.d2d.controller.api.request.SetAvatarRequest;
 import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
@@ -167,4 +168,6 @@ public interface UserService {
 	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException;
 	
 	public List<Long> getOfferIdsByDate(Date date) throws ServiceException;
+
+	public void sendSMS(SendSMSRequest request) throws ServiceException;
 }

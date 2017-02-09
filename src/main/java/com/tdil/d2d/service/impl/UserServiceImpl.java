@@ -67,6 +67,7 @@ import com.tdil.d2d.controller.api.request.NotificationConfigurationResponse;
 import com.tdil.d2d.controller.api.request.RegistrationRequestA;
 import com.tdil.d2d.controller.api.request.RegistrationRequestB;
 import com.tdil.d2d.controller.api.request.SearchOfferRequest;
+import com.tdil.d2d.controller.api.request.SendSMSRequest;
 import com.tdil.d2d.controller.api.request.SetAvatarRequest;
 import com.tdil.d2d.controller.api.request.SetInstitutionTypeRequest;
 import com.tdil.d2d.controller.api.request.SetLicenseRequest;
@@ -109,6 +110,7 @@ import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
+import com.tdil.d2d.persistence.ValidationCode;
 import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.CryptographicService;
 import com.tdil.d2d.service.EmailService;
@@ -116,6 +118,10 @@ import com.tdil.d2d.service.NotificationService;
 import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.ServiceLocator;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 @Transactional
 @Service
@@ -129,6 +135,12 @@ public class UserServiceImpl implements UserService {
 	@Value("${mercadopago.secret_id}")
 	private String secretId;
 
+	@Value("${smsservice.user}")
+	private String smsUser;
+
+	@Value("${smsservice.password}")
+	private String smsPassword;
+	
 	@Autowired
 	private UserDAO userDAO;
 	@Autowired
@@ -244,6 +256,18 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	private void sendSMS(String mobilePhone, String mobileHash) throws IOException{
+		OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+		      .url("http://servicio.smsmasivos.com.ar/enviar_sms.asp?api=1&"
+		      		+ "usuario=" + smsUser +"&clave=" + smsPassword + "&tos=" + mobilePhone + "&texto=" + mobileHash)
+		      .build();
+        Response smsResponse = client.newCall(request).execute();;
+        if("OK".equals(smsResponse.body().string())){
+        	logger.info("Code sent succesfully to " + mobilePhone + " - Code: " + mobileHash);
+        } 
+	}
 
 	@Override
 	public RegistrationResponse register(RegistrationRequestB registrationRequest) throws ServiceException {
@@ -262,22 +286,18 @@ public class UserServiceImpl implements UserService {
 			// "", user.getSalt()));
 			user.setMobilePhone(registrationRequest.getMobilePhone());
 			user.setUserb(true);
-			user.setPhoneValidated(false);
+			user.setPhoneValidated(true);
 			user.setEmailValidated(false);
 			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
 			user.setTacAccepted(registrationRequest.isTacAccepted());
 			user.setTacAcceptDate(registrationDate);
-			if (ServiceLocator.isLocalhost()) {
-				user.setMobileHash("9999");
-			} else {
-				user.setMobileHash(RandomStringUtils.randomAlphanumeric(4));
-			}
+			user.setMobileHash(RandomStringUtils.randomAlphanumeric(4));
+			
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
-			// TODO ENVIAR SMS DE VALIDACION
-
+			
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link "
 						+ user.getEmailHash();
@@ -312,17 +332,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean validate(ValidationRequest validationRequest) throws ServiceException {
 		try {
-			User user = this.userDAO.getUserByMobilePhone(validationRequest.getMobilePhone());
-			logger.info("User found = {}", user.getId());
-			if (user != null && user.getDeviceId().equals(encriptDeviceId(validationRequest.getDeviceId(), user))
-					&& user.getMobileHash().equals(validationRequest.getSmsCode())) {
-				user.setPhoneValidated(true);
-				this.userDAO.save(user);
+			ValidationCode validationCode = this.userDAO.getValidationCode(validationRequest.getMobilePhone(), validationRequest.getSmsCode());
+			if (validationCode!=null) {
+				logger.info("Code found = {}", validationCode.getCode());
+				
+				validationCode.setEnabled(false);
+				this.userDAO.save(validationCode);
 				return true;
 			}
 			return false;
-		} catch (DAOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
-				| IllegalBlockSizeException | BadPaddingException e) {
+		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -1744,5 +1763,23 @@ public class UserServiceImpl implements UserService {
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
+	}
+
+	@Override
+	public void sendSMS(SendSMSRequest request) throws ServiceException {
+		try {
+			
+			    ValidationCode validationCode = new ValidationCode();
+			    validationCode.setCreationDate(new Date());
+				validationCode.setMobilePhone(request.getMobilePhone());
+				validationCode.setCode(RandomStringUtils.randomAlphanumeric(4));
+				validationCode.setEnabled(true);
+				userDAO.save(validationCode);
+				sendSMS(validationCode.getMobilePhone(), validationCode.getCode());
+				
+		} catch (IOException | DAOException e) {
+			throw new ServiceException(e);
+		}
+		
 	}
 }

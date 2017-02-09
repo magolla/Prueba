@@ -22,6 +22,7 @@ import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
+import com.tdil.d2d.persistence.ValidationCode;
 
 @Repository
 public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
@@ -229,4 +230,36 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 	}
+
+	@Override
+	public ValidationCode getValidationCode(String mobilePhone, String smsCode) throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(ValidationCode.class);
+			criteria.add(Restrictions.eq("mobilePhone", mobilePhone));
+			criteria.add(Restrictions.eq("code", smsCode));
+			criteria.add(Restrictions.eq("enabled", true));
+			List<ValidationCode> list = criteria.list();
+			if (CollectionUtils.isEmpty(list)) {
+				return null;
+			} else {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
+	public void save(ValidationCode validationCode) throws DAOException {
+		String invocationDetails = "save(" + validationCode.getClass().getName() + ") ";
+		try {
+			this.getHibernateTemplate().save(validationCode);
+			this.getHibernateTemplate().flush();
+		} catch (DataIntegrityViolationException e) {
+			this.handleException(invocationDetails, e);
+		} catch (Exception e) {
+			this.handleException(invocationDetails, e);
+		}
+	}
+
 }
