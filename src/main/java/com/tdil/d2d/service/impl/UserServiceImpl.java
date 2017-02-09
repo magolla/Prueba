@@ -1341,6 +1341,7 @@ public class UserServiceImpl implements UserService {
 		result.setTaskName(s.getTask().getName());
 		result.setApplications(s.getApplications());
 		result.setBase64img(s.getOfferent().getBase64img());
+		result.setJobApplication_id(s.getJobApplication_id());
 		return result;
 	}
 
