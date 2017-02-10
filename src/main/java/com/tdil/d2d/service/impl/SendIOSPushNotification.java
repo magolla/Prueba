@@ -61,7 +61,7 @@ public class SendIOSPushNotification implements Runnable {
 			try {
 				// TODO pasar la clave del keystore a property
 				AppleNotificationServer server = new AppleNotificationServerBasicImpl(
-						IOSNotificationServiceImpl.getIosPushNoticationKeystoreLocation(), "rodrigo", !ServiceLocator.isLocalhost());
+						IOSNotificationServiceImpl.getIosPushNoticationKeystoreLocation(), "doctodoc", !ServiceLocator.isLocalhost());
 
 				if (IOSNotificationServiceImpl.getProxyConfiguration() != null) {
 					// server.setProxy("1.234.45.50", 3128);
@@ -78,8 +78,9 @@ public class SendIOSPushNotification implements Runnable {
 						PushedNotification notification = pushManager.sendNotification(device, payload, false);
 						notifications.add(notification);
 					} catch (InvalidDeviceTokenFormatException e) {
-						notifications.add(new PushedNotification(device, payload, e));
-						// NotificationsService.unregisterIOSId(userId);
+						//notifications.add(new PushedNotification(device, payload, e));
+						//NotificationsService.unregisterIOSId(userId);
+						LoggerManager.error(this, e);
 					}
 				}
 			} catch (Exception e) {
@@ -88,6 +89,7 @@ public class SendIOSPushNotification implements Runnable {
 				try {
 					pushManager.stopConnection();
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}

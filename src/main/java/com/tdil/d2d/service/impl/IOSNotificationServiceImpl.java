@@ -1,7 +1,10 @@
 package com.tdil.d2d.service.impl;
 
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,9 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tdil.d2d.communication.ProxyConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.service.NotificationService;
-import com.tdil.d2d.utils.ServiceLocator;
 
-import javapns.notification.PushNotificationPayload;
+import javapns.notification.PushNotificationBigPayload;
 
 @Transactional
 @Service("iosNotificationServiceImpl")
@@ -32,25 +34,14 @@ public class IOSNotificationServiceImpl implements NotificationService {
 	}
 	
 	@Override
-	public void sendNotification(NotificationType notificationType, String originObjectID, String title, String message, String regId) {
+	public void sendNotification(NotificationType notificationType,  String title, String message, String regId) {
 		try {
-			if (originObjectID == null) {
-				originObjectID = "-1";
-			}
-			PushNotificationPayload payload = PushNotificationPayload.fromJSON(
-				  "{"
-				+ "	\"data\": {"
-				+ "		\"alert\": \""+message+"\","
-				+ "		\"sound\": \"\","
-				+ "		\"cdata\": {"
-				+ "			\"type\": " + String.valueOf(notificationType.getIntValue()) + ","
-				+ "			\"oid\": \""+ originObjectID +"\""
-				+ "		}"
-				+ "	 }"
-				+ "}"
-			);
-			// limpio el deviceId de los posibles espacios que pueda tener
-			regId = regId.replaceAll(" ", "");
+			
+			PushNotificationBigPayload payload = PushNotificationBigPayload.complex();
+			payload.addCustomAlertTitle(title);
+			payload.addCustomAlertBody(message);;
+			payload.addCustomDictionary("acme", notificationType.getIntValue());
+			
 			executor.submit(new SendIOSPushNotification(payload, 0, regId));
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -61,8 +52,11 @@ public class IOSNotificationServiceImpl implements NotificationService {
 		
 	}
 
-	public static String getIosPushNoticationKeystoreLocation() {
-		return ServiceLocator.getTempPath() + "/" + IOSNotificationServiceImpl.CERTIFICATE_FILE_NAME;
+	public static String getIosPushNoticationKeystoreLocation() throws URISyntaxException {
+		
+		URL resource = IOSNotificationServiceImpl.class.getResource(IOSNotificationServiceImpl.CERTIFICATE_FILE_NAME);
+		
+		return resource.getPath();
 	}
 
 }

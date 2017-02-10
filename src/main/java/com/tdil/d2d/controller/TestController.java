@@ -80,7 +80,6 @@ public class TestController {
     }
     
     @RequestMapping(value = "/sendTestNotificationIOS", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse> sendTestNotificationIOS(HttpServletRequest request) {
     	try {
     		boolean response = this.userService.sendTestNotificationIOS();
@@ -96,7 +95,6 @@ public class TestController {
     }
     
     @RequestMapping(value = "/sendTestNotificationAndroid", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse> sendTestNotificationAndroid(HttpServletRequest request) {
     	try {
     		boolean response = this.userService.sendTestNotificationAndroid();

@@ -692,7 +692,7 @@ public class UserServiceImpl implements UserService {
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
 			
-			//this.notifyToMatchedUsers(jobOffer.getId());
+			this.notifyToMatchedUsers(jobOffer.getId());
 			
 			return true;
 		} catch (Exception e) {
@@ -1228,7 +1228,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			if (!StringUtils.isEmpty(user.getAndroidRegId())) {
-				androidNotificationService.sendNotification(NotificationType.NEW_APPLICATION, null, "Title " + date,
+				androidNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "Title " + date,
 						"Message " + date, user.getAndroidRegId());
 			}
 			return false;
@@ -1242,11 +1242,7 @@ public class UserServiceImpl implements UserService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		String date = sdf.format(new Date());
 		try {
-			User user = getLoggedUser();
-			if (!StringUtils.isEmpty(user.getIosPushId())) {
-				iosNotificationService.sendNotification(NotificationType.NEW_APPLICATION, null, "Title " + date,
-						"Message " + date, user.getIosPushId());
-			}
+			iosNotificationService.sendNotification(NotificationType.NEW_APPLICATION,  "Title " + date, "Message", "491DDAFAA367CFBA389CAE9B5179098F45DB2A27B7C68B260A86287CD7D3A57D");
 			return false;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -1726,7 +1722,6 @@ public class UserServiceImpl implements UserService {
 					//TODO PUSH Notification!!
 					System.out.println("Notify new match to " + matchedUserDTO.getUserId());
 					
-					
 					try {
 						
 						User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
@@ -1740,6 +1735,12 @@ public class UserServiceImpl implements UserService {
 						notification.setSeen(false);
 						
 						this.notificationDAO.save(notification);
+						
+						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
+							iosNotificationService.sendNotification(NotificationType.NEW_OFFER_MATCH, "Nueva oferta encontrada", "Se encontraron nuevas ofertas que matchean con tu perfil", user.getIosPushId());
+						}else{
+							//TODO notificar en android
+						}
 					} catch (DAOException e) {
 						e.printStackTrace();
 					}

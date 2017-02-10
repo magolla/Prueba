@@ -61,7 +61,7 @@ AIzaSyBYrCBCm1KnrAuntw93AaDL8A9M_J11OiI
 	}
 	
 	@Override
-	public void sendNotification(NotificationType notificationType, String originObjectID, String title, String message, String regId) {
+	public void sendNotification(NotificationType notificationType, String title, String message, String regId) {
 		try {
 			//TODO Agregar el notificationType y el originObjectID a la notificaciÃƒÂ³n
 			JSONObject jsonObject = new JSONObject();
