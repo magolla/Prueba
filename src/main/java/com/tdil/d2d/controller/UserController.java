@@ -150,7 +150,7 @@ public class UserController extends AbstractController {
 			if (result) {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
-				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
 			}
 		} catch (ServiceException e) {
 			LoggerManager.error(this, e);

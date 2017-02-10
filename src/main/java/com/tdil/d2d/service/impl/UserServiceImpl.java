@@ -117,7 +117,6 @@ import com.tdil.d2d.service.EmailService;
 import com.tdil.d2d.service.NotificationService;
 import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.service.UserService;
-import com.tdil.d2d.utils.ServiceLocator;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -223,22 +222,17 @@ public class UserServiceImpl implements UserService {
 			// user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(),
 			// "", user.getSalt()));
 			user.setUserb(false);
-			user.setPhoneValidated(false);
+			user.setPhoneValidated(true);
 			user.setEmailValidated(false);
 			user.setEmailHash(RandomStringUtils.randomAlphanumeric(4));
 			user.setCompanyScreenName(registrationRequest.getCompanyScreenName());
 			user.setTacAccepted(registrationRequest.isTacAccepted());
 			user.setTacAcceptDate(registrationDate);
-			if (ServiceLocator.isLocalhost()) {
-				user.setMobileHash("9999");
-			} else {
-				user.setMobileHash(RandomStringUtils.randomAlphanumeric(4));
-			}
+			
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
-			// TODO ENVIAR SMS DE VALIDACION
 
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link "
@@ -284,7 +278,6 @@ public class UserServiceImpl implements UserService {
 			user.setDeviceId(encriptDeviceId(registrationRequest.getDeviceId(), user));
 			// user.setPhoneNumber(cryptographicService.encrypt(registrationRequest.getPhoneNumber(),
 			// "", user.getSalt()));
-			user.setMobilePhone(registrationRequest.getMobilePhone());
 			user.setUserb(true);
 			user.setPhoneValidated(true);
 			user.setEmailValidated(false);
