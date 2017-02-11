@@ -24,7 +24,6 @@ import javax.servlet.ServletOutputStream;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +43,6 @@ import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.dto.MatchedUserDTO;
 import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
-import com.tdil.d2d.controller.api.dto.NotificationDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.dto.SearchOfferDTO;
@@ -847,6 +845,9 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setApplications(jobOffer.getApplications() + 1);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.APPLY_TO_OFFER));
+			
+			sendNotification(NotificationType.NEW_APPLICATION, jobOffer.getOfferent(), jobOffer);
+			
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -1087,14 +1088,27 @@ public class UserServiceImpl implements UserService {
 			offer.setVacants(offer.getVacants() - 1);
 			if (offer.getVacants() == 0) {
 				offer.setStatus(JobOffer.CLOSED);
-				// TODO: enviar notificaciones a los que quedan afuera
-				// TODO: enviar notificacion al que aceptaron
 			}
 			offer.setJobApplication_id((int) (long) application.getId());
 
 			this.jobDAO.save(offer);
 			this.jobApplicationDAO.save(application);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.ACCEPT_OFFER));
+			
+			sendNotification(NotificationType.APPLICATION_ACCEPTED, application.getUser(), offer);
+			
+			if(JobApplication.CLOSED.equals(offer.getStatus())){
+
+                //Notify rejected applications
+				List<JobApplication> applications = this.jobApplicationDAO.getJobApplications(offerId);
+				for(JobApplication rejectedApplication : applications){
+					if(!JobApplication.ACEPTED.equals(rejectedApplication.getStatus()) && rejectedApplication.getId() != applicationId){
+						sendNotification(NotificationType.JOB_OFFER_CLOSE, rejectedApplication.getUser(), offer);
+					}
+				}
+				
+			}
+			
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -1223,14 +1237,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean sendTestNotificationAndroid() throws ServiceException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		String date = sdf.format(new Date());
-		try {
-			User user = getLoggedUser();
-			if (!StringUtils.isEmpty(user.getAndroidRegId())) {
-				androidNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "Title " + date,
-						"Message " + date, user.getAndroidRegId());
-			}
+
+        try {
+			androidNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "PUT DEVICE TOKEN HERE");
+
 			return false;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -1239,10 +1249,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean sendTestNotificationIOS() throws ServiceException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		String date = sdf.format(new Date());
-		try {
-			iosNotificationService.sendNotification(NotificationType.NEW_APPLICATION,  "Title " + date, "Message", "491DDAFAA367CFBA389CAE9B5179098F45DB2A27B7C68B260A86287CD7D3A57D");
+
+        try {
+			iosNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "PUT DEVICE TOKEN HERE");
 			return false;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -1715,39 +1724,55 @@ public class UserServiceImpl implements UserService {
 			boolean alreadyApplied = this.searchIfApplied(offerId,matchedUserDTO.getUserId());
 			
 			if(!alreadyApplied) {
-				Notification notification = notificationDAO.getByUserOffer(matchedUserDTO.getUserId(), offerId);
 				
-				//Si es null, nunca fue notificado por esta oferta
-				if(notification == null) {
-					//TODO PUSH Notification!!
-					System.out.println("Notify new match to " + matchedUserDTO.getUserId());
+				try {
 					
-					try {
-						
-						User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
-						JobOffer offer = jobDAO.getById(JobOffer.class, offerId);
-						
-						notification = new Notification();
-						notification.setCreationDate(new Date());
-						notification.setAction(NotificationDTO.ACTION_MATCH_NOTIFICATION);
-						notification.setUser(user);
-						notification.setOffer(offer);
-						notification.setSeen(false);
-						
-						this.notificationDAO.save(notification);
-						
-						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
-							iosNotificationService.sendNotification(NotificationType.NEW_OFFER_MATCH, "Nueva oferta encontrada", "Se encontraron nuevas ofertas que matchean con tu perfil", user.getIosPushId());
-						}else{
-							//TODO notificar en android
-						}
-					} catch (DAOException e) {
-						e.printStackTrace();
-					}
+					User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
+					JobOffer offer = jobDAO.getById(JobOffer.class, offerId);
+					
+					sendNotification(NotificationType.NEW_OFFER_MATCH, user,offer);
+					
+
+				} catch (DAOException e) {
+					logger.error("ERROR", e);
 				}
 			}
 		}
 		return true;
+	}
+	
+	private void sendNotification(NotificationType type, User user, JobOffer offer){
+		
+		try {
+			Notification notification = notificationDAO.getByUserOffer(user.getId(), offer.getId());
+			
+			if(notification == null) {
+				
+				notification = new Notification();
+				notification.setCreationDate(new Date());
+				notification.setAction(type.name());
+				notification.setUser(user);
+				notification.setOffer(offer);
+				notification.setSeen(false);
+					
+				this.notificationDAO.save(notification);
+				
+				if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
+					
+					iosNotificationService.sendNotification(type, user.getIosPushId());
+					
+				} else if(user.getAndroidRegId()!=null){
+					
+					androidNotificationService.sendNotification(type,  user.getAndroidRegId());
+					
+				}
+				
+			}
+
+		} catch (DAOException e) {
+			logger.error("ERROR", e);
+		}
+			
 	}
 		
 	@Override

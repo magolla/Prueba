@@ -1,19 +1,9 @@
 package com.tdil.d2d.service.impl;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.annotation.PostConstruct;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +14,12 @@ import com.tdil.d2d.communication.ProxyConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.service.NotificationService;
 import com.tdil.d2d.utils.LoggerManager;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 @Transactional
 @Service("androidNotificationServiceImpl")
@@ -41,39 +37,25 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 	private ProxyConfiguration proxyConfiguration;
 	
 	private ExecutorService executor = Executors.newFixedThreadPool(5);
-	//TODO PARSARLO a Firebase Cloud Messaging
-	//https://developers.google.com/cloud-messaging/android/android-migrate-fcm
-	public static String HTTPS = "https://android.googleapis.com/gcm/send";
 	
-	/*
-	 * 
-	 * ApiKey android
-AIzaSyD5EwRNmbA7keuvTyJNah3_MTsKRvftAwY
-Server Key
-AIzaSyBYrCBCm1KnrAuntw93AaDL8A9M_J11OiI
-	 */
+    public static String HTTPS = "https://fcm.googleapis.com/fcm/send";
 	
-	@PostConstruct
-	public void init() {
-//		if (!StringUtils.isEmpty(proxyServer) && !StringUtils.isEmpty(proxyPort)) {
-//			setProxyConfiguration(new ProxyConfiguration(proxyServer, Integer.parseInt(proxyPort)));
-//		}
-	}
+	
 	
 	@Override
-	public void sendNotification(NotificationType notificationType, String title, String message, String regId) {
+	public void sendNotification(NotificationType notificationType, String regId) {
 		try {
-			//TODO Agregar el notificationType y el originObjectID a la notificaciÃƒÂ³n
-			JSONObject jsonObject = new JSONObject();
+			
+			JSONObject request = new JSONObject();
+			request.put("to",regId); 
+			
 			JSONObject data = new JSONObject();
-			data.put("type",1); // TODO 
-			data.put("title",title);
-			data.put("message",message);
-			JSONArray registration_ids = new JSONArray();
-			registration_ids.put(regId);
-			jsonObject.put("data",data);
-			jsonObject.put("registration_ids",registration_ids);
-			executor.submit(new SendAndroidPushNotification(jsonObject.toString(), regId, this));
+			data.put("title", notificationType.getTitle());
+			data.put("message", notificationType.getMessage());
+			data.put("notification_type", notificationType.getIntValue());
+			request.put("data",data);
+			
+			executor.submit(new SendAndroidPushNotification(request.toString(), regId, this));
 		} catch (JSONException e) {
 			 LoggerManager.error(this, e);
 		}
@@ -81,37 +63,20 @@ AIzaSyBYrCBCm1KnrAuntw93AaDL8A9M_J11OiI
 		
 	private void send(SendAndroidPushNotification sendAndroidPushNotification) {
 		try {
-			URL obj = new URL(HTTPS);
-			HttpURLConnection conn;
-			if (getProxyConfiguration() != null) {
-				conn = (HttpURLConnection)obj.openConnection(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(getProxyConfiguration().getServer(), getProxyConfiguration().getPort())));
-			} else {
-				conn = (HttpURLConnection)obj.openConnection();
-			}
-		      conn.setRequestMethod("POST");
-		      conn.setRequestProperty("Content-Type", "application/json");
-		      conn.setRequestProperty("Accept-Encoding", "application/json");
-		      //Se pasa el Api key como parametro de la cabecera de la peticiï¿½n http
-		      conn.setRequestProperty("Authorization","key=" +this.apikey);
-		      if(sendAndroidPushNotification.getJson()!=null){
-		        conn.setDoOutput(true);
-		        OutputStream os = conn.getOutputStream();
-		        os.write(sendAndroidPushNotification.getJson().getBytes("UTF-8"));
-		        os.flush();
-		      }
-		      if (conn.getResponseCode() != 200) {
-		    	  LoggerManager.error(this, "Failed : HTTP error code : " + conn.getResponseCode());
-		    	  //NotificationsService.unregisterAndroidId(userId);
-		    	  return;
-		      }
-		      BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		      String outputLine;
-		      StringBuilder totalSalida = new StringBuilder();
-		      while ((outputLine = br.readLine()) != null) {
-		        totalSalida.append(outputLine/*new String(outputLine.getBytes("ISO-8859-1"), "UTF-8")*/);
-		      }
-		      conn.disconnect();
-		      LoggerManager.info(this, totalSalida.toString());
+			
+				MediaType jsonType = MediaType.parse("application/json; charset=utf-8");
+	
+				OkHttpClient client = new OkHttpClient();
+				
+			    RequestBody body = RequestBody.create(jsonType, sendAndroidPushNotification.getJson());
+				Request request = new Request.Builder()
+				      .url(HTTPS)
+		              .header("Authorization", "key="+apikey)
+				      .post(body)
+				      .build();
+				Response response = client.newCall(request).execute();
+				LoggerManager.info(this, response.body().string());
+			
 		    } catch (IOException e) {
 		    	LoggerManager.error(this,  e);
 		    } 

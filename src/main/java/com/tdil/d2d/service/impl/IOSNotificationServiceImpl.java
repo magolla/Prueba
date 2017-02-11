@@ -34,12 +34,12 @@ public class IOSNotificationServiceImpl implements NotificationService {
 	}
 	
 	@Override
-	public void sendNotification(NotificationType notificationType,  String title, String message, String regId) {
+	public void sendNotification(NotificationType notificationType, String regId) {
 		try {
 			
 			PushNotificationBigPayload payload = PushNotificationBigPayload.complex();
-			payload.addCustomAlertTitle(title);
-			payload.addCustomAlertBody(message);;
+			payload.addCustomAlertTitle(notificationType.getTitle());
+			payload.addCustomAlertBody(notificationType.getMessage());
 			payload.addCustomDictionary("acme", notificationType.getIntValue());
 			
 			executor.submit(new SendIOSPushNotification(payload, 0, regId));

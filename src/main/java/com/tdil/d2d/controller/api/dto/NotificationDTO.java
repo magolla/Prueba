@@ -4,8 +4,6 @@ import java.util.Date;
 
 public class NotificationDTO {
 
-	public static String ACTION_MATCH_NOTIFICATION = "MATCH_NOTIFICATION";
-	
 	private long id;
 	private long userId;
 	private long offerId;
