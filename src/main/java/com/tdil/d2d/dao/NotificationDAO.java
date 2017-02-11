@@ -11,5 +11,5 @@ public interface NotificationDAO {
 
 	public Notification getByUser(long userId) throws DAOException;
 
-	public Notification getByUserOffer(Long userId, Long offerId);
+	public Notification getByUserOffer(Long userId, Long offerId, String type);
 }

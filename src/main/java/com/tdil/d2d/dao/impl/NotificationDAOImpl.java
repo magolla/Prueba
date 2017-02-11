@@ -33,18 +33,20 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public Notification getByUserOffer(Long userId, Long offerId) {
+	public Notification getByUserOffer(Long userId, Long offerId, String type) {
 		
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT distinct notification ");
 		queryString.append("FROM Notification notification ");
 		queryString.append("WHERE notification.offer.id = :offer_id ");
 		queryString.append("AND notification.user.id = :user_id ");
+		queryString.append("AND notification.action = :action ");
 		queryString.append("order by notification.creationDate desc");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		query.setParameter("offer_id", offerId);
 		query.setParameter("user_id", userId);
+		query.setParameter("action", type);
 
 		List<Notification> list = query.list();
 		

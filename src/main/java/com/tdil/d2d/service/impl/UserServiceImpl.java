@@ -1744,7 +1744,7 @@ public class UserServiceImpl implements UserService {
 	private void sendNotification(NotificationType type, User user, JobOffer offer){
 		
 		try {
-			Notification notification = notificationDAO.getByUserOffer(user.getId(), offer.getId());
+			Notification notification = notificationDAO.getByUserOffer(user.getId(), offer.getId(), type.name());
 			
 			if(notification == null) {
 				

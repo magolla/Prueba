@@ -14,7 +14,8 @@ public class ReedemCodeDTO {
 	}
 
 	public ReedemCodeDTO(Subscription elem) {
-		this.setImage(new String(elem.getSponsorCode().getSponsor().getBase64img()));
+		if(elem.getSponsorCode().getSponsor().getBase64img()!=null)
+		    this.setImage(new String(elem.getSponsorCode().getSponsor().getBase64img()));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		this.setExpirationDate(sdf.format(elem.getExpirationDate()));
 	}
