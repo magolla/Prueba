@@ -1613,6 +1613,9 @@ public class UserServiceImpl implements UserService {
 	public UserDetailsResponse getApprovedCandidateForOffer(long id) throws ServiceException {
 		try {
 			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, id);
+			if(jobOffer.getJobApplication_id() == null) {
+				return null;
+			}
 			JobApplication jobApplication = this.jobApplicationDAO.getById(JobApplication.class, jobOffer.getJobApplication_id());
 			User user = this.userDAO.getById(User.class, jobApplication.getUser().getId());
 			return getUserDetailsResponse(user);
