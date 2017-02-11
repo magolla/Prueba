@@ -1,29 +1,39 @@
 package com.tdil.d2d.controller;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.tdil.d2d.controller.api.dto.NoteDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.request.CreateNoteRequest;
 import com.tdil.d2d.controller.api.request.IdRequest;
 import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.controller.api.response.RegistrationResponse;
+import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.NoteCategory;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.service.NoteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.ws.rs.QueryParam;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.tdil.d2d.service.SessionService;
+import com.tdil.d2d.utils.LoggerManager;
 
 @Controller
 public class NoteController {
@@ -31,7 +41,9 @@ public class NoteController {
 	public static final int DEFAULT_PAGE_SIZE = 10;
 	@Autowired
 	private NoteService noteService;
-
+	@Autowired
+	private SessionService sessionService;
+	
 	@RequestMapping(value = "/notes", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<Note>> save(@RequestBody CreateNoteRequest request) {
 
@@ -55,6 +67,24 @@ public class NoteController {
 		return ResponseEntity.ok(new GenericResponse<>(200, response));
 	}
 
+	@RequestMapping(value = "/notesforuser", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotesForUser() {
+        try{
+        	
+			List<Note> notes = this.noteService.getNotesForUser();
+	
+			List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
+	
+			return ResponseEntity.ok(new GenericResponse<>(200, response));
+			
+        } catch (ServiceException e) {
+            LoggerManager.error(this, e);
+            RegistrationResponse response = new RegistrationResponse(0);
+            response.addError(e.getLocalizedMessage());
+            return new ResponseEntity<GenericResponse<List<NoteDTO>>> ((GenericResponse<List<NoteDTO>>) null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	@RequestMapping(value = "/notes/{id}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<NoteDTO>> getNoteById(@PathVariable("id") Long id) {
 		Note note = this.noteService.getNoteById(id);

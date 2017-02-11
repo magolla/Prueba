@@ -1,31 +1,40 @@
 package com.tdil.d2d.service.impl;
 
-import com.tdil.d2d.dao.NoteDAO;
-import com.tdil.d2d.dao.SpecialtyDAO;
-import com.tdil.d2d.exceptions.DAOException;
-import com.tdil.d2d.exceptions.DTDException;
-import com.tdil.d2d.exceptions.ExceptionDefinition;
-import com.tdil.d2d.persistence.Note;
-import com.tdil.d2d.persistence.Occupation;
-import com.tdil.d2d.persistence.Specialty;
-import com.tdil.d2d.service.NoteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.tdil.d2d.dao.NoteDAO;
+import com.tdil.d2d.dao.SpecialtyDAO;
+import com.tdil.d2d.dao.UserDAO;
+import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.exceptions.DTDException;
+import com.tdil.d2d.exceptions.ExceptionDefinition;
+import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.Note;
+import com.tdil.d2d.persistence.Occupation;
+import com.tdil.d2d.persistence.Specialty;
+import com.tdil.d2d.persistence.User;
+import com.tdil.d2d.service.NoteService;
+
+@Transactional
 @Service
 public class NoteServiceImpl implements NoteService {
 
 	private final NoteDAO noteDAO;
 	private final SpecialtyDAO specialtyDAO;
-
+	private final UserDAO userDAO;
+	
 	@Autowired
-	public NoteServiceImpl(NoteDAO noteDAO, SpecialtyDAO specialtyDAO) {
+	public NoteServiceImpl(NoteDAO noteDAO, SpecialtyDAO specialtyDAO, UserDAO userDAO) {
 		this.noteDAO = noteDAO;
 		this.specialtyDAO = specialtyDAO;
+		this.userDAO = userDAO;
 	}
 
 	@Override
@@ -37,6 +46,31 @@ public class NoteServiceImpl implements NoteService {
 	@Override
 	public List<Note> getNotes(int page, int size, Map<String, Object> params) {
 		return this.noteDAO.getNotes(page, size, params);
+	}
+	
+	@Override
+	public List<Note> getNotesForUser() throws ServiceException {
+		
+		User user = getLoggedUser();
+		
+		List<Long> specialities = new ArrayList<Long>();
+		List<Long> ocuppations = new ArrayList<Long>();
+		
+		for (Specialty speciality : user.getSpecialties()){
+			specialities.add(speciality.getId());
+			if(speciality.getOccupation()!=null)
+		 	  ocuppations.add(speciality.getOccupation().getId());
+		}
+		
+		return this.noteDAO.getNotesForUser(ocuppations, specialities);
+	}
+	
+	public User getLoggedUser() throws ServiceException {
+		try {
+			return userDAO.getById(User.class, com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	@Override
