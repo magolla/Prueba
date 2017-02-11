@@ -1625,7 +1625,12 @@ public class UserServiceImpl implements UserService {
 	public void setPdfCV(Base64Request base64Request) throws ServiceException {
 		try {
 			User user = getLoggedUser();
-			Media media = new Media();
+			
+			Media media = userDAO.getMediaBy(user.getId(), MediaType.PDF_CV);
+			if(media == null) {
+				media = new Media();
+			}
+			
 			media.setType(MediaType.PDF_CV);
 			media.setData(Base64.decodeBase64(base64Request.getData()));
 			user.setPdfCV(media);

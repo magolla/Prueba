@@ -5,6 +5,7 @@ import java.util.List;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
+import com.tdil.d2d.persistence.MediaType;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
@@ -34,6 +35,8 @@ public interface UserDAO {
     
     public void save(Media media) throws DAOException;
 
+	public Media getMediaBy(long userId, MediaType mediaType) throws DAOException;
+    
 	public void deleteUserGeoLocations(User user) throws DAOException;
 
 	public List<User> getMatchedUsers(JobOffer offer, List<Long> locations) throws DAOException;

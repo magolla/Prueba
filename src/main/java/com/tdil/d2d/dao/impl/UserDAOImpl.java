@@ -18,6 +18,7 @@ import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
+import com.tdil.d2d.persistence.MediaType;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
@@ -163,6 +164,31 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
             this.handleException(invocationDetails, e);
         }
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+	public Media getMediaBy(long userId, MediaType mediaType) throws DAOException {
+    	try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT media ");
+			queryString.append("FROM User user ");
+			queryString.append("JOIN user.pdfCV media ");
+			queryString.append("WHERE media.type = :mediaType ");
+			queryString.append("AND user.id = :userId ");
+			queryString.append("order by media.id desc");
+
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameter("mediaType", mediaType);
+			query.setParameter("userId", userId);
+
+			List<Media> list = query.list();
+			
+			return !list.isEmpty() ? list.get(0) : null;
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+    }
+    
 
     @Override
     public void save(Media media) throws DAOException {
