@@ -67,7 +67,7 @@ public class NoteController {
 		return ResponseEntity.ok(new GenericResponse<>(200, response));
 	}
 
-	@RequestMapping(value = "/notesforuser", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notesforuser", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotesForUser() {
         try{
         	
@@ -82,6 +82,23 @@ public class NoteController {
             RegistrationResponse response = new RegistrationResponse(0);
             response.addError(e.getLocalizedMessage());
             return new ResponseEntity<GenericResponse<List<NoteDTO>>> ((GenericResponse<List<NoteDTO>>) null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/homenote", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<NoteDTO>> getHomeNote() {
+        try{
+        	
+			Note note = this.noteService.getHomeNote();
+	
+            NoteDTO dto = toDTO(note);
+			return ResponseEntity.ok(new GenericResponse<>(200, dto));
+			
+        } catch (ServiceException e) {
+            LoggerManager.error(this, e);
+            RegistrationResponse response = new RegistrationResponse(0);
+            response.addError(e.getLocalizedMessage());
+            return new ResponseEntity<GenericResponse<NoteDTO>> ((GenericResponse<NoteDTO>) null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -151,7 +168,8 @@ public class NoteController {
 		dto.setPublishingDate(elem.getPublishingDate());
 		dto.setTitle(elem.getTitle());
 		dto.setSubtitle(elem.getSubtitle());
-
+		if(elem.getBase64img()!=null)
+			dto.setImage(new String(elem.getBase64img()));
 		return dto;
 	}
 
@@ -162,6 +180,7 @@ public class NoteController {
 		note.setContent(request.getContent());
 		note.setExpirationDate(request.getExpirationDate());
 		note.setCategory(NoteCategory.valueOf(request.getCategory()));
+		note.setBase64img(request.getBase64img().getBytes());
 		return note;
 	}
 

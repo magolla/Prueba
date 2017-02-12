@@ -62,7 +62,39 @@ public class NoteServiceImpl implements NoteService {
 		 	  ocuppations.add(speciality.getOccupation().getId());
 		}
 		
+		if(specialities.size()==0){
+			return new ArrayList<Note>();
+		}
+		
 		return this.noteDAO.getNotesForUser(ocuppations, specialities);
+	}
+	
+	@Override
+	public Note getHomeNote() throws ServiceException {
+		
+		User user = getLoggedUser();
+		
+		List<Long> specialities = new ArrayList<Long>();
+		List<Long> ocuppations = new ArrayList<Long>();
+		
+		for (Specialty speciality : user.getSpecialties()){
+			specialities.add(speciality.getId());
+			if(speciality.getOccupation()!=null)
+		 	  ocuppations.add(speciality.getOccupation().getId());
+		}
+		
+		if(specialities.size()==0){
+			return null;
+		}
+		
+		List<Note> notes = this.noteDAO.getNotesForUser(ocuppations, specialities);
+		
+		if(notes.size()>0){
+			return notes.get(0);
+		}else{
+			return null;
+		}
+	
 	}
 	
 	public User getLoggedUser() throws ServiceException {

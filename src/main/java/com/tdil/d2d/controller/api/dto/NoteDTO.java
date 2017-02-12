@@ -1,7 +1,6 @@
 package com.tdil.d2d.controller.api.dto;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by adriel on 1/10/17.
@@ -25,6 +24,8 @@ public class NoteDTO {
 	private Date publishingDate;
 
 	private Date expirationDate;
+
+	private String image;
 
 	public long getId() {
 		return id;
@@ -98,4 +99,14 @@ public class NoteDTO {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
+	
 }

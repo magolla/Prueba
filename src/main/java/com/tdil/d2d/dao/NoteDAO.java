@@ -14,4 +14,5 @@ public interface NoteDAO {
 	Note getNoteById(Long id);
 
 	List<Note> getNotesForUser(List<Long> ocuppations, List<Long> specialities);
+
 }

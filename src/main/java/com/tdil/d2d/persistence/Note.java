@@ -1,9 +1,19 @@
 package com.tdil.d2d.persistence;
 
-import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "D2D_NOTE")
@@ -23,6 +33,10 @@ public class Note implements PersistentEntity {
 	@Column(name = "content", length = 5120)
 	private String content;
 
+	@Size(max = 262144)
+	@Column(name = "base64img")
+	@Lob()
+	private byte[] base64img;
 
 	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Occupation> occupations;
@@ -142,4 +156,14 @@ public class Note implements PersistentEntity {
 	public void addSpeciality(Specialty specialty) {
 		this.getSpecialties().add(specialty);
 	}
+
+	public byte[] getBase64img() {
+		return base64img;
+	}
+
+	public void setBase64img(byte[] base64img) {
+		this.base64img = base64img;
+	}
+	
+	
 }

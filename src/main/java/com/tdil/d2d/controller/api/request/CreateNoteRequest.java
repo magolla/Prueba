@@ -1,8 +1,5 @@
 package com.tdil.d2d.controller.api.request;
 
-import com.tdil.d2d.persistence.Note;
-import com.tdil.d2d.persistence.NoteCategory;
-
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +18,9 @@ public class CreateNoteRequest {
 	private String category;
 
 	private Date expirationDate;
+	
+    private String base64img;
+    
 
 	public String getTitle() {
 		return title;
@@ -78,4 +78,12 @@ public class CreateNoteRequest {
 		this.expirationDate = expirationDate;
 	}
 
+	public String getBase64img() {
+		return base64img;
+	}
+
+	public void setBase64img(String base64img) {
+		this.base64img = base64img;
+	}
+	
 }

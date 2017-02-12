@@ -28,4 +28,6 @@ public interface NoteService {
 	Specialty addSpeciality(Long id, Long specialityId);
 
 	void disableNote(Long id);
+
+	Note getHomeNote()  throws ServiceException;
 }
