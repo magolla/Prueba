@@ -1768,26 +1768,32 @@ public class UserServiceImpl implements UserService {
 	private void sendNotification(NotificationType type, User user, JobOffer offer){
 		
 		try {
-			Notification notification = notificationDAO.getByUserOffer(user.getId(), offer.getId(), type.name());
 			
-			if(notification == null) {
+			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
+			if(notificationConfiguration!=null && notificationConfiguration.isPush()){
+			
+				Notification notification = notificationDAO.getByUserOffer(user.getId(), offer.getId(), type.name());
+			
+				if(notification == null) {
 				
-				notification = new Notification();
-				notification.setCreationDate(new Date());
-				notification.setAction(type.name());
-				notification.setUser(user);
-				notification.setOffer(offer);
-				notification.setSeen(false);
+					notification = new Notification();
+					notification.setCreationDate(new Date());
+					notification.setAction(type.name());
+					notification.setUser(user);
+					notification.setOffer(offer);
+					notification.setSeen(false);
+						
+					this.notificationDAO.save(notification);
 					
-				this.notificationDAO.save(notification);
-				
-				if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
-					
-					iosNotificationService.sendNotification(type, user.getIosPushId());
-					
-				} else if(user.getAndroidRegId()!=null){
-					
-					androidNotificationService.sendNotification(type,  user.getAndroidRegId());
+					if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
+						
+						iosNotificationService.sendNotification(type, user.getIosPushId());
+						
+					} else if(user.getAndroidRegId()!=null){
+						
+						androidNotificationService.sendNotification(type,  user.getAndroidRegId());
+						
+					}
 					
 				}
 				
