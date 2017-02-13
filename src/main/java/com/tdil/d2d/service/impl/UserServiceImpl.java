@@ -230,6 +230,13 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 
+			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
+			if (notificationConfiguration == null) {
+				notificationConfiguration = NotificationConfiguration.getDefaultConfiguration();
+				notificationConfiguration.setUser(user);
+				this.notificationConfigurationDAO.save(notificationConfiguration);
+			}
+			
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
 
 			try {
@@ -287,6 +294,13 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 
+			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
+			if (notificationConfiguration == null) {
+				notificationConfiguration = NotificationConfiguration.getDefaultConfiguration();
+				notificationConfiguration.setUser(user);
+				this.notificationConfigurationDAO.save(notificationConfiguration);
+			}
+			
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
 			
 			try {
@@ -328,7 +342,9 @@ public class UserServiceImpl implements UserService {
 				logger.info("Code found = {}", validationCode.getCode());
 				
 				validationCode.setEnabled(false);
+				
 				this.userDAO.save(validationCode);
+				
 				return true;
 			}
 			return false;

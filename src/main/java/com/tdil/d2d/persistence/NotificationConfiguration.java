@@ -149,5 +149,18 @@ public class NotificationConfiguration implements PersistentEntity {
 		this.grantOffers = grantOffers;
 	}
 
-
+	public static NotificationConfiguration getDefaultConfiguration() {
+		NotificationConfiguration config = new NotificationConfiguration();
+		config.setPush(true);
+		config.setCongress(true);
+		config.setPromotionsOffers(true);
+		config.setGrantOffers(true);
+		config.setCourses(true);
+		config.setProductAndServices(true);
+		config.setNotifAllDay(true);
+		config.setNotif9to20(true);
+		config.setNotes(true);
+		
+		return config;
+	}
 }

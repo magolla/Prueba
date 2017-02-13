@@ -66,5 +66,4 @@ public class ConfigureNotificationsRequest extends ApiRequest {
 	public void setNotif9to20(boolean notif9to20) {
 		this.notif9to20 = notif9to20;
 	}
-	
 }
