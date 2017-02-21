@@ -91,9 +91,12 @@ public class NoteController {
         	
 			Note note = this.noteService.getHomeNote();
 	
-            NoteDTO dto = toDTO(note);
-			return ResponseEntity.ok(new GenericResponse<>(200, dto));
-			
+			if(note == null){
+                NoteDTO dto = toDTO(note);
+			    return ResponseEntity.ok(new GenericResponse<>(200, dto));
+			} else{
+				return ResponseEntity.ok(new GenericResponse<>(400, null));
+			}
         } catch (ServiceException e) {
             LoggerManager.error(this, e);
             RegistrationResponse response = new RegistrationResponse(0);
