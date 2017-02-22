@@ -992,6 +992,10 @@ public class UserServiceImpl implements UserService {
 			
 			searchOfferDTO.setPermanent(true);
 			
+			if(com.tdil.d2d.security.RuntimeContext.getCurrentUser() != null) {
+				searchOfferDTO.setOfferentIdToIgnore(com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
+			}
+			
 			result = (List<JobOffer>) this.jobDAO.getOffersBy(searchOfferDTO);
 			
 			return result.stream().map(s -> toDTO(s)).collect(Collectors.toList());
@@ -1017,6 +1021,10 @@ public class UserServiceImpl implements UserService {
 			}
 			
 			searchOfferDTO.setPermanent(permament);
+			
+			if(com.tdil.d2d.security.RuntimeContext.getCurrentUser() != null) {
+				searchOfferDTO.setOfferentIdToIgnore(com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
+			}
 			
 			result = (List<JobOffer>) this.jobDAO.getOffersBy(searchOfferDTO);
 			
@@ -1497,6 +1505,10 @@ public class UserServiceImpl implements UserService {
 			searchOfferDTO.setPermanent(true);
 			searchOfferDTO.setInstitutionType(InstitutionType.BOTH);
 			
+			if(com.tdil.d2d.security.RuntimeContext.getCurrentUser() != null) {
+				searchOfferDTO.setOfferentIdToIgnore(com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
+			}
+			
 			Collection<JobOffer> offers = this.jobDAO.getOffersBy(searchOfferDTO);
 			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
@@ -1511,6 +1523,9 @@ public class UserServiceImpl implements UserService {
 			searchOfferDTO.setPermanent(false);
 			searchOfferDTO.setInstitutionType(InstitutionType.BOTH);
 			
+			if(com.tdil.d2d.security.RuntimeContext.getCurrentUser() != null) {
+				searchOfferDTO.setOfferentIdToIgnore(com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
+			}
 			Collection<JobOffer> offers = this.jobDAO.getOffersBy(searchOfferDTO);
 			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
