@@ -79,6 +79,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("AND offer.status = :status ");
 		queryString.append("AND offer.vacants > 0 ");
 		queryString.append("AND offer.offerDate > (:nowDate) ");
+		queryString.append("AND (:offerentId is null OR offer.offerent.id != :offerentId) ");
 		
 		if(!searchOfferDTO.getOccupations().isEmpty()) {
 			queryString.append("AND offer.occupation.id in (:ocuppations) ");
@@ -116,6 +117,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		if(!searchOfferDTO.getGeos().isEmpty()) {
 			query.setParameterList("geoIds", searchOfferDTO.getGeos());
 		}
+		query.setParameter("offerentId", searchOfferDTO.getOfferentIdToIgnore());
 		
 		return query.list();
 	}

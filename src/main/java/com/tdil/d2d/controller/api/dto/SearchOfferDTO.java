@@ -13,6 +13,7 @@ public class SearchOfferDTO {
 	private List<Long> tasks;
 	private Boolean permanent;
 	private InstitutionType institutionType;
+	private Long offerentIdToIgnore;
 	
 	public List<Long> getGeos() {
 		if(this.geos == null) {
@@ -72,5 +73,13 @@ public class SearchOfferDTO {
 	
 	public void setInstitutionType(InstitutionType institutionType) {
 		this.institutionType = institutionType;
+	}
+	
+	public Long getOfferentIdToIgnore() {
+		return offerentIdToIgnore;
+	}
+	
+	public void setOfferentIdToIgnore(Long avoidOfferentId) {
+		this.offerentIdToIgnore = avoidOfferentId;
 	}
 }

@@ -232,6 +232,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			queryString.append("WHERE (userProfile.institutionType = :both OR userProfile.institutionType = :institutionType) ");
 			queryString.append("AND :task in elements(userProfile.tasks) ");
 			queryString.append("AND user.userb = true ");
+			queryString.append("AND user.id != :offerentId ");
 			
 			if(!locations.isEmpty()) {
 				queryString.append("AND (");
@@ -250,6 +251,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			query.setParameter("both", InstitutionType.BOTH);
 			query.setParameter("institutionType", offer.getInstitutionType());
 			query.setParameter("task", offer.getTask());
+			query.setParameter("offerentId", offer.getOfferent().getId());
 
 			return query.list();
 		} catch (Exception e) {
