@@ -84,6 +84,7 @@ import com.tdil.d2d.dao.NotificationConfigurationDAO;
 import com.tdil.d2d.dao.NotificationDAO;
 import com.tdil.d2d.dao.PaymentDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
+import com.tdil.d2d.dao.SystemPropertyDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
@@ -103,6 +104,7 @@ import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Payment;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Subscription;
+import com.tdil.d2d.persistence.SystemProperty;
 import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
@@ -115,10 +117,7 @@ import com.tdil.d2d.service.EmailService;
 import com.tdil.d2d.service.NotificationService;
 import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.service.UserService;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import com.tdil.d2d.utils.Constants;
 
 @Transactional
 @Service
@@ -158,6 +157,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PaymentDAO paymentDAO;
 
+	@Autowired
+	private SystemPropertyDAO systemPropertyDAO;
+	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -248,11 +250,33 @@ public class UserServiceImpl implements UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			
+			createSubscription(user);
 
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
 			throw new ServiceException(e);
+		}
+	}
+
+	private void createSubscription(User user) throws DAOException, ServiceException {
+		SystemProperty spEnabled = systemPropertyDAO.getSystemPropertyByKey(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_ENABLED);
+		if(spEnabled!=null){
+			
+			String value = spEnabled.getValue();
+		
+			if("1".equals(value)){
+				
+				SystemProperty spDays = systemPropertyDAO.getSystemPropertyByKey(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_DAYS);
+				if(spDays!=null){
+				   int months = Integer.valueOf(spDays.getValue());
+				   subscriptionService.register(user, months);
+				}
+				
+			}
+		
 		}
 	}
 	
@@ -265,7 +289,9 @@ public class UserServiceImpl implements UserService {
         Response smsResponse = client.newCall(request).execute();;
         if("OK".equals(smsResponse.body().string())){
         	logger.info("Code sent succesfully to " + mobilePhone + " - Code: " + mobileHash);
-        } 
+        } else {
+        	logger.info("Can't send code by SMS. Error: " + smsResponse.toString());
+        }
 	}
 
 	@Override
@@ -312,6 +338,8 @@ public class UserServiceImpl implements UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			createSubscription(user);
 
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
@@ -1633,7 +1661,7 @@ public class UserServiceImpl implements UserService {
             String item = createPaymentRequest.getItem();
             BigDecimal price = new BigDecimal(createPaymentRequest.getPrice());
             paymentDAO.save(new Payment(idPayment, item, price, user));
-            subscriptionService.register(createPaymentRequest.getSubscriptionDuration());
+            subscriptionService.register(user, createPaymentRequest.getSubscriptionDuration());
             return true;
         } catch (DAOException e) {
             throw new ServiceException(e);

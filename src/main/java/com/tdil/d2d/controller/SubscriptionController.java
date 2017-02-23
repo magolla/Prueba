@@ -88,7 +88,9 @@ public class SubscriptionController extends AbstractController {
 		}
 		Subscription response;
 		try {
-			response = this.subscriptionService.register(createSuscriptionRequest.getDuration());
+			
+			User user = this.sessionService.getUserLoggedIn();
+			response = this.subscriptionService.register(user, createSuscriptionRequest.getDuration());
 
 			if (response != null) {
 				return ResponseEntity.ok(new GenericResponse<>(200, response.getId()));

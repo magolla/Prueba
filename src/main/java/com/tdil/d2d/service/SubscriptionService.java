@@ -3,6 +3,7 @@ package com.tdil.d2d.service;
 import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Subscription;
+import com.tdil.d2d.persistence.User;
 
 public interface SubscriptionService {
 
@@ -10,7 +11,7 @@ public interface SubscriptionService {
 
 	public Subscription getActiveSubscription(long userID);
 
-	public Subscription register(int duration) throws ServiceException;
+	public Subscription register(User user, int duration) throws ServiceException;
 
 
 }

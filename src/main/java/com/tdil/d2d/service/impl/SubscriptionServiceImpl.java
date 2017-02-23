@@ -139,11 +139,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
-	public Subscription register(int duration) {
+	public Subscription register(User user, int duration) {
 		try {
 			Subscription subscription = new Subscription();
-			User user = sessionService.getUserLoggedIn();
-
+			
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MONTH, duration);
 			subscription.setExpirationDate(cal.getTime());
