@@ -119,6 +119,10 @@ import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.Constants;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
