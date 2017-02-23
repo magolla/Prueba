@@ -276,7 +276,7 @@ public class UserServiceImpl implements UserService {
 				SystemProperty spDays = systemPropertyDAO.getSystemPropertyByKey(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_DAYS);
 				if(spDays!=null){
 				   int months = Integer.valueOf(spDays.getValue());
-				   subscriptionService.register(user, months);
+				   subscriptionService.registerByDays(user, months);
 				}
 				
 			}

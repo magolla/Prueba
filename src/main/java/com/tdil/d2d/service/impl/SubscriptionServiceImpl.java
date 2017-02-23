@@ -155,4 +155,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			throw new DTDException(ExceptionDefinition.DTD_2004, e, String.valueOf(duration));
 		}
 	}
+	
+	@Override
+	public Subscription registerByDays(User user, int duration) {
+		try {
+			Subscription subscription = new Subscription();
+			
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DAY_OF_MONTH, duration);
+			subscription.setExpirationDate(cal.getTime());
+			subscription.setUser(user);
+			subscription.setCreationDate(new Date());
+			subscriptionDAO.saveSubscription(subscription);
+			return subscription;
+		} catch (DAOException e) {
+			LoggerManager.error(this, e);
+			throw new DTDException(ExceptionDefinition.DTD_2004, e, String.valueOf(duration));
+		}
+	}
 }
