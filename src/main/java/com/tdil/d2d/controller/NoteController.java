@@ -91,7 +91,7 @@ public class NoteController {
         	
 			Note note = this.noteService.getHomeNote();
 	
-			if(note == null){
+			if(note != null){
                 NoteDTO dto = toDTO(note);
 			    return ResponseEntity.ok(new GenericResponse<>(200, dto));
 			} else{
