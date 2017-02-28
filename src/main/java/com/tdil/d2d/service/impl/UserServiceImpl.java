@@ -429,8 +429,6 @@ public class UserServiceImpl implements UserService {
 	public boolean addSpecialties(AddSpecialtiesRequest addSpecialtiesRequest) throws ServiceException {
 		try {
 			User user = getLoggedUser();
-			// TODO ver si hay que vaciar primero las especialidades y en ese
-			// caso cambiar el nombre por setSpecialities
 			user.getSpecialties().clear();
 			for (long id : addSpecialtiesRequest.getSpecialtyId()) {
 				Specialty specialty = this.specialtyDAO.getSpecialtyById(id);
@@ -1215,7 +1213,19 @@ public class UserServiceImpl implements UserService {
 			offer.setStatus(JobOffer.CLOSED);
 			this.jobDAO.save(offer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.CLOSED_OFFER));
-			//TODO: Enviar notificacion a los apliccants avisando que se cerro el aviso
+			
+			if(JobApplication.CLOSED.equals(offer.getStatus())){
+
+                //Notify rejected applications
+				List<JobApplication> applications = this.jobApplicationDAO.getJobApplications(offerId);
+				for(JobApplication rejectedApplication : applications){
+					if(!JobApplication.ACEPTED.equals(rejectedApplication.getStatus())){
+						sendNotification(NotificationType.JOB_OFFER_CLOSE, rejectedApplication.getUser(), offer);
+					}
+				}
+				
+			}
+			
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
