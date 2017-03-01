@@ -38,7 +38,7 @@ import com.tdil.d2d.utils.LoggerManager;
 @Controller
 public class NoteController {
 
-	public static final int DEFAULT_PAGE_SIZE = 10;
+	public static final String DEFAULT_PAGE_SIZE = "10";
 	@Autowired
 	private NoteService noteService;
 	@Autowired
@@ -54,13 +54,16 @@ public class NoteController {
 		return ResponseEntity.ok(new GenericResponse<>(200, result));
 	}
 
-	@RequestMapping(value = "/notes", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notes", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotes(@RequestParam Map<String, Object> params) {
 
-		int size = (int) params.getOrDefault("size", DEFAULT_PAGE_SIZE);
-		int page = (int) params.getOrDefault("page", 0);
+		String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
+	    String page = (String) (String)params.getOrDefault("page", "0");
 
-		List<Note> notes = this.noteService.getNotes(page, size, params);
+	    params.remove("size");
+	    params.remove("page");
+	    
+		List<Note> notes = this.noteService.getNotes(Integer.valueOf(page), Integer.valueOf(size), params);
 
 		List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
 

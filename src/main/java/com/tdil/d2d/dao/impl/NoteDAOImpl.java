@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -54,8 +55,10 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 				criteria.add(Restrictions.eq(key, value));
 			}
 		});
-		criteria.setFirstResult(page * size);
-		criteria.setMaxResults(size);
+		
+		criteria.setFirstResult((page - 1) * size);
+		criteria.setMaxResults(((page - 1) * size) + size);
+		criteria.addOrder(Order.desc("id"));
 		return criteria.list();
 	}
 
