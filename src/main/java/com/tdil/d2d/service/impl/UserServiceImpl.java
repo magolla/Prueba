@@ -506,7 +506,8 @@ public class UserServiceImpl implements UserService {
 	public void getAvatar(OutputStream outputStream) throws ServiceException {
 		try {
 			User user = getLoggedUser();
-			outputStream.write(user.getBase64img());
+			if(user.getAvatar()!=null)
+			  outputStream.write(user.getAvatar().getData());
 		} catch (IOException e) {
 			throw new ServiceException(e);
 		}
@@ -515,8 +516,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Base64DTO getAvatarBase64() throws ServiceException {
 		User user = getLoggedUser();
-		if (user.getBase64img() != null) {
-			return new Base64DTO(new String(user.getBase64img()));
+		if (user.getAvatar() != null) {
+			return new Base64DTO(new String(user.getAvatar().getData()));
 		} else {
 			return new Base64DTO("");
 		}
@@ -526,7 +527,8 @@ public class UserServiceImpl implements UserService {
 	public void getAvatar(long userId, ServletOutputStream outputStream) throws ServiceException {
 		try {
 			User user = this.userDAO.getById(User.class, userId);
-			outputStream.write(user.getBase64img());
+			if(user.getAvatar()!=null)
+			   outputStream.write(user.getAvatar().getData());
 		} catch (DAOException | IOException e) {
 			throw new ServiceException(e);
 		}
@@ -536,8 +538,8 @@ public class UserServiceImpl implements UserService {
 	public Base64DTO getAvatarBase64(long userId) throws ServiceException {
 		try {
 			User user = this.userDAO.getById(User.class, userId);
-			if (user.getBase64img() != null) {
-				return new Base64DTO(new String(user.getBase64img()));
+			if (user.getAvatar() != null) {
+				return new Base64DTO(new String(user.getAvatar().getData()));
 			} else {
 				return new Base64DTO();
 			}
@@ -1334,8 +1336,8 @@ public class UserServiceImpl implements UserService {
 		// Creation Date
 		result.setCreationDate(s.getCreationDate() != null ? s.getCreationDate().toString() : "");
 		// Base64Image
-		if(s.getUser().getBase64img() != null) {
-			result.setBase64Image(new String(s.getUser().getBase64img()));
+		if(s.getUser().getAvatar() != null) {
+			result.setBase64Image(new String(s.getUser().getAvatar().getData()));
 		}
 		// Linkedin CV
 		result.setLinkedinInCv(s.getLinkedInCv());
@@ -1404,7 +1406,8 @@ public class UserServiceImpl implements UserService {
 		result.setTask_id(s.getTask().getId());
 		result.setTaskName(s.getTask().getName());
 		result.setApplications(s.getApplications());
-		result.setBase64img(s.getOfferent().getBase64img());
+		if(s.getOfferent().getAvatar()!=null)
+		    result.setBase64img(s.getOfferent().getAvatar().getData());
 		result.setJobApplication_id(s.getJobApplication_id());
 		return result;
 	}
@@ -1459,8 +1462,8 @@ public class UserServiceImpl implements UserService {
 			resp.setSpecialities(SpecialtyServiceImpl.toDtoSpecialty(user.getSpecialties()));
 		}
 
-		if (user.getBase64img() != null) {
-			resp.setBase64img(new String(user.getBase64img()));
+		if (user.getAvatar() != null) {
+			resp.setBase64img(new String(user.getAvatar().getData()));
 		}
 		resp.setUserb(user.isUserb());
 		if (resp != null) {
@@ -1578,13 +1581,26 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean setAvatar(User user, SetAvatarRequest setAvatarRequest) throws ServiceException {
 		try {
-			user.setBase64img(setAvatarRequest.getAvatarBase64().getBytes());
+			
+			Media media = userDAO.getMediaBy(user.getId(), MediaType.AVATAR);
+			if(media == null) {
+				media = new Media();
+				media.setType(MediaType.AVATAR);
+			}
+			
+			media.setData(setAvatarRequest.getAvatarBase64().getBytes());
+			user.setAvatar(media);
+			this.userDAO.save(media);
 			this.userDAO.save(user);
+			
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_AVATAR));
-			return true;
+			
+			return true;			
+
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
+		
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "D2D_MEDIA")
@@ -21,6 +22,7 @@ public class Media implements PersistentEntity {
 	@Enumerated(javax.persistence.EnumType.STRING)
 	private MediaType type;
 	
+	@Size(max = 262144)
 	@Column(name = "data")
 	@Lob()
 	private byte[] data;

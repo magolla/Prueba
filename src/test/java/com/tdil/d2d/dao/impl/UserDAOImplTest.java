@@ -1,11 +1,8 @@
 package com.tdil.d2d.dao.impl;
 
-import com.tdil.d2d.config.DaoConfig;
-import com.tdil.d2d.config.PersistenceConfiguration;
-import com.tdil.d2d.config.WebInitializer;
-import com.tdil.d2d.dao.UserDAO;
-import com.tdil.d2d.exceptions.DAOException;
-import com.tdil.d2d.persistence.User;
+import java.util.Random;
+
+import org.apache.commons.codec.binary.Base64;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,12 +10,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Random;
+import com.tdil.d2d.config.DaoConfig;
+import com.tdil.d2d.config.PersistenceConfiguration;
+import com.tdil.d2d.config.WebInitializer;
+import com.tdil.d2d.dao.UserDAO;
+import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.Media;
+import com.tdil.d2d.persistence.MediaType;
+import com.tdil.d2d.persistence.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebInitializer.class, PersistenceConfiguration.class, DaoConfig.class})
@@ -62,8 +65,15 @@ public class UserDAOImplTest {
 		new Random().nextBytes(b);
 
 		logger.info("{} kb", b.length / 1024);
-		user.setBase64img(b);
-		userDAO.save(user);
+		
+		Media media = new Media();
+		media.setType(MediaType.AVATAR);
+		media.setData(Base64.decodeBase64(b));
+		user.setAvatar(media);
+		
+		this.userDAO.save(media);
+		this.userDAO.save(user);
+		
 	}
 
 	@Test(expected = DAOException.class)
@@ -75,8 +85,13 @@ public class UserDAOImplTest {
 		new Random().nextBytes(b);
 
 		logger.info("{} kb", b.length / 1024);
-		user.setBase64img(b);
-		userDAO.save(user);
+		Media media = new Media();
+		media.setType(MediaType.AVATAR);
+		media.setData(Base64.decodeBase64(b));
+		user.setAvatar(media);
+		
+		this.userDAO.save(media);
+		this.userDAO.save(user);
 
 	}
 

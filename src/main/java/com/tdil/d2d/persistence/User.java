@@ -93,12 +93,6 @@ public class User implements PersistentEntity {
 
 	@Column(name = "license", length = 256)
 	private String license;
-
-	//Ver tamaño
-	@Size(max = 262144)
-	@Column(name = "base64img")
-	@Lob()
-	private byte[] base64img;
 	
 	@Column(name = "CV", length = 2000)
     private String cv;
@@ -121,6 +115,11 @@ public class User implements PersistentEntity {
 	@ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
 	@JoinColumn(name="pdfcv_id")
 	private Media pdfCV;
+	
+	@ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+	@JoinColumn(name="avatar_id")
+	private Media avatar;
+
 
 	public long getId() {
 		return id;
@@ -318,14 +317,6 @@ public class User implements PersistentEntity {
 		this.companyScreenName = companyScreenName;
 	}
 
-	public byte[] getBase64img() {
-		return base64img;
-	}
-
-	public void setBase64img(byte[] base64img) {
-		this.base64img = base64img;
-	}
-
 	public String getLicense() {
 		return license;
 	}
@@ -346,7 +337,15 @@ public class User implements PersistentEntity {
         return cv;
     }
 
-    public void setCV(String cv) {
+    public Media getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(Media avatar) {
+		this.avatar = avatar;
+	}
+
+	public void setCV(String cv) {
         this.cv = cv;
     }
 
@@ -357,5 +356,10 @@ public class User implements PersistentEntity {
 	public void setPdfCV(Media pdfCV) {
 		this.pdfCV = pdfCV;
 	}
+	
+	
+	
+	
+	
 
 }
