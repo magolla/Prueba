@@ -63,19 +63,21 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 	}
 
 	@Override
-	public List<Note> getNotesForUser(List<Long> ocuppations, List<Long> specialities) {
+	public List<Note> getNotesForUser(int page, int size,List<Long> ocuppations, List<Long> specialities) {
 		
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT distinct note ");
 		queryString.append("FROM Note note ");
 		queryString.append("left join note.specialties as specialty ");
 		queryString.append("WHERE specialty.occupation.id IN (:ocuppations) ");
-		queryString.append("AND specialty.id IN (:specialities) ");
+		queryString.append("OR specialty.id IN (:specialities) ");
 		queryString.append("order by note.creationDate desc ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		query.setParameterList("ocuppations", ocuppations);
 		query.setParameterList("specialities", specialities);
+		query.setFirstResult((page - 1) * size);
+		query.setMaxResults(((page - 1) * size) + size);
 
 
 		List<Note> list = query.list();

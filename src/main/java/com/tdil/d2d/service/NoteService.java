@@ -15,7 +15,7 @@ public interface NoteService {
 
 	List<Note> getNotes(int page, int size, Map<String, Object> params);
 
-	List<Note> getNotesForUser() throws ServiceException ;
+	List<Note> getNotesForUser(int page, int size) throws ServiceException ;
 
 	Note getNoteById(Long id);
 

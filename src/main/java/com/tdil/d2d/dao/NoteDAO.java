@@ -13,6 +13,6 @@ public interface NoteDAO {
 
 	Note getNoteById(Long id);
 
-	List<Note> getNotesForUser(List<Long> ocuppations, List<Long> specialities);
+	List<Note> getNotesForUser(int page, int size, List<Long> ocuppations, List<Long> specialities);
 
 }

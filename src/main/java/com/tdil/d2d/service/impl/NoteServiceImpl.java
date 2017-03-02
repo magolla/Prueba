@@ -49,7 +49,7 @@ public class NoteServiceImpl implements NoteService {
 	}
 	
 	@Override
-	public List<Note> getNotesForUser() throws ServiceException {
+	public List<Note> getNotesForUser(int page, int size) throws ServiceException {
 		
 		User user = getLoggedUser();
 		
@@ -66,7 +66,7 @@ public class NoteServiceImpl implements NoteService {
 			return new ArrayList<Note>();
 		}
 		
-		return this.noteDAO.getNotesForUser(ocuppations, specialities);
+		return this.noteDAO.getNotesForUser(page, size, ocuppations, specialities);
 	}
 	
 	@Override
@@ -87,7 +87,7 @@ public class NoteServiceImpl implements NoteService {
 			return null;
 		}
 		
-		List<Note> notes = this.noteDAO.getNotesForUser(ocuppations, specialities);
+		List<Note> notes = this.noteDAO.getNotesForUser(1, 1, ocuppations, specialities);
 		
 		if(notes.size()>0){
 			return notes.get(0);

@@ -1,8 +1,10 @@
 package com.tdil.d2d.persistence;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,8 +12,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -38,11 +42,19 @@ public class Note implements PersistentEntity {
 	@Lob()
 	private byte[] base64img;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "D2D_NOTE_SPECIALTY", joinColumns = {
+			@JoinColumn(name = "NOTE_ID", nullable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name = "SPECIALTY_ID",
+					nullable = false, updatable = false)})
+	private Set<Specialty> specialties = new HashSet<Specialty>(0);
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "D2D_NOTE_OCCUPATION", joinColumns = {
+			@JoinColumn(name = "NOTE_ID", nullable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name = "OCCUPATION_ID",
+					nullable = false, updatable = false)})
 	private Set<Occupation> occupations;
-
-	@OneToMany(fetch = FetchType.EAGER)
-	private Set<Specialty> specialties;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "category")

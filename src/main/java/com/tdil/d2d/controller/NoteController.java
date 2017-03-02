@@ -71,10 +71,13 @@ public class NoteController {
 	}
 
 	@RequestMapping(value = "/notesforuser", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotesForUser() {
+	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotesForUser(@RequestParam Map<String, Object> params) {
         try{
         	
-			List<Note> notes = this.noteService.getNotesForUser();
+        	String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
+    	    String page = (String) (String)params.getOrDefault("page", "0");
+        	
+			List<Note> notes = this.noteService.getNotesForUser(Integer.valueOf(page), Integer.valueOf(size));
 	
 			List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
 	
