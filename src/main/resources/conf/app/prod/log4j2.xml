@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
 
- <Appenders>	
-
-
-	<Async name="Async" blocking="false">
-		<AppenderRef ref="file" />
-	</Async>
-
-	<RollingFile name="file" fileName="./logs/d2d.log"
-		filePattern="./logs/d2d-%d{MM-dd-yyyy}-%i.log.gz">
-		<PatternLayout>
-			<Pattern>%d %-4p [%t] %c{4} (%F:%L) : %m %n</Pattern>
-		</PatternLayout>
-		<Policies>              
-	           <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-       	</Policies>
-	</RollingFile>
-	
-	
-  </Appenders> 
+ <Appenders> 	
+ 	<Async name="Async" blocking="false">
+ 		 <AppenderRef ref="Console"/>
+ 	</Async>
+ 
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d %-4p [%t] %c{4} (%F:%L) : %m %n"/>
+    </Console>    
+  </Appenders>
   
   <Loggers>
      <Root level="info">
