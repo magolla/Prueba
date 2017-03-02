@@ -4,7 +4,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
 
-import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -24,8 +23,7 @@ public class QuartzListener extends QuartzInitializerListener {
         try {
             Scheduler scheduler = factory.getScheduler();
             JobDetail jobDetail = JobBuilder.newJob(NotifyNewOffersJob.class).build();
-            Trigger trigger = TriggerBuilder.newTrigger().withIdentity("simple").withSchedule(
-                    CronScheduleBuilder.cronSchedule("0 0/1 * 1/1 * ? *")).startNow().build();
+            Trigger trigger = TriggerBuilder.newTrigger().withIdentity("simple").startNow().build();
             scheduler.scheduleJob(jobDetail, trigger);
             scheduler.start();
         } catch (Exception e) {

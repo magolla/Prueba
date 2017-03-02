@@ -103,6 +103,7 @@ import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Payment;
 import com.tdil.d2d.persistence.Specialty;
+import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
@@ -259,7 +260,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-
+	
 	private void sendSMS(String mobilePhone, String mobileHash) throws IOException{
 		OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -1444,7 +1445,10 @@ public class UserServiceImpl implements UserService {
 			Subscription subscription = subscriptionService.getActiveSubscription(user.getId());
 			if (subscription != null) {
 				if (subscription.getSponsorCode() != null && subscription.getSponsorCode().getSponsor() != null) {
-					resp.setSponsorName(subscription.getSponsorCode().getSponsor().getName());
+					Sponsor sponsor = subscription.getSponsorCode().getSponsor();
+					resp.setSponsorName(sponsor.getName());
+					if(sponsor.getBase64img()!=null)
+						resp.setSponsorImage(new String(sponsor.getBase64img()));
 				}
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				resp.setSubscriptionExpirationDate(sdf.format(subscription.getExpirationDate()));
@@ -1466,7 +1470,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		resp.setCV(user.getCV());
-		resp.setAlreadyUsedFreeSuscription(user.isAlreadyUsedFreeSuscription());
 
 		return resp;
 	}
