@@ -1,3 +1,4 @@
+
 package com.tdil.d2d.controller.api.response;
 
 import java.util.Collection;
@@ -33,6 +34,7 @@ public class UserDetailsResponse extends ApiResponse {
 	private boolean hasLinkedinProfile;
 	private String linkedinProfileUrl;
     private String cv;
+    private boolean alreadyUsedFreeSuscription;
 
 	public UserDetailsResponse(int status) {
 		super(status);
@@ -212,5 +214,13 @@ public class UserDetailsResponse extends ApiResponse {
 	
 	public void setLinkedinProfileUrl(String linkedinProfileUrl) {
 		this.linkedinProfileUrl = linkedinProfileUrl;
+	}
+	
+	public boolean isAlreadyUsedFreeSuscription() {
+		return alreadyUsedFreeSuscription;
+	}
+	
+	public void setAlreadyUsedFreeSuscription(boolean alreadyUsedFreeSuscription) {
+		this.alreadyUsedFreeSuscription = alreadyUsedFreeSuscription;
 	}
 }

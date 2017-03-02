@@ -102,4 +102,27 @@ public class SubscriptionController extends AbstractController {
 		}
 	}
 
+	@RequestMapping(value = "/subscription/free", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ApiResponse> createFreeSuscription(BindingResult bidingResult) {
+		if (bidingResult.hasErrors()) {
+			return new ResponseEntity<ApiResponse>(
+					getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())),
+					HttpStatus.BAD_REQUEST);
+		}
+		Subscription response;
+		try {
+			
+			User user = this.sessionService.getUserLoggedIn();
+			response = this.subscriptionService.createFreeSubscription(user);
+
+			if (response != null) {
+				return ResponseEntity.ok(new GenericResponse<>(200, response.getId()));
+			} else {
+				return ResponseEntity.ok(new GenericResponse<>(400, "create_subscription_error"));
+			}
+		} catch (ServiceException e) {
+			return ResponseEntity.ok(new GenericResponse<>(500));
+		}
+	}
+
 }

@@ -104,7 +104,6 @@ import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Payment;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Subscription;
-import com.tdil.d2d.persistence.SystemProperty;
 import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
@@ -117,7 +116,6 @@ import com.tdil.d2d.service.EmailService;
 import com.tdil.d2d.service.NotificationService;
 import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.service.UserService;
-import com.tdil.d2d.utils.Constants;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -255,9 +253,6 @@ public class UserServiceImpl implements UserService {
 				e.printStackTrace();
 			}
 			
-			
-			createSubscription(user);
-
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
@@ -265,25 +260,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private void createSubscription(User user) throws DAOException, ServiceException {
-		SystemProperty spEnabled = systemPropertyDAO.getSystemPropertyByKey(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_ENABLED);
-		if(spEnabled!=null){
-			
-			String value = spEnabled.getValue();
-		
-			if("1".equals(value)){
-				
-				SystemProperty spDays = systemPropertyDAO.getSystemPropertyByKey(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_DAYS);
-				if(spDays!=null){
-				   int months = Integer.valueOf(spDays.getValue());
-				   subscriptionService.registerByDays(user, months);
-				}
-				
-			}
-		
-		}
-	}
-	
 	private void sendSMS(String mobilePhone, String mobileHash) throws IOException{
 		OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -342,8 +318,6 @@ public class UserServiceImpl implements UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			createSubscription(user);
 
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
@@ -1492,6 +1466,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		resp.setCV(user.getCV());
+		resp.setAlreadyUsedFreeSuscription(user.isAlreadyUsedFreeSuscription());
 
 		return resp;
 	}

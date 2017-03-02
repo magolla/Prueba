@@ -13,11 +13,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "D2D_USER")
@@ -96,6 +94,9 @@ public class User implements PersistentEntity {
 	
 	@Column(name = "CV", length = 2000)
     private String cv;
+
+	@Column(name = "alreadyUsedFreeSuscription")
+	private Boolean alreadyUsedFreeSuscription;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "D2D_USER_SPECIALTY", joinColumns = {
@@ -357,9 +358,14 @@ public class User implements PersistentEntity {
 		this.pdfCV = pdfCV;
 	}
 	
+	public Boolean isAlreadyUsedFreeSuscription() {
+		if(alreadyUsedFreeSuscription == null) {
+			alreadyUsedFreeSuscription = Boolean.FALSE;
+		}
+		return alreadyUsedFreeSuscription;
+	}
 	
-	
-	
-	
-
+	public void setAlreadyUsedFreeSuscription(Boolean alreadyUsedFreeSuscription) {
+		this.alreadyUsedFreeSuscription = alreadyUsedFreeSuscription;
+	}
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
+import com.tdil.d2d.controller.api.dto.SystemPropertyDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddLocationsRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
@@ -57,9 +59,12 @@ import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
+import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.security.JwtTokenUtil;
+import com.tdil.d2d.service.SystemPropertyService;
 import com.tdil.d2d.service.UserService;
+import com.tdil.d2d.utils.Constants;
 import com.tdil.d2d.utils.LoggerManager;
 
 /**
@@ -79,6 +84,9 @@ public class UserController extends AbstractController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SystemPropertyService systemPropertyService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -659,5 +667,20 @@ public class UserController extends AbstractController {
 			return null;
 		}
 		
+    }
+	
+	@RequestMapping(value = "/user/subscription/system/properties", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+   	public ResponseEntity<GenericResponse<List<SystemPropertyDTO>>> getSystemPropertiesForSubscription() {
+		List<String> properties = new ArrayList<String>();
+		properties.add(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_ENABLED);
+		properties.add(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_DAYS);
+		
+		try {
+			List<SystemPropertyDTO> propertiesDTO = this.systemPropertyService.getSystemPropertiesByKeys(properties);
+			return new ResponseEntity<GenericResponse<List<SystemPropertyDTO>>>(new GenericResponse<List<SystemPropertyDTO>>(propertiesDTO,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (DTDException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<List<SystemPropertyDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
     }
 }

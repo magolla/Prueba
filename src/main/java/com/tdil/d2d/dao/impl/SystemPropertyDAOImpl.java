@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +26,24 @@ public class SystemPropertyDAOImpl  extends GenericDAO<SystemProperty> implement
 			} else {
 				return list.get(0);
 			}
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SystemProperty> getSystemPropertiesByKeys(List<String> keys) throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct systemProperty ");
+			queryString.append("FROM SystemProperty systemProperty ");
+			queryString.append("AND systemProperty.key in (:keyProperties) ");
+
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameterList("keyProperties", keys);
+
+			return query.list();
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}

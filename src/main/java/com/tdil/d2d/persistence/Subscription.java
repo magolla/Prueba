@@ -30,6 +30,10 @@ public class Subscription implements PersistentEntity {
 	@ManyToOne
 	private SponsorCode sponsorCode;
 	
+
+	@Column(name = "freeSuscription")
+	private boolean freeSuscription;
+	
 	public Subscription() {
 	}
 
@@ -73,5 +77,11 @@ public class Subscription implements PersistentEntity {
 		this.sponsorCode = sponsorCode;
 	}
 
-
+	public boolean isFreeSuscription() {
+		return freeSuscription;
+	}
+	
+	public void setFreeSuscription(boolean freeSuscription) {
+		this.freeSuscription = freeSuscription;
+	}
 }

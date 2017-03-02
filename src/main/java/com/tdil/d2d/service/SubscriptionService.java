@@ -13,6 +13,8 @@ public interface SubscriptionService {
 
 	public Subscription register(User user, int duration) throws ServiceException;
 
-	public Subscription registerByDays(User user, int duration) throws ServiceException;
+	public Subscription registerByDays(User user, int duration, boolean freeSuscription) throws ServiceException;
+
+	public Subscription createFreeSubscription(User user) throws ServiceException ;
 }
 

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.SubscriptionDAO;
+import com.tdil.d2d.dao.SystemPropertyDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ExceptionDefinition;
@@ -21,9 +22,11 @@ import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.SubscriptionTimeUnit;
+import com.tdil.d2d.persistence.SystemProperty;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.SessionService;
 import com.tdil.d2d.service.SubscriptionService;
+import com.tdil.d2d.utils.Constants;
 import com.tdil.d2d.utils.LoggerManager;
 import com.tdil.d2d.utils.ServiceLocator;
 
@@ -34,6 +37,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private final SessionService sessionService;
 	private final SubscriptionDAO subscriptionDAO;
 	private final ActivityLogDAO activityLogDAO;
+
+	@Autowired
+	private SystemPropertyDAO systemPropertyDAO;
 
 	@Autowired
 	public SubscriptionServiceImpl(SessionService sessionService, SubscriptionDAO subscriptionDAO,
@@ -93,6 +99,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			subscription.setExpirationDate(getExpirationDate(Calendar.getInstance(), sponsorCode));
 			subscription.setUser(user);
 			subscription.setCreationDate(new Date());
+			subscription.setFreeSuscription(false);
 			subscriptionDAO.saveSubscription(subscription);
 			return true;
 		} catch (Exception e) {
@@ -148,6 +155,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			subscription.setExpirationDate(cal.getTime());
 			subscription.setUser(user);
 			subscription.setCreationDate(new Date());
+			subscription.setFreeSuscription(false);
 			subscriptionDAO.saveSubscription(subscription);
 			return subscription;
 		} catch (DAOException e) {
@@ -157,7 +165,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
-	public Subscription registerByDays(User user, int duration) {
+	public Subscription registerByDays(User user, int duration, boolean freeSuscription) {
 		try {
 			Subscription subscription = new Subscription();
 			
@@ -166,11 +174,42 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			subscription.setExpirationDate(cal.getTime());
 			subscription.setUser(user);
 			subscription.setCreationDate(new Date());
+			subscription.setFreeSuscription(freeSuscription);
 			subscriptionDAO.saveSubscription(subscription);
 			return subscription;
 		} catch (DAOException e) {
 			LoggerManager.error(this, e);
 			throw new DTDException(ExceptionDefinition.DTD_2004, e, String.valueOf(duration));
 		}
+	}
+	
+	@Override
+	public Subscription createFreeSubscription(User user) throws ServiceException {
+		if(user.isAlreadyUsedFreeSuscription()) {
+			LoggerManager.error(this, "This user has already used the free suscription");
+			return null;
+		}
+		
+		try {
+			SystemProperty spEnabled = systemPropertyDAO.getSystemPropertyByKey(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_ENABLED);
+			if(spEnabled != null){
+				
+				String value = spEnabled.getValue();
+			
+				if("1".equals(value)){
+					
+					SystemProperty spDays = systemPropertyDAO.getSystemPropertyByKey(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_DAYS);
+					if(spDays!=null){
+					   int days = Integer.valueOf(spDays.getValue());
+					   return this.registerByDays(user, days, true);
+					}
+				}
+			}
+		} catch (DAOException e) {
+			LoggerManager.error(this, e);
+			throw new DTDException(ExceptionDefinition.DTD_2004, e);
+		}
+		
+		return null;
 	}
 }
