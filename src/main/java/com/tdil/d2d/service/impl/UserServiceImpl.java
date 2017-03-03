@@ -1149,7 +1149,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/*
-	 * <<<<<<< HEAD ESTE MÉTODO ESTÁ DEPRECADO YA QUE NO SE VAN A RECHAZAR
+	 * <<<<<<< HEAD ESTE MÉTODO EST� DEPRECADO YA QUE NO SE VAN A RECHAZAR
 	 * PERFILES POR AHORA ======= ESTE M�TODO EST� DEPRECADO YA QUE NO SE VAN A
 	 * RECHAZAR PERFILES POR AHORA >>>>>>> master
 	 */
@@ -1319,11 +1319,11 @@ public class UserServiceImpl implements UserService {
 		// Linkedin CV
 		result.setLinkedinInCv(s.getLinkedInCv());
 		// Falta cvAttach
-		if(s.getCvAttach() != null) {
-			result.setCvAttach(new String(s.getCvAttach()));
-		}
-		// cvPlain
-		result.setCvPlain(s.getCvPlain());
+				if(s.getUser().getPdfCV() != null) {
+					result.setCvAttach(new String(Base64.encodeBase64(s.getUser().getPdfCV().getData())));
+				}
+				// cvPlain
+				result.setCvPlain(s.getUser().getCV());
 		// FirstName
 		result.setFirstname(s.getUser().getFirstname());
 		// LastName
