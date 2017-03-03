@@ -47,7 +47,7 @@ public class SystemPropertyServiceImpl implements SystemPropertyService {
 			
 			return propertiesDTO;
 		} catch (DAOException e) {
-			throw new DTDException(ExceptionDefinition.DTD_2004, e);
+			throw new DTDException(ExceptionDefinition.DTD_2007, e);
 		}
 	}
 

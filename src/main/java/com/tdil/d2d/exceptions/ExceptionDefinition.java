@@ -10,7 +10,8 @@ public enum ExceptionDefinition {
 	DTD_2003("DTD_2003: Not subscription available for user <<%s>>"),
 	DTD_2004("DTD_2004: Error trying to create suscription"),
 	DTD_2005("DTD_2005: Cannot add occupation to note"),
-	DTD_2006("DTD_2006: Cannot add speciality to note");
+	DTD_2006("DTD_2006: Cannot add speciality to note"),
+	DTD_2007("DTD_2007: Error trying to get system properties for suscription");
 
 	// DTD_3xxx: Controller Exceptions
 

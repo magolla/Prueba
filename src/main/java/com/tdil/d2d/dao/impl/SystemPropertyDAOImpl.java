@@ -38,10 +38,11 @@ public class SystemPropertyDAOImpl  extends GenericDAO<SystemProperty> implement
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct systemProperty ");
 			queryString.append("FROM SystemProperty systemProperty ");
-			queryString.append("AND systemProperty.key in (:keyProperties) ");
+			queryString.append("WHERE systemProperty.key in (:keyProperties) ");
 
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			query.setParameterList("keyProperties", keys);
+			
 
 			return query.list();
 		} catch (Exception e) {

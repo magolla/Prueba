@@ -12,6 +12,7 @@ import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.SystemPropertyDAO;
+import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ExceptionDefinition;
@@ -37,16 +38,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private final SessionService sessionService;
 	private final SubscriptionDAO subscriptionDAO;
 	private final ActivityLogDAO activityLogDAO;
+	private final UserDAO userDAO;
 
 	@Autowired
 	private SystemPropertyDAO systemPropertyDAO;
 
 	@Autowired
 	public SubscriptionServiceImpl(SessionService sessionService, SubscriptionDAO subscriptionDAO,
-			ActivityLogDAO activityLogDAO) {
+			ActivityLogDAO activityLogDAO,
+			UserDAO userDAO) {
 		this.sessionService = sessionService;
 		this.subscriptionDAO = subscriptionDAO;
 		this.activityLogDAO = activityLogDAO;
+		this.userDAO = userDAO;
 	}
 
 	/**
@@ -200,8 +204,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 					
 					SystemProperty spDays = systemPropertyDAO.getSystemPropertyByKey(Constants.SYSTEM_PROPERTY_PROMO_SUSCRIPTION_DAYS);
 					if(spDays!=null){
-					   int days = Integer.valueOf(spDays.getValue());
-					   return this.registerByDays(user, days, true);
+						int days = Integer.valueOf(spDays.getValue());
+						Subscription suscription = this.registerByDays(user, days, true);
+					   
+						user.setAlreadyUsedFreeSuscription(true);
+						this.userDAO.save(user);
+						
+						return suscription;
 					}
 				}
 			}

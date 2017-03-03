@@ -1470,6 +1470,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		resp.setCV(user.getCV());
+		resp.setAlreadyUsedFreeSuscription(user.isAlreadyUsedFreeSuscription());
 
 		return resp;
 	}
