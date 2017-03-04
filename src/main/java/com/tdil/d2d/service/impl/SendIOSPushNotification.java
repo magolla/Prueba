@@ -3,7 +3,6 @@ package com.tdil.d2d.service.impl;
 import java.util.List;
 
 import com.tdil.d2d.utils.LoggerManager;
-import com.tdil.d2d.utils.ServiceLocator;
 
 import javapns.devices.Device;
 import javapns.devices.Devices;
@@ -61,7 +60,7 @@ public class SendIOSPushNotification implements Runnable {
 			try {
 				// TODO pasar la clave del keystore a property
 				AppleNotificationServer server = new AppleNotificationServerBasicImpl(
-						IOSNotificationServiceImpl.getIosPushNoticationKeystoreLocation(), "doctodoc", !ServiceLocator.isLocalhost());
+						IOSNotificationServiceImpl.getIosPushNoticationKeystoreLocation(), "doctodoc", false);
 
 				if (IOSNotificationServiceImpl.getProxyConfiguration() != null) {
 					// server.setProxy("1.234.45.50", 3128);
