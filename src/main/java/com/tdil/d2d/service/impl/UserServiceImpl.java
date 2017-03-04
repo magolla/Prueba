@@ -1149,7 +1149,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/*
-	 * <<<<<<< HEAD ESTE MÉTODO EST� DEPRECADO YA QUE NO SE VAN A RECHAZAR
+	 * <<<<<<< HEAD ESTE MÉTODO EST� DEPRECADO YA QUE NO SE VAN A RECHAZAR
 	 * PERFILES POR AHORA ======= ESTE M�TODO EST� DEPRECADO YA QUE NO SE VAN A
 	 * RECHAZAR PERFILES POR AHORA >>>>>>> master
 	 */
@@ -1384,7 +1384,7 @@ public class UserServiceImpl implements UserService {
 		result.setTaskName(s.getTask().getName());
 		result.setApplications(s.getApplications());
 		if(s.getOfferent().getAvatar()!=null)
-		    result.setBase64img(s.getOfferent().getAvatar().getData());
+		    result.setBase64img(new String(s.getOfferent().getAvatar().getData()));
 		result.setJobApplication_id(s.getJobApplication_id());
 		return result;
 	}
