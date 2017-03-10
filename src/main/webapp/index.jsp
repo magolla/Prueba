@@ -13,7 +13,7 @@
 <body>
 	<div>
 		<b>DOC TO DOC IS WORKING FINE!</b>
-		<p>Versión de la aplicación backend: WebApp DTD v 1.00.00 Beta 01</p>
+		<p>Versión de la aplicación backend: WebApp DTD v 1.00.00 Beta 02</p>
 	</div>
 </body>
 </html>
