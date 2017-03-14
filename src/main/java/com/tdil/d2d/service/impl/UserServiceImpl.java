@@ -1654,6 +1654,9 @@ public class UserServiceImpl implements UserService {
 					+          "'id': 'atm'"
 					+ " 	 },"
 					+ "      {"
+					+          "'id': 'debit_card'"
+					+ " 	 },"
+					+ "      {"
 					+          "'id': 'bank_transfer'"
 					+         "}]"
 					+ "}}");
