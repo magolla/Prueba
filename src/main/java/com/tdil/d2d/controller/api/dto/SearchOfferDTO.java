@@ -7,7 +7,7 @@ import com.tdil.d2d.controller.api.request.InstitutionType;
 
 public class SearchOfferDTO {
 
-	private List<Long> geos;
+	private List<GeoLevelDTO> geos;
 	private List<Long> specialities;
 	private List<Long> occupations;
 	private List<Long> tasks;
@@ -15,14 +15,14 @@ public class SearchOfferDTO {
 	private InstitutionType institutionType;
 	private Long offerentIdToIgnore;
 	
-	public List<Long> getGeos() {
+	public List<GeoLevelDTO> getGeos() {
 		if(this.geos == null) {
-			this.geos = new ArrayList<Long>();
+			this.geos = new ArrayList<GeoLevelDTO>();
 		}
 		return geos;
 	}
 	
-	public void setGeos(List<Long> geos) {
+	public void setGeos(List<GeoLevelDTO> geos) {
 		this.geos = geos;
 	}
 	
