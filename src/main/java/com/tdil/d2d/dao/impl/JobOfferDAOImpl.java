@@ -13,6 +13,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.dto.SearchOfferDTO;
 import com.tdil.d2d.controller.api.request.InstitutionType;
 import com.tdil.d2d.dao.JobOfferDAO;
@@ -91,7 +92,14 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 			queryString.append("AND offer.task.id in (:tasks) ");
 		}
 		if(!searchOfferDTO.getGeos().isEmpty()) {
-			queryString.append("AND offer.geoLevelId in (:geoIds) ");
+			queryString.append("AND (");
+			String OR = "";
+			for (GeoLevelDTO location : searchOfferDTO.getGeos()) {
+				//queryString.append(OR + location + " in elements(userProfile.user.userGeoLocations.id) ");
+				queryString.append(OR + "(offer.geoLevelId = " + location.getId() + " AND offer.geoLevelLevel = " + location.getLevel() + ") ");
+				OR = "OR ";
+			}
+			queryString.append(") ");
 		}
 		queryString.append("order by offer.id asc");
 
@@ -113,9 +121,6 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		}
 		if(!searchOfferDTO.getTasks().isEmpty()) {
 			query.setParameterList("tasks", searchOfferDTO.getTasks());
-		}
-		if(!searchOfferDTO.getGeos().isEmpty()) {
-			query.setParameterList("geoIds", searchOfferDTO.getGeos());
 		}
 		query.setParameter("offerentId", searchOfferDTO.getOfferentIdToIgnore());
 		
