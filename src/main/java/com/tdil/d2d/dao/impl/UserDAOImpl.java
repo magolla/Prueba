@@ -13,6 +13,7 @@ import org.hibernate.criterion.Subqueries;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.request.InstitutionType;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
@@ -222,7 +223,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getMatchedUsers(JobOffer offer, List<Long> locations) throws DAOException {
+	public List<User> getMatchedUsers(JobOffer offer, List<GeoLevelDTO> locations) throws DAOException {
 		try {
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
@@ -237,9 +238,9 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			if(!locations.isEmpty()) {
 				queryString.append("AND (");
 				String OR = "";
-				for (Long location : locations) {
+				for (GeoLevelDTO location : locations) {
 					//queryString.append(OR + location + " in elements(userProfile.user.userGeoLocations.id) ");
-					queryString.append(OR + "location.geoLevelId = " + location + " ");
+					queryString.append(OR + "(location.geoLevelId = " + location.getId() + " AND location.geoLevelLevel = " + location.getLevel() + ") ");
 					OR = "OR ";
 				}
 				queryString.append(") ");

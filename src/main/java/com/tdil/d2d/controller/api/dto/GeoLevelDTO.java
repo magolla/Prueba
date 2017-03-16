@@ -6,6 +6,14 @@ public class GeoLevelDTO {
 	private int level;
 	private String name;
 	
+	public GeoLevelDTO() {
+	}
+	
+	public GeoLevelDTO(long id, int level) {
+		this.id = id;
+		this.level = level;
+	}
+	
 	public long getId() {
 		return id;
 	}

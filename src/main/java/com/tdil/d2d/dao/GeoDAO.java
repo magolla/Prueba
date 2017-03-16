@@ -19,5 +19,8 @@ public interface GeoDAO {
 	public List<Geo4> listGeo4(String text) throws DAOException;
 	
 	public GeoLevel getGeoByIdAndLevel(long geoLevelId, int geoLevelLevel) throws DAOException;
+	
+	public List<Geo4> getListGeo4ByGeo2(Long geo2Id) throws DAOException;
+	public List<Geo4> getListGeo4ByGeo3(Long geo3Id) throws DAOException;
 
 }
