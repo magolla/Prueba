@@ -1,5 +1,11 @@
 package com.tdil.d2d.controller.api.dto;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.tdil.d2d.persistence.Specialty;
+
 public class JobApplicationDTO {
 
 	private long id;
@@ -13,10 +19,8 @@ public class JobApplicationDTO {
 	private String lastname;
 	private String mobilePhone;
 	private String occupationName;
-	private String specialtyName;
-	private long geoLevelId;
-	private int geoLevelLevel;
-	private String geoLevelName;
+	private Set<Specialty> specialties = new HashSet<Specialty>(0);
+	private Collection<GeoLevelDTO> geoLevels;
 	private String comment;
 
 	public long getId() {
@@ -79,30 +83,24 @@ public class JobApplicationDTO {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public String getSpecialtyName() {
-		return specialtyName;
-	}
-	public void setSpecialtyName(String specialtyName) {
-		this.specialtyName = specialtyName;
-	}
-	public long getGeoLevelId() {
-		return geoLevelId;
-	}
-	public void setGeoLevelId(long geoLevelId) {
-		this.geoLevelId = geoLevelId;
-	}
-	public int getGeoLevelLevel() {
-		return geoLevelLevel;
-	}
-	public void setGeoLevelLevel(int geoLevelLevel) {
-		this.geoLevelLevel = geoLevelLevel;
-	}
-	public String getGeoLevelName() {
-		return geoLevelName;
-	}
-	public void setGeoLevelName(String geoLevelName) {
-		this.geoLevelName = geoLevelName;
-	}
+//	public long getGeoLevelId() {
+//		return geoLevelId;
+//	}
+//	public void setGeoLevelId(long geoLevelId) {
+//		this.geoLevelId = geoLevelId;
+//	}
+//	public int getGeoLevelLevel() {
+//		return geoLevelLevel;
+//	}
+//	public void setGeoLevelLevel(int geoLevelLevel) {
+//		this.geoLevelLevel = geoLevelLevel;
+//	}
+//	public String getGeoLevelName() {
+//		return geoLevelName;
+//	}
+//	public void setGeoLevelName(String geoLevelName) {
+//		this.geoLevelName = geoLevelName;
+//	}
 	public String getBase64Image() {
 		return base64Image;
 	}
@@ -114,6 +112,18 @@ public class JobApplicationDTO {
 	}
 	public void setCvAttach(String cvAttach) {
 		this.cvAttach = cvAttach;
+	}
+	public Set<Specialty> getSpecialties() {
+		return specialties;
+	}
+	public void setSpecialties(Set<Specialty> specialties) {
+		this.specialties = specialties;
+	}
+	public Collection<GeoLevelDTO> getGeoLevels() {
+		return geoLevels;
+	}
+	public void setGeoLevels(Collection<GeoLevelDTO> geoLevels) {
+		this.geoLevels = geoLevels;
 	}
 	
 }

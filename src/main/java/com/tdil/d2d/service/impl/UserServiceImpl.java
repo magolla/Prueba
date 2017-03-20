@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -1331,21 +1332,27 @@ public class UserServiceImpl implements UserService {
 		// numberPhone
 		result.setMobilePhone(s.getUser().getMobilePhone());
 		// Occupation
-		result.setOccupationName(s.getOffer().getOccupation().getName());
+//		result.setOccupationName(s.getOffer().getOccupation().getName());
+		
+		Iterator iter = s.getUser().getSpecialties().iterator();
+		Specialty first = (Specialty) iter.next();
+		result.setOccupationName(first.getOccupation().getName());
 		// Specialty
-		result.setSpecialtyName(s.getOffer().getSpecialty().getName());
-
+		result.setSpecialties(s.getUser().getSpecialties());
+		
 		//geolevel
-		result.setGeoLevelId(s.getOffer().getGeoLevelId());
-		result.setGeoLevelLevel(s.getOffer().getGeoLevelLevel());
+//		result.setGeoLevelId(s.getOffer().getGeoLevelId());
+//		result.setGeoLevelLevel(s.getOffer().getGeoLevelLevel());
+//		result.setUserGeoLocations(s.getUser().getUserGeoLocations());
+		result.setGeoLevels(toDtoGeoLevel(s.getUser().getUserGeoLocations()));
 
-		GeoLevel geoLevel;
-		try {
-			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getOffer().getGeoLevelId(), s.getOffer().getGeoLevelLevel());
-			result.setGeoLevelName(geoLevel.getName());
-		} catch (DAOException e) {
-			throw new RuntimeException(e);
-		}
+//		GeoLevel geoLevel;
+//		try {
+//			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getOffer().getGeoLevelId(), s.getOffer().getGeoLevelLevel());
+//			result.setGeoLevelName(geoLevel.getName());
+//		} catch (DAOException e) {
+//			throw new RuntimeException(e);
+//		}
 
 		result.setComment(s.getComment());
 		return result;
