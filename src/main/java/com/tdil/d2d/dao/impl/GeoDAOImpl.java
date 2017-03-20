@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -131,6 +132,42 @@ public class GeoDAOImpl extends HibernateDaoSupport implements GeoDAO  {
 		return null;
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Geo4> getListGeo4ByGeo2(Long geo2Id) throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct geo4 ");
+			queryString.append("FROM Geo4 geo4 ");
+			queryString.append("JOIN geo4.geo3 geo3 ");
+			queryString.append("JOIN geo3.geo2 geo2 ");
+			queryString.append("WHERE geo2.id = :geo2 ");
+			
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameter("geo2", geo2Id);
 
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Geo4> getListGeo4ByGeo3(Long geo3Id) throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct geo4 ");
+			queryString.append("FROM Geo4 geo4 ");
+			queryString.append("JOIN geo4.geo3 geo3 ");
+			queryString.append("WHERE geo3.id = :geo3 ");
+			
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameter("geo3", geo3Id);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 }

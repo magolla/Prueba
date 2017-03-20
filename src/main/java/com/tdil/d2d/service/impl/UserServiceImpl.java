@@ -985,7 +985,7 @@ public class UserServiceImpl implements UserService {
 				Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
 				geoLocations.add(geoLocation);
 				
-				List<Long> geos = this.getGeoLevels(geoLocations);
+				List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
 				
 				searchOfferDTO.setGeos(geos);
 			}			
@@ -1019,7 +1019,7 @@ public class UserServiceImpl implements UserService {
 			List<JobOffer> result = new ArrayList<>();
 			User user = getLoggedUser();
 			
-			List<Long> geos = this.getGeoLevels(user.getUserGeoLocations());
+			List<GeoLevelDTO> geos = this.getGeoLevels(user.getUserGeoLocations());
 			
 			SearchOfferDTO searchOfferDTO = new SearchOfferDTO();
 			searchOfferDTO.setGeos(geos);
@@ -1044,20 +1044,34 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
-	private List<Long> getGeoLevels(Set<UserGeoLocation> userGeoLocations) throws DAOException {
-		List<Long> geos = new ArrayList<Long>();
+	private List<GeoLevelDTO> getGeoLevels(Set<UserGeoLocation> userGeoLocations) throws DAOException {
+		List<GeoLevelDTO> geos = new ArrayList<GeoLevelDTO>();
+		GeoLevelDTO geoDto;
 		
 		for (UserGeoLocation location : userGeoLocations) {
-			geos.add(location.getGeoLevelId());
+			geoDto = new GeoLevelDTO(location.getGeoLevelId(), location.getGeoLevelLevel());
+			geos.add(geoDto);
 			GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(location.getGeoLevelId(), location.getGeoLevelLevel());
 			if (location.getGeoLevelLevel() == 4) {
 				Geo4 geo4 = (Geo4) geoLevel;
-				geos.add(geo4.getGeo3().getId());
-				geos.add(geo4.getGeo3().getGeo2().getId());
+				geos.add(new GeoLevelDTO(geo4.getGeo3().getId(), 3));
+				geos.add(new GeoLevelDTO(geo4.getGeo3().getGeo2().getId(), 2));
 			}
 			if (location.getGeoLevelLevel() == 3) {
 				Geo3 geo3 = (Geo3) geoLevel;
-				geos.add(geo3.getGeo2().getId());
+				geos.add(new GeoLevelDTO(geo3.getGeo2().getId(), 2));
+				
+				List<Geo4> geos4 = this.geoDAO.getListGeo4ByGeo3(location.getGeoLevelId());
+				for (Geo4 geo4 : geos4) {
+					geos.add(new GeoLevelDTO(geo4.getId(), 4));
+				}
+			}
+			if (location.getGeoLevelLevel() == 2) {
+				List<Geo4> geos4 = this.geoDAO.getListGeo4ByGeo2(location.getGeoLevelId());
+				for (Geo4 geo4 : geos4) {
+					geos.add(new GeoLevelDTO(geo4.getId(), 4));
+					geos.add(new GeoLevelDTO(geo4.getGeo3().getId(), 3));
+				}
 			}
 		}
 		
@@ -1774,7 +1788,7 @@ public class UserServiceImpl implements UserService {
 			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
 			geoLocations.add(geoLocation);
 			
-			List<Long> geos = this.getGeoLevels(geoLocations);
+			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
 			
 			result = userDAO.getMatchedUsers(jobOffer, geos);
 			
