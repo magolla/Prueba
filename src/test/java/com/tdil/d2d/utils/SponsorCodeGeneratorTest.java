@@ -1,11 +1,12 @@
 package com.tdil.d2d.utils;
 
-import com.tdil.d2d.persistence.Sponsor;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
+import com.tdil.d2d.persistence.Sponsor;
 
 public class SponsorCodeGeneratorTest {
 

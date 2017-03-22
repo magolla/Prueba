@@ -27,7 +27,9 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 	private final SponsorCodeGenerator sponsorCodeGenerator;
 	private final SubscriptionDAO subscriptionDAO;
 	private final UserDAO userDAO;
-
+	
+	
+	
 	@Autowired
 	public SponsorCodeServiceImpl(SponsorCodeGenerator sponsorCodeGenerator, SubscriptionDAO subscriptionDAO, UserDAO userDAO) {
 		this.sponsorCodeGenerator = sponsorCodeGenerator;
@@ -35,6 +37,8 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 		this.userDAO = userDAO;
 	}
 
+	
+	
 	@Override
 	public List<SponsorCode> generateSponsorCodes(long sponsorId, int codesCount, int units, SubscriptionTimeUnit timeUnit) {
 
@@ -43,6 +47,8 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 		Sponsor sponsor = subscriptionDAO.getSponsorById(sponsorId);
 
 		for (int i = 0; i < codesCount; i++) {
+			
+			
 			String code = this.sponsorCodeGenerator.generate(sponsor);
 			SponsorCode sponsorCode = new SponsorCode();
 			sponsorCode.setCode(code);

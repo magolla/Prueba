@@ -26,4 +26,6 @@ public interface SubscriptionDAO {
 	List<SponsorCode> saveSponsorCode(List<SponsorCode> codes);
 
 	List<SponsorCode> listSponsorCodes(Long sponsorId);
+	
+	boolean checkIfSponsorCodeExist(Long sponsorId,String sponsorCode);
 }

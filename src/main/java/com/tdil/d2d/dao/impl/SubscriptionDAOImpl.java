@@ -6,9 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
-import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @Repository
@@ -149,6 +147,23 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 	protected void handleException(String invocationDetails, Exception e) throws DAOException {
 //		LoggerManager.error(this, e.getMessage(), e);
 		throw new DAOException(e.getMessage(), e);
+	}
+
+	@Override
+	public boolean checkIfSponsorCodeExist(Long sponsorId, String sponsorCode) {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SponsorCode.class);
+		criteria.add(Restrictions.eq("sponsor.id", sponsorId));
+		criteria.add(Restrictions.eq("code", sponsorCode));
+		List<SponsorCode> codes = criteria.list();
+		logger.info("Sponsor codes found: {}", codes.size());
+
+		if(codes.size() == 0) {
+			System.out.println("No esta repetido, se guardara en la base el code: " + sponsorCode);
+			return false;
+		} else {
+			System.out.println("El codigo: " + sponsorCode + " para el usuario con ID: " + sponsorId + " ya existe, se generara otro codigo");
+			return true;
+		}
 	}
 
 }
