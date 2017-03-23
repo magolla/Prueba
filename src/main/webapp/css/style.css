@@ -29825,7 +29825,12 @@ html:not(.lt-ie10) .not-animated {
 .lighter      { font-weight:lighter; }
 .underline    { text-decoration:underline; }
 .linked       { color:#ffc371; }
+li.left			{ text-align:left; }
 
-
+@media (max-width:1800px) {
+	.tdil-spacer				{ padding-top:56px; }
+	.tdil-head-spacer			{ margin-top: 61px!important; }
+	.tdil-logo-hideable			{ visibility:hidden; }
+}
 
 

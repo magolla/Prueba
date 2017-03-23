@@ -30,7 +30,7 @@
 		
 	</script>
   </head>
-  <!-- Versión de la aplicación backend: WebApp DTD v 1.00.00 Release 01 -->
+  <!-- Versión de la aplicación backend: WebApp DTD v 1.00.00 Release 02 -->
   <body>
     <!-- Page-->
     <div class="page text-center">
@@ -72,11 +72,11 @@
         </div>
       </header>
       <!-- Page Contents-->
-      <main class="page-content">
-        <section class="context-dark offset-top-20 section-absolute veil reveal-md-block">
+      <main class="page-content tdil-spacer">
+        <section class="context-dark offset-top-20 section-absolute veil reveal-md-block tdil-head-spacer">
           <div class="shell-wide">
             <div class="range range-xs-middle">
-              <div class="cell-sm-6 text-sm-left"><a href="index.html"><img src="images/logo-ligth-183x32.png" width="183" height="32" alt="" class="img-responsive reveal-inline-block"></a></div>
+              <div class="cell-sm-6 text-sm-left"><a href="index.html"><img src="images/logo-ligth-183x32.png" width="183" height="32" alt="" class="img-responsive reveal-inline-block tdil-logo-hideable"></a></div>
               <div class="cell-sm-6">
                 <ul class="list-inline pull-sm-right list-inline-md list-inline-primary">
                   <li><a href="#" class="icon icon-xxs fa fa-facebook"></a></li>
@@ -132,29 +132,29 @@
             </div>
             <div class="shell">
               <h2 class="text-bold">Funciones principales</h2>
-              <div class="range offset-top-50 offset-md-top-93">
-                <div class="cell-sm-4"><img src="images/icon-01-64x64.png" width="64" height="64" alt="" class="img-responsive reveal-inline-block">
+              <div class="range offset-top-50">
+                <div class="cell-sm-4"><img src="images/icon-curriculum.jpg" width="123" height="92" alt="" class="img-responsive reveal-inline-block">
                   <div class="offset-md-top-40 offset-top-20">
-                    <h6>PUBLICAR OFERTAS LABORALES TEMPORALES GRATIS</h6>
+                    <h6>COMO CANDIDATO</h6>
                   </div>
                   <div class="offset-top-10">
-                    <p>Texto texto texto Texto texto texto Texto texto texto Texto texto texto Texto texto texto Texto texto texto.</p>
+					<p>Podes cargar tu CV en PDF o relacionar tu perfil de LinkedIn, especificando tu especialidad y completando un perfil con datos relacionados a tu experiencia y objetivos. ¡Descubrí todos los días nuevos empleos de las mejores empresas del rubro de la Medicina, Odontología, Psicología, Kinesiología, Obstetricia, Nutrición, e Instrumentación quirúrgica y postulate en cuestión de segundos!</p>
                   </div>
                 </div>
-                <div class="cell-sm-4 offset-top-50 offset-sm-top-0"><img src="images/icon-02-64x64.png" width="64" height="64" alt="" class="img-responsive reveal-inline-block">
+                <div class="cell-sm-4 offset-top-50 offset-sm-top-0"><img src="images/icon-empleos.jpg" width="123" height="92" alt="" class="img-responsive reveal-inline-block">
                   <div class="offset-md-top-40 offset-top-20">
-                    <h6>PUBLICAR OFERTAS LABORALES PERMANENTES GRATIS</h6>
+                    <h6>COMO OFERENTE</h6>
                   </div>
                   <div class="offset-top-10">
-                    <p>Texto texto texto Texto texto texto Texto texto texto Texto texto texto Texto texto texto Texto texto texto.</p>
+                    <p>La aplicación le permite a las instituciones públicas o privadas, empresas de medicina prepaga, clínicas, sanatorios, servicios de salud y todo aquel que se encuentre en la búsqueda de profesionales para tareas temporales y permanentes, crear un usuario y PUBLICAR ofertas de forma GRATUITA.</p>
                   </div>
                 </div>
-                <div class="cell-sm-4 offset-top-50 offset-sm-top-0"><img src="images/icon-03-64x64.png" width="64" height="64" alt="" class="img-responsive reveal-inline-block">
+                <div class="cell-sm-4 offset-top-50 offset-sm-top-0"><img src="images/icon-notificaciones.jpg" width="123" height="92" alt="" class="img-responsive reveal-inline-block">
                   <div class="offset-md-top-40 offset-top-20">
-                    <h6>SUSCRIBITE Y RECIBÍ OFERTAS LABORALES</h6>
+                    <h6>NOTIFICACIONES PUSH</h6>
                   </div>
                   <div class="offset-top-10">
-                    <p>Texto texto texto Texto texto texto Texto texto texto Texto texto texto Texto texto texto Texto texto texto.</p>
+                    <P>Recibí notificaciones de trabajos temporales, ayudantías para cirugías, reemplazos de guardia, reemplazos de consultorios, entre otros. Según tus preferencias, la app te envía alertas sobre los empleos que te interesen.</P>
                   </div>
                 </div>
               </div>
@@ -178,13 +178,9 @@
             <div class="shell">
               <div class="range range-xs-center">
                 <div class="cell-xs-10 cell-md-12">
-                  <!--h2 class="text-bold">Soporte</h2-->
-	              <div class="range"><!-- offset-top-50 offset-md-top-93 -->
-	                <div class="cell-sm-6">
-	                  <h2 class="text-bold">Soporte</h2>
-	                  <div class="">
-	                    <h6>DESCARGA, INSTALACIÓN Y USO</h6>
-	                  </div>
+                  <h2 class="text-bold">Soporte</h2>
+                  <h6>DESCARGA, INSTALACIÓN Y USO</h6>
+	              <div class="range" style="text-align:center; display:inline-block;">
 	                  <div class="offset-top-10">
 						<ol>
 							<li class="text-left lighter">Ingresá <a href="#" class="underline linked" target="_blank" title="Disponible en App Store">aquí para descargar la aplicación en iOS</a>, o en <a href="#" class="underline linked" target="_blank" title="Disponible en Google Play">este otro enlace para la versión de Android</a>.</li>
@@ -196,24 +192,6 @@
 							<li class="text-left lighter">También podrás recorrer y buscar oportunidades en las ofertas de trabajo permanente.</li>
 						</ol>
 	                  </div>
-	                </div>
-	                <div class="cell-sm-6 offset-top-50 offset-sm-top-0">
-	                  <h2 class="text-bold">Suscripción</h2>
-	                  <div class="">
-	                    <h6>NOTIFICACIONES PUSH</h6>
-	                  </div>
-	                  <div class="offset-top-10">
-						<ul>
-							<li class="text-left lighter">Ingresá <a href="#" class="underline linked" target="_blank" title="Disponible en App Store">aquí para descargar la aplicación en iOS</a>, o en <a href="#" class="underline linked" target="_blank" title="Disponible en Google Play">este otro enlace para la versión de Android</a>.</li>
-							<li class="text-left lighter">Luego de instalada la aplicación deberás seleccionar si te interesa publicar trabajo o buscar ofertas laborales.</li>
-							<li class="text-left lighter">Tanto si buscas u freces trabajo, te pedimos registrarte con pocos datos</li>
-							<li class="text-left lighter">Si buscas, deberás detallar bien el tipo de ofertas laborales que deseas recibir a tu casilla de notificaciones.</li>
-							<li class="text-left lighter">Con tu perfil completo, buscaremos las ofertas de trabajo temporal con coincidencia.</li>
-							<li class="text-left lighter">Te enviaremos las propuestas laborales para que puedas anotarte con un simple paso.</li>
-							<li class="text-left lighter">También podrás recorrer y buscar oportunidades en las ofertas de trabajo permanente.</li>
-						</ul>
-	                  </div>
-	                </div>
 	              </div>
                 </div>
               </div>
@@ -238,13 +216,16 @@
               <div class="range range-xs-center">
                 <div class="cell-xs-10 cell-md-12">
                   <div class="range range-sm-middle">
-                    <div class="cell-md-6 cell-md-push-2"><img src="images/home-02-641x340.png" width="641" height="340" alt="" class="img-responsive"></div>
+                    <div class="cell-md-6 cell-md-push-2"><img src="images/home-03-641x340.png" width="641" height="340" alt="" class="img-responsive"></div>
                     <div class="cell-md-6 text-md-left offset-top-50 offset-md-top-0 cell-md-push-1">
                       <h2 class="text-bold">Revisa de salúd, congresos, cursos, productos y servicios</h2>
-                      <p class="inset-md-right-100">En Doc To Doc podrás leer y publicar contenidos de dibulgación científica, actualidad en salúd, productos y servicios <br class="veil reveal-lg-inline-block"> completamente gratis.</p>
-                      <div class="offset-top-30 offset-ms-top-55"><a href="#" class="btn btn-primary btn-ellipse btn-anis-effect">¡PUBLICAR CONTENIDOS!</a></div>
+                      <p class="inset-md-right-100">En Doc To Doc podrás leer y publicar contenidos de dibulgación científica, actualidad en salúd, productos y servicios completamente gratis. <br class="veil reveal-lg-inline-block"><br class="veil reveal-lg-inline-block">Envianos un mail a <a href="mailto:admin@doctodocapp.com"><b>admin@doctodocapp.com</b></a></p>
+                      <!-- div class="offset-top-30 offset-ms-top-55"><a href="mailto:admin@doctodocapp.com" class="btn btn-primary btn-ellipse btn-anis-effect">¡PUBLICAR CONTENIDOS!</a></div-->
                     </div>
                   </div>
+                  <h4 style="margin-top:50px;">Doc to Doc te conecta con precisión con los profesionales que buscas</h4>
+                  <p>Es la primera aplicación móvil orientada a la búsqueda de empleos y reclutamiento del campo de la salud, apuntando a todas las especialidades. La aplicación le permite a las instituciones públicas o privadas, empresas de medicina prepaga, clínicas, sanatorios, servicios de salud y todo aquel que se encuentre en la búsqueda de profesionales para tareas temporales y permanentes, crear un usuario y publicar ofertas de forma gratuita.<br/>La aplicación matchea con: médicos, odontólogos, psicólogos, kinesiólogos fisiatras, nutricionistas e instrumentadoras, según el perfil cargado.<br/>El candidato adquiere diferentes beneficios, como por ejemplo alertas de trabajos disponibles según sus preferencias, novedades del rubro, y de esta forma te convertís en parte de una comunidad de cientos de empleadores.</p>
+                  <p><b>¡Registrate en pocos pasos y comenzá a beneficiarte de la red de trabajo más grande del campo de la salud. Con tu perfil completo, podrás recibir notificaciones de ofertas laborales de acuerdo a tu búsqueda, sea temporal o permanente y luego ponerte en contacto con tu futuro empleador!</b></p>
                 </div>
               </div>
             </div>
@@ -263,7 +244,7 @@
                 </ul>
               </nav>
             </div>
-            <div class="shell">
+            <!-- div class="shell">
               <div class="range range-xs-center">
                 <div class="cell-xs-10 cell-md-12">
                   <div class="range range-md-justify">
@@ -278,7 +259,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div-->
           </section>
         </div>
         <div id="testimonials" class="section-navigation">
@@ -304,39 +285,39 @@
                     <div class="quote-meta"><img width="80" height="80" src="images/user-alex-ross-80x80.jpg" alt="" class="img-circle quote-img"/></div>
                     <div class="quote-body">
                       <p>
-                        <q>Hemos estado usando la App durante un tiempo y los resultados son fascinantes.</br></br>úImperdible!</q>
+                        <q>La sola idea de recibir notificaciones con ofertas de trabajo en tiempo real es fascinante.</br>¡Imperdible!</q>
                       </p>
                       <div class="quote-author h6 text-uppercase"><a href="#">
-                          <cite class="text-normal text-darker">Roberto Marin</cite></a></div>
-                      <p class="quote-desc text-primary">DIRECTOR/Recursos humanos La Trinidad</p>
+                          <cite class="text-normal text-darker">Sofía Moldes</cite></a></div>
+                      <p class="quote-desc text-primary">Médica, Endocrinóloga</p>
                     </div>
                   </blockquote>
                 </div>
                 <div data-wow-delay="0.2s" class="cell-sm-8 cell-md-4 offset-top-40 offset-md-top-0 wow fadeInLeft">
                   <!-- Boxed Testimonials v2-->
                   <blockquote class="quote quote-classic quote-classic-boxed-2">
-                    <div class="quote-meta"><img width="80" height="80" src="images/user-alisa-milano-80x80.jpg" alt="" class="img-circle quote-img"/></div>
+                    <div class="quote-meta"><img width="80" height="80" src="images/user-pablo_mendoza-80x80.jpg" alt="" class="img-circle quote-img"/></div>
                     <div class="quote-body">
                       <p>
-                        <q>Brinda las mismas posibilidades a un profesional y a una compañúa.</br></br>úEso es darle poder a los usuarios!</q>
+                        <q>Brinda las mismas posibilidades a un profesional y a una compañía.</br></br>¡Eso es darle poder a los usuarios!</q>
                       </p>
                       <div class="quote-author h6 text-uppercase"><a href="#">
-                          <cite class="text-normal text-darker">Marisa Milano</cite></a></div>
-                      <p class="quote-desc text-primary">Cardiúloga, independiente</p>
+                          <cite class="text-normal text-darker">Pablo Mendoza</cite></a></div>
+                      <p class="quote-desc text-primary">Desarrollador de Software</p>
                     </div>
                   </blockquote>
                 </div>
                 <div data-wow-delay="0.3s" class="cell-sm-8 cell-md-4 offset-top-40 offset-md-top-0 wow fadeInLeft">
                   <!-- Boxed Testimonials v2-->
                   <blockquote class="quote quote-classic quote-classic-boxed-2">
-                    <div class="quote-meta"><img width="80" height="80" src="images/user-philip-more-80x80.jpg" alt="" class="img-circle quote-img"/></div>
+                    <div class="quote-meta"><img width="80" height="80" src="images/user-silvina_tonelli-80x80.jpg" alt="" class="img-circle quote-img"/></div>
                     <div class="quote-body">
                       <p>
-                        <q>Publicar avisos con búsquedas laborales gratis y que le lleguen directo a los interesados es lo más eficiente del mercado. ¡Revolucionario!</q>
+                        <q>Desde que subí mi perfil a DOC to DOC incremente el número de cirugías, pero por sobre todo, todas por la zona que me interesaba.</q>
                       </p>
                       <div class="quote-author h6 text-uppercase"><a href="#">
-                          <cite class="text-normal text-darker">Felipe Di María</cite></a></div>
-                      <p class="quote-desc text-primary">Consultor en recursos humanos</p>
+                          <cite class="text-normal text-darker">Lic. Silvina Tonelli</cite></a></div>
+                      <p class="quote-desc text-primary">Instrumentadora</p>
                     </div>
                   </blockquote>
                 </div>
@@ -377,7 +358,7 @@
                       <div class="unit unit-horizontal unit-spacing-xs unit-middle">
                         <div class="unit-body">
                           <div class="post-meta"><span class="icon-xxs mdi mdi-arrow-right text-macaroni"></span>
-                            <time datetime="2016-01-01" class="text-dark">30/11/2016</time>
+                            <time datetime="2016-01-01" class="text-dark">01/04/2017</time>
                           </div>
                           <div class="post-title">
                             <h6 class="text-regular">Disponible en AppStore</h6>
@@ -389,7 +370,7 @@
                       <div class="unit unit-horizontal unit-spacing-xs unit-middle">
                         <div class="unit-body">
                           <div class="post-meta"><span class="icon-xxs mdi mdi-arrow-right text-macaroni"></span>
-                            <time datetime="2016-01-01" class="text-dark">27/11/2016</time>
+                            <time datetime="2016-01-01" class="text-dark">01/04/2017</time>
                           </div>
                           <div class="post-title">
                             <h6 class="text-regular">Disponible en Google Play</h6>
@@ -399,8 +380,8 @@
                 </div>
                 <div class="cell-xs-12 offset-top-40 cell-md-5 offset-md-top-0 text-md-left cell-lg-4 cell-lg-push-3">
                   <p class="text-uppercase text-spacing-60 text-ubold">Newsletter</p>
-                  <p><span class="small">Suscribite al newsletter de Doc to Doc, para recibir mensualmente el resumen de las novedades.</br>Ingresa tu e-Mail.</span></p>
-                  <div class="offset-top-30">
+                  <p><span class="small">Pronto vas a poder suscribite al newsletter de Doc to Doc, para recibir mensualmente el resumen de las novedades.</br>Envianos un mail a admin@doctodocapp.com</span></p>
+                  <div class="offset-top-30" style="display:none;">
                     <form data-form-output="form-subscribe-footer" data-form-type="subscribe" method="post" action="bat/rd-mailform.php" class="rd-mailform">
                       <div class="form-group">
                         <div class="input-group input-group-sm"><span class="input-group-addon"><span class="input-group-icon mdi mdi-email"></span></span>
