@@ -62,7 +62,7 @@
                       <li><a href="https://www.facebook.com/DOC-to-DOC-1351865914905089/" class="icon icon-xxs fa fa-facebook" target="_blank"></a></li>
                       <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-twitter" target="_blank"></a></li>
                       <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-google-plus" target="_blank"></a></li>
-                      <li><a href="#" class="icon icon-xxs fa fa-linkedin" target="_blank"></a></li>
+                      <li><a href="https://www.linkedin.com/company/doc-to-doc-app" class="icon icon-xxs fa fa-linkedin" target="_blank"></a></li>
                     </ul>
                   </div>
                 </div>
@@ -82,7 +82,7 @@
                   <li><a href="https://www.facebook.com/DOC-to-DOC-1351865914905089/" class="icon icon-xxs fa fa-facebook" target="_blank"></a></li>
                   <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-twitter" target="_blank"></a></li>
                   <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-google-plus" target="_blank"></a></li>
-                  <li><a href="#" class="icon icon-xxs fa fa-linkedin" target="_blank"></a></li>
+                  <li><a href="https://www.linkedin.com/company/doc-to-doc-app" class="icon icon-xxs fa fa-linkedin" target="_blank"></a></li>
                 </ul>
               </div>
             </div>
@@ -132,9 +132,27 @@
             </div>
             <div class="shell">
               <h2 class="text-bold">Funciones principales</h2>
-              <h4 style="margin-top:50px;">¡Enterate antes que nadie de los mejores empleos!</h4>
-              <p>DOC to DOC es la primera aplicación móvil orientada a la búsqueda de empleos y reclutamiento del campo de la salud, apuntando a todas las especialidades. La aplicación le permite a las instituciones públicas o privadas, empresas de medicina prepaga, clínicas, sanatorios, servicios de salud y todo aquel que se encuentre en la búsqueda de profesionales para tareas temporales y permanentes, crear un usuario y publicar ofertas de forma gratuita.<br/>La aplicación matchea con: médicos, odontólogos, psicólogos, kinesiólogos fisiatras, nutricionistas e instrumentadoras, según el perfil cargado.<br/>El candidato adquiere diferentes beneficios, como por ejemplo alertas de trabajos disponibles según sus preferencias, novedades del rubro, y de esta forma te convertís en parte de una comunidad de cientos de empleadores.</p>
-              <p><b>¡Registrate en pocos pasos y comenzá a beneficiarte de la red de trabajo más grande del campo de la salud. Con tu perfil completo, podrás recibir notificaciones de ofertas laborales de acuerdo a tu búsqueda, sea temporal o permanente y luego ponerte en contacto con tu futuro empleador!</b></p>
+              
+
+              <div class="range range-xs-center">
+                <div class="cell-xs-10 cell-md-12">
+                  <div class="range range-md-justify">
+                    <div class="cell-md-4 cell-md-push-1 section-top-150 section-md-top-0 section-md-bottom-80 section-md-top-80"><img src="images/medicos.jpg" width="484" height="500" alt="" style="border:solid 2px #959595;" class="img-responsive"></div>
+                    <div class="cell-md-8 text-md-left cell-md-push-2 section-bottom-80">
+                      <div class="offset-md-top-30">
+                        <h3 class="text-bold">¡Enterate antes que nadie de los mejores empleos!</h3>
+                        <p><b>DOC to DOC</b> es la primera aplicación móvil orientada a la búsqueda de empleos y reclutamiento del campo de la salud, apuntando a todas las especialidades. La aplicación le permite a las instituciones públicas o privadas, empresas de medicina prepaga, clínicas, sanatorios, servicios de salud y todo aquel que se encuentre en la búsqueda de profesionales para tareas temporales y permanentes, crear un usuario y publicar ofertas de forma gratuita.</p>
+                        <p><b>La aplicación matchea con:</b> médicos, odontólogos, psicólogos, kinesiólogos fisiatras, nutricionistas e instrumentadoras, según el perfil cargado.<br/>El candidato adquiere diferentes beneficios, como por ejemplo alertas de trabajos disponibles según sus preferencias, novedades del rubro, y de esta forma te convertís en parte de una comunidad de cientos de empleadores.</p>
+              			<p><b>¡Registrate en pocos pasos y comenzá a beneficiarte de la red de trabajo más grande del campo de la salud. Con tu perfil completo, podrás recibir notificaciones de ofertas laborales de acuerdo a tu búsqueda, sea temporal o permanente y luego ponerte en contacto con tu futuro empleador!</b></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              
+              <h4 style="margin-top:50px;"></h4>
+
               <div class="range offset-top-50">
                 <div class="cell-sm-4"><img src="images/icon-curriculum.jpg" width="123" height="92" alt="" class="img-responsive reveal-inline-block">
                   <div class="offset-md-top-40 offset-top-20">
@@ -188,7 +206,7 @@
 						<ol>
 							<li class="text-left lighter">Ingresá <a href="#" class="underline linked" target="_blank" title="Disponible en App Store">aquí para descargar la aplicación en iOS</a>, o en <a href="#" class="underline linked" target="_blank" title="Disponible en Google Play">este otro enlace para la versión de Android</a>.</li>
 							<li class="text-left lighter">Luego de instalada la aplicación deberás seleccionar si te interesa publicar trabajo o buscar ofertas laborales.</li>
-							<li class="text-left lighter">Tanto si buscas u freces trabajo, te pedimos registrarte con pocos datos</li>
+							<li class="text-left lighter">Tanto si buscas u ofreces trabajo, te pedimos registrarte con pocos datos.</li>
 							<li class="text-left lighter">Si buscas, deberás detallar bien el tipo de ofertas laborales que deseas recibir a tu casilla de notificaciones.</li>
 							<li class="text-left lighter">Con tu perfil completo, buscaremos las ofertas de trabajo temporal con coincidencia.</li>
 							<li class="text-left lighter">Te enviaremos las propuestas laborales para que puedas anotarte con un simple paso.</li>
@@ -202,7 +220,6 @@
           </section>
         </div>
         <div id="publish" class="section-navigation">
-          <!--Revisa de salúd, congresos, cursos, productos y servicios<-->
           <section class="section-80 section-md-110 section-md-bottom-135 bg-gray-lighter">
             <div class="navigation-wrap">
               <nav class="navigation">
@@ -219,11 +236,10 @@
               <div class="range range-xs-center">
                 <div class="cell-xs-10 cell-md-12">
                   <div class="range range-sm-middle">
-                    <div class="cell-md-6 cell-md-push-2"><img src="images/home-03-641x340.png" width="641" height="340" alt="" class="img-responsive"></div>
-                    <div class="cell-md-6 text-md-left offset-top-50 offset-md-top-0 cell-md-push-1">
-                      <h2 class="text-bold">Revisa de salúd, congresos, cursos, productos y servicios</h2>
-                      <p class="inset-md-right-100">En Doc To Doc podrás leer y publicar contenidos de divulgación científica, actualidad en salúd, productos y servicios completamente gratis. <br class="veil reveal-lg-inline-block"><br class="veil reveal-lg-inline-block">Envianos un mail a <a href="mailto:admin@doctodocapp.com"><b>admin@doctodocapp.com</b></a></p>
-                      <!-- div class="offset-top-30 offset-ms-top-55"><a href="mailto:admin@doctodocapp.com" class="btn btn-primary btn-ellipse btn-anis-effect">¡PUBLICAR CONTENIDOS!</a></div-->
+                    <div class="cell-md-4 cell-md-push-2"><img src="images/home-03-641x340.png" width="485" height="340" alt="" class="img-responsive"></div>
+                    <div class="cell-md-8 text-md-left offset-top-50 offset-md-top-0 cell-md-push-1">
+                      <h3 class="text-bold">Notificaciones para: cursos, congresos y jornadas, becas, divulgación científica y promociones.</h3>
+                      <p class="inset-md-right-100">Publicá y descubrí contenido científico a través de la app, donde te podrás enterar de temas de la actualidad del ámbito de la salud, productos y servicios.<br class="veil reveal-lg-inline-block"><br class="veil reveal-lg-inline-block">Envianos un mail a: <a href="mailto:admin@doctodocapp.com"><b>admin@doctodocapp.com</b></a></p>
                     </div>
                   </div>
                 </div>
@@ -401,7 +417,7 @@
                       <li><a href="https://www.facebook.com/DOC-to-DOC-1351865914905089/" class="icon fa fa-facebook icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
                       <li style="display:none;"><a href="#" class="icon fa fa-twitter icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
                       <li style="display:none;"><a href="#" class="icon fa fa-google-plus icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
-                      <li><a href="#" class="icon fa fa-linkedin icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
+                      <li><a href="https://www.linkedin.com/company/doc-to-doc-app" class="icon fa fa-linkedin icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
                     </ul>
                   </div>
                 </div>
