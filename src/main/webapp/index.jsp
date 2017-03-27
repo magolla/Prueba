@@ -59,10 +59,10 @@
                       <li><a href="#contacts">Envianos un mensaje</a></li>
                     </ul>
                     <ul class="list-inline offset-top-50 reveal-inline-block veil-xl list-inline-primary list-inline-md">
-                      <li><a href="#" class="icon icon-xxs fa fa-facebook"></a></li>
-                      <li><a href="#" class="icon icon-xxs fa fa-twitter"></a></li>
-                      <li><a href="#" class="icon icon-xxs fa fa-google-plus"></a></li>
-                      <li><a href="#" class="icon icon-xxs fa fa-linkedin"></a></li>
+                      <li><a href="https://www.facebook.com/DOC-to-DOC-1351865914905089/" class="icon icon-xxs fa fa-facebook" target="_blank"></a></li>
+                      <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-twitter" target="_blank"></a></li>
+                      <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-google-plus" target="_blank"></a></li>
+                      <li><a href="#" class="icon icon-xxs fa fa-linkedin" target="_blank"></a></li>
                     </ul>
                   </div>
                 </div>
@@ -79,10 +79,10 @@
               <div class="cell-sm-6 text-sm-left"><a href="index.html"><img src="images/logo-ligth-183x32.png" width="183" height="32" alt="" class="img-responsive reveal-inline-block tdil-logo-hideable"></a></div>
               <div class="cell-sm-6">
                 <ul class="list-inline pull-sm-right list-inline-md list-inline-primary">
-                  <li><a href="#" class="icon icon-xxs fa fa-facebook"></a></li>
-                  <li><a href="#" class="icon icon-xxs fa fa-twitter"></a></li>
-                  <li><a href="#" class="icon icon-xxs fa fa-google-plus"></a></li>
-                  <li><a href="#" class="icon icon-xxs fa fa-linkedin"></a></li>
+                  <li><a href="https://www.facebook.com/DOC-to-DOC-1351865914905089/" class="icon icon-xxs fa fa-facebook" target="_blank"></a></li>
+                  <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-twitter" target="_blank"></a></li>
+                  <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-google-plus" target="_blank"></a></li>
+                  <li><a href="#" class="icon icon-xxs fa fa-linkedin" target="_blank"></a></li>
                 </ul>
               </div>
             </div>
@@ -132,6 +132,9 @@
             </div>
             <div class="shell">
               <h2 class="text-bold">Funciones principales</h2>
+              <h4 style="margin-top:50px;">¡Enterate antes que nadie de los mejores empleos!</h4>
+              <p>DOC to DOC es la primera aplicación móvil orientada a la búsqueda de empleos y reclutamiento del campo de la salud, apuntando a todas las especialidades. La aplicación le permite a las instituciones públicas o privadas, empresas de medicina prepaga, clínicas, sanatorios, servicios de salud y todo aquel que se encuentre en la búsqueda de profesionales para tareas temporales y permanentes, crear un usuario y publicar ofertas de forma gratuita.<br/>La aplicación matchea con: médicos, odontólogos, psicólogos, kinesiólogos fisiatras, nutricionistas e instrumentadoras, según el perfil cargado.<br/>El candidato adquiere diferentes beneficios, como por ejemplo alertas de trabajos disponibles según sus preferencias, novedades del rubro, y de esta forma te convertís en parte de una comunidad de cientos de empleadores.</p>
+              <p><b>¡Registrate en pocos pasos y comenzá a beneficiarte de la red de trabajo más grande del campo de la salud. Con tu perfil completo, podrás recibir notificaciones de ofertas laborales de acuerdo a tu búsqueda, sea temporal o permanente y luego ponerte en contacto con tu futuro empleador!</b></p>
               <div class="range offset-top-50">
                 <div class="cell-sm-4"><img src="images/icon-curriculum.jpg" width="123" height="92" alt="" class="img-responsive reveal-inline-block">
                   <div class="offset-md-top-40 offset-top-20">
@@ -219,13 +222,10 @@
                     <div class="cell-md-6 cell-md-push-2"><img src="images/home-03-641x340.png" width="641" height="340" alt="" class="img-responsive"></div>
                     <div class="cell-md-6 text-md-left offset-top-50 offset-md-top-0 cell-md-push-1">
                       <h2 class="text-bold">Revisa de salúd, congresos, cursos, productos y servicios</h2>
-                      <p class="inset-md-right-100">En Doc To Doc podrás leer y publicar contenidos de dibulgación científica, actualidad en salúd, productos y servicios completamente gratis. <br class="veil reveal-lg-inline-block"><br class="veil reveal-lg-inline-block">Envianos un mail a <a href="mailto:admin@doctodocapp.com"><b>admin@doctodocapp.com</b></a></p>
+                      <p class="inset-md-right-100">En Doc To Doc podrás leer y publicar contenidos de divulgación científica, actualidad en salúd, productos y servicios completamente gratis. <br class="veil reveal-lg-inline-block"><br class="veil reveal-lg-inline-block">Envianos un mail a <a href="mailto:admin@doctodocapp.com"><b>admin@doctodocapp.com</b></a></p>
                       <!-- div class="offset-top-30 offset-ms-top-55"><a href="mailto:admin@doctodocapp.com" class="btn btn-primary btn-ellipse btn-anis-effect">¡PUBLICAR CONTENIDOS!</a></div-->
                     </div>
                   </div>
-                  <h4 style="margin-top:50px;">Doc to Doc te conecta con precisión con los profesionales que buscas</h4>
-                  <p>Es la primera aplicación móvil orientada a la búsqueda de empleos y reclutamiento del campo de la salud, apuntando a todas las especialidades. La aplicación le permite a las instituciones públicas o privadas, empresas de medicina prepaga, clínicas, sanatorios, servicios de salud y todo aquel que se encuentre en la búsqueda de profesionales para tareas temporales y permanentes, crear un usuario y publicar ofertas de forma gratuita.<br/>La aplicación matchea con: médicos, odontólogos, psicólogos, kinesiólogos fisiatras, nutricionistas e instrumentadoras, según el perfil cargado.<br/>El candidato adquiere diferentes beneficios, como por ejemplo alertas de trabajos disponibles según sus preferencias, novedades del rubro, y de esta forma te convertís en parte de una comunidad de cientos de empleadores.</p>
-                  <p><b>¡Registrate en pocos pasos y comenzá a beneficiarte de la red de trabajo más grande del campo de la salud. Con tu perfil completo, podrás recibir notificaciones de ofertas laborales de acuerdo a tu búsqueda, sea temporal o permanente y luego ponerte en contacto con tu futuro empleador!</b></p>
                 </div>
               </div>
             </div>
@@ -282,10 +282,10 @@
                 <div data-wow-delay="0.1s" class="cell-sm-8 cell-md-4 wow fadeInLeft">
                   <!-- Boxed Testimonials v2-->
                   <blockquote class="quote quote-classic quote-classic-boxed-2">
-                    <div class="quote-meta"><img width="80" height="80" src="images/user-alex-ross-80x80.jpg" alt="" class="img-circle quote-img"/></div>
+                    <div class="quote-meta"><img width="80" height="80" src="images/user-sofia_moldes-80x80.jpg" alt="" class="img-circle quote-img"/></div>
                     <div class="quote-body">
                       <p>
-                        <q>La sola idea de recibir notificaciones con ofertas de trabajo en tiempo real es fascinante.</br>¡Imperdible!</q>
+                        <q>Recibir ofertas laborales en tiempo real es algo novedoso y beneficioso para cualquier profesional.</br>¡Muy recomendable!</q>
                       </p>
                       <div class="quote-author h6 text-uppercase"><a href="#">
                           <cite class="text-normal text-darker">Sofía Moldes</cite></a></div>
@@ -398,10 +398,10 @@
                   <div class="footer-brand"><a href="index.html"><img src="images/logo-footer-184x56.png" width="184" height="56" alt="" class="img-responsive reveal-inline-block"></a></div>
                   <div class="offset-top-30">
                     <ul class="list-inline">
-                      <li><a href="#" class="icon fa fa-facebook icon-xxs icon-circle icon-gray-darkest-filled"></a></li>
-                      <li><a href="#" class="icon fa fa-twitter icon-xxs icon-circle icon-gray-darkest-filled"></a></li>
-                      <li><a href="#" class="icon fa fa-google-plus icon-xxs icon-circle icon-gray-darkest-filled"></a></li>
-                      <li><a href="#" class="icon fa fa-linkedin icon-xxs icon-circle icon-gray-darkest-filled"></a></li>
+                      <li><a href="https://www.facebook.com/DOC-to-DOC-1351865914905089/" class="icon fa fa-facebook icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
+                      <li style="display:none;"><a href="#" class="icon fa fa-twitter icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
+                      <li style="display:none;"><a href="#" class="icon fa fa-google-plus icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
+                      <li><a href="#" class="icon fa fa-linkedin icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
                     </ul>
                   </div>
                 </div>
