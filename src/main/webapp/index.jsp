@@ -109,7 +109,7 @@
                     <div class="offset-top-34">
                       <p class="big">La única plataforma desarrollada por profesionales de la medicina para resolver búsquedas temporales y permanentes.</p>
                     </div>
-                    <div class="group group-lg offset-md-top-55 offset-top-30"><a href="#"><img src="images/icon-appstore-180x60.png" width="180" height="60" alt="" class="img-responsive"></a><a href="#"><img src="images/icon-google-play-200x60.png" width="200" height="60" alt="" class="img-responsive"></a></div>
+                    <div class="group group-lg offset-md-top-55 offset-top-30"><a href="#"><img src="images/icon-appstore-180x60_soon.png" width="180" height="60" alt="" class="img-responsive"></a><a href="#"><img src="images/icon-google-play-200x60_soon.png" width="200" height="60" alt="" class="img-responsive"></a></div>
                   </div>
                 </div>
               </div>
