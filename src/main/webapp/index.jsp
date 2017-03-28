@@ -105,11 +105,11 @@
               <div class="range">
                 <div class="range section-cover range-xs-center range-xs-middle range-md-left">
                   <div class="cell-lg-5 text-lg-left section-80 section-relative">
-                    <h1 class="text-bold"><span class="text-download">DESCARGÁ</span><span class="text-uppercase">DOC TO DOC</span> <span class="small">App ahora!</span></h1>
+                    <h1 class="text-bold"><span class="text-download">&nbsp;</span><span class="text-uppercase">DOC TO DOC</span> <span class="small">¡PRÓXIMAMENTE!</span></h1>
                     <div class="offset-top-34">
-                      <p class="big">La única plataforma desarrollada por profesionales de la medicina para resolver búsquedas temporales y permanentes.</p>
+                      <p class="big">La única plataforma desarrollada por profesionales de la medicina para resolver búsquedas laborales temporales y permanentes.</p>
                     </div>
-                    <div class="group group-lg offset-md-top-55 offset-top-30"><a href="#"><img src="images/icon-appstore-180x60_soon.png" width="180" height="60" alt="" class="img-responsive"></a><a href="#"><img src="images/icon-google-play-200x60_soon.png" width="200" height="60" alt="" class="img-responsive"></a></div>
+                    <div class="group group-lg offset-md-top-55 offset-top-30"><a href="#"><img src="images/icon-appstore-180x60_soon2.png" width="180" height="60" alt="" class="img-responsive"></a><a href="#"><img src="images/icon-google-play-200x60_soon2.png" width="200" height="60" alt="" class="img-responsive"></a></div>
                   </div>
                 </div>
               </div>
