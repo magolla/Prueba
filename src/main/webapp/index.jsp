@@ -59,6 +59,7 @@
                       <li><a href="#contacts">Envianos un mensaje</a></li>
                     </ul>
                     <ul class="list-inline offset-top-50 reveal-inline-block veil-xl list-inline-primary list-inline-md">
+                      <li><img src="images/qrcode_white.png" width="60" height="60" alt="" class=""></li>
                       <li><a href="https://www.facebook.com/DOC-to-DOC-1351865914905089/" class="icon icon-xxs fa fa-facebook" target="_blank"></a></li>
                       <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-twitter" target="_blank"></a></li>
                       <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-google-plus" target="_blank"></a></li>
@@ -79,6 +80,7 @@
               <div class="cell-sm-6 text-sm-left"><a href="index.html"><img src="images/logo-ligth-183x32.png" width="183" height="32" alt="" class="img-responsive reveal-inline-block tdil-logo-hideable"></a></div>
               <div class="cell-sm-6">
                 <ul class="list-inline pull-sm-right list-inline-md list-inline-primary">
+                  <li><img src="images/qrcode_transparent.png" width="60" height="60" alt="" class=""></li>
                   <li><a href="https://www.facebook.com/DOC-to-DOC-1351865914905089/" class="icon icon-xxs fa fa-facebook" target="_blank"></a></li>
                   <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-twitter" target="_blank"></a></li>
                   <li style="display:none;"><a href="#" class="icon icon-xxs fa fa-google-plus" target="_blank"></a></li>
@@ -411,7 +413,7 @@
                 </div>
                 <div class="cell-xs-12 offset-top-66 cell-lg-4 cell-lg-push-1 offset-lg-top-0">
                   <!-- Footer brand-->
-                  <div class="footer-brand"><a href="index.html"><img src="images/logo-footer-184x56.png" width="184" height="56" alt="" class="img-responsive reveal-inline-block"></a></div>
+                  <div class="footer-brand"><a href="index.html"><img src="images/qrcode_black.png" width="60" height="60" alt="" class="" style="margin-right:20px;"><img src="images/logo-footer-184x56.png" width="184" height="56" alt="" class="img-responsive reveal-inline-block"></a></div>
                   <div class="offset-top-30">
                     <ul class="list-inline">
                       <li><a href="https://www.facebook.com/DOC-to-DOC-1351865914905089/" class="icon fa fa-facebook icon-xxs icon-circle icon-gray-darkest-filled" target="_blank"></a></li>
