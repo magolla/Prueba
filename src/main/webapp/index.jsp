@@ -30,7 +30,7 @@
 		
 	</script>
   </head>
-  <!-- Versión de la aplicación backend: WebApp DTD v 1.00.00 Release 02 -->
+  <!-- Versión de la aplicación backend: WebApp DTD v 1.00.00 Release 03 -->
   <body>
     <!-- Page-->
     <div class="page text-center">
@@ -107,11 +107,11 @@
               <div class="range">
                 <div class="range section-cover range-xs-center range-xs-middle range-md-left">
                   <div class="cell-lg-5 text-lg-left section-80 section-relative">
-                    <h1 class="text-bold"><span class="text-download">&nbsp;</span><span class="text-uppercase">DOC TO DOC</span> <span class="small">¡PRÓXIMAMENTE!</span></h1>
+                    <h1 class="text-bold"><span class="text-download">&nbsp;</span><span class="text-uppercase">DOC TO DOC</span> <span class="small">¡Descargar ahora!</span></h1>
                     <div class="offset-top-34">
                       <p class="big">La única plataforma desarrollada por profesionales de la medicina para resolver búsquedas laborales temporales y permanentes.</p>
                     </div>
-                    <div class="group group-lg offset-md-top-55 offset-top-30"><a href="#"><img src="images/icon-appstore-180x60_soon2.png" width="180" height="60" alt="" class="img-responsive"></a><a href="#"><img src="images/icon-google-play-200x60_soon2.png" width="200" height="60" alt="" class="img-responsive"></a></div>
+                    <div class="group group-lg offset-md-top-55 offset-top-30"><a href="#"><img src="images/icon-appstore-180x60_soon2.png" width="180" height="60" alt="" class="img-responsive"></a><a href="https://play.google.com/store/apps/details?id=com.tdil.d2d.android" target="_blank"><img src="images/icon-google-play-200x60.png" width="200" height="60" alt="" class="img-responsive"></a></div>
                   </div>
                 </div>
               </div>
