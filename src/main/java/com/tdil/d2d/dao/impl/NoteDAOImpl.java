@@ -69,8 +69,11 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		queryString.append("SELECT distinct note ");
 		queryString.append("FROM Note note ");
 		queryString.append("left join note.specialties as specialty ");
-		queryString.append("WHERE specialty.occupation.id IN (:ocuppations) ");
+		queryString.append("WHERE (specialty.occupation.id IN (:ocuppations) ");
 		queryString.append("AND specialty.id IN (:specialities) ");
+		queryString.append("AND note.active = 1) ");
+		queryString.append("AND (specialty.id is null AND note.active = 1 )");
+		queryString.append("AND (specialty.occupation.id is null AND note.active = 1) ");
 		queryString.append("order by note.creationDate desc ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
