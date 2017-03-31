@@ -683,4 +683,9 @@ public class UserController extends AbstractController {
 			return new ResponseEntity<GenericResponse<List<SystemPropertyDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
+	
+	@RequestMapping(value = "/user/checkToken", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ApiResponse> checkToken() {
+		return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
+    }
 }
