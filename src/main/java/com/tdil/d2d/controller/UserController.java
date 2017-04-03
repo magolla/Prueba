@@ -684,8 +684,4 @@ public class UserController extends AbstractController {
 		}
     }
 	
-	@RequestMapping(value = "/user/checkToken", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ApiResponse> checkToken() {
-		return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
-    }
 }
