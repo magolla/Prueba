@@ -7,13 +7,12 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
 
-    <context:component-scan base-package="com.tdil.d2d"></context:component-scan>
+    <context:component-scan base-package="com.tdil.d2d.admcontroller"></context:component-scan>
     <mvc:annotation-driven></mvc:annotation-driven>
 
-    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
-        <property name="prefix" value="/WEB-INF/views/"></property>
-        <property name="suffix" value="*.jsp"></property>
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/admindtd/"></property>
+        <property name="suffix" value=".jsp"></property>
     </bean>
 
 </beans>
