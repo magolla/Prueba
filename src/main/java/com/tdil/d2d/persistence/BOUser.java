@@ -2,11 +2,18 @@ package com.tdil.d2d.persistence;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -33,20 +40,18 @@ public class BOUser implements PersistentEntity {
 	@Column(name = "email")
 	private String email;
 	
-	@Column(name = "emailHash")
-	private String emailHash;
-	
-	@Column(name = "emailValidated")
-	private boolean emailValidated;
-	
 	@Column(name="pass")
 	private String password;
 
 	@Column(name = "enabled")
 	private boolean enabled;
 	
-	@Column(name = "lastPasswordResetDate")
-	private Date lastPasswordResetDate;
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "D2D_USER_ROLE", joinColumns = {
+			@JoinColumn(name = "USER_ID", nullable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name = "ROLE_ID",
+					nullable = false, updatable = false)})
+	private Set<Role> roles = new HashSet<Role>(0);
 	
 	public long getId() {
 		return id;
@@ -96,37 +101,13 @@ public class BOUser implements PersistentEntity {
 	public String getSalt() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(this.getCreationDate());
 	}
-
-	public String getEmailHash() {
-		return emailHash;
-	}
-
-	public void setEmailHash(String emailHash) {
-		this.emailHash = emailHash;
-	}
-
-	public boolean isEmailValidated() {
-		return emailValidated;
-	}
-
-	public void setEmailValidated(boolean emailValidated) {
-		this.emailValidated = emailValidated;
-	}
-
+	
 	public Date getCreationDate() {
 		return creationDate;
 	}
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
-	}
-
-	public Date getLastPasswordResetDate() {
-		return lastPasswordResetDate;
-	}
-
-	public void setLastPasswordResetDate(Date lastPasswordResetDate) {
-		this.lastPasswordResetDate = lastPasswordResetDate;
 	}
 
 	public Date getLastLoginDate() {
@@ -145,4 +126,14 @@ public class BOUser implements PersistentEntity {
 		this.password = password;
 	}
 
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> userRole) {
+		this.roles = userRole;
+	}
+
+	
+	
 }

@@ -1,6 +1,7 @@
 package com.tdil.d2d.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.tdil.d2d.security.JwtAuthenticationEntryPoint;
 import com.tdil.d2d.security.JwtAuthenticationTokenFilter;
@@ -29,6 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Autowired
+	@Qualifier("boUserDetailsService")
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -59,41 +63,50 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                // we don't need CSRF because our token is invulnerable
-                .csrf().disable()
-
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-
-                // don't create session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
-                .authorizeRequests()
-                //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                // allow anonymous resource requests
-                .antMatchers(
-                        HttpMethod.GET,
-                        "/",
-                        "/*.html",
-                        "/favicon.ico",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
-                ).permitAll()
-                .antMatchers("/api/auth/**", "/api/user/registerA", "/api/user/registerB", "/api/user/validate", "/api/user/send",  "/api/geo/autocomplete", "/api/initDB", "/api/user/linkedin/auth/step1",
-                        "/api/specialties/**",
-                        "/api/contact/motives",
-                        "/api/contact", 
-                        "/api/sendTestNotificationIOS",
-                        "/api/sendTestNotificationAndroid").permitAll()
-                .anyRequest().authenticated();
-
-        // Custom JWT based security filter
-        httpSecurity
-                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-
-        // disable page caching
-        httpSecurity.headers().cacheControl();
+    	httpSecurity.authorizeRequests().antMatchers("/admin/**")
+		.access("hasRole('ADMIN')").and().formLogin()
+		.loginPage("/login").failureUrl("/login?error")
+		  .usernameParameter("username")
+			.passwordParameter("password")
+			.and().logout().logoutSuccessUrl("/login?logout")
+			.and().csrf()
+			.and().exceptionHandling().accessDeniedPage("/403");
+    	
+//        httpSecurity
+//                // we don't need CSRF because our token is invulnerable
+//                .csrf().disable()
+//
+//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+//
+//                // don't create session
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//
+//                .authorizeRequests()
+//                //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//
+//                // allow anonymous resource requests
+//                .antMatchers(
+//                        HttpMethod.GET,
+//                        "/",
+//                        "/.html",
+//                        "/favicon.ico",
+//                        "/**/*.html",
+//                        "/**/*.css",
+//                        "/**/*.js"
+//                ).permitAll()
+//                .antMatchers("/api/auth/**", "/api/user/registerA", "/api/user/registerB", "/api/user/validate", "/api/user/send",  "/api/geo/autocomplete", "/api/initDB", "/api/user/linkedin/auth/step1",
+//                        "/api/specialties/**",
+//                        "/api/contact/motives",
+//                        "/api/contact", 
+//                        "/api/sendTestNotificationIOS",
+//                        "/api/sendTestNotificationAndroid").permitAll()
+//                .anyRequest().authenticated();
+//
+//        // Custom JWT based security filter
+//        httpSecurity
+//                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+//
+//        // disable page caching
+//        httpSecurity.headers().cacheControl();
     }
 }
