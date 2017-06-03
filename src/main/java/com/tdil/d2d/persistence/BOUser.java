@@ -27,27 +27,18 @@ public class BOUser implements PersistentEntity {
 	
 	@Column(name = "creationDate")
 	private Date creationDate;
-	
-	@Column(name = "lastLoginDate")
-	private Date lastLoginDate;
 
-	@Column(name = "firstname")
-	private String firstname;
+	@Column(name = "name")
+	private String name;
 
-	@Column(name = "lastname")
-	private String lastname;
-	
 	@Column(name = "email")
 	private String email;
 	
 	@Column(name="pass")
 	private String password;
 
-	@Column(name = "enabled")
-	private boolean enabled;
-	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "D2D_USER_ROLE", joinColumns = {
+	@JoinTable(name = "D2D_BOUSER_ROLE", joinColumns = {
 			@JoinColumn(name = "USER_ID", nullable = false, updatable = false)},
 			inverseJoinColumns = {@JoinColumn(name = "ROLE_ID",
 					nullable = false, updatable = false)})
@@ -69,35 +60,6 @@ public class BOUser implements PersistentEntity {
 		this.email = email;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
-	
-	public boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public String getFirstname() {
-		return firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getLastname() {
-		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
-
 	public String getSalt() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(this.getCreationDate());
 	}
@@ -108,14 +70,6 @@ public class BOUser implements PersistentEntity {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
-	}
-
-	public Date getLastLoginDate() {
-		return lastLoginDate;
-	}
-
-	public void setLastLoginDate(Date lastLoginDate) {
-		this.lastLoginDate = lastLoginDate;
 	}
 
 	public String getPassword() {

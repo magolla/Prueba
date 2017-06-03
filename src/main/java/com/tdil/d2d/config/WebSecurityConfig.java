@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,97 +17,118 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.tdil.d2d.security.JwtAuthenticationEntryPoint;
 import com.tdil.d2d.security.JwtAuthenticationTokenFilter;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
-@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig  {
 
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+	 @Configuration
+	 @Order(1)
+     public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-	@Qualifier("boUserDetailsService")
-    private UserDetailsService userDetailsService;
+		    @Autowired
+		    private JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    @Autowired
-    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder
-                .userDetailsService(this.userDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
+		    @Autowired
+			@Qualifier("jwtUserDetailsService")
+		    private UserDetailsService userDetailsService;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-        //return new NoOpPasswordEncoder();
-    }
+		    @Autowired
+		    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+		        authenticationManagerBuilder
+		                .userDetailsService(this.userDetailsService)
+		                .passwordEncoder(passwordEncoder());
+		    }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+		    @Bean
+		    public PasswordEncoder passwordEncoder() {
+		        return new BCryptPasswordEncoder();
+		        //return new NoOpPasswordEncoder();
+		    }
 
-    @Bean
-    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-        JwtAuthenticationTokenFilter authenticationTokenFilter = new JwtAuthenticationTokenFilter();
-        authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
-        return authenticationTokenFilter;
-    }
+		    @Bean
+		    @Override
+		    public AuthenticationManager authenticationManagerBean() throws Exception {
+		        return super.authenticationManagerBean();
+		    }
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-    	httpSecurity.authorizeRequests().antMatchers("/admin/**")
-		.access("hasRole('ROLE_ADMIN')").and().formLogin()
-		.loginPage("/login").failureUrl("/login?error")
-		  .usernameParameter("username")
-			.passwordParameter("password")
-			.and().logout().logoutSuccessUrl("/login?logout")
-			.and().csrf()
-			.and().exceptionHandling().accessDeniedPage("/403");
-    	
-//        httpSecurity
-//                // we don't need CSRF because our token is invulnerable
-//                .csrf().disable()
-//
-//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-//
-//                // don't create session
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//
-//                .authorizeRequests()
-//                //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//
-//                // allow anonymous resource requests
-//                .antMatchers(
-//                        HttpMethod.GET,
-//                        "/",
-//                        "/.html",
-//                        "/favicon.ico",
-//                        "/**/*.html",
-//                        "/**/*.css",
-//                        "/**/*.js"
-//                ).permitAll()
-//                .antMatchers("/api/auth/**", "/api/user/registerA", "/api/user/registerB", "/api/user/validate", "/api/user/send",  "/api/geo/autocomplete", "/api/initDB", "/api/user/linkedin/auth/step1",
-//                        "/api/specialties/**",
-//                        "/api/contact/motives",
-//                        "/api/contact", 
-//                        "/api/sendTestNotificationIOS",
-//                        "/api/sendTestNotificationAndroid").permitAll()
-//                .anyRequest().authenticated();
-//
-//        // Custom JWT based security filter
-//        httpSecurity
-//                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-//
-//        // disable page caching
-//        httpSecurity.headers().cacheControl();
-    }
+		    @Bean
+		    public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
+		        JwtAuthenticationTokenFilter authenticationTokenFilter = new JwtAuthenticationTokenFilter();
+		        authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
+		        return authenticationTokenFilter;
+		    }
+
+		    @Override
+		    protected void configure(HttpSecurity httpSecurity) throws Exception {
+		    	
+		    	 httpSecurity
+	               
+	                .antMatcher("/api/**") 
+	                .authorizeRequests()
+	                .antMatchers("/api/auth/**", "/api/user/registerA", "/api/user/registerB", "/api/user/validate", "/api/user/send",  "/api/geo/autocomplete", "/api/initDB", "/api/user/linkedin/auth/step1",
+	                        "/api/specialties/**",
+	                        "/api/contact/motives",
+	                        "/api/contact", 
+	                        "/api/sendTestNotificationIOS",
+	                        "/api/sendTestNotificationAndroid").permitAll()
+	                .anyRequest().authenticated().and()
+	                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+	                .csrf().disable()
+	                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+			        // Custom JWT based security filter
+			        httpSecurity
+			                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+		
+			        // disable page caching
+			        httpSecurity.headers().cacheControl();
+		    	
+		    }
+     }
+	 
+	 @Configuration
+	 @Order(2)
+     public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+
+		   
+		    @Autowired
+			@Qualifier("boUserDetailsService")
+		    private UserDetailsService userDetailsService;
+
+		    @Autowired
+		    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+		        authenticationManagerBuilder
+		                .userDetailsService(this.userDetailsService)
+		                .passwordEncoder(passwordEncoder());
+		    }
+
+		    @Bean
+		    public PasswordEncoder passwordEncoder() {
+		        return new BCryptPasswordEncoder();
+		        //return new NoOpPasswordEncoder();
+		    }
+
+		    @Override
+		    protected void configure(HttpSecurity httpSecurity) throws Exception {
+		    	
+			      httpSecurity
+			                .authorizeRequests()
+			                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+			                .antMatchers("/login").permitAll().and()
+					    	.formLogin()
+							.loginPage("/login").failureUrl("/login?error")
+							    				.usernameParameter("username")
+							    				.passwordParameter("password")
+							    				.defaultSuccessUrl("/admin").and()
+							.logout().logoutSuccessUrl("/login?logout").and().
+							exceptionHandling().accessDeniedPage("/403");
+		    	
+		    }
+     }
+   
 }

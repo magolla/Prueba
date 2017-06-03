@@ -47,8 +47,7 @@ public class BOUserDetailsServiceImpl implements UserDetailsService {
     
  	private User buildUserForAuthentication(BOUser user,
  		List<GrantedAuthority> authorities) {
- 		return new User(user.getEmail(), user.getPassword(),
- 			user.isEnabled(), true, true, true, authorities);
+ 		return new User(user.getEmail(), user.getPassword(), authorities);
  	}
 
  	private List<GrantedAuthority> buildUserAuthority(Set<Role> userRoles) {
