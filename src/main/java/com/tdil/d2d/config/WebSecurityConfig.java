@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -118,6 +117,8 @@ public class WebSecurityConfig  {
 		    	
 			      httpSecurity
 			                .authorizeRequests().antMatchers("/admin/login").permitAll()
+			                .antMatchers("/admin/adminlte/**").permitAll()
+			                .antMatchers("/admin/bootstrap/**").permitAll()
 			                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')").and()
 			                
 					    	.formLogin()

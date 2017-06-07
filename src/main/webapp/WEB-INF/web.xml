@@ -44,9 +44,27 @@
          <param-value>true</param-value>
      </context-param>
      
+     <context-param>
+       <param-name>org.apache.tiles.impl.BasicTilesContainer.DEFINITIONS_CONFIG</param-name>
+       <param-value>/WEB-INF/tiles.xml</param-value>
+   	</context-param>   
+     
      <listener>
          <listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
      </listener>
+     
+     <listener>
+	    <listener-class>org.apache.tiles.extras.complete.CompleteAutoloadTilesListener</listener-class>
+	</listener>
+
+	<servlet>
+	    <servlet-name>Tiles Dispatch Servlet</servlet-name>
+	    <servlet-class>org.apache.tiles.web.util.TilesDispatchServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>Tiles Dispatch Servlet</servlet-name>
+	    <url-pattern>*.tiles</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>spring</servlet-name>

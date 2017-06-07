@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<definition name="d2d.guest" template="layouts/guest.jsp">
+	</definition>
+	
+	<definition name="d2d.login" extends="d2d.guest">
+		<put-attribute name="body" value="/WEB-INF/views/admin/login-content.jsp" />
+	</definition>
+	
+	<definition name="d2d.dashboard" template="layouts/main.jsp">
+	</definition>
+	
+</tiles-definitions>
