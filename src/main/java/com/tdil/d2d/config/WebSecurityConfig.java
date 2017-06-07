@@ -117,15 +117,15 @@ public class WebSecurityConfig  {
 		    protected void configure(HttpSecurity httpSecurity) throws Exception {
 		    	
 			      httpSecurity
-			                .authorizeRequests()
-			                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-			                .antMatchers("/login").permitAll().and()
+			                .authorizeRequests().antMatchers("/admin/login").permitAll()
+			                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')").and()
+			                
 					    	.formLogin()
-							.loginPage("/login").failureUrl("/login?error")
+							.loginPage("/admin/login").failureUrl("/admin/login?error")
 							    				.usernameParameter("username")
 							    				.passwordParameter("password")
 							    				.defaultSuccessUrl("/admin").and()
-							.logout().logoutSuccessUrl("/login?logout").and().
+							.logout().logoutSuccessUrl("/admin/login?logout").and().
 							exceptionHandling().accessDeniedPage("/403");
 		    	
 		    }

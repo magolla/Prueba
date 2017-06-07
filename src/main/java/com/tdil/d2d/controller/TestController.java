@@ -45,13 +45,6 @@ public class TestController {
         response.getOutputStream().write("OK".getBytes());
 
     }
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public void home(HttpServletResponse response) throws IOException {
-        System.out.println("HOME");
-        response.setContentType("text/plain");
-        response.getOutputStream().write("OK".getBytes());
-    }
     
     @Autowired
     private JwtTokenUtil jwtTokenUtil;

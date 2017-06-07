@@ -2,7 +2,7 @@
 <%@page session="true"%>
 <html>
 <head>
-<title>Login Page</title>
+<title>Login</title>
 <style>
 .error {
 	padding: 15px;
@@ -37,11 +37,11 @@
 </head>
 <body onload='document.loginForm.username.focus();'>
 
-	<h1> Login </h1>
+	<h1>Doc to Doc</h1>
 
 	<div id="login-box">
 
-		<h3>Login con Username and Password</h3>
+		<h3>Login</h3>
 
 		<c:if test="${not empty error}">
 			<div class="error">${error}</div>
@@ -51,11 +51,11 @@
 		</c:if>
 
 		<form name='loginForm'
-			action="<c:url value='/login' />" method='POST'>
+			action="<c:url value='/admin/login' />" method='POST'>
 
 			<table>
 				<tr>
-					<td>User:</td>
+					<td>Email:</td>
 					<td><input type='text' name='username'></td>
 				</tr>
 				<tr>

@@ -18,13 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class LoginController {
     
-	@RequestMapping(value = "/admin", method = RequestMethod.GET)
+	@RequestMapping(value = {"/", "/admin"} , method = RequestMethod.GET)
 	public ModelAndView adminPage() {
 
 		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Spring Security + Hibernate Example");
-		model.addObject("message", "This page is for ROLE_ADMIN only!");
-		model.setViewName("admin");
+		model.addObject("title", "Doc to Doc");
+		model.addObject("message", "Dashboard");
+		model.setViewName("admin/dashboard");
 
 		return model;
 
@@ -40,9 +40,9 @@ public class LoginController {
 		}
 
 		if (logout != null) {
-			model.addObject("msg", "You've been logged out successfully.");
+			model.addObject("msg", "La sesión ha finalizado correctamente.");
 		}
-		model.setViewName("login");
+		model.setViewName("admin/login");
 
 		return model;
 
@@ -52,18 +52,17 @@ public class LoginController {
 
 			Exception exception = (Exception) request.getSession().getAttribute(key);
 
-			String error = "";
+			String error = "Se ha producido un error. Por favor intente nuevamente mas tarde.";
 			if (exception instanceof BadCredentialsException) {
-				error = "Invalid username and password!";
+				error = "Usuario o contraseña incorrectos";
 			} else {
 				error = "Generic Error";
 			}
 			return error;
 	}
 	
-	// for 403 access denied page
-		@RequestMapping(value = "/403", method = RequestMethod.GET)
-		public ModelAndView accesssDenied() {
+	@RequestMapping(value = "/403", method = RequestMethod.GET)
+	public ModelAndView accesssDenied() {
 
 			ModelAndView model = new ModelAndView();
 
