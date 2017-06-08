@@ -125,7 +125,7 @@ public class WebSecurityConfig  {
 							.loginPage("/admin/login").failureUrl("/admin/login?error")
 							    				.usernameParameter("username")
 							    				.passwordParameter("password")
-							    				.defaultSuccessUrl("/admin").and()
+							    				.defaultSuccessUrl("/admin/dashboard").and()
 							.logout().logoutSuccessUrl("/admin/login?logout").and().
 							exceptionHandling().accessDeniedPage("/403");
 		    	

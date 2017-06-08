@@ -9,13 +9,13 @@
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<!-- Bootstrap 3.3.6 -->
-	<link rel="stylesheet" href="admin/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 	<!-- Ionicons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 	<!-- Theme style -->
-	<link rel="stylesheet" href="admin/adminlte/dist/css/AdminLTE.min.css">
+	<link rel="stylesheet" href="adminlte/dist/css/AdminLTE.min.css">
 	<!-- AdminLTE Skins. Choose a skin from the css/skins
 		 folder instead of downloading all of them to reduce the load. -->
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -61,7 +61,7 @@
 								<li><!-- start message -->
 									<a href="#">
 										<div class="pull-left">
-											<img src="admin/adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+											<img src="adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 										</div>
 										<h4>
 											Support Team
@@ -74,7 +74,7 @@
 								<li>
 									<a href="#">
 										<div class="pull-left">
-											<img src="admin/adminlte/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+											<img src="adminlte/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
 										</div>
 										<h4>
 											AdminLTE Design Team
@@ -86,7 +86,7 @@
                   				<li>
 									<a href="#">
 										<div class="pull-left">
-											<img src="admin/adminlte/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+											<img src="adminlte/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
 										</div>
 										<h4>
 											Developers
@@ -98,7 +98,7 @@
 								<li>
 									<a href="#">
 										<div class="pull-left">
-											<img src="admin/adminlte/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+											<img src="adminlte/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
 										</div>
 										 <h4>
 											Sales Department
@@ -110,7 +110,7 @@
 								<li>
 									<a href="#">
 										<div class="pull-left">
-											<img src="admin/adminlte/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+											<img src="adminlte/dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
 										</div>
 										<h4>
 											Reviewers
@@ -260,13 +260,13 @@
 				<!-- User Account: style can be found in dropdown.less -->
 				<li class="dropdown user user-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img src="admin/adminlte/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+						<img src="adminlte/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
 						<span class="hidden-xs">Alexander Pierce</span>
 					</a>
 					<ul class="dropdown-menu">
 						<!-- User image -->
 						<li class="user-header">
-							<img src="admin/adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+							<img src="adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 							<p>
 								Alexander Pierce - Web Developer
 								<small>Member since Nov. 2012</small>
@@ -288,12 +288,14 @@
 							<!-- /.row -->
 						</li>
 						<!-- Menu Footer-->
+						
 						<li class="user-footer">
 							<div class="pull-left">
 								<a href="#" class="btn btn-default btn-flat">Profile</a>
 							</div>
 							<div class="pull-right">
-								<a href="#" class="btn btn-default btn-flat">Sign out</a>
+							    <a href="javascript:document.getElementById('logoutForm').submit();"
+							    class="btn btn-default btn-flat">Sign out</a>
 							</div>
 						</li>
 					</ul>
@@ -303,6 +305,11 @@
 					<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
 				</li>
 			</ul>
+			<c:url value="/logout" var="logoutUrl" />
+			 <form action="${logoutUrl}" method="post" id="logoutForm">
+					<input type="hidden" name="${_csrf.parameterName}"
+								value="${_csrf.token}" />
+			</form>
 		</div>
 	</nav>
 	
@@ -314,7 +321,7 @@
 			<!-- Sidebar user panel -->
 			<div class="user-panel">
 				<div class="pull-left image">
-					<img src="admin/adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+					<img src="adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 				</div>
 				<div class="pull-left info">
 					<p>Alexander Pierce</p>
@@ -732,14 +739,14 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 2.2.3 -->
-<script src="admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="admin/bootstrap/js/bootstrap.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
 <!-- FastClick -->
-<script src="admin/adminlte/plugins/fastclick/fastclick.js"></script>
+<script src="adminlte/plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
-<script src="admin/adminlte/dist/js/app.min.js"></script>
+<script src="adminlte/dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="admin/adminlte/dist/js/demo.js"></script>
+<script src="adminlte/dist/js/demo.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-package com.tdil.d2d.admcontroller;
+package com.tdil.d2d.controller.bo;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class LoginController {
     
-	@RequestMapping(value = {"/", "/admin"} , method = RequestMethod.GET)
+	@RequestMapping(value = {"/dashboard"} , method = RequestMethod.GET)
 	public ModelAndView adminPage() {
 
 		ModelAndView model = new ModelAndView();
@@ -27,6 +27,14 @@ public class LoginController {
 		model.setViewName("admin/dashboard");
 
 		return model;
+
+	}
+	
+	@RequestMapping(value = {"/", "/admin"} , method = RequestMethod.GET)
+	public ModelAndView home() {
+
+		return new ModelAndView("redirect:/admin/dashboard");
+
 
 	}
 	
