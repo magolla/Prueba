@@ -18,8 +18,14 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class LoginController {
     
+
+	@RequestMapping(value = {"/", "/admin"} , method = RequestMethod.GET)
+	public ModelAndView redirect() {
+		return new ModelAndView("redirect:/admin/dashboard");
+	}
+	
 	@RequestMapping(value = {"/dashboard"} , method = RequestMethod.GET)
-	public ModelAndView adminPage() {
+	public ModelAndView homePage() {
 
 		ModelAndView model = new ModelAndView();
 		model.addObject("title", "Doc to Doc");
@@ -30,13 +36,6 @@ public class LoginController {
 
 	}
 	
-	@RequestMapping(value = {"/", "/admin"} , method = RequestMethod.GET)
-	public ModelAndView home() {
-
-		return new ModelAndView("redirect:/admin/dashboard");
-
-
-	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
