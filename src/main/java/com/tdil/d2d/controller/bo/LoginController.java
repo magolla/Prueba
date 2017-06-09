@@ -28,8 +28,6 @@ public class LoginController {
 	public ModelAndView homePage() {
 
 		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Doc to Doc");
-		model.addObject("message", "Dashboard");
 		model.setViewName("admin/dashboard");
 
 		return model;
@@ -62,9 +60,7 @@ public class LoginController {
 			String error = "Se ha producido un error. Por favor intente nuevamente mas tarde.";
 			if (exception instanceof BadCredentialsException) {
 				error = "Usuario o contraseña incorrectos";
-			} else {
-				error = "Generic Error";
-			}
+			} 
 			return error;
 	}
 	
