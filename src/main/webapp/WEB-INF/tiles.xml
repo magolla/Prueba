@@ -3,14 +3,16 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
-	<definition name="d2d.guest" template="layouts/guest.jsp">
+	<definition name="d2d.guest" template="/WEB-INF/views/admin/layouts/guest.jsp">
 	</definition>
 	
 	<definition name="d2d.login" extends="d2d.guest">
-		<put-attribute name="body" value="/WEB-INF/views/admin/login-content.jsp" />
+		<put-attribute name="body" value=" " />
 	</definition>
 	
-	<definition name="d2d.dashboard" template="layouts/main.jsp">
+	<definition name="d2d.dashboard" template="/WEB-INF/views/admin/layouts/main.jsp">
+		<put-attribute name="title" value=" " />
+		<put-attribute name="body" value=" " />
 	</definition>
 	
 </tiles-definitions>
