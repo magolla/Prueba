@@ -48,7 +48,6 @@
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script src="adminlte/plugins/fastclick/fastclick.js"></script>
 <script src="adminlte/dist/js/app.min.js"></script>
-<script src="adminlte/dist/js/demo.js"></script>
 
 </body>
 </html>

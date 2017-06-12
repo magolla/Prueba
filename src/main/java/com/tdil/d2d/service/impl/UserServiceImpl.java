@@ -37,6 +37,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mercadopago.MP;
+import com.tdil.d2d.bo.dto.BOUserDTO;
+import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
@@ -91,6 +93,7 @@ import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.ActivityAction;
 import com.tdil.d2d.persistence.ActivityLog;
+import com.tdil.d2d.persistence.BOUser;
 import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.GeoLevel;
@@ -1909,5 +1912,28 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 		
+	}
+
+	@Override
+	public List<UserDTO> getAll() throws ServiceException {
+		try {
+			return toDtoList(this.userDAO.getAll());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	private List<UserDTO> toDtoList(Collection<User> list) {
+		return list.stream().map(user -> toDto(user)).collect(Collectors.toList());
+	}
+	
+	private  UserDTO toDto(User user) {
+		UserDTO result = new UserDTO();
+
+		result.setId(user.getId());
+		result.setEmail(user.getEmail());
+		result.setName(user.getFirstname());
+		
+		return result;
 	}
 }

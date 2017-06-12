@@ -45,4 +45,6 @@ public interface UserDAO {
 	public ValidationCode getValidationCode(String mobilePhone, String smsCode) throws DAOException;
 
 	public void save(ValidationCode validationCode)  throws DAOException ;
+	
+	public List<User> getAll() throws DAOException; 
 }
