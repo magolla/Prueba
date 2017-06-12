@@ -1,4 +1,4 @@
-package com.tdil.d2d.controller.bo;
+package com.tdil.d2d.bo.controller;
 
 import javax.servlet.http.HttpServletRequest;
 

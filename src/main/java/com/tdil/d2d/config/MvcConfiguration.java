@@ -12,7 +12,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
-@ComponentScan(basePackages="com.tdil.d2d.controller.bo")
+@ComponentScan(basePackages="com.tdil.d2d.bo.controller")
 @EnableWebMvc
 public class MvcConfiguration extends WebMvcConfigurerAdapter{
 

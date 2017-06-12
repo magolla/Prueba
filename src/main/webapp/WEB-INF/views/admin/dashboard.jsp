@@ -9,10 +9,11 @@
 	<tiles:putAttribute name="body">
 		<section class="content">
 			<div class="row">
-				PEPOTE
+				
 			</div>
 		</section>
 		
 	</tiles:putAttribute>
+
 </tiles:insertDefinition>
 
