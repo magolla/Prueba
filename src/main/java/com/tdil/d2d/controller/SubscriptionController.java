@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tdil.d2d.controller.api.dto.SubscriptionDTO;
 import com.tdil.d2d.controller.api.request.GenerateSuscriptionRequest;
+import com.tdil.d2d.controller.api.request.ReceiptSuscriptionRequest;
 import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.controller.api.response.UserReceiptResponse;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
@@ -120,4 +122,21 @@ public class SubscriptionController extends AbstractController {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value = "/subscription/receipt/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<UserReceiptResponse>> verifyAndRegisterSuscription(@Valid @RequestBody ReceiptSuscriptionRequest receiptSuscriptionRequest, BindingResult bidingResult) {
+		if (bidingResult.hasErrors()) {
+			return new ResponseEntity<GenericResponse<UserReceiptResponse>>((GenericResponse)null, HttpStatus.BAD_REQUEST);
+		}
+		
+		User user = this.sessionService.getUserLoggedIn();
+		
+		try {
+			UserReceiptResponse receiptInfo = this.subscriptionService.verifyAndRegisterSuscription(user, receiptSuscriptionRequest);
+			return new ResponseEntity<GenericResponse<UserReceiptResponse>>(new GenericResponse<UserReceiptResponse>(receiptInfo, HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (ServiceException e) {
+			return new ResponseEntity<GenericResponse<UserReceiptResponse>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+	}
 }

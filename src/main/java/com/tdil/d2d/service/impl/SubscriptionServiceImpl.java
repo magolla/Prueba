@@ -8,7 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.tdil.d2d.controller.api.dto.InAppPurchaseDTO;
+import com.tdil.d2d.controller.api.dto.VerifyReceiptResultDTO;
+import com.tdil.d2d.controller.api.request.ReceiptSuscriptionRequest;
 import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
+import com.tdil.d2d.controller.api.response.UserReceiptResponse;
 import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.SystemPropertyDAO;
@@ -30,6 +36,10 @@ import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.utils.Constants;
 import com.tdil.d2d.utils.LoggerManager;
 import com.tdil.d2d.utils.ServiceLocator;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 @Transactional
 @Service()
@@ -219,6 +229,62 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			throw new DTDException(ExceptionDefinition.DTD_2004, e);
 		}
 		
+		return null;
+	}
+	
+	@Override
+	public UserReceiptResponse verifyAndRegisterSuscription(User user, ReceiptSuscriptionRequest receiptSuscriptionRequest) throws ServiceException {
+		String url = "https://buy.itunes.apple.com/verifyReceipt";
+		if(receiptSuscriptionRequest.getIsDev()) {
+			url = "https://sandbox.itunes.apple.com/verifyReceipt";
+		}
+		
+        try {
+        	org.json.JSONObject data = new org.json.JSONObject();
+			data.put("receipt-data", receiptSuscriptionRequest.getReceiptData());
+			data.put("password", receiptSuscriptionRequest.getPassword());
+			
+        	okhttp3.MediaType jsonType = okhttp3.MediaType.parse("application/x-www-form-urlencoded");
+        	
+			OkHttpClient client = new OkHttpClient();
+			
+			okhttp3.RequestBody body = okhttp3.RequestBody.create(jsonType, data.toString());
+			Request request = new Request.Builder()
+			      .url(url)
+			      .post(body)
+			      .build();
+			Response response = client.newCall(request).execute();
+        	
+            String responseBody = response.body().string();
+            System.out.println(responseBody);
+            
+            Gson gson = new GsonBuilder().create();
+            VerifyReceiptResultDTO receiptResult = gson.fromJson(responseBody, VerifyReceiptResultDTO.class);
+            
+            InAppPurchaseDTO lastPurchase = null;
+            if(receiptResult.getStatus() == 0 && !receiptResult.getLatestPurchases().isEmpty()) {
+            	int quantity = receiptResult.getLatestPurchases().size();
+            	
+            	lastPurchase = receiptResult.getLatestPurchases().get(quantity - 1);
+            }
+            
+            if(lastPurchase != null) {
+            	Long expiresDate = lastPurchase.getExpiresDate();
+            	Long purchaseDate = lastPurchase.getPurchaseDate();
+            	Boolean isTrialPeriod = lastPurchase.getIsTrialPeriod();
+            	
+            	UserReceiptResponse receiptInfo = new UserReceiptResponse();
+            	receiptInfo.setExpiresDate(expiresDate);
+            	receiptInfo.setPurchaseDate(purchaseDate);
+            	receiptInfo.setIsTrialPeriod(isTrialPeriod);
+            	
+            	return receiptInfo;
+            }
+        } catch (Exception ex) {
+        	LoggerManager.error(this, ex);
+			throw new DTDException(ExceptionDefinition.DTD_2004, ex);
+        }
+        
 		return null;
 	}
 }
