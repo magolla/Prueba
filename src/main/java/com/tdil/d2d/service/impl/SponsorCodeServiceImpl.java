@@ -7,12 +7,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ExceptionDefinition;
+import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
@@ -21,13 +23,13 @@ import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.SponsorCodeService;
 import com.tdil.d2d.utils.SponsorCodeGenerator;
 
+@Transactional
 @Service
 public class SponsorCodeServiceImpl implements SponsorCodeService {
 
 	private final SponsorCodeGenerator sponsorCodeGenerator;
 	private final SubscriptionDAO subscriptionDAO;
 	private final UserDAO userDAO;
-	
 	
 	
 	@Autowired
@@ -101,5 +103,40 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 		cal = sponsorCode.getTimeUnit().add(cal, sponsorCode.getUnits());
 		return cal.getTime();
 	}
+
+
+
+	@Override
+	public Subscription consumeWebSponsorCode(String mobilePhone, String code)  throws ServiceException{
+		try{
+			
+			User user = userDAO.getUserByMobilePhone(mobilePhone);
+			
+			if(user==null){
+				user = register(mobilePhone);
+			}
+			Subscription subscription = this.consumeSponsorCode(user, code);
+					
+			return subscription;
+			
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	public User register(String mobilePhone) throws ServiceException {
+		try {
+			User user = new User();
+			user.setMobilePhone(mobilePhone);
+			Date registrationDate = new Date();
+			user.setCreationDate(registrationDate);
+			
+			this.userDAO.save(user);
+			
+			return user;
+		} catch (DAOException e){
+			throw new ServiceException(e);
+		}
+	}	
 
 }
