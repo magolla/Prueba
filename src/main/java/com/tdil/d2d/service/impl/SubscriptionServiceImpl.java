@@ -132,7 +132,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				// String.valueOf(userID));
 				return null;
 			} else {
-				Subscription subscription = subscriptions.get(0);
+				Subscription subscription = subscriptions.get(subscriptions.size()-1);
 				if (subscription.getExpirationDate().before(new Date())) {
 					return null;
 				} else {
