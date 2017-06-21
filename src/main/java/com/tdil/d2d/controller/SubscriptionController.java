@@ -142,7 +142,7 @@ public class SubscriptionController extends AbstractController {
 	
 	@RequestMapping(value = "/subscription/receipt/me", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<UserReceiptResponse>> receiptMe() {
-		try {
+		try { 
 			UserReceiptResponse receiptInfo = this.subscriptionService.getLastReceipt();
 			return new ResponseEntity<GenericResponse<UserReceiptResponse>>(new GenericResponse<UserReceiptResponse>(receiptInfo, HttpStatus.OK.value()), HttpStatus.OK);
 		} catch (ServiceException e) {
