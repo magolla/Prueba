@@ -1,6 +1,8 @@
 package com.tdil.d2d.service.impl;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -263,9 +265,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             
             InAppPurchaseDTO lastPurchase = null;
             if(receiptResult.getStatus() == 0 && !receiptResult.getLatestPurchases().isEmpty()) {
-            	int quantity = receiptResult.getLatestPurchases().size();
             	
-            	lastPurchase = receiptResult.getLatestPurchases().get(quantity - 1);
+            	Comparator<InAppPurchaseDTO> comp = (InAppPurchaseDTO a, InAppPurchaseDTO b) -> {
+            		if (b.getExpiresDate() < a.getExpiresDate()){
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+            	};
+            	
+            	List<InAppPurchaseDTO> latestPurchases = receiptResult.getLatestPurchases();
+            	
+            	Collections.sort(latestPurchases, comp);
+            	
+            	lastPurchase = latestPurchases.get(0);
             }
             
             if(lastPurchase != null) {
