@@ -27,6 +27,7 @@ import com.tdil.d2d.exceptions.ExceptionDefinition;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.ActivityAction;
 import com.tdil.d2d.persistence.ActivityLog;
+import com.tdil.d2d.persistence.Receipt;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
@@ -258,7 +259,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			Response response = client.newCall(request).execute();
         	
             String responseBody = response.body().string();
-            System.out.println(responseBody);
             
             Gson gson = new GsonBuilder().create();
             VerifyReceiptResultDTO receiptResult = gson.fromJson(responseBody, VerifyReceiptResultDTO.class);
@@ -267,7 +267,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             if(receiptResult.getStatus() == 0 && !receiptResult.getLatestPurchases().isEmpty()) {
             	
             	Comparator<InAppPurchaseDTO> comp = (InAppPurchaseDTO a, InAppPurchaseDTO b) -> {
-            		if (b.getExpiresDate() < a.getExpiresDate()){
+            		if (b.getExpiresDate() > a.getExpiresDate()){
                         return -1;
                     } else {
                         return 1;
@@ -278,7 +278,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             	
             	Collections.sort(latestPurchases, comp);
             	
-            	lastPurchase = latestPurchases.get(0);
+            	int quantity = latestPurchases.size();
+            	
+            	List<String> storedTransationIds = subscriptionDAO.getStoredTransationIds(latestPurchases);
+            	this.saveReceipts(latestPurchases, storedTransationIds);
+            	
+            	lastPurchase = latestPurchases.get(quantity - 1);
             }
             
             if(lastPurchase != null) {
@@ -293,6 +298,68 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             	
             	return receiptInfo;
             }
+        } catch (Exception ex) {
+        	LoggerManager.error(this, ex);
+			throw new DTDException(ExceptionDefinition.DTD_2004, ex);
+        }
+        
+		return null;
+	}
+	
+	private void saveReceipts(List<InAppPurchaseDTO> latestPurchases, List<String> storedTransationIds) throws ServiceException {
+		try {
+			User loggedUser = this.getLoggedUser();
+			for (InAppPurchaseDTO inApp : latestPurchases) {
+				if(!storedTransationIds.contains(inApp.getTransactionID())) {
+					
+					Receipt newReceipt = new Receipt();
+					newReceipt.setUser(loggedUser);
+					newReceipt.setCreationDate(new Date());
+					newReceipt.setExpiresDate(inApp.getExpiresDate());
+					newReceipt.setIsTrialPeriod(inApp.getIsTrialPeriod());
+					newReceipt.setOrderItemId(inApp.getOrderItemID());
+					newReceipt.setTransationId(inApp.getTransactionID());
+					newReceipt.setTransactionIdOriginal(inApp.getTransactionIDOriginal());
+					newReceipt.setPurchaseDate(inApp.getPurchaseDate());
+					newReceipt.setPurchaseDateOriginal(inApp.getPurchaseDateOriginal());
+					newReceipt.setQuantity(inApp.getQuantity());
+					newReceipt.setProductId(inApp.getProductID());
+					
+		            subscriptionDAO.saveReceipt(newReceipt);
+				}
+			}
+			
+		} catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+		
+	}
+	
+	private User getLoggedUser() throws ServiceException {
+		try {
+			return userDAO.getById(User.class, com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public UserReceiptResponse getLastReceipt() throws ServiceException {
+        try {
+        	Long userId = com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId();
+            Receipt lastReceipt = null;
+            lastReceipt = subscriptionDAO.getLastReceipt(userId);
+            
+            if(lastReceipt != null) {
+            	UserReceiptResponse receiptInfo = new UserReceiptResponse();
+            	receiptInfo.setExpiresDate(lastReceipt.getExpiresDate());
+            	receiptInfo.setPurchaseDate(lastReceipt.getPurchaseDate());
+            	receiptInfo.setIsTrialPeriod(lastReceipt.getIsTrialPeriod());
+            	
+            	return receiptInfo;	
+            }
+            
+            
         } catch (Exception ex) {
         	LoggerManager.error(this, ex);
 			throw new DTDException(ExceptionDefinition.DTD_2004, ex);

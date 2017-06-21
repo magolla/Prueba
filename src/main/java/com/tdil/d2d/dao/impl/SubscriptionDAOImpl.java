@@ -1,11 +1,13 @@
 package com.tdil.d2d.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -16,8 +18,10 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.controller.api.dto.InAppPurchaseDTO;
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.Receipt;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
@@ -166,4 +170,54 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getStoredTransationIds(List<InAppPurchaseDTO> latestPurchases) {
+		
+		List<String> transactionIds = new ArrayList<String>();
+		for (InAppPurchaseDTO inAppPurchaseDTO : latestPurchases) {
+			transactionIds.add(inAppPurchaseDTO.getTransactionID());
+		}
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT distinct receipt.transactionId ");
+		queryString.append("FROM Receipt receipt ");
+		queryString.append("WHERE receipt.transactionId in (:transactionIds) ");
+		queryString.append("order by receipt.creationDate desc");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameterList("transactionIds", transactionIds);
+
+		List<String> list = query.list();
+		return list;
+	}
+	
+	@Override
+	public void saveReceipt(Receipt receipt) throws DAOException {
+		String invocationDetails = "save(" + receipt.getClass().getName() + ") ";
+		try {
+			this.getHibernateTemplate().save(receipt);
+			this.getHibernateTemplate().flush();
+		} catch (DataIntegrityViolationException e) {
+			this.handleException(invocationDetails, e);
+		} catch (Exception e) {
+			this.handleException(invocationDetails, e);
+		}
+	}
+	
+	@Override
+	public Receipt getLastReceipt(Long userId) {
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT distinct receipt ");
+		queryString.append("FROM Receipt receipt ");
+		queryString.append("WHERE receipt.user.id = :userId ");
+		queryString.append("order by receipt.expiresDate desc");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setMaxResults(1);
+		query.setParameter("userId", userId);
+
+		return (Receipt) query.uniqueResult();
+	}
 }

@@ -20,5 +20,7 @@ public interface SubscriptionService {
 	public Subscription createFreeSubscription(User user) throws ServiceException ;
 
 	public UserReceiptResponse verifyAndRegisterSuscription(User user, ReceiptSuscriptionRequest receiptSuscriptionRequest) throws ServiceException ;
+
+	public UserReceiptResponse getLastReceipt() throws ServiceException;
 }
 

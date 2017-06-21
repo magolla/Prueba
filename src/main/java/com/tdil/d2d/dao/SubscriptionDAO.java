@@ -2,7 +2,9 @@ package com.tdil.d2d.dao;
 
 import java.util.List;
 
+import com.tdil.d2d.controller.api.dto.InAppPurchaseDTO;
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.Receipt;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
@@ -28,4 +30,10 @@ public interface SubscriptionDAO {
 	List<SponsorCode> listSponsorCodes(Long sponsorId);
 	
 	boolean checkIfSponsorCodeExist(Long sponsorId,String sponsorCode);
+
+	public List<String> getStoredTransationIds(List<InAppPurchaseDTO> latestPurchases);
+	
+	public void saveReceipt(Receipt receipt) throws DAOException;
+
+	public Receipt getLastReceipt(Long userId);
 }
