@@ -1,13 +1,12 @@
 package com.tdil.d2d.bo.dto;
 
 import java.util.Date;
+import java.util.List;
 
 public class BOUserDTO {
 
 	private long id;
 	
-	private Date creationDate;
-
 	private String name;
 
 	private String email;
@@ -16,7 +15,7 @@ public class BOUserDTO {
 
 	private String state;
 	
-	private String roles;
+	private List<RoleDTO> roles;
 	
 	public long getId() {
 		return id;
@@ -24,14 +23,6 @@ public class BOUserDTO {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
 	}
 
 	public String getName() {
@@ -66,12 +57,21 @@ public class BOUserDTO {
 		this.state = state;
 	}
 
-	public String getRoles() {
+	public List<RoleDTO> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(String roles) {
+	public void setRoles(List<RoleDTO> roles) {
 		this.roles = roles;
+	}
+	
+	public boolean hasRole(String role){
+		for(RoleDTO dto : roles){
+			if(dto.getName().equals(role)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

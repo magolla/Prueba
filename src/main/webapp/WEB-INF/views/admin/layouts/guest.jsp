@@ -1,7 +1,7 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-<%@page session="true"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -17,16 +17,9 @@
 	<!-- Ionicons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 	<!-- Theme style -->
-	<link rel="stylesheet" href="adminlte/dist/css/AdminLTE.min.css">
-	<!-- AdminLTE Skins. Choose a skin from the css/skins
-		 folder instead of downloading all of them to reduce the load. -->
-	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-	<![endif]-->
-</head>
+	<link rel="stylesheet" href="<c:url value="/admin/adminlte/dist/css/AdminLTE.css" />">
+	
+
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 	
@@ -43,11 +36,6 @@
 
 	<div class="control-sidebar-bg"></div>
 </div>
-
-<script src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<script src="bootstrap/js/bootstrap.min.js"></script>
-<script src="adminlte/plugins/fastclick/fastclick.js"></script>
-<script src="adminlte/dist/js/app.min.js"></script>
 
 </body>
 </html>

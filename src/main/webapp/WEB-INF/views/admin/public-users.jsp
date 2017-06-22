@@ -26,15 +26,21 @@
 							                <th>Nombre publico</th>
 							                <th>Email</th>
 							                <th>Estado</th>
-							                <th>Roles</th>
+							                <th>Tipo Suscripción</th>
+							                <th>Estado Suscripción</th>
+							                <th>Fecha Expiración</th>
+							                <th>Acción</th>
 							            </tr>
 							        </thead>
 							        <tfoot>
 							            <tr>
-							                <th>Nombre</th>
+							                <th>Nombre publico</th>
 							                <th>Email</th>
 							                <th>Estado</th>
-							                <th>Roles</th>
+							                <th>Tipo Suscripción</th>
+							                <th>Estado Suscripción</th>
+							                <th>Fecha Expiración</th>
+							                <th>Acción</th>
 							            </tr>
 							        </tfoot>
 							    </table>
@@ -53,11 +59,27 @@
 $(document).ready(function() {
     $('#users').DataTable( {
         "ajax": '/d2d/admin/list/public-users',
+        "language": {
+            "search": "Buscar:",
+            "info": "Página _PAGE_ de _PAGES_",
+            "paginate": {
+                "previous": "Previa",
+                "next": "Siguiente",
+              }
+          },
         "columns": [
                     { "data": "name" },
                     { "data": "email" },
                     { "data": "state" },
-                    { "data": "roles" },
+                    { "data": "subscriptionType" },
+                    { "data": "subscriptionState" },
+                    { "data": "expirationDate" },
+                    {
+                        "data": "id",
+                        "render": function ( data, type, full, meta ) {
+                              return '<a href="users/'+data+'">Ver Datos</a>';
+                            }
+                     }  
                 ],
          "bLengthChange": false        
     } );

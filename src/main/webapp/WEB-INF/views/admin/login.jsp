@@ -11,7 +11,7 @@
 		
 					<div class="box box-info">
 						<div class="box-header with-border">
-							<h3 class="box-title">Login Form</h3>
+							<h3 class="box-title">Login</h3>
 						</div>
 						
 						<c:if test="${not empty error}">
@@ -41,7 +41,7 @@
 							</div>
 							
 							<div class="box-footer">
-								<button type="submit" class="btn btn-info pull-right">Sign in</button>
+								<button type="submit" class="btn btn-info pull-right">Login</button>
 							</div>
 							
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

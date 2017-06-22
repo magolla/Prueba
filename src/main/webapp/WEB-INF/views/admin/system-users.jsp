@@ -26,6 +26,7 @@
 							                <th>Email</th>
 							                <th>Estado</th>
 							                <th>Roles</th>
+							                <th>Acción</th>
 							            </tr>
 							        </thead>
 							        <tfoot>
@@ -34,6 +35,7 @@
 							                <th>Email</th>
 							                <th>Estado</th>
 							                <th>Roles</th>
+							                <th>Acción</th>
 							            </tr>
 							        </tfoot>
 							    </table>
@@ -52,11 +54,28 @@
 $(document).ready(function() {
     $('#users').DataTable( {
         "ajax": '/d2d/admin/list/bo-users',
+        "language": {
+            "search": "Buscar:",
+            "info": "Página _PAGE_ de _PAGES_",
+            "paginate": {
+                "previous": "Previa",
+                "next": "Siguiente",
+              }
+          },
         "columns": [
                     { "data": "name" },
                     { "data": "email" },
                     { "data": "state" },
-                    { "data": "roles" },
+                    {
+                        "data": "roles",
+                        "render": "[, ].description"
+                      },
+                    {
+                        "data": "id",
+                        "render": function ( data, type, full, meta ) {
+                              return '<a href="users/'+data+'">Editar</a>';
+                            }
+                     }  
                 ],
          "bLengthChange": false        
     } );

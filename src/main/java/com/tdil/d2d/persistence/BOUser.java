@@ -36,6 +36,9 @@ public class BOUser implements PersistentEntity {
 	
 	@Column(name="pass")
 	private String password;
+	
+	@Column(name="active")
+	private boolean active;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "D2D_BOUSER_ROLE", joinColumns = {
@@ -96,6 +99,12 @@ public class BOUser implements PersistentEntity {
 		this.name = name;
 	}
 
-	
-	
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 }

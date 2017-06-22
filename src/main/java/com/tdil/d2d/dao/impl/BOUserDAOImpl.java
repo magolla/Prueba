@@ -5,11 +5,13 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.quartz.utils.FindbugsSuppressWarnings;
 import org.springframework.stereotype.Repository;
 
 import com.tdil.d2d.dao.BOUserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.BOUser;
+import com.tdil.d2d.persistence.Role;
 
 @Repository
 public class BOUserDAOImpl extends GenericDAO<BOUser> implements BOUserDAO {
@@ -35,6 +37,22 @@ public class BOUserDAOImpl extends GenericDAO<BOUser> implements BOUserDAO {
 	public List<BOUser> getAll() throws DAOException {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(BOUser.class);
 			return criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Role> getAllRoles() throws DAOException {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Role.class);
+			return criteria.list();
+	}
+
+	@Override
+	public BOUser find(long userId)  throws DAOException{
+		try{
+			return getById(BOUser.class, userId);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
 	}
 
 }

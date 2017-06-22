@@ -6,17 +6,17 @@ public class UserDTO {
 
 	private long id;
 	
-	private Date creationDate;
-
 	private String name;
 
 	private String email;
 	
-	private String password;
-
 	private String state;
 	
-	private String roles;
+	private String subscriptionType;
+	
+	private String subscriptionState;
+	
+	private String expirationDate;
 	
 	public long getId() {
 		return id;
@@ -24,14 +24,6 @@ public class UserDTO {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
 	}
 
 	public String getName() {
@@ -50,14 +42,6 @@ public class UserDTO {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getState() {
 		return state;
 	}
@@ -66,12 +50,29 @@ public class UserDTO {
 		this.state = state;
 	}
 
-	public String getRoles() {
-		return roles;
+	public String getSubscriptionType() {
+		return subscriptionType;
 	}
 
-	public void setRoles(String roles) {
-		this.roles = roles;
+	public void setSubscriptionType(String subscriptionType) {
+		this.subscriptionType = subscriptionType;
 	}
+
+	public String getSubscriptionState() {
+		return subscriptionState;
+	}
+
+	public void setSubscriptionState(String subscriptionState) {
+		this.subscriptionState = subscriptionState;
+	}
+
+	public String getExpirationDate() {
+		return expirationDate;
+	}
+
+	public void setExpirationDate(String expirationDate) {
+		this.expirationDate = expirationDate;
+	}
+
 	
 }

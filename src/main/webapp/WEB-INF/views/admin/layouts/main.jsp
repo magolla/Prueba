@@ -11,29 +11,19 @@
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<!-- Bootstrap 3.3.6 -->
-	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<c:url value="/admin/bootstrap/css/bootstrap.min.css" />">
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
-	<!-- Ionicons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-	<!-- Theme style -->
-	<link rel="stylesheet" href="adminlte/dist/css/AdminLTE.min.css">
-	
-   <link rel="stylesheet" href="adminlte/dist/css/skins/_all-skins.min.css">
+	<link rel="stylesheet" href="<c:url value="/admin/adminlte/dist/css/AdminLTE.css" />">
+	<link rel="stylesheet" href="<c:url value="/admin/adminlte/dist/css/skins/_all-skins.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/admin/adminlte/plugins/datatables/jquery.dataTables.min.css" />">
    
-   <link rel="stylesheet" href="adminlte/plugins/datatables/jquery.dataTables.min.css">
-   
-   
-<!-- jQuery 2.2.3 -->
-<script src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<!-- Bootstrap 3.3.6 -->
-<script src="bootstrap/js/bootstrap.min.js"></script>
-<!-- FastClick -->
-<script src="adminlte/plugins/fastclick/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="adminlte/dist/js/app.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="adminlte/plugins/datatables/jquery.dataTables.min.js" ></script>
+	<script src="<c:url value="/admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js" />"></script>
+	<script src="<c:url value="/admin/bootstrap/js/bootstrap.min.js" />"></script>
+	<script src="<c:url value="/admin/adminlte/plugins/fastclick/fastclick.js" />"></script>
+	<script src="<c:url value="/admin/adminlte/dist/js/app.min.js" />"></script>
+	<script src="<c:url value="/admin/adminlte/plugins/datatables/jquery.dataTables.min.js" />" ></script>
 
 
 </head>
@@ -74,8 +64,7 @@
 				<!-- User Account: style can be found in dropdown.less -->
 				<li class="dropdown user user-menu">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img src="adminlte/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-						<span class="hidden-xs">Alexander Pierce</span>
+						<span class="hidden-xs">${pageContext.request.userPrincipal.name}</span>
 					</a>
 				</li>
 				
@@ -100,12 +89,12 @@
 			<!-- sidebar menu: : style can be found in sidebar.less -->
 			<ul class="sidebar-menu">
 				<li class="treeview">
-					<a href="dashboard">
+					<a href="<c:url value="/admin/dashboard" />">
 						<i class="fa fa-dashboard"></i> <span>Dashboard</span>
 					</a>
 				</li>
 				<li class="treeview">
-					<a href="users">
+					<a href="<c:url value="/admin/users" />">
 						<i class="fa fa-user"></i> <span>Usuarios</span>
 					</a>
 				</li>
@@ -128,9 +117,9 @@
 	
 	<footer class="main-footer">
 		<div class="pull-right hidden-xs">
-			<b>Version</b> 2.3.6
+			<b>Version</b> 1.0.0
 		</div>
-		<strong>Copyright &copy; 2014-2016 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
+		<strong>Copyright &copy; 2017 <a href="http://www.doctodocapp.com/">Doc To Doc</a>.</strong> All rights reserved.
 	</footer>
 
 	<!-- Control Sidebar -->
