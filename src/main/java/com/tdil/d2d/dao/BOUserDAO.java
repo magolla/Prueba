@@ -14,5 +14,9 @@ public interface BOUserDAO {
 	
 	public List<Role> getAllRoles() throws DAOException;
 
-	public BOUser find(long userId)  throws DAOException; 
+	public BOUser find(long userId)  throws DAOException;
+
+	public Role findRole(Long roleId)  throws DAOException;
+
+	public void save(BOUser user)  throws DAOException; 
 }

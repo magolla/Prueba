@@ -27,12 +27,12 @@
 		<tiles:insertAttribute name="body"/>
 	</div>
 	
-	<footer class="main-footer" style="margin-left: 0px;">
+	<!--<footer class="main-footer" style="margin-left: 0px;">
 		<div class="pull-right hidden-xs">
 			<b>Version</b> 1.0.0
 		</div>
 		<strong>Copyright &copy; 2017 <a href="http://www.doctodocapp.com/">Doc To Doc</a>.</strong> All rights reserved.
-	</footer>
+	</footer>-->
 
 	<div class="control-sidebar-bg"></div>
 </div>

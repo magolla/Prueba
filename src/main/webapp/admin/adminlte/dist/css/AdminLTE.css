@@ -4960,5 +4960,14 @@ table.text-center th {
 }
 
 .form-group{
-	padding-bottom: 30px!important;
+	padding-bottom: 35px!important;
+}
+
+.checkbox input[type=checkbox]{
+	margin-left: 0!important
+}
+
+.checkbox {
+	margin-top: 0!important;
+	margin-bottom: 5px!important;
 }

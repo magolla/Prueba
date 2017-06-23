@@ -2,7 +2,9 @@ package com.tdil.d2d.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -26,9 +28,6 @@ public class BOUserServiceImpl implements BOUserService {
 
 	private Logger logger = LoggerFactory.getLogger(BOUserServiceImpl.class);
 
-	private static String STATE_ACTIVE_LABEL = "Activo";
-	private static String STATE_INACTIVE_LABEL = "Inactivo";
-	
 	@Autowired
 	private BOUserDAO userDAO;
 	
@@ -51,12 +50,9 @@ public class BOUserServiceImpl implements BOUserService {
 		result.setId(user.getId());
 		result.setEmail(user.getEmail());
 		result.setName(user.getName());
+		result.setPassword(user.getPassword());
+		result.setActive(user.isActive());
 		
-		if(user.isActive()){
-			result.setState(STATE_ACTIVE_LABEL);
-		} else {
-			result.setState(STATE_INACTIVE_LABEL);
-		}
 		
 		List<RoleDTO> roles = new ArrayList<RoleDTO>();
 		for(Role role : user.getRoles()){
@@ -83,11 +79,59 @@ public class BOUserServiceImpl implements BOUserService {
 	private  RoleDTO toRoleDto(Role role) {
 		return new RoleDTO(role.getId(), role.getName(), role.getDescription());
 	}
+	
+	@Override
+	public List<String> getAllRolesLabels() throws ServiceException {
+		try {
+			return toDtoLabelList(this.userDAO.getAllRoles());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	
+	private List<String> toDtoLabelList(Collection<Role> list) {
+		return list.stream().map(role -> toRoleLabel(role)).collect(Collectors.toList());
+	}
+	
+	private  String toRoleLabel(Role role) {
+		return role.getDescription();
+	}
+	
 
 	@Override
 	public BOUserDTO find(long userId) throws ServiceException {
 		try {
 			return toDto(this.userDAO.find(userId));
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public boolean save(BOUserDTO dto)  throws ServiceException {
+		try {
+			
+			BOUser user;
+			if(dto.getId()!=0){
+				user = userDAO.find(dto.getId());
+			} else {
+				user = new BOUser();
+				user.setPassword(dto.getPassword());
+			}
+			user.setEmail(dto.getEmail());
+			user.setName(dto.getName());
+			user.setActive(dto.getActive());
+			
+			Set<Role> roles = new HashSet<Role>();
+			for(Long roleId : dto.getRolesIds()){
+				roles.add(userDAO.findRole(roleId));
+			}
+			user.setRoles(roles);
+			
+			this.userDAO.save(user);
+			return true; 
+		
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}

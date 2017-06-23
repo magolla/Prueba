@@ -1,6 +1,6 @@
 package com.tdil.d2d.bo.dto;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BOUserDTO {
@@ -13,9 +13,11 @@ public class BOUserDTO {
 	
 	private String password;
 
-	private String state;
+	private boolean active;
 	
 	private List<RoleDTO> roles;
+	
+	private List<Long> rolesIds;
 	
 	public long getId() {
 		return id;
@@ -49,12 +51,12 @@ public class BOUserDTO {
 		this.password = password;
 	}
 
-	public String getState() {
-		return state;
+	public boolean getActive() {
+		return active;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public List<RoleDTO> getRoles() {
@@ -63,8 +65,21 @@ public class BOUserDTO {
 
 	public void setRoles(List<RoleDTO> roles) {
 		this.roles = roles;
+		List<Long> rolesIds = new ArrayList<Long>();
+		for(RoleDTO role : roles){
+			rolesIds.add(role.getId());
+		}
+		this.rolesIds = rolesIds;
 	}
 	
+	public List<Long> getRolesIds() {
+		return rolesIds;
+	}
+	
+	public void setRolesIds(List<Long> rolesIds) {
+		this.rolesIds = rolesIds;
+	}
+
 	public boolean hasRole(String role){
 		for(RoleDTO dto : roles){
 			if(dto.getName().equals(role)){

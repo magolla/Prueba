@@ -65,7 +65,16 @@ $(document).ready(function() {
         "columns": [
                     { "data": "name" },
                     { "data": "email" },
-                    { "data": "state" },
+                    {
+                        "data": "active",
+                        "render": function ( data, type, full, meta ) {
+                        	 if(data==true){
+                        		 return 'Activo';
+                        	 } else {
+                        		 return 'Inactivo';
+                        	 }
+                        }
+                     },  
                     {
                         "data": "roles",
                         "render": "[, ].description"

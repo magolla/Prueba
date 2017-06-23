@@ -69,7 +69,6 @@ public class LoginController {
 
 			ModelAndView model = new ModelAndView();
 
-			// check if user is login
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			if (!(auth instanceof AnonymousAuthenticationToken)) {
 				UserDetails userDetail = (UserDetails) auth.getPrincipal();

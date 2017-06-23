@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -92,8 +93,28 @@ public class AdminUserController {
 			model.addObject("roles", roles);
 			
 			BOUserDTO user = boUserService.find(userId);
-			model.addObject("user", user);
+			model.addObject("userForm", user);
 			
+			return model;
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			ModelAndView model = new ModelAndView();
+			model.setViewName("admin/generic-error");
+			return model;	
+		}
+
+	}
+	
+	@RequestMapping(value = {"/users/save"} , method = RequestMethod.POST)
+	public ModelAndView userEdit(@ModelAttribute("userForm") BOUserDTO user) {
+		try{ 
+			
+			boUserService.save(user);
+			
+			ModelAndView model = new ModelAndView();
+			model.setViewName("redirect:/admin/users");
+
 			return model;
 		
 		}catch(Exception e){

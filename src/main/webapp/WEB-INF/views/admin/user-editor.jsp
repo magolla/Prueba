@@ -1,4 +1,5 @@
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <tiles:insertDefinition name="d2d.dashboard">
@@ -24,37 +25,39 @@
 							<div class="msg">${msg}</div>
 						</c:if>
 		
-						<form name='loginForm' action="<c:url value='/user/${user_id}' />" method='POST'>
+						<form:form method="POST" modelAttribute="userForm" action="${pageContext.request.contextPath}/admin/users/save" >
 							<div class="box-body">
 								<div class="form-group">
-									<label for="username" class="col-sm-2 control-label">Email</label>
-		
+									<label for="email" class="col-sm-2 control-label">Email</label>
 									<div class="col-sm-10">
-										<input type="email" class="form-control" id="email" name="email" placeholder="Email" value="${user.email}">
+									    <form:input type="email" path="email" class="form-control"  placeholder="Email"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="password" class="col-sm-2 control-label">Nombre</label>
+									<label for="name" class="col-sm-2 control-label">Nombre</label>
 		
 									<div class="col-sm-10">
-										<input type="text" class="form-control" id="name" name="name"  placeholder="Nombre"  value="${user.name}">
+										<form:input path="name" class="form-control"  placeholder="Nombre"/>
 									</div>
 								</div>
+								<!-- div class="form-group">
+									<label for="password" class="col-sm-2 control-label">Password</label>
+		
+									<div class="col-sm-10">
+										<form:input path="password" class="form-control" type="password"  placeholder="Password"/>
+									</div>
+								</div> -->
 								<div class="form-group">
 								    <label for="state" class="col-sm-2 control-label">Estado</label>
-									<div class="radio col-sm-10" style="margin: 0px">
-										  <label><input type="radio" name="state" value="1">Activo</label>
-										  <label style="margin-left: 10px"><input type="radio" name="state" value="0">Inactivo</label>
+									<div class="col-sm-10">
+									     <form:radiobutton path="active" value="true" element="span class='radio'"/>Activo <br>
+									     <form:radiobutton path="active" value="false" element="span class='radio'"/>Inactivo
 									</div>
 								</div>
 								<div class="form-group">
 								    <label for="state" class="col-sm-2 control-label">Roles</label>
-								    <div class="checkbox col-sm-10" style="margin: 0px">
-										<c:forEach var="role" items="${roles}">
-										    <div>
-												<label><input type="checkbox" name="roles" value="${role.id}">${role.description}</label>
-											</div>
-										</c:forEach>
+								    <div class="col-sm-10">
+								        <form:checkboxes path="rolesIds" items="${roles}"  itemValue="id" itemLabel="description" element="span class='checkbox'"/>
 									</div>
 								</div>
 								
@@ -63,17 +66,14 @@
 							<div class="box-footer">
 								<button type="submit" class="btn btn-info pull-right">Enviar</button>
 							</div>
-							
+							<input type="hidden" name="id" value="${userId}" />
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-						</form>
+						</form:form>
 					</div>
 		
 				</div>
 			</div>
 		</section>
-
-<script>
-</script>
 	</tiles:putAttribute>
 </tiles:insertDefinition>
 

@@ -12,5 +12,9 @@ public interface BOUserService {
 	
 	public List<RoleDTO> getAllRoles() throws ServiceException;
 
-	public BOUserDTO find(long userId) throws ServiceException;;
+	public List<String> getAllRolesLabels() throws ServiceException;
+	
+	public BOUserDTO find(long userId) throws ServiceException;
+
+	public boolean save(BOUserDTO user)  throws ServiceException ;
 }

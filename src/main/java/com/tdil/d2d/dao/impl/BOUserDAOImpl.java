@@ -6,6 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.quartz.utils.FindbugsSuppressWarnings;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.tdil.d2d.dao.BOUserDAO;
@@ -54,5 +55,29 @@ public class BOUserDAOImpl extends GenericDAO<BOUser> implements BOUserDAO {
 			throw new DAOException(e);
 		}
 	}
+
+	@Override
+	public Role findRole(Long roleId) throws DAOException {
+		try{
+			return (Role)getSessionFactory().getCurrentSession().get(Role.class, roleId);
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@Override
+	public void save(BOUser user)  throws DAOException {
+		String invocationDetails= "save("+user.getClass().getName()+") ";
+		try {
+			this.getHibernateTemplate().save(user);
+			this.getHibernateTemplate().flush();
+		} catch (DataIntegrityViolationException e) {
+			this.handleException(invocationDetails, e);
+		} catch (Exception e) {
+			this.handleException(invocationDetails, e);
+		}
+	}
+	
+	
 
 }
