@@ -18,7 +18,7 @@ import com.tdil.d2d.persistence.Role;
 public class BOUserDAOImpl extends GenericDAO<BOUser> implements BOUserDAO {
 
 	@Override
-	public BOUser getUserByEmail(String email) throws DAOException {
+	public BOUser findByEmail(String email) throws DAOException {
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(BOUser.class);
 			criteria.add(Restrictions.eq("email", email));
@@ -77,7 +77,5 @@ public class BOUserDAOImpl extends GenericDAO<BOUser> implements BOUserDAO {
 			this.handleException(invocationDetails, e);
 		}
 	}
-	
-	
 
 }

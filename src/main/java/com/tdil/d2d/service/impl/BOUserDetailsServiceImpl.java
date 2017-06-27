@@ -31,8 +31,11 @@ public class BOUserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         try {
-        	BOUser user = userDAO.getUserByEmail(email);
+        	BOUser user = userDAO.findByEmail(email);
 
+        	if(!user.isActive()){
+        		throw new UsernameNotFoundException("User inactive");
+        	}
         	List<GrantedAuthority> authorities =
                     buildUserAuthority(user.getRoles());
 

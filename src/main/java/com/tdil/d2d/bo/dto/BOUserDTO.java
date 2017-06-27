@@ -13,11 +13,13 @@ public class BOUserDTO {
 	
 	private String password;
 
-	private boolean active;
+	private boolean active = true;
 	
 	private List<RoleDTO> roles;
 	
 	private List<Long> rolesIds;
+	
+	private boolean passwordChanged = false;
 	
 	public long getId() {
 		return id;
@@ -88,5 +90,15 @@ public class BOUserDTO {
 		}
 		return false;
 	}
+
+	public boolean isPasswordChanged() {
+		return passwordChanged;
+	}
+
+	public void setPasswordChanged(boolean passwordChanged) {
+		this.passwordChanged = passwordChanged;
+	}
+	
+	
 	
 }

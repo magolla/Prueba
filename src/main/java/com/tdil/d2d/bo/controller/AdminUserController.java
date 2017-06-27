@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tdil.d2d.bo.dto.BOUserDTO;
+import com.tdil.d2d.bo.dto.ResultDTO;
 import com.tdil.d2d.bo.dto.RoleDTO;
 import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.response.GenericResponse;
@@ -86,13 +87,37 @@ public class AdminUserController {
 		try{ 
 			
 			ModelAndView model = new ModelAndView();
-			model.addObject("user_id", userId);
-			model.setViewName("admin/user-editor");
 			
 			List<RoleDTO> roles = this.boUserService.getAllRoles();
 			model.addObject("roles", roles);
 			
 			BOUserDTO user = boUserService.find(userId);
+			model.addObject("userForm", user);
+			
+			model.setViewName("admin/user-editor");
+			
+			return model;
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			ModelAndView model = new ModelAndView();
+			model.setViewName("admin/generic-error");
+			return model;	
+		}
+
+	}
+	
+	@RequestMapping(value = {"/new-user"} , method = RequestMethod.GET)
+	public ModelAndView userNew() {
+		try{ 
+			
+			ModelAndView model = new ModelAndView();
+			model.setViewName("admin/user-editor");
+			
+			List<RoleDTO> roles = this.boUserService.getAllRoles();
+			model.addObject("roles", roles);
+			
+			BOUserDTO user = new BOUserDTO();
 			model.addObject("userForm", user);
 			
 			return model;
@@ -110,7 +135,20 @@ public class AdminUserController {
 	public ModelAndView userEdit(@ModelAttribute("userForm") BOUserDTO user) {
 		try{ 
 			
-			boUserService.save(user);
+			ResultDTO result = boUserService.save(user);
+			
+			if(!result.isSuccess()){
+				ModelAndView model = new ModelAndView();
+				model.setViewName("admin/user-editor");
+				model.addObject("errors", result.getErrors());
+				
+				List<RoleDTO> roles = this.boUserService.getAllRoles();
+				model.addObject("roles", roles);
+				
+				model.addObject("userForm", user);
+				
+				return model;
+			}
 			
 			ModelAndView model = new ModelAndView();
 			model.setViewName("redirect:/admin/users");

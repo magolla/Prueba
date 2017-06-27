@@ -18,35 +18,42 @@
 							<h3 class="box-title">Ingresar/Modificar</h3>
 						</div>
 						
-						<c:if test="${not empty error}">
-							<div class="error">${error}</div>
-						</c:if>
 						<c:if test="${not empty msg}">
 							<div class="msg">${msg}</div>
 						</c:if>
+						
+						<c:if test="${not empty errors}">
+						    <c:forEach var="error" items="${errors}">
+								<div class="error">${error}</div>
+							</c:forEach>
+						</c:if>
 		
-						<form:form method="POST" modelAttribute="userForm" action="${pageContext.request.contextPath}/admin/users/save" >
+						<form:form method="POST" modelAttribute="userForm" autocomplete="off"  action="${pageContext.request.contextPath}/admin/users/save" >
 							<div class="box-body">
 								<div class="form-group">
 									<label for="email" class="col-sm-2 control-label">Email</label>
 									<div class="col-sm-10">
-									    <form:input type="email" path="email" class="form-control"  placeholder="Email"/>
+									    <form:input type="email" path="email" class="form-control"  placeholder="Email" required="true"/>
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="name" class="col-sm-2 control-label">Nombre</label>
 		
 									<div class="col-sm-10">
-										<form:input path="name" class="form-control"  placeholder="Nombre"/>
+										<form:input path="name" class="form-control"  placeholder="Nombre"  
+										autocomplete="false" required="true"/>
 									</div>
 								</div>
-								<!-- div class="form-group">
+								<div class="form-group">
 									<label for="password" class="col-sm-2 control-label">Password</label>
 		
 									<div class="col-sm-10">
-										<form:input path="password" class="form-control" type="password"  placeholder="Password"/>
+										<form:input path="password" class="form-control" type="password"  placeholder="Password" 
+										 id="password" autocomplete="new-password"/>
+										<!-- form:input path="password" class="form-control" type="password"  placeholder="Password" 
+										 readonly="true"  onfocus="this.removeAttribute('readonly'); this.val('')" id="password" autocomplete="off"/ -->
 									</div>
-								</div> -->
+								</div>
 								<div class="form-group">
 								    <label for="state" class="col-sm-2 control-label">Estado</label>
 									<div class="col-sm-10">
@@ -64,9 +71,10 @@
 							</div>
 							
 							<div class="box-footer">
-								<button type="submit" class="btn btn-info pull-right">Enviar</button>
+								<button type="submit" class="btn btn-info pull-right">Guardar</button>
 							</div>
-							<input type="hidden" name="id" value="${userId}" />
+							<form:input path="id" type="hidden" />
+							<form:input path="passwordChanged" type="hidden"/>
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 						</form:form>
 					</div>
@@ -74,6 +82,18 @@
 				</div>
 			</div>
 		</section>
+		<script>
+			$('#password').on('input',function(e){
+			  if($('#passwordChanged').val() == "false"){
+				  $('#passwordChanged').val("true");
+				  if($('#password').val().length>0==true){
+					  console.log($(this).val().length);
+					  
+					  $('#password').val("");  
+				  }
+			  }	
+		    });
+		</script>
 	</tiles:putAttribute>
 </tiles:insertDefinition>
 

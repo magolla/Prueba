@@ -1,4 +1,5 @@
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <tiles:insertDefinition name="d2d.dashboard">
 
@@ -40,6 +41,9 @@
 							        </tfoot>
 							    </table>
 							
+							    <div class="box-footer" style="margin-top:15px">
+									<a type="submit" class="btn btn-info pull-right" href="<c:url value='/admin/new-user'/>">Nuevo</a>
+								</div>
 		              </div>
 		             <!-- /.tab-pane -->
 		            </div>

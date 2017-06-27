@@ -10,10 +10,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.tdil.d2d.bo.dto.BOUserDTO;
+import com.tdil.d2d.bo.dto.ResultDTO;
 import com.tdil.d2d.bo.dto.RoleDTO;
 import com.tdil.d2d.dao.BOUserDAO;
 import com.tdil.d2d.exceptions.DAOException;
@@ -50,7 +53,7 @@ public class BOUserServiceImpl implements BOUserService {
 		result.setId(user.getId());
 		result.setEmail(user.getEmail());
 		result.setName(user.getName());
-		result.setPassword(user.getPassword());
+		result.setPassword("xxxxxxxx");//Show just 8 dots in the form
 		result.setActive(user.isActive());
 		
 		
@@ -109,28 +112,71 @@ public class BOUserServiceImpl implements BOUserService {
 	}
 
 	@Override
-	public boolean save(BOUserDTO dto)  throws ServiceException {
+	public ResultDTO save(BOUserDTO dto)  throws ServiceException {
 		try {
+			
+			if(StringUtils.isEmpty(dto.getEmail())){
+				return ResultDTO.error("El email es obligatorio");
+			}
+			
+			if(StringUtils.isEmpty(dto.getName())){
+				return ResultDTO.error("El nombre es obligatorio");
+			}
+			
+			if(dto.getRolesIds()==null || dto.getRolesIds().size()==0){
+				return ResultDTO.error("Seleccionar por lo menos un rol");
+			}
+			
+			BOUser userByEmail = userDAO.findByEmail(dto.getEmail());
 			
 			BOUser user;
 			if(dto.getId()!=0){
+				
+				//Edit user
 				user = userDAO.find(dto.getId());
+				//Validate unique email
+				if(userByEmail!=null && !userByEmail.getEmail().equals(user.getEmail())){
+					return ResultDTO.error("El email ingresado ya pertenece a otro usuario.");
+				}
+				
+				if(dto.isPasswordChanged()){
+					if(StringUtils.isEmpty(dto.getPassword()) || dto.getPassword().length()<6){
+						return ResultDTO.error("Password: La longitud mínima es de 6 caracteres");
+					}
+					BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+					user.setPassword(encoder.encode(dto.getPassword()));
+				}
+				
 			} else {
+				
+				//Validate unique email
+				if(userByEmail!=null){
+					return ResultDTO.error("El email ingresado ya pertenece a otro usuario.");
+				}
+				
+				if(StringUtils.isEmpty(dto.getPassword()) || dto.getPassword().length()<6){
+					return ResultDTO.error("Password: La longitud mínima es de 6 caracteres");
+				}
+				
+				//New User
 				user = new BOUser();
 				user.setPassword(dto.getPassword());
 			}
+			
 			user.setEmail(dto.getEmail());
 			user.setName(dto.getName());
 			user.setActive(dto.getActive());
 			
 			Set<Role> roles = new HashSet<Role>();
-			for(Long roleId : dto.getRolesIds()){
-				roles.add(userDAO.findRole(roleId));
+			if(dto.getRolesIds()!=null){
+				for(Long roleId : dto.getRolesIds()){
+					roles.add(userDAO.findRole(roleId));
+				}
 			}
 			user.setRoles(roles);
 			
 			this.userDAO.save(user);
-			return true; 
+			return ResultDTO.ok(); 
 		
 		} catch (DAOException e) {
 			throw new ServiceException(e);
