@@ -10,11 +10,11 @@ public class UserDTO {
 
 	private String email;
 	
-	private String state;
+	private boolean active;
 	
-	private String subscriptionType;
+	private boolean userB;
 	
-	private String subscriptionState;
+	private boolean hasActiveSuscription;
 	
 	private String expirationDate;
 	
@@ -42,28 +42,28 @@ public class UserDTO {
 		this.email = email;
 	}
 
-	public String getState() {
-		return state;
+	public boolean isActive() {
+		return active;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
-	public String getSubscriptionType() {
-		return subscriptionType;
+	public boolean isUserB() {
+		return userB;
 	}
 
-	public void setSubscriptionType(String subscriptionType) {
-		this.subscriptionType = subscriptionType;
+	public void setUserB(boolean userB) {
+		this.userB = userB;
 	}
 
-	public String getSubscriptionState() {
-		return subscriptionState;
+	public boolean isHasActiveSuscription() {
+		return hasActiveSuscription;
 	}
 
-	public void setSubscriptionState(String subscriptionState) {
-		this.subscriptionState = subscriptionState;
+	public void setHasActiveSuscription(boolean hasActiveSuscription) {
+		this.hasActiveSuscription = hasActiveSuscription;
 	}
 
 	public String getExpirationDate() {

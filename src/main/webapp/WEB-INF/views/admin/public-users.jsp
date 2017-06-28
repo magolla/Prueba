@@ -70,14 +70,42 @@ $(document).ready(function() {
         "columns": [
                     { "data": "name" },
                     { "data": "email" },
-                    { "data": "state" },
-                    { "data": "subscriptionType" },
-                    { "data": "subscriptionState" },
+                    {
+                        "data": "active",
+                        "render": function ( data, type, full, meta ) {
+                        	 if(data==true){
+                        		 return 'Activo';
+                        	 } else {
+                        		 return 'Inactivo';
+                        	 }
+                        }
+                     },  
+                     {
+                         "data": "userB",
+                         "render": function ( data, type, full, meta ) {
+                         	 if(data==true){
+                         		 return 'Candidato';
+                         	 } else {
+                         		 return 'Oferente';
+                         	 }
+                         }
+                      },
+                      {
+                          "data": "hasActiveSuscription",
+                          "render": function ( data, type, full, meta ) {
+                        	  console.log(full.userB);
+                          	 if(data==true){
+                          		 return 'Suscripto';
+                          	 } else {
+                          		 return 'No suscripto';
+                          	 }
+                          }
+                       },
                     { "data": "expirationDate" },
                     {
                         "data": "id",
                         "render": function ( data, type, full, meta ) {
-                              return '<a href="users/'+data+'">Ver Datos</a>';
+                              return '<a href="users-data/'+data+'">Ver Datos</a>';
                             }
                      }  
                 ],

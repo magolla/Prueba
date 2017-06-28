@@ -1933,6 +1933,19 @@ public class UserServiceImpl implements UserService {
 		result.setId(user.getId());
 		result.setEmail(user.getEmail());
 		result.setName(user.getFirstname());
+		result.setActive(user.isPhoneValidated());
+		result.setUserB(user.isUserb());
+		
+		Subscription subscription = subscriptionService.getActiveSubscription(user.getId());
+		if (subscription != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			result.setExpirationDate(sdf.format(subscription.getExpirationDate()));
+			if(subscription.getExpirationDate().after(new Date())){
+				result.setHasActiveSuscription(false);
+			} else {
+				result.setHasActiveSuscription(true);
+			}
+		}
 		
 		return result;
 	}

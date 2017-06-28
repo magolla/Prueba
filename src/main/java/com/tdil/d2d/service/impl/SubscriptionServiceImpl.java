@@ -115,8 +115,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public Subscription getActiveSubscription(long userID) {
 		try {
-			User user = sessionService.getUserLoggedIn();
-			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(user.getId());
+			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(userID);
 			if (subscriptions == null || subscriptions.isEmpty()) {
 				// throw new DTDException(ExceptionDefinition.DTD_2003,
 				// String.valueOf(userID));
