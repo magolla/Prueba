@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+h1.maintitle			{ font-family:"Open Sans", sans-serif;font-size:24px; font-weight:bold; line-height:1; color:#f2f2f2; padding:100px 0 0; }
+h2.mainsubtitle			{ font-family:"Open Sans", sans-serif;font-size:18px; font-weight:light; line-height:1; color:#f2f2f2; padding:0 0 100px; }
+div.containerbox		{ background:#fff; border-radius:8px; display:inline-block; width:100%; padding:25px; }
+h3.advertencia			{ font-family:"Open Sans", sans-serif; font-size:20px; font-weight:bold; line-height:1.2; }
+ul.advertencia			{ font-family:"Open Sans", sans-serif; font-size:13px; line-height:1.5; color:#5a5a5a; }
+div.box-body			{ display:inline-block; width:100%; }
+div.form-group			{ margin-bottom:15px; display:inline-block; width:100%; }
