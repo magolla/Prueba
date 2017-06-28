@@ -37,7 +37,8 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(@RequestParam(value = "error", required = false) String error,
-			@RequestParam(value = "logout", required = false) String logout, HttpServletRequest request) {
+			@RequestParam(value = "logout", required = false) String logout, 
+			@RequestParam(value = "invalidCaptcha", required = false) String invalidCaptcha, HttpServletRequest request) {
 
 		ModelAndView model = new ModelAndView();
 		if (error != null) {
@@ -47,6 +48,11 @@ public class LoginController {
 		if (logout != null) {
 			model.addObject("msg", "La sesión ha finalizado correctamente.");
 		}
+		
+		if (invalidCaptcha != null) {
+			model.addObject("msg", "El captcha es inválido.");
+		}
+		
 		model.setViewName("admin/login");
 
 		return model;

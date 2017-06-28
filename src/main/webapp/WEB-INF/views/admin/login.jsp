@@ -21,7 +21,7 @@
 							<div class="msg">${msg}</div>
 						</c:if>
 		
-						<form name='loginForm' action="<c:url value='/admin/login' />" method='POST'>
+						<form id='loginForm' name='loginForm' action="<c:url value='/admin/login' />" method='POST'>
 							<div class="box-body">
 								<div class="form-group">
 									<label for="username" class="col-sm-2 control-label">Email</label>
@@ -41,8 +41,10 @@
 							</div>
 							
 							<div class="box-footer">
+								<div class="g-recaptcha" data-sitekey="6Ld0MicUAAAAAE-End1La_1FNAHsRZ0ICe0NRpXW"></div>
 								<button type="submit" class="btn btn-info pull-right">Login</button>
 							</div>
+							
 							
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 						</form>

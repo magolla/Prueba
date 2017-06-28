@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.tdil.d2d.security.CaptchaValidatorFilter;
 import com.tdil.d2d.security.JwtAuthenticationEntryPoint;
 import com.tdil.d2d.security.JwtAuthenticationTokenFilter;
 
@@ -111,6 +112,19 @@ public class WebSecurityConfig  {
 		        return new BCryptPasswordEncoder();
 		        //return new NoOpPasswordEncoder();
 		    }
+		    
+		    @Bean
+		    @Override
+		    public AuthenticationManager authenticationManagerBean() throws Exception {
+		        return super.authenticationManagerBean();
+		    }
+		    
+		    @Bean
+		    public CaptchaValidatorFilter validationCaptchaFilterBean() throws Exception {
+		    	CaptchaValidatorFilter authenticationTokenFilter = new CaptchaValidatorFilter();
+		        authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
+		        return authenticationTokenFilter;
+		    }
 
 		    @Override
 		    protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -129,6 +143,8 @@ public class WebSecurityConfig  {
 							.logout().logoutSuccessUrl("/admin/login?logout").and().
 							exceptionHandling().accessDeniedPage("/403");
 		    	
+			      httpSecurity
+			                .addFilterBefore(validationCaptchaFilterBean(), UsernamePasswordAuthenticationFilter.class);
 		    }
      }
    

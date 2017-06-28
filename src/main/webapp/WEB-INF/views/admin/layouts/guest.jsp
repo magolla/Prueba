@@ -18,7 +18,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 	<!-- Theme style -->
 	<link rel="stylesheet" href="<c:url value="/admin/adminlte/dist/css/AdminLTE.css" />">
+	<link rel="stylesheet" href="<c:url value="/css/guest.css" />">
 	
+	<script src='https://www.google.com/recaptcha/api.js'></script>
 
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
