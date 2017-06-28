@@ -30,7 +30,7 @@
 		
 	</script>
   </head>
-  <!-- Versión de la aplicación backend: WebApp DTD v 1.01.00.Beta.03 -->
+  <!-- Versión de la aplicación backend: WebApp DTD v 1.01.00 -->
   <body>
     <!-- Page-->
     <div class="page text-center">
@@ -111,7 +111,7 @@
                     <div class="offset-top-34">
                       <p class="big">La única plataforma desarrollada por profesionales de la medicina para resolver búsquedas laborales temporales y permanentes.</p>
                     </div>
-                    <div class="group group-lg offset-md-top-55 offset-top-30"><a href="#"><img src="images/icon-appstore-180x60_soon2.png" width="180" height="60" alt="" class="img-responsive"></a><a href="https://play.google.com/store/apps/details?id=com.tdil.d2d.android" target="_blank"><img src="images/icon-google-play-200x60.png" width="200" height="60" alt="" class="img-responsive"></a></div>
+                    <div class="group group-lg offset-md-top-55 offset-top-30"><a href="https://itunes.apple.com/ar/app/doc-to-doc/id1242930513?l=en&mt=8" target="_blank"><img src="images/icon-appstore-180x60.png" width="180" height="60" alt="" class="img-responsive"></a><a href="https://play.google.com/store/apps/details?id=com.tdil.d2d.android" target="_blank"><img src="images/icon-google-play-200x60.png" width="200" height="60" alt="" class="img-responsive"></a></div>
                   </div>
                 </div>
               </div>
@@ -371,12 +371,12 @@
               <div class="range range-xs-center">
                 <div class="cell-xs-7 text-xs-left cell-md-4 cell-lg-4 cell-lg-push-2">
                   <p class="text-uppercase text-spacing-60 text-ubold">Últimas novedades</p>
-                  <!-- Post Widget-->
-                  <article class="post widget-post text-left"><a href="#">
+                  <!-- Post Widget-->   
+                  <article class="post widget-post text-left"><a href="https://itunes.apple.com/ar/app/doc-to-doc/id1242930513?l=en&mt=8" target="_blank">
                       <div class="unit unit-horizontal unit-spacing-xs unit-middle">
                         <div class="unit-body">
                           <div class="post-meta"><span class="icon-xxs mdi mdi-arrow-right text-macaroni"></span>
-                            <time datetime="2016-01-01" class="text-dark">01/04/2017</time>
+                            <time datetime="2016-06-28" class="text-dark">28/06/2017</time>
                           </div>
                           <div class="post-title">
                             <h6 class="text-regular">Disponible en AppStore</h6>
@@ -384,11 +384,11 @@
                         </div>
                       </div></a></article>
                   <!-- Post Widget-->
-                  <article class="post widget-post text-left"><a href="#">
+                  <article class="post widget-post text-left"><a href="https://play.google.com/store/apps/details?id=com.tdil.d2d.android" target="_blank">
                       <div class="unit unit-horizontal unit-spacing-xs unit-middle">
                         <div class="unit-body">
                           <div class="post-meta"><span class="icon-xxs mdi mdi-arrow-right text-macaroni"></span>
-                            <time datetime="2016-01-01" class="text-dark">01/04/2017</time>
+                            <time datetime="2016-06-27" class="text-dark">27/06/2017</time>
                           </div>
                           <div class="post-title">
                             <h6 class="text-regular">Disponible en Google Play</h6>
