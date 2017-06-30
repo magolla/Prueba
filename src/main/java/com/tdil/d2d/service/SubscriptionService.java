@@ -21,6 +21,6 @@ public interface SubscriptionService {
 
 	public UserReceiptResponse verifyAndRegisterSuscription(User user, ReceiptSuscriptionRequest receiptSuscriptionRequest) throws ServiceException ;
 
-	public UserReceiptResponse getLastReceipt() throws ServiceException;
+	public UserReceiptResponse getLastReceipt(Long userId) throws ServiceException;
 }
 

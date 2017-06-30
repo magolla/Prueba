@@ -344,9 +344,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
-	public UserReceiptResponse getLastReceipt() throws ServiceException {
+	public UserReceiptResponse getLastReceipt(Long userId) throws ServiceException {
         try {
-        	Long userId = com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId();
             Receipt lastReceipt = null;
             lastReceipt = subscriptionDAO.getLastReceipt(userId);
             

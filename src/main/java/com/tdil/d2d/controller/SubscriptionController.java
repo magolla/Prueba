@@ -143,7 +143,7 @@ public class SubscriptionController extends AbstractController {
 	@RequestMapping(value = "/subscription/receipt/me", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<UserReceiptResponse>> receiptMe() {
 		try { 
-			UserReceiptResponse receiptInfo = this.subscriptionService.getLastReceipt();
+			UserReceiptResponse receiptInfo = this.subscriptionService.getLastReceipt(com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
 			return new ResponseEntity<GenericResponse<UserReceiptResponse>>(new GenericResponse<UserReceiptResponse>(receiptInfo, HttpStatus.OK.value()), HttpStatus.OK);
 		} catch (ServiceException e) {
 			return new ResponseEntity<GenericResponse<UserReceiptResponse>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
