@@ -1,6 +1,7 @@
 package com.tdil.d2d.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -132,6 +133,8 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Subscription.class);
 			criteria.add(Restrictions.eq("user.id", userId));
+			criteria.add(Restrictions.gt("expirationDate", Calendar.getInstance().getTime()));
+			
 			List<Subscription> list = criteria.list();
 			return list;
 		} catch (Exception e) {

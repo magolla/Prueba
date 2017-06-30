@@ -128,19 +128,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public Subscription getActiveSubscription(long userID) {
 		try {
-			User user = sessionService.getUserLoggedIn();
-			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(user.getId());
+			List<Subscription> subscriptions = subscriptionDAO.listSubscriptions(userID);
 			if (subscriptions == null || subscriptions.isEmpty()) {
 				// throw new DTDException(ExceptionDefinition.DTD_2003,
 				// String.valueOf(userID));
 				return null;
 			} else {
-				Subscription subscription = subscriptions.get(subscriptions.size()-1);
-				if (subscription.getExpirationDate().before(new Date())) {
-					return null;
-				} else {
-					return subscription;
+				for (Subscription subscriptionDB : subscriptions) {
+					if(subscriptionDB.getSponsorCode() != null) {
+						return subscriptionDB;
+					}
 				}
+				
+				return subscriptions.get(subscriptions.size()-1);
 			}
 		} catch (DAOException e) {
 			throw new DTDException(ExceptionDefinition.DTD_2002, e, String.valueOf(userID));

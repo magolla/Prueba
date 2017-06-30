@@ -63,7 +63,9 @@ public class WebSubscriptionController {
 			User user = userService.getUserByMobilePhone(number);
 			
 			boolean alreadyHaveSubscription = false;
+			
 			if(user != null) {
+				//CHECK APPLE SUBSCRIPTIONS (RECEIPTS)
 				UserReceiptResponse receiptInfo = this.subscriptionService.getLastReceipt(user.getId());
 				if(receiptInfo != null) {
 					long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
@@ -72,7 +74,14 @@ public class WebSubscriptionController {
 					}
 					
 				}
+				
+				//CHECK OTHER SUBSCRIPTIONS (ANDROID, FREE and SPONSORS)
+				Subscription currentSubscription = this.subscriptionService.getActiveSubscription(user.getId());
+				if(currentSubscription != null) {
+					alreadyHaveSubscription = true;
+				}
 			}
+			
 			
 			Subscription subscription = sponsorCodeService.consumeWebSponsorCode(number, code);
 			if(subscription==null){
