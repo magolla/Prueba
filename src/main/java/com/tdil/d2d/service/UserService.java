@@ -78,6 +78,8 @@ public interface UserService {
 
 	public List<ActivityLogDTO> getActivityLog() throws ServiceException;
 
+	public List<ActivityLogDTO> getWebActivityLog(Long userId) throws ServiceException;
+	
 	public void initDbWithTestData() throws ServiceException;
 
 	public boolean addSpecialty(AddSpecialtyRequest addSpecialtyRequest) throws ServiceException;
@@ -123,6 +125,8 @@ public interface UserService {
 	
 	public UserDetailsResponse getUser(long id) throws ServiceException;
 
+	public UserDTO getUserWebDetails(long id) throws ServiceException;
+	
 	// Profile
 	public ProfileResponseDTO profile() throws ServiceException;
 	

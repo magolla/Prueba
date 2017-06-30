@@ -17,6 +17,7 @@ import com.tdil.d2d.bo.dto.BOUserDTO;
 import com.tdil.d2d.bo.dto.ResultDTO;
 import com.tdil.d2d.bo.dto.RoleDTO;
 import com.tdil.d2d.bo.dto.UserDTO;
+import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.service.BOUserService;
@@ -164,5 +165,39 @@ public class AdminUserController {
 
 	}
 	
+	@RequestMapping(value = {"/public-users/{userId}"} , method = RequestMethod.GET)
+	public ModelAndView showUserData(@PathVariable long userId) {
+		try{ 
+			
+			ModelAndView model = new ModelAndView();
+			
+			UserDTO user = this.userService.getUserWebDetails(userId);
+			model.addObject("user", user);
+			
+			model.setViewName("admin/show-user");
+			
+			return model;
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			ModelAndView model = new ModelAndView();
+			model.setViewName("admin/generic-error");
+			return model;	
+		}
+
+	}
+	
+	@RequestMapping(value = "/public-users/{userId}/activity", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<List<ActivityLogDTO>>> getLogs(@PathVariable long userId) {
+		try{ 
+			
+			List<ActivityLogDTO> logs = this.userService.getWebActivityLog(userId);
+	
+			return ResponseEntity.ok(new GenericResponse<>(200, logs));
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<List<ActivityLogDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
     

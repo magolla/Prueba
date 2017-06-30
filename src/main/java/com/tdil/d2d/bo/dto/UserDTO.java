@@ -1,7 +1,5 @@
 package com.tdil.d2d.bo.dto;
 
-import java.util.Date;
-
 public class UserDTO {
 
 	private long id;
@@ -18,6 +16,43 @@ public class UserDTO {
 	
 	private String expirationDate;
 	
+	private String operativeSystem;
+	
+	private String creationDate;
+	
+	private String lastLoginDate;
+	
+	private String license;
+	
+	private String mobilePhone;
+	
+	private String avatar;
+	
+	
+	public String getLicense() {
+		return license;
+	}
+
+	public void setLicense(String license) {
+		this.license = license;
+	}
+
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -74,5 +109,31 @@ public class UserDTO {
 		this.expirationDate = expirationDate;
 	}
 
+	public String getOperativeSystem() {
+		return operativeSystem;
+	}
+
+	public void setOperativeSystem(String operativeSystem) {
+		this.operativeSystem = operativeSystem;
+	}
+
+	public String getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public String getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(String lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+	
+	
+	
 	
 }

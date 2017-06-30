@@ -23,23 +23,25 @@
 		              			<table id="users" class="display" cellspacing="0" width="100%">
 							        <thead>
 							            <tr>
-							                <th>Nombre publico</th>
+							                <th>ID</th>
+							                <th>Número Tel</th>
+							                <th>Nombre</th>
 							                <th>Email</th>
 							                <th>Estado</th>
 							                <th>Tipo Suscripción</th>
 							                <th>Estado Suscripción</th>
-							                <th>Fecha Expiración</th>
 							                <th>Acción</th>
 							            </tr>
 							        </thead>
 							        <tfoot>
 							            <tr>
-							                <th>Nombre publico</th>
+							                <th>ID</th>
+							                <th>Número Tel</th>
+							                <th>Nombre</th>
 							                <th>Email</th>
 							                <th>Estado</th>
 							                <th>Tipo Suscripción</th>
 							                <th>Estado Suscripción</th>
-							                <th>Fecha Expiración</th>
 							                <th>Acción</th>
 							            </tr>
 							        </tfoot>
@@ -68,6 +70,8 @@ $(document).ready(function() {
               }
           },
         "columns": [
+					{ "data": "id" },
+					{ "data": "mobilePhone" },
                     { "data": "name" },
                     { "data": "email" },
                     {
@@ -93,19 +97,22 @@ $(document).ready(function() {
                       {
                           "data": "hasActiveSuscription",
                           "render": function ( data, type, full, meta ) {
-                        	  console.log(full.userB);
-                          	 if(data==true){
-                          		 return 'Suscripto';
-                          	 } else {
-                          		 return 'No suscripto';
-                          	 }
+                        	 if(full.userB==true){ 
+	                          	 if(data==true){
+	                          		 return 'Suscripto';
+	                          	 } else {
+	                          		 return 'No suscripto';
+	                          	 }
+                        	 }
+
+                          	 return "-";
                           }
                        },
-                    { "data": "expirationDate" },
+                    //{ "data": "expirationDate" },
                     {
                         "data": "id",
                         "render": function ( data, type, full, meta ) {
-                              return '<a href="users-data/'+data+'">Ver Datos</a>';
+                              return '<a href="public-users/'+data+'">Ver Datos</a>';
                             }
                      }  
                 ],
