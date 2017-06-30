@@ -60,7 +60,7 @@ public class SendIOSPushNotification implements Runnable {
 			try {
 				// TODO pasar la clave del keystore a property
 				AppleNotificationServer server = new AppleNotificationServerBasicImpl(
-						IOSNotificationServiceImpl.getIosPushNoticationKeystoreLocation(), "doctodoc", false);
+						IOSNotificationServiceImpl.getIosPushNoticationKeystoreLocation(), "doctodoc", true);
 
 				if (IOSNotificationServiceImpl.getProxyConfiguration() != null) {
 					// server.setProxy("1.234.45.50", 3128);
