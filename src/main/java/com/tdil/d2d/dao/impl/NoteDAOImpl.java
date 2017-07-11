@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.NoteCategory;
+import com.tdil.d2d.persistence.User;
 
 @Repository
 @Transactional
@@ -63,7 +64,7 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 	}
 
 	@Override
-	public List<Note> getNotesForUser(int page, int size,List<Long> ocuppations, List<Long> specialities) {
+	public List<Note> getNotesForUser(int page, int size,List<Long> ocuppations, List<Long> specialities,User user) {
 		
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT distinct note ");
@@ -72,8 +73,10 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		queryString.append("WHERE (specialty.occupation.id IN (:ocuppations) ");
 		queryString.append("AND specialty.id IN (:specialities) ");
 		queryString.append("AND note.active = 1) ");
-		queryString.append("AND (specialty.id is null AND note.active = 1 ) ");
-		queryString.append("AND (specialty.occupation.id is null AND note.active = 1) ");
+		if(!user.isUserb()){
+			queryString.append("OR (specialty.id is null AND note.active = 1 ) ");
+			queryString.append("OR (specialty.occupation.id is null AND note.active = 1) ");
+		}
 		queryString.append("order by note.creationDate desc ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());

@@ -66,7 +66,7 @@ public class NoteServiceImpl implements NoteService {
 			return new ArrayList<Note>();
 		}
 		
-		return this.noteDAO.getNotesForUser(page, size, ocuppations, specialities);
+		return this.noteDAO.getNotesForUser(page, size, ocuppations, specialities, user);
 	}
 	
 	@Override
@@ -87,7 +87,7 @@ public class NoteServiceImpl implements NoteService {
 			return null;
 		}
 		
-		List<Note> notes = this.noteDAO.getNotesForUser(1, 1, ocuppations, specialities);
+		List<Note> notes = this.noteDAO.getNotesForUser(1, 1, ocuppations, specialities,user);
 		
 		if(notes.size()>0){
 			return notes.get(0);
