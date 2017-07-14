@@ -76,8 +76,8 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		} else {
 			queryString.append("WHERE (occupation.id IN (:ocuppations) ");
 			queryString.append("AND specialty.id IN (:specialities) AND note.active = 1) ");
-			queryString.append("OR (occupation.id IN (:ocuppations) AND note.active = 1) ");
-			queryString.append("OR (specialty.id is null AND note.active = 1) ");
+			queryString.append("OR (occupation.id IN (:ocuppations) AND specialty.id is null AND note.active = 1) ");
+			queryString.append("OR (occupation.id is null AND specialty.id is null AND note.active = 1) ");
 		}
 		queryString.append("order by note.creationDate desc ");
 
