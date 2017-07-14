@@ -3,6 +3,7 @@ package com.tdil.d2d.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Note;
 
 public interface NoteDAO {
@@ -15,4 +16,5 @@ public interface NoteDAO {
 
 	List<Note> getNotesForUser(int page, int size, List<Long> ocuppations, List<Long> specialities);
 
+	List<Note> getAll() throws DAOException; 
 }

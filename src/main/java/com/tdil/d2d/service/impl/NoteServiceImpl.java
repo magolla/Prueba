@@ -1,14 +1,17 @@
 package com.tdil.d2d.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.controller.api.dto.NoteDTO;
 import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
 import com.tdil.d2d.dao.UserDAO;
@@ -153,5 +156,42 @@ public class NoteServiceImpl implements NoteService {
 		Note note = this.getNoteById(id);
 		note.setActive(false);
 		this.save(note);
+	}
+	
+	@Override
+	public List<NoteDTO> getAll() throws ServiceException {
+		try {
+			return toDtoList(this.noteDAO.getAll());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	private List<NoteDTO> toDtoList(Collection<Note> list) {
+		return list.stream().map(note -> toDto(note)).collect(Collectors.toList());
+	}
+	
+	private  NoteDTO toDto(Note note) {
+		NoteDTO result = new NoteDTO();
+
+		result.setId(note.getId());
+		result.setActive(note.isActive());
+		result.setContent(note.getContent());
+		result.setExpirationDate(note.getExpirationDate());
+		result.setCategory(note.getCategory().toString());
+		result.setCreationDate(note.getCreationDate());
+		result.setPublishingDate(note.getPublishingDate());
+		result.setTitle(note.getTitle());
+		result.setSubtitle(note.getSubtitle());
+		if(note.getBase64img()!=null) {
+			result.setImage(new String(note.getBase64img()));
+		}
+
+		return result;
+	}
+	
+	@Override
+	public NoteDTO getNoteDTOById(Long id) {
+		return toDto(this.noteDAO.getNoteById(id));
 	}
 }

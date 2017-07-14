@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.dao.NoteDAO;
+import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.NoteCategory;
 
@@ -91,4 +92,10 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		return this.getHibernateTemplate().get(Note.class, id);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Note> getAll() throws DAOException {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Note.class);
+		return criteria.list();
+	}
 }

@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="<c:url value="/admin/adminlte/dist/css/AdminLTE.css" />">
 	<link rel="stylesheet" href="<c:url value="/admin/adminlte/dist/css/skins/_all-skins.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/admin/adminlte/plugins/datatables/jquery.dataTables.min.css" />">
+	<link rel="stylesheet" href="<c:url value="/css/admin.css" />">
    
 	<script src="<c:url value="/admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js" />"></script>
 	<script src="<c:url value="/admin/bootstrap/js/bootstrap.min.js" />"></script>
@@ -96,6 +97,11 @@
 				<li class="treeview">
 					<a href="<c:url value="/admin/users" />">
 						<i class="fa fa-user"></i> <span>Usuarios</span>
+					</a>
+				</li>
+				<li class="treeview">
+					<a href="<c:url value="/admin/notes" />">
+						<i class="fa fa-book"></i> <span>Otros Contenidos</span>
 					</a>
 				</li>
 			</ul>
