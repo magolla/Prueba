@@ -70,6 +70,35 @@
 									     <form:radiobutton path="active" value="false" element="span class='radio'"/>Inactivo
 									</div>
 								</div>
+								
+								<div class="form-group">
+									<div class=col-sm-2>
+										<label for="content" class="control-label">Publicaci&oacute;n</label>
+									</div>
+									<div class=col-sm-10>
+										<div class="input-group date">
+											<div class="input-group-addon">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<input type="text" class="form-control pull-right" id="publishingDate" name="publishingDate" value="${noteForm.publishingDate}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+										</div>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<div class=col-sm-2>
+										<label for="content" class="control-label">Expiraci&oacute;n</label>
+									</div>
+									<div class=col-sm-10>
+										<div class="input-group date">
+											<div class="input-group-addon">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<input type="text" class="form-control pull-right" id="expirationDate" name="expirationDate" value="${noteForm.expirationDate}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+										</div>
+									</div>
+								</div>
+								
 								<div class="form-group">
 									<div class=col-sm-2>
 										<label for="content" class="control-label">Contenido</label>
@@ -110,6 +139,17 @@
 				</div>
 			</div>
 		</section>
+		
+		<script>
+			$('#publishingDate').datepicker({
+				autoclose: true,
+				format: "dd-mm-yyyy"
+			});
+			$('#expirationDate').datepicker({
+				autoclose: true,
+				format: "dd-mm-yyyy"
+			});
+		</script>
 	</tiles:putAttribute>
 </tiles:insertDefinition>
 

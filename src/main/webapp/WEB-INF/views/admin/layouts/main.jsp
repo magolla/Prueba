@@ -19,13 +19,18 @@
 	<link rel="stylesheet" href="<c:url value="/admin/adminlte/dist/css/skins/_all-skins.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/admin/adminlte/plugins/datatables/jquery.dataTables.min.css" />">
 	<link rel="stylesheet" href="<c:url value="/css/admin.css" />">
+	<link rel="stylesheet" href="<c:url value="/admin/adminlte/plugins/datepicker/datepicker3.css" />">
    
 	<script src="<c:url value="/admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js" />"></script>
 	<script src="<c:url value="/admin/bootstrap/js/bootstrap.min.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/fastclick/fastclick.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/dist/js/app.min.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/datatables/jquery.dataTables.min.js" />" ></script>
+	<script src="<c:url value="/admin/adminlte/plugins/datepicker/bootstrap-datepicker.js" />"></script>
 
+	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.js" />"></script>
+	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.date.extensions.js" />"></script>
+	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.extensions.js" />"></script>
 
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">
