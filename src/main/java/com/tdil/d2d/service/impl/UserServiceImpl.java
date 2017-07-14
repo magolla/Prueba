@@ -1407,6 +1407,8 @@ public class UserServiceImpl implements UserService {
 		if(s.getOfferent().getAvatar()!=null)
 		    result.setBase64img(new String(s.getOfferent().getAvatar().getData()));
 		result.setJobApplication_id(s.getJobApplication_id());
+		result.setOfferentFirstname(s.getOfferent().getFirstname());
+		result.setOfferentLastname(s.getOfferent().getLastname());
 		return result;
 	}
 

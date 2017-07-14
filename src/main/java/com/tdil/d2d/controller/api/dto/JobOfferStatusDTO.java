@@ -27,6 +27,8 @@ public class JobOfferStatusDTO{
 	private Integer applications;
 	private String base64img;
 	private Integer jobApplication_id;
+	private String offerentFirstname;
+	private String offerentLastname;
 
 	public long getId() {
 		return id;
@@ -180,5 +182,17 @@ public class JobOfferStatusDTO{
 	
 	public void setJobApplication_id(Integer jobApplication_id) {
 		this.jobApplication_id = jobApplication_id;
+	}
+	public String getOfferentFirstname() {
+		return offerentFirstname;
+	}
+	public void setOfferentFirstname(String offerentFirstname) {
+		this.offerentFirstname = offerentFirstname;
+	}
+	public String getOfferentLastname() {
+		return offerentLastname;
+	}
+	public void setOfferentLastname(String offerentLastname) {
+		this.offerentLastname = offerentLastname;
 	}
 }
