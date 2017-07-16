@@ -1,5 +1,7 @@
 package com.tdil.d2d.controller.api.dto;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -108,5 +110,43 @@ public class NoteDTO {
 		this.image = image;
 	}
 	
+	public String getPublishingDateForView() {
+		if(publishingDate == null) {
+			return null;
+		}
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		String format = formatter.format(publishingDate);
+		return format;
+	}
 	
+	public void setPublishingDateForView(String string) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		try {
+			Date date = formatter.parse(string);
+			setPublishingDate(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getExpirationDateForView() {
+		if(expirationDate == null) {
+			return null;
+		}
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		String format = formatter.format(expirationDate);
+		return format;
+	}
+	
+	public void setExpirationDateForView(String string) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		try {
+			Date date = formatter.parse(string);
+			setExpirationDate(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 }

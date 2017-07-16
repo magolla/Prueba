@@ -28,7 +28,7 @@
 							</c:forEach>
 						</c:if>
 		
-						<form:form method="POST" modelAttribute="noteForm" autocomplete="off"  action="${pageContext.request.contextPath}/admin/notes/save" enctype="multipart/form-data">
+						<form:form method="POST" modelAttribute="noteForm" autocomplete="off"  action="${pageContext.request.contextPath}/admin/notes/save?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 							<div class="box-body">
 								<div class="form-group">
 									<div class="col-sm-2">
@@ -80,7 +80,7 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control pull-right" id="publishingDate" name="publishingDate" value="${noteForm.publishingDate}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+											<input type="text" class="form-control pull-right" id="publishingDateForView" name="publishingDateForView" value="${noteForm.publishingDateForView}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
 										</div>
 									</div>
 								</div>
@@ -94,7 +94,7 @@
 											<div class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control pull-right" id="expirationDate" name="expirationDate" value="${noteForm.expirationDate}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+											<input type="text" class="form-control pull-right" id="expirationDateForView" name="expirationDateForView" value="${noteForm.expirationDateForView}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
 										</div>
 									</div>
 								</div>
@@ -121,7 +121,7 @@
 										<c:choose>
 										    <c:when test="${noteForm.image != null && !noteForm.image.equals('')}">
 												<div>Imagen actual</div>
-												<img alt="image" src="data:image/png;base64,${noteForm.image}">
+												<img alt="image" src="data:image/png;base64,${noteForm.image}" style="max-width: 100%;">
 										    </c:when>
 										</c:choose>
 									</div>
@@ -141,11 +141,11 @@
 		</section>
 		
 		<script>
-			$('#publishingDate').datepicker({
+			$('#publishingDateForView').datepicker({
 				autoclose: true,
 				format: "dd-mm-yyyy"
 			});
-			$('#expirationDate').datepicker({
+			$('#expirationDateForView').datepicker({
 				autoclose: true,
 				format: "dd-mm-yyyy"
 			});

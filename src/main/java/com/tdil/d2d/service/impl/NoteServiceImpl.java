@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import com.tdil.d2d.bo.dto.ResultDTO;
 import com.tdil.d2d.controller.api.dto.NoteDTO;
 import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
@@ -20,6 +22,7 @@ import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ExceptionDefinition;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Note;
+import com.tdil.d2d.persistence.NoteCategory;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.User;
@@ -44,6 +47,26 @@ public class NoteServiceImpl implements NoteService {
 	public Note save(Note note) {
 		this.noteDAO.save(note);
 		return note;
+	}
+
+	@Override
+	public ResultDTO save(NoteDTO noteDTO) throws ServiceException {
+		if(StringUtils.isEmpty(noteDTO.getTitle())){
+			return ResultDTO.error("El título es obligatorio");
+		}
+		
+		if(StringUtils.isEmpty(noteDTO.getSubtitle())){
+			return ResultDTO.error("El subtítulo es obligatorio");
+		}
+		
+		if(StringUtils.isEmpty(noteDTO.getContent())){
+			return ResultDTO.error("El contenido es obligatorio");
+		}
+		
+		Note note = toPersistent(noteDTO);
+		this.noteDAO.save(note);
+		
+		return ResultDTO.ok();
 	}
 
 	@Override
@@ -178,7 +201,9 @@ public class NoteServiceImpl implements NoteService {
 		result.setActive(note.isActive());
 		result.setContent(note.getContent());
 		result.setExpirationDate(note.getExpirationDate());
-		result.setCategory(note.getCategory().toString());
+		if(note.getCategory() != null) {
+			result.setCategory(note.getCategory().toString());
+		}
 		result.setCreationDate(note.getCreationDate());
 		result.setPublishingDate(note.getPublishingDate());
 		result.setTitle(note.getTitle());
@@ -188,6 +213,28 @@ public class NoteServiceImpl implements NoteService {
 		}
 
 		return result;
+	}
+	
+	private  Note toPersistent(NoteDTO noteDTO) {
+		
+		Note note = this.getNoteById(noteDTO.getId());
+		if(note == null) {
+			note = new Note();
+		}
+		
+		note.setActive(noteDTO.isActive());
+		note.setContent(noteDTO.getContent());
+		note.setExpirationDate(noteDTO.getExpirationDate());
+		note.setCategory(NoteCategory.getCategoryEnum(noteDTO.getCategory()));
+		note.setCreationDate(noteDTO.getCreationDate());
+		note.setPublishingDate(noteDTO.getExpirationDate());
+		note.setTitle(noteDTO.getTitle());
+		note.setSubtitle(noteDTO.getSubtitle());
+		if(noteDTO.getImage() != null) {
+			note.setBase64img(noteDTO.getImage().getBytes());
+		}
+
+		return note;
 	}
 	
 	@Override
