@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.tdil.d2d.bo.dto.ResultDTO;
-import com.tdil.d2d.controller.api.dto.NoteDTO;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.Occupation;
@@ -14,8 +12,6 @@ import com.tdil.d2d.persistence.Specialty;
 public interface NoteService {
 
 	Note save(Note note);
-
-	ResultDTO save(NoteDTO note) throws ServiceException;
 
 	List<Note> getNotes(int page, int size, Map<String, Object> params);
 
@@ -34,8 +30,4 @@ public interface NoteService {
 	void disableNote(Long id);
 
 	Note getHomeNote()  throws ServiceException;
-	
-	List<NoteDTO> getAll() throws ServiceException;
-
-	NoteDTO getNoteDTOById(Long id);
 }
