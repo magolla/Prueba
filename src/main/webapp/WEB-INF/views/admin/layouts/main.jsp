@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="<c:url value="/admin/adminlte/plugins/datatables/jquery.dataTables.min.css" />">
 	<link rel="stylesheet" href="<c:url value="/css/admin.css" />">
 	<link rel="stylesheet" href="<c:url value="/admin/adminlte/plugins/datepicker/datepicker3.css" />">
+	<link rel="stylesheet" href="<c:url value="/bootstrap-select/css/bootstrap-select.min.css" />">
    
 	<script src="<c:url value="/admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js" />"></script>
 	<script src="<c:url value="/admin/bootstrap/js/bootstrap.min.js" />"></script>
@@ -31,6 +32,7 @@
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.date.extensions.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.extensions.js" />"></script>
+	<script src="<c:url value="/bootstrap-select/js/bootstrap-select.min.js" />"></script>
 
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">

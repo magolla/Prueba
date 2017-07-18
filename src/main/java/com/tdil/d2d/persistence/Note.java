@@ -176,6 +176,4 @@ public class Note implements PersistentEntity {
 	public void setBase64img(byte[] base64img) {
 		this.base64img = base64img;
 	}
-	
-	
 }

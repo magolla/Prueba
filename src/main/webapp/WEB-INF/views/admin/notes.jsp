@@ -37,7 +37,7 @@
 							    </table>
 							
 							    <div class="box-footer" style="margin-top:15px">
-									<a type="submit" class="btn btn-info pull-right" href="<c:url value='/admin/new-note'/>">Nuevo</a>
+									<a type="submit" class="btn btn-info pull-right" href="<c:url value='/admin/notes/new-note'/>">Nuevo</a>
 								</div>
 							</div>
 						</div>

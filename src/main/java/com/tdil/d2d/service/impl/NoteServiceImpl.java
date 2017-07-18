@@ -158,15 +158,6 @@ public class NoteServiceImpl implements NoteService {
 		this.save(note);
 	}
 	
-	@Override
-	public List<NoteDTO> getAll() throws ServiceException {
-		try {
-			return toDtoList(this.noteDAO.getAll());
-		} catch (DAOException e) {
-			throw new ServiceException(e);
-		}
-	}
-	
 	private List<NoteDTO> toDtoList(Collection<Note> list) {
 		return list.stream().map(note -> toDto(note)).collect(Collectors.toList());
 	}
@@ -178,7 +169,9 @@ public class NoteServiceImpl implements NoteService {
 		result.setActive(note.isActive());
 		result.setContent(note.getContent());
 		result.setExpirationDate(note.getExpirationDate());
-		result.setCategory(note.getCategory().toString());
+		if(note.getCategory() != null) {
+			result.setCategory(note.getCategory().toString());
+		}
 		result.setCreationDate(note.getCreationDate());
 		result.setPublishingDate(note.getPublishingDate());
 		result.setTitle(note.getTitle());
@@ -188,10 +181,5 @@ public class NoteServiceImpl implements NoteService {
 		}
 
 		return result;
-	}
-	
-	@Override
-	public NoteDTO getNoteDTOById(Long id) {
-		return toDto(this.noteDAO.getNoteById(id));
 	}
 }

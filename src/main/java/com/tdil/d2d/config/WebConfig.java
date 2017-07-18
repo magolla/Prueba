@@ -14,6 +14,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -27,6 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableAsync
 public class WebConfig extends WebMvcConfigurationSupport {
 
+	private int maxUploadSizeInMb = 5 * 1024 * 1024; // 5 MB
+	
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
@@ -84,4 +87,12 @@ public class WebConfig extends WebMvcConfigurationSupport {
         }
     }
 
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+
+        final CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(maxUploadSizeInMb);
+
+        return multipartResolver;
+    }
 }
