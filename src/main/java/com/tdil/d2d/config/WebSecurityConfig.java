@@ -86,7 +86,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/contact/motives",
                         "/api/contact", 
                         "/api/sendTestNotificationIOS",
-                        "/api/sendTestNotificationAndroid").permitAll()
+                        "/api/sendTestNotificationAndroid",
+                        "/api/validateVersion/**").permitAll()
                 .anyRequest().authenticated();
 
         // Custom JWT based security filter
