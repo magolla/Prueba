@@ -1,3 +1,4 @@
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page session="true"%>
@@ -21,7 +22,7 @@
 							<div class="msg">${msg}</div>
 						</c:if>
 		
-						<form id='loginForm' name='loginForm' action="<c:url value='/admin/login' />" method='POST'>
+						<form:form id='loginForm' name='loginForm' action="login?${_csrf.parameterName}=${_csrf.token}" method='POST' enctype="multipart/form-data">
 							<div class="box-body">
 								<div class="form-group">
 									<label for="username" class="col-sm-2 control-label">Email</label>
@@ -47,7 +48,7 @@
 							
 							
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-						</form>
+						</form:form>
 					</div>
 		
 				</div>

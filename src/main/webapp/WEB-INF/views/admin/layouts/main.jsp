@@ -59,7 +59,7 @@
 			<ul class="nav navbar-nav">
 			
 				<c:url value="/logout" var="logoutUrl" />
-				<form style="display: none;" action="${logoutUrl}" method="post" id="logoutForm">
+				<form style="display: none;" action="${logoutUrl}?${_csrf.parameterName}=${_csrf.token}" method='POST' enctype="multipart/form-data" method="post" id="logoutForm">
 					<input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
 				</form>

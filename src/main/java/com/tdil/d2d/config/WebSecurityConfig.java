@@ -128,23 +128,18 @@ public class WebSecurityConfig  {
 
 		    @Override
 		    protected void configure(HttpSecurity httpSecurity) throws Exception {
+		    	httpSecurity
 		    	
-			      httpSecurity
-			                .authorizeRequests().antMatchers("/admin/login").permitAll()
-			                .antMatchers("/admin/adminlte/**").permitAll()
-			                .antMatchers("/admin/bootstrap/**").permitAll()
-			                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')").and()
-			                
-					    	.formLogin()
-							.loginPage("/admin/login").failureUrl("/admin/login?error")
-							    				.usernameParameter("username")
-							    				.passwordParameter("password")
-							    				.defaultSuccessUrl("/admin/dashboard").and()
-							.logout().logoutSuccessUrl("/admin/login?logout").and().
-							exceptionHandling().accessDeniedPage("/403");
-		    	
-			      httpSecurity
-			                .addFilterBefore(validationCaptchaFilterBean(), UsernamePasswordAuthenticationFilter.class);
+			    	.authorizeRequests().antMatchers("/admin/login").permitAll()
+	                .antMatchers("/admin/adminlte/**").permitAll()
+	                .antMatchers("/admin/bootstrap/**").permitAll()
+	                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')").and()
+	                .csrf().and()
+	                .logout().logoutSuccessUrl("/admin/login?logout").and()
+					.exceptionHandling().accessDeniedPage("/403");
+
+		    	httpSecurity
+			                .addFilterAfter(validationCaptchaFilterBean(), UsernamePasswordAuthenticationFilter.class);
 		    }
      }
    

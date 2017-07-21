@@ -28,7 +28,7 @@
 							</c:forEach>
 						</c:if>
 		
-						<form:form method="POST" modelAttribute="userForm" autocomplete="off"  action="${pageContext.request.contextPath}/admin/users/save" >
+						<form:form method="POST" modelAttribute="userForm" autocomplete="off"  action="${pageContext.request.contextPath}/admin/users/save?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 							<div class="box-body">
 								<div class="form-group">
 									<label for="email" class="col-sm-2 control-label">Email</label>
