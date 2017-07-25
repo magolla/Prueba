@@ -94,7 +94,7 @@
 										</div>
 										<div class="row">
 						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Tipo de Suscripción:</label>
+								              <label for="name" class="control-label">Tipo de Usuario:</label>
 											</div>
 											<div class="col-md-8">
 												<c:choose>

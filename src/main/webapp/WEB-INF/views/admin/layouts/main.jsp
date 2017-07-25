@@ -39,11 +39,11 @@
 <div class="wrapper">
 	<header class="main-header">
 	<!-- Logo -->
-	<a href="../../index2.html" class="logo">
+	<a href="../../admin/dashboard" class="logo">
 		<!-- mini logo for sidebar mini 50x50 pixels -->
-		<span class="logo-mini"><b></b></span>
+		<span class="logo-mini"><img src="https://localhost:8443/d2d/images/favicon-32x32.png"></span>
 		<!-- logo for regular state and mobile devices -->
-		<span class="logo-lg"><b>Doc to Doc</b></span>
+		<span class="logo-lg"><img src="https://localhost:8443/d2d/images/navbar-logo-ligth-183x32.png"></span>
 	</a>
 	<!-- Header Navbar: style can be found in header.less -->
 	<nav class="navbar navbar-static-top">
