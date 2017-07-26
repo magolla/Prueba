@@ -33,14 +33,17 @@ public class BOUserDetailsServiceImpl implements UserDetailsService {
         try {
         	BOUser user = userDAO.findByEmail(email);
 
-        	if(!user.isActive()){
-        		throw new UsernameNotFoundException("User inactive");
-        	}
-        	List<GrantedAuthority> authorities =
-                    buildUserAuthority(user.getRoles());
-
-            return buildUserForAuthentication(user, authorities);
-
+        	if (user == null) {
+			    throw new UsernameNotFoundException(String.format("No user found with email '%s'.", email));
+			} else {
+	        	if(!user.isActive()){
+	        		throw new UsernameNotFoundException("User inactive");
+	        	}
+	        	List<GrantedAuthority> authorities =
+	                    buildUserAuthority(user.getRoles());
+	
+	            return buildUserForAuthentication(user, authorities);
+			}
 		} catch (DAOException e) {
 			throw new UsernameNotFoundException(e.getMessage(), e);
 		}
