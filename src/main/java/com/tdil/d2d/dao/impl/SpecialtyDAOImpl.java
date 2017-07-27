@@ -1,10 +1,12 @@
 package com.tdil.d2d.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.dao.SpecialtyDAO;
 import com.tdil.d2d.exceptions.DAOException;
@@ -19,7 +22,6 @@ import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.PersistentEntity;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Task;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
@@ -179,5 +181,45 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 	protected void handleException(String invocationDetails, Exception e) throws DAOException {
 //		LoggerManager.error(this, e.getMessage(), e);
 		throw new DAOException(e.getMessage(), e);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Occupation> listOccupationsByIds(List<Long> ids) throws DAOException {
+		if(ids.isEmpty()) {
+			return new ArrayList<Occupation>();
+		}
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct o ");
+			queryString.append("FROM Occupation o ");
+			queryString.append("WHERE o.id in(:ids) ");
+			
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameterList("ids", ids);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Specialty> listSpecialtiesByIds(List<Long> ids) throws DAOException {
+		if(ids.isEmpty()) {
+			return new ArrayList<Specialty>();
+		}
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct s ");
+			queryString.append("FROM Specialty s ");
+			queryString.append("WHERE s.id in(:ids) ");
+			
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameterList("ids", ids);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
 	}
 }

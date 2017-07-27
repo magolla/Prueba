@@ -141,6 +141,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				}
 				
 				return subscriptions.get(subscriptions.size()-1);
+			/*
+				Subscription subscription = subscriptions.get(0);
+				if (subscription.getExpirationDate().before(new Date())) {
+					return null;
+				} else {
+					return subscription;
+				}
+			 */
 			}
 		} catch (DAOException e) {
 			throw new DTDException(ExceptionDefinition.DTD_2002, e, String.valueOf(userID));

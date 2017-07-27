@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,18 +45,12 @@ public class TestController {
         response.getOutputStream().write("OK".getBytes());
 
     }
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public void home(HttpServletResponse response) throws IOException {
-        System.out.println("HOME");
-        response.setContentType("text/plain");
-        response.getOutputStream().write("OK".getBytes());
-    }
     
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
+	@Qualifier("jwtUserDetailsService")
     private UserDetailsService userDetailsService;
     
     @Autowired

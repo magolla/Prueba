@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 
+import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.JobApplicationDTO;
@@ -77,6 +78,8 @@ public interface UserService {
 
 	public List<ActivityLogDTO> getActivityLog() throws ServiceException;
 
+	public List<ActivityLogDTO> getWebActivityLog(Long userId) throws ServiceException;
+	
 	public void initDbWithTestData() throws ServiceException;
 
 	public boolean addSpecialty(AddSpecialtyRequest addSpecialtyRequest) throws ServiceException;
@@ -122,6 +125,8 @@ public interface UserService {
 	
 	public UserDetailsResponse getUser(long id) throws ServiceException;
 
+	public UserDTO getUserWebDetails(long id) throws ServiceException;
+	
 	// Profile
 	public ProfileResponseDTO profile() throws ServiceException;
 	
@@ -170,4 +175,6 @@ public interface UserService {
 	public List<Long> getOfferIdsByDate(Date date) throws ServiceException;
 
 	public void sendSMS(SendSMSRequest request) throws ServiceException;
+	
+	public List<UserDTO> getAll() throws ServiceException;
 }

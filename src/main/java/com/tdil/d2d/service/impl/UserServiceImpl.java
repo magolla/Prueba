@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mercadopago.MP;
+import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
@@ -1428,7 +1430,19 @@ public class UserServiceImpl implements UserService {
 		}
 		return getUserDetailsResponse(user);
 	}
+	
+	@Override
+	public UserDTO getUserWebDetails(long id) throws ServiceException {
+		User user = null;
+		try {
+			user = this.userDAO.getById(User.class, id);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		return toDtoWebDetails(user);
+	}
 
+	
 	private UserDetailsResponse getUserDetailsResponse(User user) throws ServiceException {
 		UserDetailsResponse resp = new UserDetailsResponse(HttpStatus.OK.value());
 		resp.setUserId(String.valueOf(user.getId()));
@@ -1517,6 +1531,16 @@ public class UserServiceImpl implements UserService {
 		try {
 			List<ActivityLog> creditCards = this.activityLogDAO.getLastLog(RuntimeContext.getCurrentUser().getId());
 			return creditCards.stream().map(s -> toDTO(s)).collect(Collectors.toList());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public List<ActivityLogDTO> getWebActivityLog(Long userId) throws ServiceException {
+		try {
+			List<ActivityLog> logs = this.activityLogDAO.getLastLog(userId);
+			return logs.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
@@ -1914,5 +1938,70 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 		
+	}
+
+	@Override
+	public List<UserDTO> getAll() throws ServiceException {
+		try {
+			return toDtoList(this.userDAO.getAll());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	private List<UserDTO> toDtoList(Collection<User> list) {
+		return list.stream().map(user -> toDto(user)).collect(Collectors.toList());
+	}
+	
+	
+	private  UserDTO toDtoWebDetails(User user) {
+		UserDTO result = toDto(user);
+
+		Date creationDate = user.getCreationDate();
+		if(creationDate!=null){
+			DateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
+			result.setCreationDate(formatter.format(creationDate));
+		}
+		
+		if(user.getAvatar()!=null){
+			result.setAvatar(new String(user.getAvatar().getData()));
+		}
+		
+		Date lastLogin = user.getLastLoginDate();
+		if(lastLogin!=null){
+			DateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
+			result.setLastLoginDate(formatter.format(lastLogin));
+		}
+		
+		result.setLicense(user.getLicense());
+		
+		result.setOperativeSystem(user.getAndroidRegId()!=null?"Android":"IOS");
+		
+		return result;
+	}
+	
+	private  UserDTO toDto(User user) {
+		UserDTO result = new UserDTO();
+
+		result.setId(user.getId());
+		result.setEmail(user.getEmail());
+		result.setName(user.getFirstname());
+		result.setActive(user.isPhoneValidated());
+		result.setUserB(user.isUserb());
+
+		result.setMobilePhone(user.getMobilePhone());
+		
+		Subscription subscription = subscriptionService.getActiveSubscription(user.getId());
+		if (subscription != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			result.setExpirationDate(sdf.format(subscription.getExpirationDate()));
+			if(subscription.getExpirationDate().after(new Date())){
+				result.setHasActiveSuscription(false);
+			} else {
+				result.setHasActiveSuscription(true);
+			}
+		}
+		
+		return result;
 	}
 }

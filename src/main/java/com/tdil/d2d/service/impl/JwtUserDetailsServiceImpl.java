@@ -13,7 +13,7 @@ import com.tdil.d2d.security.JwtUserFactory;
 /**
  * Created by stephan on 20.03.16.
  */
-@Service
+@Service("jwtUserDetailsService")
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired

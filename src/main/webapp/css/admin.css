@@ -1,0 +1,8 @@
+input[type=checkbox], input[type=radio] {
+    margin: 4px 10px 0px 0px;
+    margin-top: 1px\9;
+}
+
+#note-editor .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+    width: 100%;
+}

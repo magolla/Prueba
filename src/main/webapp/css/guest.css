@@ -1,0 +1,9 @@
+#loginForm .box-footer {
+	position: relative;
+}
+
+#loginForm .box-footer .btn {
+	position: absolute;
+	right: 25px;
+	top: 10px;
+}
