@@ -80,7 +80,6 @@
 		<servlet-name>spring</servlet-name>
 		<url-pattern>/api/*</url-pattern>
 		<url-pattern>/suscribirme</url-pattern>
-		<url-pattern>/admin/*</url-pattern>
 	</servlet-mapping>
 
 	<filter>
