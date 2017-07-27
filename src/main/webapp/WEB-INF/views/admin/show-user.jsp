@@ -16,6 +16,7 @@
 					<div class="box box-info">
 						<div class="box-header with-border">
 							<h3 class="box-title">Datos del usuario</h3>
+							<a href="<c:url value="/admin/public-users" />" class="link-to-right"><< Volver al listado</a>
 						</div>
 						
 						<div class="box-body">

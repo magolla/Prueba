@@ -3,7 +3,7 @@
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
-		Dashboard
+		Inicio
 	</tiles:putAttribute>
 
 	<tiles:putAttribute name="body">

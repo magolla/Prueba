@@ -4,7 +4,7 @@
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
-		Otros Contenidos
+		ABM de Notas
 	</tiles:putAttribute>
 
 	<tiles:putAttribute name="body">

@@ -4971,3 +4971,5 @@ table.text-center th {
 	margin-top: 0!important;
 	margin-bottom: 5px!important;
 }
+
+.link-to-right				{ font-size: 18px; position: absolute; right: 28px; line-height: normal; }

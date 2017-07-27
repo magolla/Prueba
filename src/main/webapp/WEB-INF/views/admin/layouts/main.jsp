@@ -33,17 +33,17 @@
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.date.extensions.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.extensions.js" />"></script>
 	<script src="<c:url value="/bootstrap-select/js/bootstrap-select.min.js" />"></script>
-
+	<link rel="icon" href="<c:url value="/images/favicon.ico" />"  type="image/x-icon">
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">
 <div class="wrapper">
 	<header class="main-header">
 	<!-- Logo -->
-	<a href="../../admin/dashboard" class="logo">
+	<a href="<c:url value="/admin/dashboard" />" class="logo">
 		<!-- mini logo for sidebar mini 50x50 pixels -->
-		<span class="logo-mini"><img src="https://localhost:8443/d2d/images/favicon-32x32.png"></span>
+		<span class="logo-mini"><img src="<c:url value="/images/favicon-32x32.png" />"></span>
 		<!-- logo for regular state and mobile devices -->
-		<span class="logo-lg"><img src="https://localhost:8443/d2d/images/navbar-logo-ligth-183x32.png"></span>
+		<span class="logo-lg"><img src="<c:url value="/images/navbar-logo-ligth-183x32.png" />"></span>
 	</a>
 	<!-- Header Navbar: style can be found in header.less -->
 	<nav class="navbar navbar-static-top">
@@ -98,7 +98,7 @@
 			<ul class="sidebar-menu">
 				<li class="treeview">
 					<a href="<c:url value="/admin/dashboard" />">
-						<i class="fa fa-dashboard"></i> <span>Dashboard</span>
+						<i class="fa fa-dashboard"></i> <span>Inicio</span>
 					</a>
 				</li>
 				<li class="treeview">
@@ -108,7 +108,7 @@
 				</li>
 				<li class="treeview">
 					<a href="<c:url value="/admin/notes" />">
-						<i class="fa fa-book"></i> <span>Otros Contenidos</span>
+						<i class="fa fa-book"></i> <span>ABM de Notas</span>
 					</a>
 				</li>
 			</ul>
@@ -129,9 +129,7 @@
 	</div>
 	
 	<footer class="main-footer">
-		<div class="pull-right hidden-xs">
-			<b>Version</b> 1.0.0
-		</div>
+		<div class="pull-right hidden-xs">WebApp DTD v 1.01.02</div>
 		<strong>Copyright &copy; 2017 <a href="http://www.doctodocapp.com/">Doc To Doc</a>.</strong> All rights reserved.
 	</footer>
 
