@@ -690,5 +690,5 @@ public class UserController extends AbstractController {
     public ResponseEntity<ApiResponse> checkToken() {
         return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
     }
-    
+
 }
