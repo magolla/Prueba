@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="<c:url value="/admin/adminlte/dist/css/AdminLTE.css" />">
 	<link rel="stylesheet" href="<c:url value="/admin/adminlte/dist/css/skins/_all-skins.min.css"/>">
     <link rel="stylesheet" href="<c:url value="/admin/adminlte/plugins/datatables/jquery.dataTables.min.css" />">
+    <link rel="stylesheet" href="<c:url value="/admin/adminlte/plugins/datatables/buttons.dataTables.min.css" />">
 	<link rel="stylesheet" href="<c:url value="/css/admin.css" />">
 	<link rel="stylesheet" href="<c:url value="/admin/adminlte/plugins/datepicker/datepicker3.css" />">
 	<link rel="stylesheet" href="<c:url value="/bootstrap-select/css/bootstrap-select.min.css" />">
@@ -27,6 +28,9 @@
 	<script src="<c:url value="/admin/adminlte/plugins/fastclick/fastclick.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/dist/js/app.min.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/datatables/jquery.dataTables.min.js" />" ></script>
+	<script src="<c:url value="/admin/adminlte/plugins/datatables/buttons.html5.js" />" ></script>
+	<script src="<c:url value="/admin/adminlte/plugins/datatables/jszip.min.js" />" ></script>
+	<script src="<c:url value="/admin/adminlte/plugins/datatables/dataTables.buttons.min.js" />" ></script>
 	<script src="<c:url value="/admin/adminlte/plugins/datepicker/bootstrap-datepicker.js" />"></script>
 
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.js" />"></script>
