@@ -79,6 +79,7 @@ import com.tdil.d2d.controller.api.request.UserLinkedinProfileRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
+import com.tdil.d2d.controller.api.response.UserReceiptResponse;
 import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.GeoDAO;
 import com.tdil.d2d.dao.JobApplicationDAO;
@@ -1946,7 +1947,7 @@ public class UserServiceImpl implements UserService {
 			return toDtoList(this.userDAO.getAll());
 		} catch (DAOException e) {
 			throw new ServiceException(e);
-		}
+		} 
 	}
 	
 	private List<UserDTO> toDtoList(Collection<User> list) {
@@ -1980,7 +1981,8 @@ public class UserServiceImpl implements UserService {
 		return result;
 	}
 	
-	private  UserDTO toDto(User user) {
+	private  UserDTO toDto(User user){
+		
 		UserDTO result = new UserDTO();
 
 		result.setId(user.getId());
@@ -1994,12 +1996,33 @@ public class UserServiceImpl implements UserService {
 		Subscription subscription = subscriptionService.getActiveSubscription(user.getId());
 		if (subscription != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			result.setExpirationDate(sdf.format(subscription.getExpirationDate()));
 			if(subscription.getExpirationDate().after(new Date())){
-				result.setHasActiveSuscription(false);
-			} else {
 				result.setHasActiveSuscription(true);
+				result.setExpirationDate(sdf.format(subscription.getExpirationDate()));
+			} else {
+				result.setHasActiveSuscription(false);
 			}
+		}
+		
+		try {
+			UserReceiptResponse receipt = subscriptionService.getLastReceipt(user.getId());
+
+			if (receipt != null) {
+				Date expireDate = new Date(receipt.getExpiresDate());
+				//Check bigger date
+				if(subscription==null || (subscription!=null && subscription.getExpirationDate().before(expireDate))){
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					if(expireDate.after(new Date())){
+						result.setHasActiveSuscription(true);
+						result.setExpirationDate(sdf.format(expireDate));
+					} else {
+						result.setHasActiveSuscription(false);
+					}
+				}
+				
+			}
+		} catch (ServiceException e) {
+			logger.error("Can't load receipts", e);
 		}
 		
 		return result;
