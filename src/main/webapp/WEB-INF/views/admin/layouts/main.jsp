@@ -111,6 +111,21 @@
 						<i class="fa fa-book"></i> <span>ABM de Notas</span>
 					</a>
 				</li>
+				<li class="treeview">
+					<a href="<c:url value="/admin/reports/subscription" />">
+						<i class="fa fa-book"></i> <span>Reporte: Suscripciones</span>
+					</a>
+				</li>
+				<li class="treeview">
+					<a href="<c:url value="/admin/reports/jobofferstats" />">
+						<i class="fa fa-book"></i> <span>Reporte: Avisos (Cantidades)</span>
+					</a>
+				</li>
+				<li class="treeview">
+					<a href="<c:url value="/admin/reports/details" />">
+						<i class="fa fa-book"></i> <span>Reporte: Avisos (Listado/detalle)</span>
+					</a>
+				</li>
 			</ul>
 		</section>
 		<!-- /.sidebar -->
