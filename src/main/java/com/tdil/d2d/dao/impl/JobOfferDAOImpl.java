@@ -143,6 +143,19 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		}
 	}
 	
+	
+	@Override
+	public List<JobOffer> getAllOffers() throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
+			criteria.addOrder(Order.asc("id"));
+			List<JobOffer> list = criteria.list();
+			return list;
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
 
 
 	@SuppressWarnings("unchecked")
