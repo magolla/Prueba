@@ -56,8 +56,9 @@
 
 <script>
 $(document).ready(function() {
+	
     $('#users').DataTable( {
-        "ajax": '/d2d/admin/list/bo-users',
+        "ajax": '<c:url value="/admin/list/bo-users" />',
         "language": {
             "search": "Buscar:",
             "info": "Página _PAGE_ de _PAGES_",

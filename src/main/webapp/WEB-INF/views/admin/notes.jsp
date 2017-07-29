@@ -49,7 +49,7 @@
 <script>
 $(document).ready(function() {
     $('#notes').DataTable( {
-        "ajax": '/d2d/admin/list/bo-notes',
+        "ajax": '<c:url value="/admin/list/bo-notes" />',
         "language": {
             "search": "Buscar:",
             "info": "Página _PAGE_ de _PAGES_",

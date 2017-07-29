@@ -160,7 +160,8 @@ public class BOUserServiceImpl implements BOUserService {
 				
 				//New User
 				user = new BOUser();
-				user.setPassword(dto.getPassword());
+				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+				user.setPassword(encoder.encode(dto.getPassword()));
 			}
 			
 			user.setEmail(dto.getEmail());
