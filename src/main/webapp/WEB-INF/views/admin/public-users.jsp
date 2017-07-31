@@ -1,4 +1,5 @@
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <tiles:insertDefinition name="d2d.dashboard">
 
@@ -60,7 +61,7 @@
 <script>
 $(document).ready(function() {
     $('#users').DataTable( {
-        "ajax": '/d2d/admin/list/public-users',
+        "ajax": '<c:url value="/admin/list/public-users" />',
         "language": {
             "search": "Buscar:",
             "info": "Página _PAGE_ de _PAGES_",
