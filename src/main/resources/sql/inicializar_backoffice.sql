@@ -1,5 +1,5 @@
 
-INSERT INTO d2d_bouser (id,creationDate,email,name,pass,active) VALUES (1,'2017-06-03 00:00:00','admin@doctodoc.com.ar','Admin','$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y',1);
+INSERT INTO d2d_bouser (id,creationDate,email,name,pass,active) VALUES (1,'2017-06-03 00:00:00','admin@doctodocapp.com','Admin','$2a$10$04TVADrR6/SPLBjsK0N30.Jf5fNjBugSACeGv1S69dZALR7lSov0y',1);
 
 INSERT INTO d2d_role (id,name,description) VALUES (1,'ROLE_ADMIN','Admin');
 INSERT INTO d2d_role (id,name,description) VALUES (2,'ROLE_SYSPRO','Sysprops');
