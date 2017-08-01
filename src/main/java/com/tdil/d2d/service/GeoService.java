@@ -10,4 +10,6 @@ public interface GeoService {
 	public void initDbWithTestData() throws ServiceException;
 
 	public List<GeoLevelDTO> search(String text) throws ServiceException;
+
+	public List<GeoLevelDTO> listGeoLevel2() throws ServiceException;
 }

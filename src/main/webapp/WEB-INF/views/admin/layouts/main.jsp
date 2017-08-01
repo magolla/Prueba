@@ -37,6 +37,7 @@
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.date.extensions.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.extensions.js" />"></script>
 	<script src="<c:url value="/bootstrap-select/js/bootstrap-select.min.js" />"></script>
+	<script src="<c:url value="/chartjs/Chart.bundle.min.js" />"></script>
 	<link rel="icon" href="<c:url value="/images/favicon.ico" />"  type="image/x-icon">
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">

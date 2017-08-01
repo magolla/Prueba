@@ -22,5 +22,6 @@ public interface GeoDAO {
 	
 	public List<Geo4> getListGeo4ByGeo2(Long geo2Id) throws DAOException;
 	public List<Geo4> getListGeo4ByGeo3(Long geo3Id) throws DAOException;
-
+	
+	public List<Geo2> getListGeo2() throws DAOException;
 }
