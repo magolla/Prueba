@@ -66,24 +66,25 @@
 		</section>
 		
 		<div class="line-chart-separator"></div>
-		
-		<div class="row">
-			<div class="col-md-offset-1 col-md-4">
-				<div id="canvas-holder" class="center-block">
-			        <canvas id="chart-area" ></canvas>
-			    </div>
+		<c:if test="${subscriptionList != null}">
+			<div class="row">
+				<div class="col-md-offset-1 col-md-4">
+					<div id="canvas-holder" class="center-block">
+				        <canvas id="chart-area" ></canvas>
+				    </div>
+				</div>
+				<div class="col-md-offset-1 col-md-6">
+					<label class="chart-resume">Resumen</label>
+					
+					<div class="chart-resume-element"><b>Usuarios registrados: ${registeredUsers}</b></div>
+					<div class="chart-resume-element"><b>Suscripciones activas: ${activeSubscriptions}</b></div>
+					
+					<c:forEach var="obj" items="${subscriptionList}">
+		        		<div class="chart-resume-element" style="color: ${obj.color}"><b>${obj.name}: ${obj.quantity}</b></div>
+					</c:forEach>
+				</div>
 			</div>
-			<div class="col-md-offset-1 col-md-6">
-				<label class="chart-resume">Resumen</label>
-				
-				<div class="chart-resume-element"><b>Usuarios registrados: ${registeredUsers}</b></div>
-				<div class="chart-resume-element"><b>Suscripciones activas: ${activeSubscriptions}</b></div>
-				
-				<c:forEach var="obj" items="${subscriptionList}">
-	        		<div class="chart-resume-element" style="color: ${obj.color}"><b>${obj.name}: ${obj.quantity}</b></div>
-				</c:forEach>
-			</div>
-		</div>
+		</c:if>
 	    
 	<script>
 		$('#geosSelect').selectpicker('val', ${filterForm.geoLevels2});
@@ -107,48 +108,49 @@
 		
 		loadGeosInput();
 	</script>
-		
-    <script>
-
-    var config = {
-        type: 'pie',
-        data: {
-            datasets: [{
-                data: [
-                	<c:forEach var="obj" items="${subscriptionList}">
-                		${obj.quantity},
+	
+	<c:if test="${subscriptionList != null}">	
+	    <script>
+	    var config = {
+	        type: 'pie',
+	        data: {
+	            datasets: [{
+	                data: [
+	                	<c:forEach var="obj" items="${subscriptionList}">
+	                		${obj.quantity},
+						</c:forEach>
+	                ],
+	                
+	                
+	                backgroundColor: [
+	                	<c:forEach var="obj" items="${subscriptionList}">
+			        		"${obj.color}",
+						</c:forEach>
+		            ],
+	                
+	                label: 'Dataset 1'
+	            }],
+	            labels: [
+	            	<c:forEach var="obj" items="${subscriptionList}">
+		        		"${obj.name}",
 					</c:forEach>
-                ],
-                
-                
-                backgroundColor: [
-                	<c:forEach var="obj" items="${subscriptionList}">
-		        		"${obj.color}",
-					</c:forEach>
-	            ],
-                
-                label: 'Dataset 1'
-            }],
-            labels: [
-            	<c:forEach var="obj" items="${subscriptionList}">
-	        		"${obj.name}",
-				</c:forEach>
-            ]
-        },
-        options: {
-            responsive: true,
-            legend: {
-                display: false
-            }
-        }
-    };
-
-    window.onload = function() {
-        var ctx = document.getElementById("chart-area").getContext("2d");
-        window.myPie = new Chart(ctx, config);
-    };
-
-    </script>
+	            ]
+	        },
+	        options: {
+	            responsive: true,
+	            legend: {
+	                display: false
+	            }
+	        }
+	    };
+	
+	    window.onload = function() {
+	        var ctx = document.getElementById("chart-area").getContext("2d");
+	        window.myPie = new Chart(ctx, config);
+	    };
+	
+	    </script>
+    </c:if>
 		
 	</tiles:putAttribute>
 

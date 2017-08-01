@@ -1,6 +1,5 @@
 package com.tdil.d2d.bo.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tdil.d2d.bo.dto.FilterSubscriptionReportDTO;
-import com.tdil.d2d.bo.dto.SubscriptionReportDTO;
 import com.tdil.d2d.controller.api.dto.BOJobOfferDTO;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.exceptions.ServiceException;
@@ -86,7 +84,7 @@ public class AdminReportsController {
 			ModelAndView model = new ModelAndView();
 			model.addObject("geoList", this.geoService.listGeoLevel2());
 			model.addObject("filterForm", filterDTO);
-			model.addObject("subscriptionList", this.getSubscriptionList());
+			model.addObject("subscriptionList", this.reportsService.getSubscriptionList());
 			model.addObject("registeredUsers", 1000);
 			model.addObject("activeSubscriptions", 900);
 			
@@ -103,14 +101,5 @@ public class AdminReportsController {
 
 	}
 	
-	private List<SubscriptionReportDTO> getSubscriptionList() {
-		List<SubscriptionReportDTO> subscriptions = new ArrayList<SubscriptionReportDTO>();
-		subscriptions.add(new SubscriptionReportDTO("Suscripciones pagas android mercado pago", 100, "rgba(255, 165, 0, 1)"));
-		subscriptions.add(new SubscriptionReportDTO("Suscripciones por sponsor", 200, "rgba(0, 128, 128, 1)"));
-		subscriptions.add(new SubscriptionReportDTO("Suscripciones inapp iOS", 300, "rgba(3, 72, 123, 1)"));
-		subscriptions.add(new SubscriptionReportDTO("Suscripciones gratuitas dtd", 400, "rgba(238,67,100, 1)"));
-		
-		return subscriptions;
-	}
 }
     
