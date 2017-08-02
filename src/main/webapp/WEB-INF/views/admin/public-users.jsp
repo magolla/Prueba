@@ -10,7 +10,7 @@
 	<tiles:putAttribute name="body">
 		<section class="content">
 			<div class="row">
-		        <div class="col-md-10">
+		        <div class="col-md-12">
 		          <!-- Custom Tabs -->
 		          <div class="nav-tabs-custom">
 		            <ul class="nav nav-tabs">

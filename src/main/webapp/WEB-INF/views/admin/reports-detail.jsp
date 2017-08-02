@@ -4,7 +4,7 @@
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
-		Reporte: Avisos (Listado/detalle)
+		Reporte: Detalle de avisos
 	</tiles:putAttribute>
 
 	<tiles:putAttribute name="body">
@@ -78,7 +78,7 @@ $(document).ready(function() {
         	 'excelHtml5','csvHtml5','copyHtml5' 
          ],
     	"scrollX": true,
-        "ajax": '/d2d/admin/reports/all-jobsoffer',
+        "ajax": '<c:url value="/admin/reports/all-jobsoffer" />',
         "language": {
             "search": "Buscar:",
             "info": "Página _PAGE_ de _PAGES_",
