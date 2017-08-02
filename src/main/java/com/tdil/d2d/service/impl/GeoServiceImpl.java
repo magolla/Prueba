@@ -36,6 +36,15 @@ public class GeoServiceImpl implements GeoService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<GeoLevelDTO> listGeoLevel2() throws ServiceException {
+		try {
+			return (List<GeoLevelDTO>) toDto2(geoDAO.getListGeo2());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
 
 	private Collection<? extends GeoLevelDTO> toDto4(List<Geo4> levels) {
 		return levels.stream().map(s -> toDto(s)).collect(Collectors.toList());

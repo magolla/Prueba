@@ -170,4 +170,20 @@ public class GeoDAOImpl extends HibernateDaoSupport implements GeoDAO  {
 			throw new DAOException(e);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Geo2> getListGeo2() throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct geo2 ");
+			queryString.append("FROM Geo2 geo2 ");
+			
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 }

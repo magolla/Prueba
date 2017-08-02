@@ -174,7 +174,7 @@
 		<script>
 $(document).ready(function() {
     $('#users').DataTable( {
-        "ajax": '/d2d/admin/public-users/' + "<c:out value='${user.id}'/>" + '/activity',
+        "ajax": '<c:url value="/admin/public-users/" />' + "<c:out value='${user.id}'/>" + '/activity',
         "language": {
             "search": "Buscar:",
             "info": "Página _PAGE_ de _PAGES_",

@@ -2,6 +2,7 @@ package com.tdil.d2d.service.impl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.bo.dto.SubscriptionReportDTO;
 import com.tdil.d2d.controller.api.dto.BOJobOfferDTO;
 import com.tdil.d2d.dao.GeoDAO;
 import com.tdil.d2d.dao.JobOfferDAO;
@@ -107,5 +109,15 @@ public class BOReportsServiceImpl implements BOReportsService {
 		result.setTaskName(jobOffer.getTask().getName());
 
 		return result;
+	}
+	
+	public List<SubscriptionReportDTO> getSubscriptionList() {
+		List<SubscriptionReportDTO> subscriptions = new ArrayList<SubscriptionReportDTO>();
+		subscriptions.add(new SubscriptionReportDTO("Suscripciones pagas android mercado pago", 100, "rgba(255, 165, 0, 1)"));
+		subscriptions.add(new SubscriptionReportDTO("Suscripciones por sponsor", 200, "rgba(0, 128, 128, 1)"));
+		subscriptions.add(new SubscriptionReportDTO("Suscripciones inapp iOS", 300, "rgba(3, 72, 123, 1)"));
+		subscriptions.add(new SubscriptionReportDTO("Suscripciones gratuitas dtd", 400, "rgba(238,67,100, 1)"));
+		
+		return subscriptions;
 	}
 }
