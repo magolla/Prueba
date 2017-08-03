@@ -37,7 +37,7 @@ public interface SubscriptionDAO {
 
 	public Receipt getLastReceipt(Long userId);
 
-	public List<Subscription> listAllSubscriptions() throws DAOException;
+	public List<Subscription> listAllSubscriptions(List<Long> ids) throws DAOException;
 
 	public List<Receipt> listAllReceipts() throws DAOException;
 }

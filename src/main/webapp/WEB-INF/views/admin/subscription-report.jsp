@@ -77,7 +77,7 @@
 					<label class="chart-resume">Resumen</label>
 					
 					<div class="chart-resume-element"><b>Usuarios registrados: ${registeredUsers}</b></div>
-					<div class="chart-resume-element"><b>Suscripciones activas: ${activeSubscriptions}</b></div>
+					<!--div class="chart-resume-element"><b>Suscripciones activas: ${activeSubscriptions}</b></div-->
 					
 					<c:forEach var="obj" items="${subscriptionList}">
 		        		<div class="chart-resume-element" style="color: ${obj.color}"><b>${obj.name}: ${obj.quantity}</b></div>

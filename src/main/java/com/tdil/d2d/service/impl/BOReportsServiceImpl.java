@@ -13,19 +13,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.bo.dto.FilterSubscriptionReportDTO;
 import com.tdil.d2d.bo.dto.ReportItemDTO;
 import com.tdil.d2d.bo.dto.SubscriptionReportDTO;
 import com.tdil.d2d.controller.api.dto.BOJobOfferDTO;
+import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.dao.GeoDAO;
 import com.tdil.d2d.dao.JobOfferDAO;
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.Geo3;
+import com.tdil.d2d.persistence.Geo4;
+import com.tdil.d2d.persistence.GeoLevel;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Receipt;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
+import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.service.BOReportsService;
 
 @Transactional
@@ -114,43 +120,67 @@ public class BOReportsServiceImpl implements BOReportsService {
 
 		return result;
 	}
-	
-	public SubscriptionReportDTO getSubscriptionReportDTO()  throws ServiceException {
-		
+
+
+
+
+	@Override
+	public SubscriptionReportDTO getSubscriptionReportDTO(FilterSubscriptionReportDTO filterDTO)
+			throws ServiceException {
 		try {
-	
 			SubscriptionReportDTO result = new SubscriptionReportDTO();
-			long count = userDAO.getCount();
-			result.setCountUsers(count);
-			
-			List<Subscription> subscriptions = subscriptionDAO.listAllSubscriptions();
-			
 			int freeSubcriptions = 0;
 			int paidSubcriptions = 0;
 			int sponsorSubcriptions = 0;
 			int iosSubcriptions = 0;
 			
-			Set<Long> userIds = new HashSet<Long>();
-			
-			List<Receipt> receipts = subscriptionDAO.listAllReceipts();
-			for(Receipt subscription : receipts){
-				iosSubcriptions = iosSubcriptions + 1;
-				userIds.add(subscription.getUser().getId());
+			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
+			if(filterDTO.getGeoLevels2()!=null){
+				
+				for(Long geoId : filterDTO.getGeoLevels2()){
+				
+					UserGeoLocation geoLocation = new UserGeoLocation();
+					geoLocation.setGeoLevelId(geoId);
+					geoLocation.setGeoLevelLevel(2);
+					
+					geoLocations.add(geoLocation);
+				}
+				
 			}
 
-			for(Subscription subscription : subscriptions){
-				long id = subscription.getUser().getId();
-				if(!userIds.contains(id)){
-					if(subscription.getSponsorCode()!=null){
-						sponsorSubcriptions = sponsorSubcriptions + 1;
-					} else {
-						if(subscription.isFreeSuscription()){
-							freeSubcriptions = freeSubcriptions + 1;
-						} else{
-							paidSubcriptions = paidSubcriptions + 1;
+			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
+			
+			List<Long> usersIdByGeo = userDAO.getByGeo(geos);
+			result.setCountUsers(usersIdByGeo.size());
+			
+			if(!usersIdByGeo.isEmpty()){
+				
+				List<Subscription> subscriptions = subscriptionDAO.listAllSubscriptions(usersIdByGeo);
+				
+				
+				Set<Long> addedUserIds = new HashSet<Long>();
+				
+				List<Receipt> receipts = subscriptionDAO.listAllReceipts();
+				for(Receipt subscription : receipts){
+					iosSubcriptions = iosSubcriptions + 1;
+					addedUserIds.add(subscription.getUser().getId());
+				}
+	
+				for(Subscription subscription : subscriptions){
+					long id = subscription.getUser().getId();
+					if(!addedUserIds.contains(id)){
+						if(subscription.getSponsorCode()!=null){
+							sponsorSubcriptions = sponsorSubcriptions + 1;
+						} else {
+							if(subscription.isFreeSuscription()){
+								freeSubcriptions = freeSubcriptions + 1;
+							} else{
+								paidSubcriptions = paidSubcriptions + 1;
+							}
 						}
 					}
 				}
+			
 			}
 			
 			result.setCountSubscriptions(freeSubcriptions + paidSubcriptions + sponsorSubcriptions + iosSubcriptions);
@@ -161,6 +191,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 			items.add(new ReportItemDTO("Suscripciones por sponsor", sponsorSubcriptions, "rgba(0, 128, 128, 1)"));
 			items.add(new ReportItemDTO("Suscripciones inapp iOS", iosSubcriptions, "rgba(3, 72, 123, 1)"));
 			items.add(new ReportItemDTO("Suscripciones gratuitas dtd", freeSubcriptions, "rgba(238,67,100, 1)"));
+			items.add(new ReportItemDTO("Otros Usuarios", (int)(usersIdByGeo.size() - result.getCountSubscriptions()), "rgba(192,192,192, 1)"));
 			result.setList(items);
 		   
 			return result;
@@ -169,5 +200,39 @@ public class BOReportsServiceImpl implements BOReportsService {
 
 			throw new ServiceException(e);
 		}
+	}
+	
+	private List<GeoLevelDTO> getGeoLevels(Set<UserGeoLocation> userGeoLocations) throws DAOException {
+		List<GeoLevelDTO> geos = new ArrayList<GeoLevelDTO>();
+		GeoLevelDTO geoDto;
+		
+		for (UserGeoLocation location : userGeoLocations) {
+			geoDto = new GeoLevelDTO(location.getGeoLevelId(), location.getGeoLevelLevel());
+			geos.add(geoDto);
+			GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(location.getGeoLevelId(), location.getGeoLevelLevel());
+			if (location.getGeoLevelLevel() == 4) {
+				Geo4 geo4 = (Geo4) geoLevel;
+				geos.add(new GeoLevelDTO(geo4.getGeo3().getId(), 3));
+				geos.add(new GeoLevelDTO(geo4.getGeo3().getGeo2().getId(), 2));
+			}
+			if (location.getGeoLevelLevel() == 3) {
+				Geo3 geo3 = (Geo3) geoLevel;
+				geos.add(new GeoLevelDTO(geo3.getGeo2().getId(), 2));
+				
+				List<Geo4> geos4 = this.geoDAO.getListGeo4ByGeo3(location.getGeoLevelId());
+				for (Geo4 geo4 : geos4) {
+					geos.add(new GeoLevelDTO(geo4.getId(), 4));
+				}
+			}
+			if (location.getGeoLevelLevel() == 2) {
+				List<Geo4> geos4 = this.geoDAO.getListGeo4ByGeo2(location.getGeoLevelId());
+				for (Geo4 geo4 : geos4) {
+					geos.add(new GeoLevelDTO(geo4.getId(), 4));
+					geos.add(new GeoLevelDTO(geo4.getGeo3().getId(), 3));
+				}
+			}
+		}
+		
+		return geos;
 	}
 }

@@ -299,9 +299,31 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	}
 
 	@Override
-	public long getCount() throws DAOException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
-		return (long)criteria.setProjection(Projections.rowCount()).uniqueResult();
+	public List<Long> getByGeo(List<GeoLevelDTO> locations) throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct user.id ");
+
+			queryString.append("FROM User user ");
+			if(!locations.isEmpty()) {
+				queryString.append("JOIN user.userGeoLocations location ");
+				queryString.append("WHERE (");
+				String OR = "";
+				for (GeoLevelDTO location : locations) {
+					//queryString.append(OR + location + " in elements(userProfile.user.userGeoLocations.id) ");
+					queryString.append(OR + "(location.geoLevelId = " + location.getId() + " AND location.geoLevelLevel = " + location.getLevel() + ") ");
+					OR = "OR ";
+				}
+				queryString.append(") ");
+			}
+			
+
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
 	}
 
 }

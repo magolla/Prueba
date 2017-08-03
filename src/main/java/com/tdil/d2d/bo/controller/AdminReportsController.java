@@ -82,7 +82,7 @@ public class AdminReportsController {
 	public ModelAndView saveNote(@Valid FilterSubscriptionReportDTO filterDTO, BindingResult bindingResult) {
 		try { 
 			
-			SubscriptionReportDTO result = this.reportsService.getSubscriptionReportDTO();
+			SubscriptionReportDTO result = this.reportsService.getSubscriptionReportDTO(filterDTO);
 			
 			ModelAndView model = new ModelAndView();
 			model.addObject("geoList", this.geoService.listGeoLevel2());

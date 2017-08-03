@@ -225,13 +225,19 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 	}
 
 	@Override
-	public List<Subscription> listAllSubscriptions() throws DAOException {
+	public List<Subscription> listAllSubscriptions(List<Long> ids) throws DAOException {
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Subscription.class);
-			criteria.add(Restrictions.gt("expirationDate", Calendar.getInstance().getTime()));
-			
-			List<Subscription> list = criteria.list();
-			return list;
+			try {
+				StringBuilder queryString = new StringBuilder("");
+				queryString.append("SELECT distinct subscription ");
+				queryString.append("FROM Subscription subscription ");
+				queryString.append("WHERE subscription.user.id IN :ids ");
+				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+				query.setParameterList("ids", ids);
+				return (List<Subscription> ) query.list();
+			} catch (Exception e) {
+				throw new DAOException(e);
+			}
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
