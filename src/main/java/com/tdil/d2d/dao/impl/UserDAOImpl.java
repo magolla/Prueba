@@ -17,7 +17,6 @@ import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.request.InstitutionType;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
-import com.tdil.d2d.persistence.BOUser;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
@@ -297,6 +296,12 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	public List<User> getAll() throws DAOException {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
 			return criteria.list();
+	}
+
+	@Override
+	public long getCount() throws DAOException {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
+		return (long)criteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 }

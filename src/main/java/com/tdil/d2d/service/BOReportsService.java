@@ -10,5 +10,5 @@ public interface BOReportsService {
 
 	List<BOJobOfferDTO> getAllJobOffers() throws ServiceException;
 	
-	List<SubscriptionReportDTO> getSubscriptionList();
+	SubscriptionReportDTO getSubscriptionReportDTO()  throws ServiceException;
 }

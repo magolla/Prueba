@@ -223,4 +223,33 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 
 		return (Receipt) query.uniqueResult();
 	}
+
+	@Override
+	public List<Subscription> listAllSubscriptions() throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Subscription.class);
+			criteria.add(Restrictions.gt("expirationDate", Calendar.getInstance().getTime()));
+			
+			List<Subscription> list = criteria.list();
+			return list;
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	@Override
+	public List<Receipt> listAllReceipts() throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct receipt ");
+			queryString.append("FROM Receipt receipt ");
+			queryString.append("WHERE receipt.expiresDate > :expiresDate ");
+			queryString.append("group by receipt.user.id ");
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameter("expiresDate", Calendar.getInstance().getTime().getTime());
+			return (List<Receipt> ) query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 }

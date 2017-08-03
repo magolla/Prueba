@@ -36,4 +36,8 @@ public interface SubscriptionDAO {
 	public void saveReceipt(Receipt receipt) throws DAOException;
 
 	public Receipt getLastReceipt(Long userId);
+
+	public List<Subscription> listAllSubscriptions() throws DAOException;
+
+	public List<Receipt> listAllReceipts() throws DAOException;
 }

@@ -46,5 +46,7 @@ public interface UserDAO {
 
 	public void save(ValidationCode validationCode)  throws DAOException ;
 	
-	public List<User> getAll() throws DAOException; 
+	public List<User> getAll() throws DAOException;
+
+	public long getCount() throws DAOException; 
 }

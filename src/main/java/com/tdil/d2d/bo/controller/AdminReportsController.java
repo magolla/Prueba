@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tdil.d2d.bo.dto.FilterSubscriptionReportDTO;
+import com.tdil.d2d.bo.dto.SubscriptionReportDTO;
 import com.tdil.d2d.controller.api.dto.BOJobOfferDTO;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.exceptions.ServiceException;
@@ -81,12 +82,14 @@ public class AdminReportsController {
 	public ModelAndView saveNote(@Valid FilterSubscriptionReportDTO filterDTO, BindingResult bindingResult) {
 		try { 
 			
+			SubscriptionReportDTO result = this.reportsService.getSubscriptionReportDTO();
+			
 			ModelAndView model = new ModelAndView();
 			model.addObject("geoList", this.geoService.listGeoLevel2());
 			model.addObject("filterForm", filterDTO);
-			model.addObject("subscriptionList", this.reportsService.getSubscriptionList());
-			model.addObject("registeredUsers", 1000);
-			model.addObject("activeSubscriptions", 900);
+			model.addObject("subscriptionList", result.getList());
+			model.addObject("registeredUsers", result.getCountUsers());
+			model.addObject("activeSubscriptions", result.getCountSubscriptions());
 			
 			model.setViewName("admin/subscription-report");
 	
