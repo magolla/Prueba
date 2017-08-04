@@ -1,6 +1,7 @@
 package com.tdil.d2d.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.exceptions.DAOException;
@@ -48,5 +49,5 @@ public interface UserDAO {
 	
 	public List<User> getAll() throws DAOException;
 
-	public List<Long> getByGeo(List<GeoLevelDTO> geos) throws DAOException; 
+	public Set<Long> getByGeo(List<GeoLevelDTO> geos) throws DAOException; 
 }

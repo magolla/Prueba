@@ -1,6 +1,8 @@
 package com.tdil.d2d.dao.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
@@ -299,28 +301,62 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	}
 
 	@Override
-	public List<Long> getByGeo(List<GeoLevelDTO> locations) throws DAOException {
+	public Set<Long> getByGeo(List<GeoLevelDTO> locations) throws DAOException {
 		try {
+			
+			Set<Long> result = new HashSet<Long>();
+			
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user.id ");
-
 			queryString.append("FROM User user ");
 			if(!locations.isEmpty()) {
-				queryString.append("JOIN user.userGeoLocations location ");
-				queryString.append("WHERE (");
-				String OR = "";
+				
+				String whereIn = "";
+				int count = 1;
 				for (GeoLevelDTO location : locations) {
-					//queryString.append(OR + location + " in elements(userProfile.user.userGeoLocations.id) ");
-					queryString.append(OR + "(location.geoLevelId = " + location.getId() + " AND location.geoLevelLevel = " + location.getLevel() + ") ");
-					OR = "OR ";
+					whereIn = whereIn + "(" + location.getId() + ", " + location.getLevel() + "),";
+					
+					if(count > 1000){
+						
+						whereIn = whereIn.substring(0, whereIn.length() - 1);
+						
+						queryString.append("JOIN user.userGeoLocations location ");
+						queryString.append("WHERE (location.geoLevelId, location.geoLevelLevel) IN (" + whereIn + ")");
+						
+						Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+						result.addAll(query.list());
+						
+						queryString = new StringBuilder("");
+						queryString.append("SELECT distinct user.id ");
+						queryString.append("FROM User user ");
+						
+						whereIn = "";
+						
+						count = 0;
+					}
+					
+					count = count + 1;
+					
 				}
-				queryString.append(") ");
+				
+				whereIn = whereIn.substring(0, whereIn.length() - 1);
+				
+				queryString.append("JOIN user.userGeoLocations location ");
+				queryString.append("WHERE (location.geoLevelId, location.geoLevelLevel) IN (" + whereIn + ")");
+				
+				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+				result.addAll(query.list());
+				
+				return result;
+				
+			} else {
+				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+				result.addAll(query.list());
+				return result;
 			}
 			
-
-			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
-
-			return query.list();
+			
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}

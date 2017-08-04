@@ -3,6 +3,7 @@ package com.tdil.d2d.dao.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -225,7 +226,7 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 	}
 
 	@Override
-	public List<Subscription> listAllSubscriptions(List<Long> ids) throws DAOException {
+	public List<Subscription> listAllSubscriptions(Set<Long> ids) throws DAOException {
 		try {
 			try {
 				StringBuilder queryString = new StringBuilder("");

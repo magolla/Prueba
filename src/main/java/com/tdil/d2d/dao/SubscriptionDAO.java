@@ -1,6 +1,7 @@
 package com.tdil.d2d.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import com.tdil.d2d.controller.api.dto.InAppPurchaseDTO;
 import com.tdil.d2d.exceptions.DAOException;
@@ -37,7 +38,7 @@ public interface SubscriptionDAO {
 
 	public Receipt getLastReceipt(Long userId);
 
-	public List<Subscription> listAllSubscriptions(List<Long> ids) throws DAOException;
+	public List<Subscription> listAllSubscriptions(Set<Long> ids) throws DAOException;
 
 	public List<Receipt> listAllReceipts() throws DAOException;
 }

@@ -4,8 +4,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -150,7 +152,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 
 			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
 			
-			List<Long> usersIdByGeo = userDAO.getByGeo(geos);
+			Set<Long> usersIdByGeo = userDAO.getByGeo(geos);
 			result.setCountUsers(usersIdByGeo.size());
 			
 			if(!usersIdByGeo.isEmpty()){
@@ -228,11 +230,28 @@ public class BOReportsServiceImpl implements BOReportsService {
 				List<Geo4> geos4 = this.geoDAO.getListGeo4ByGeo2(location.getGeoLevelId());
 				for (Geo4 geo4 : geos4) {
 					geos.add(new GeoLevelDTO(geo4.getId(), 4));
-					geos.add(new GeoLevelDTO(geo4.getGeo3().getId(), 3));
+					GeoLevelDTO geo3 = new GeoLevelDTO(geo4.getGeo3().getId(), 3);
+					if(!containts(geos, geo3)){
+						geos.add(geo3);
+					}
+
 				}
 			}
 		}
 		
 		return geos;
+	}
+
+
+
+
+	private boolean containts(List<GeoLevelDTO> geos, GeoLevelDTO geo3) {
+		for(GeoLevelDTO geoDTO : geos){
+			if(geoDTO.getId() == geo3.getId() 
+					&& geoDTO.getLevel() == geo3.getLevel()){
+				return true;
+			}
+		}
+		return false;
 	}
 }
