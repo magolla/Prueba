@@ -16,6 +16,7 @@ public interface SpecialtyService {
 	public Collection<TaskDTO> listTasks(long specialtyId) throws ServiceException;
 
 	public void initDB() throws ServiceException;
-	
+
 	public OccupationDTO getOccupationDTOById(Long id);
+	public SpecialtyDTO getSpecialtyDTOById(Long id);
 }

@@ -38,6 +38,7 @@
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.extensions.js" />"></script>
 	<script src="<c:url value="/bootstrap-select/js/bootstrap-select.min.js" />"></script>
 	<script src="<c:url value="/chartjs/Chart.bundle.min.js" />"></script>
+	<script src="<c:url value="/chartjs/utils.js" />"></script>
 	<link rel="icon" href="<c:url value="/images/favicon.ico" />"  type="image/x-icon">
 </head>
 <body class="hold-transition skin-black-light sidebar-mini">
@@ -121,12 +122,11 @@
 						<i class="fa fa-book"></i> <span>Reporte: Suscripciones</span>
 					</a>
 				</li>
-				<!--
 				<li class="treeview">
 					<a href="<c:url value="/admin/reports/jobofferstats" />">
 						<i class="fa fa-book"></i> <span>Reporte: Avisos (Cantidades)</span>
 					</a>
-				</li -->
+				</li>
 				<li class="treeview">
 					<a href="<c:url value="/admin/reports/details" />">
 						<i class="fa fa-book"></i> <span>Reporte: Detalle de avisos</span>

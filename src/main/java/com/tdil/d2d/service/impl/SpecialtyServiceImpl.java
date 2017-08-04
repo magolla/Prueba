@@ -174,4 +174,14 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 			return null;
 		}
 	}
+
+	@Override
+	public SpecialtyDTO getSpecialtyDTOById(Long id) {
+		try {
+			return toDto(this.specialtyDAO.getSpecialtyById(id));
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

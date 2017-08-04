@@ -204,3 +204,13 @@ input[type=checkbox], input[type=radio] {
 .chart-resume-element {
 	font-size: 20px;
 }
+
+.form-group-job-offer.form-group {
+	padding-bottom: 0px!important;
+	margin-bottom: 0px;
+}
+
+.form-group-job-offer-combos.form-group {
+    padding-bottom: 20px!important;
+    margin-bottom: 0px;
+}
