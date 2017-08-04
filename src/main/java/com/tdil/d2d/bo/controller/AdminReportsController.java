@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tdil.d2d.bo.dto.FilterJobOfferReportDTO;
 import com.tdil.d2d.bo.dto.FilterSubscriptionReportDTO;
+import com.tdil.d2d.bo.dto.JobOfferReportDTO;
 import com.tdil.d2d.bo.dto.SubscriptionReportDTO;
 import com.tdil.d2d.controller.api.dto.BOJobOfferDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
@@ -123,8 +124,6 @@ public class AdminReportsController {
 			model.addObject("occupationList", this.specialtyService.listOccupations());
 			model.addObject("filterForm", new FilterJobOfferReportDTO());
 			
-			
-			
 			model.setViewName("admin/job-offer-report");
 	
 			return model;
@@ -142,12 +141,21 @@ public class AdminReportsController {
 			
 			//SubscriptionReportDTO result = this.reportsService.getSubscriptionReportDTO(filterDTO);
 			
+			JobOfferReportDTO result = new JobOfferReportDTO();
+			
 			ModelAndView model = new ModelAndView();
 			model.addObject("geoList", this.geoService.listGeoLevel2());
+			model.addObject("occupationList", this.specialtyService.listOccupations());
 			model.addObject("filterForm", filterDTO);
-			//model.addObject("subscriptionList", result.getList());
-			//model.addObject("registeredUsers", result.getCountUsers());
-			//model.addObject("activeSubscriptions", result.getCountSubscriptions());
+			
+			if(filterDTO.getOccupationId() != null && filterDTO.getOccupationId() != -1) {
+				model.addObject("specialtyList", this.specialtyService.listSpecialties(filterDTO.getOccupationId()));
+			}
+			if(filterDTO.getSpecialtyId() != null && filterDTO.getSpecialtyId() != -1) {
+				model.addObject("taskList", this.specialtyService.listTasks(filterDTO.getSpecialtyId()));
+			}
+			
+			model.addObject("report", result);
 			
 			model.setViewName("admin/job-offer-report");
 	
@@ -173,6 +181,7 @@ public class AdminReportsController {
 			Collection<SpecialtyDTO> specialties = this.specialtyService.listSpecialties(occupationId);
 			model.addObject("occupation", occupation);
 			model.addObject("specialtyList", specialties);
+			
 			model.setViewName("admin/specialty-job-offer-report-editor");
 			
 			return model;

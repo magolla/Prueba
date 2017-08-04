@@ -69,24 +69,28 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 
 	private static OccupationDTO toDto(Occupation s) {
 		OccupationDTO result = new OccupationDTO();
-		result.setId(s.getId());
-		// TODO setear el path hasta el 2
-		result.setName(s.getName());
+		if(s != null) {
+			result.setId(s.getId());
+			result.setName(s.getName());
+		}
 		return result;
 	}
 	
 	private static SpecialtyDTO toDto(Specialty s) {
 		SpecialtyDTO result = new SpecialtyDTO();
-		result.setId(s.getId());
-		// TODO setear el path hasta el 2
-		result.setName(s.getName());
+		if(s != null) {
+			result.setId(s.getId());
+			result.setName(s.getName());
+		}
 		return result;
 	}
 	
 	private static TaskDTO toDto(Task s) {
 		TaskDTO result = new TaskDTO();
-		result.setId(s.getId());
-		result.setName(s.getName());
+		if(s != null) {
+			result.setId(s.getId());
+			result.setName(s.getName());
+		}
 		return result;
 	}
 	
