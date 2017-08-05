@@ -1,5 +1,6 @@
 package com.tdil.d2d.bo.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -76,7 +77,21 @@ public class AdminReportsController {
 			
 			ModelAndView model = new ModelAndView();
 			model.addObject("geoList", this.geoService.listGeoLevel2());
-			model.addObject("filterForm", new FilterSubscriptionReportDTO());
+			FilterSubscriptionReportDTO form = new FilterSubscriptionReportDTO();
+			List<Long> geoLevels2 = new ArrayList<Long>();
+			geoLevels2.add(-1L);
+			form.setGeoLevels2(geoLevels2);
+			form.setFree(true);
+			form.setAndroid(true);
+			form.setIos(true);
+			form.setSponsor(true);
+			model.addObject("filterForm", form);
+			
+			SubscriptionReportDTO result = this.reportsService.getSubscriptionReportDTO(form);
+			model.addObject("subscriptionList", result.getList());
+			model.addObject("registeredUsers", result.getCountAllUsers());
+			model.addObject("registeredUsersB", result.getCountUsersB());
+			model.addObject("activeSubscriptions", result.getCountSubscriptions());
 			
 			model.setViewName("admin/subscription-report");
 	
@@ -99,7 +114,8 @@ public class AdminReportsController {
 			model.addObject("geoList", this.geoService.listGeoLevel2());
 			model.addObject("filterForm", filterDTO);
 			model.addObject("subscriptionList", result.getList());
-			model.addObject("registeredUsers", result.getCountUsers());
+			model.addObject("registeredUsers", result.getCountAllUsers());
+			model.addObject("registeredUsersB", result.getCountUsersB());
 			model.addObject("activeSubscriptions", result.getCountSubscriptions());
 			
 			model.setViewName("admin/subscription-report");

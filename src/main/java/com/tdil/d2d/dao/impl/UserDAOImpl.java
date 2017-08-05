@@ -321,7 +321,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 						whereIn = whereIn.substring(0, whereIn.length() - 1);
 						
 						queryString.append("JOIN user.userGeoLocations location ");
-						queryString.append("WHERE (location.geoLevelId, location.geoLevelLevel) IN (" + whereIn + ")");
+						queryString.append("WHERE user.userb=1 AND (location.geoLevelId, location.geoLevelLevel) IN (" + whereIn + ")");
 						
 						Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 
@@ -343,7 +343,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				whereIn = whereIn.substring(0, whereIn.length() - 1);
 				
 				queryString.append("JOIN user.userGeoLocations location ");
-				queryString.append("WHERE (location.geoLevelId, location.geoLevelLevel) IN (" + whereIn + ")");
+				queryString.append("WHERE  user.userb=1 AND (location.geoLevelId, location.geoLevelLevel) IN (" + whereIn + ")");
 				
 				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 				result.addAll(query.list());
@@ -351,6 +351,8 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				return result;
 				
 			} else {
+				
+				queryString.append("WHERE  user.userb=1 ");
 				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 				result.addAll(query.list());
 				return result;
@@ -360,6 +362,12 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+	}
+	
+	@Override
+	public long getCount() throws DAOException {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
+		return (long)criteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 }

@@ -50,4 +50,7 @@ public interface UserDAO {
 	public List<User> getAll() throws DAOException;
 
 	public Set<Long> getByGeo(List<GeoLevelDTO> geos) throws DAOException; 
+	
+	public long getCount() throws DAOException;
+	
 }

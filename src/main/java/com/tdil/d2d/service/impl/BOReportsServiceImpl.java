@@ -4,10 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -137,7 +135,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 			int iosSubcriptions = 0;
 			
 			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
-			if(filterDTO.getGeoLevels2()!=null){
+			if(filterDTO.getGeoLevels2()!=null && !containsFilterAll(filterDTO.getGeoLevels2())){
 				
 				for(Long geoId : filterDTO.getGeoLevels2()){
 				
@@ -149,11 +147,13 @@ public class BOReportsServiceImpl implements BOReportsService {
 				}
 				
 			}
-
+			
+			Long countAllUsers = userDAO.getCount();
 			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
+			result.setCountAllUsers(countAllUsers);
 			
 			Set<Long> usersIdByGeo = userDAO.getByGeo(geos);
-			result.setCountUsers(usersIdByGeo.size());
+			result.setCountUsersB(usersIdByGeo.size());
 			
 			if(!usersIdByGeo.isEmpty()){
 				
@@ -163,21 +163,29 @@ public class BOReportsServiceImpl implements BOReportsService {
 				Set<Long> addedUserIds = new HashSet<Long>();
 				
 				List<Receipt> receipts = subscriptionDAO.listAllReceipts();
-				for(Receipt subscription : receipts){
-					iosSubcriptions = iosSubcriptions + 1;
-					addedUserIds.add(subscription.getUser().getId());
+				if(filterDTO.isIos()){
+					for(Receipt subscription : receipts){
+						iosSubcriptions = iosSubcriptions + 1;
+						addedUserIds.add(subscription.getUser().getId());
+					}
 				}
 	
 				for(Subscription subscription : subscriptions){
 					long id = subscription.getUser().getId();
 					if(!addedUserIds.contains(id)){
 						if(subscription.getSponsorCode()!=null){
-							sponsorSubcriptions = sponsorSubcriptions + 1;
+							if(filterDTO.isSponsor()){
+								sponsorSubcriptions = sponsorSubcriptions + 1;
+							}
 						} else {
 							if(subscription.isFreeSuscription()){
-								freeSubcriptions = freeSubcriptions + 1;
-							} else{
-								paidSubcriptions = paidSubcriptions + 1;
+								if(filterDTO.isFree()){
+									freeSubcriptions = freeSubcriptions + 1;
+								}
+							} else {
+								if(filterDTO.getAndroid()){
+									paidSubcriptions = paidSubcriptions + 1;
+								}
 							}
 						}
 					}
@@ -193,7 +201,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 			items.add(new ReportItemDTO("Suscripciones por sponsor", sponsorSubcriptions, "rgba(0, 128, 128, 1)"));
 			items.add(new ReportItemDTO("Suscripciones inapp iOS", iosSubcriptions, "rgba(3, 72, 123, 1)"));
 			items.add(new ReportItemDTO("Suscripciones gratuitas dtd", freeSubcriptions, "rgba(238,67,100, 1)"));
-			items.add(new ReportItemDTO("Otros Usuarios", (int)(usersIdByGeo.size() - result.getCountSubscriptions()), "rgba(192,192,192, 1)"));
+			items.add(new ReportItemDTO("Otros usuarios candidatos", (int)(usersIdByGeo.size() - result.getCountSubscriptions()), "rgba(192,192,192, 1)"));
 			result.setList(items);
 		   
 			return result;
@@ -204,6 +212,18 @@ public class BOReportsServiceImpl implements BOReportsService {
 		}
 	}
 	
+	private boolean containsFilterAll(List<Long> geoLevels2) {
+		for(Long geoId : geoLevels2){
+			if(geoId == -1L){
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+
+
 	private List<GeoLevelDTO> getGeoLevels(Set<UserGeoLocation> userGeoLocations) throws DAOException {
 		List<GeoLevelDTO> geos = new ArrayList<GeoLevelDTO>();
 		GeoLevelDTO geoDto;

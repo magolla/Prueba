@@ -1,7 +1,8 @@
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+ <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+ 
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
@@ -17,7 +18,8 @@
 						<div class="form-group">
 							<label for="name" class="control-label">Seleccionar provincias</label>
 													
-							<select id="geosSelect" class="selectpicker" multiple>
+							<select id="geosSelect" class="selectpicker" multiple placeholder="lala">
+							    <option value="-1" selected>TODAS</option>
 								<c:forEach var="geo" items="${geoList}">
 									<option value="<c:out value="${geo.id}"/>"><c:out value="${geo.name}"/></option>
 								</c:forEach>
@@ -69,18 +71,21 @@
 		<c:if test="${subscriptionList != null}">
 			<div class="row">
 				<div class="col-md-offset-1 col-md-4">
-					<div id="canvas-holder" class="center-block">
-				        <canvas id="chart-area" ></canvas>
-				    </div>
+					 <c:if test="${registeredUsersB > 0}">
+						<div id="canvas-holder" class="center-block">
+					        <canvas id="chart-area" ></canvas>
+					    </div>
+					 </c:if>   
 				</div>
 				<div class="col-md-offset-1 col-md-6">
 					<label class="chart-resume">Resumen</label>
 					
-					<div class="chart-resume-element"><b>Usuarios registrados: ${registeredUsers}</b></div>
+					<div class="chart-resume-element"><b>Usuarios totales registrados: ${registeredUsers}</b></div>
+					<div class="chart-resume-element"><b>Usuario Candidatos: ${registeredUsersB}</b></div>
 					<!--div class="chart-resume-element"><b>Suscripciones activas: ${activeSubscriptions}</b></div-->
 					
 					<c:forEach var="obj" items="${subscriptionList}">
-		        		<div class="chart-resume-element" style="color: ${obj.color}"><b>${obj.name}: ${obj.quantity}</b></div>
+		        		<div class="chart-resume-element" style="color: ${obj.color}; margin-left: 20px"><b>${obj.name}: ${obj.quantity}</b></div>
 					</c:forEach>
 				</div>
 			</div>

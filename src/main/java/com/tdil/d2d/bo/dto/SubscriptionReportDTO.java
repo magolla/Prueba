@@ -4,16 +4,24 @@ import java.util.List;
 
 public class SubscriptionReportDTO {
 
-	private long countUsers;
+	private long countAllUsers;
+	private long countUsersB;
 	private long countSubscriptions;
 	List<ReportItemDTO> list;
 	
 
-	public long getCountUsers() {
-		return countUsers;
+	
+	public long getCountAllUsers() {
+		return countAllUsers;
 	}
-	public void setCountUsers(long countUsers) {
-		this.countUsers = countUsers;
+	public void setCountAllUsers(long countAllUsers) {
+		this.countAllUsers = countAllUsers;
+	}
+	public long getCountUsersB() {
+		return countUsersB;
+	}
+	public void setCountUsersB(long countUsersB) {
+		this.countUsersB = countUsersB;
 	}
 	public long getCountSubscriptions() {
 		return countSubscriptions;
