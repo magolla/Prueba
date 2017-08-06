@@ -1,6 +1,7 @@
 package com.tdil.d2d.bo.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -135,10 +136,26 @@ public class AdminReportsController {
 	public ModelAndView jobOfferReport() {
 		try{ 
 			
+			FilterJobOfferReportDTO defaultFilterDTO = new FilterJobOfferReportDTO();
+			
+			Calendar now = Calendar.getInstance();
+			defaultFilterDTO.setEndMonth(now.get(Calendar.MONTH) + 1);
+			defaultFilterDTO.setEndYear(now.get(Calendar.YEAR));
+			
+			now.add(Calendar.MONTH, -11);
+			defaultFilterDTO.setStartMonth(now.get(Calendar.MONTH) + 1);
+			defaultFilterDTO.setStartYear(now.get(Calendar.YEAR));
+
+			defaultFilterDTO.setActiveOffers(true);
+			defaultFilterDTO.setTotalOffers(true);
+			defaultFilterDTO.setPermanentOffers(true);
+			defaultFilterDTO.setTemporalOffers(true);
+			defaultFilterDTO.setContracted(true);
+			
 			ModelAndView model = new ModelAndView();
 			model.addObject("geoList", this.geoService.listGeoLevel2());
 			model.addObject("occupationList", this.specialtyService.listOccupations());
-			model.addObject("filterForm", new FilterJobOfferReportDTO());
+			model.addObject("filterForm", defaultFilterDTO);
 			
 			model.setViewName("admin/job-offer-report");
 	
@@ -155,9 +172,7 @@ public class AdminReportsController {
 	public ModelAndView jobOfferReportPost(@Valid FilterJobOfferReportDTO filterDTO, BindingResult bindingResult) {
 		try { 
 			
-			//SubscriptionReportDTO result = this.reportsService.getSubscriptionReportDTO(filterDTO);
-			
-			JobOfferReportDTO result = new JobOfferReportDTO();
+			JobOfferReportDTO report = this.reportsService.getJobOfferReportDTO(filterDTO);
 			
 			ModelAndView model = new ModelAndView();
 			model.addObject("geoList", this.geoService.listGeoLevel2());
@@ -171,7 +186,7 @@ public class AdminReportsController {
 				model.addObject("taskList", this.specialtyService.listTasks(filterDTO.getSpecialtyId()));
 			}
 			
-			model.addObject("report", result);
+			model.addObject("report", report);
 			
 			model.setViewName("admin/job-offer-report");
 	

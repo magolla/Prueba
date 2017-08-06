@@ -11,28 +11,33 @@
 	<tiles:putAttribute name="body">
 	
 		<section class="content">
-			<form:form method="POST" modelAttribute="filterForm" autocomplete="off" action="${pageContext.request.contextPath}/admin/reports/jobofferstats?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
+			<form:form method="POST" id="filterForm" modelAttribute="filterForm" autocomplete="off" action="${pageContext.request.contextPath}/admin/reports/jobofferstats?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
+				<input type="hidden" name="startMonth" id="startMonth">
+				<input type="hidden" name="startYear" id="startYear">
+				<input type="hidden" name="endMonth" id="endMonth">
+				<input type="hidden" name="endYear" id="endYear">
+				
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group form-group-job-offer">
-							<label for="content" class="control-label">Fecha desde</label>
+							<label for="content" class="control-label">Per&iacute;odo desde</label>
 							<div class="input-group date">
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
 								</div>
-								<input type="text" class="form-control pull-right" id="publishingDateForView" name="publishingDateForView" value="${noteForm.publishingDateForView}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+								<input type="text" class="form-control pull-right" id="startDateForView" name="startDateForView" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
 							</div>
 						</div>
 					</div>
 					
 					<div class="col-md-6">
 						<div class="form-group form-group-job-offer">
-							<label for="content" class="control-label">Fecha hasta</label>
+							<label for="content" class="control-label">Per&iacute;odo hasta</label>
 							<div class="input-group date">
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
 								</div>
-								<input type="text" class="form-control pull-right" id="publishingDateForView" name="publishingDateForView" value="${noteForm.publishingDateForView}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+								<input type="text" class="form-control pull-right" id="endDateForView" name="endDateForView" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
 							</div>
 						</div>
 					</div>
@@ -43,21 +48,33 @@
 							<label for="name" class="control-label">&nbsp;</label>
 									
 							<div class="checkbox checkbox-primary">
-								<input id="checkbox-android" name="android" type="checkbox" value="true">
-								<label for="checkbox-android">
-									Avisos activos solamente
+								<input id="checkbox-total-offers" name="totalOffers" type="checkbox"  value="true" ${filterForm.totalOffers ? "checked" : ""}>
+								<label for="checkbox-total-offers">
+									Avisos creados TOTALES
 								</label>
 							</div>
 							<div class="checkbox checkbox-primary">
-								<input id="checkbox-sponsor" name="sponsor" type="checkbox" value="true">
-								<label for="checkbox-sponsor">
+								<input id="checkbox-temporal-offers" name="temporalOffers" type="checkbox"  value="true" ${filterForm.temporalOffers ? "checked" : ""}>
+								<label for="checkbox-temporal-offers">
 									Avisos temporales
 								</label>
 							</div>
 							<div class="checkbox checkbox-primary">
-								<input id="checkbox-inapp" name="ios" type="checkbox" value="true" >
-								<label for="checkbox-inapp">
+								<input id="checkbox-permanent-offers" name="permanentOffers" type="checkbox"  value="true" ${filterForm.permanentOffers ? "checked" : ""} >
+								<label for="checkbox-permanent-offers">
 									Avisos permanentes
+								</label>
+							</div>
+							<div class="checkbox checkbox-primary">
+								<input id="checkbox-active-offers" name="activeOffers" type="checkbox"  value="true" ${filterForm.activeOffers ? "checked" : ""}>
+								<label for="checkbox-active-offers">
+									Avisos creados ACTIVOS
+								</label>
+							</div>
+							<div class="checkbox checkbox-primary">
+								<input id="checkbox-contracted" name="contracted" type="checkbox"  value="true" ${filterForm.contracted ? "checked" : ""} >
+								<label for="checkbox-contracted">
+									Contrataciones
 								</label>
 							</div>
 						</div>
@@ -68,33 +85,33 @@
 						<div class="form-group form-group-job-offer-combos">
 							<label for="name" class="control-label">Filtrar por Ocupaci&oacute;n principal</label>
 													
-							<select id="occupationsSelect" class="selectpicker">
+							<select id="occupationsSelect" class="selectpicker" name="occupationId">
 								<option value="-1">TODAS</option>
 								<c:forEach var="occupation" items="${occupationList}">
 									<option value="<c:out value="${occupation.id}"/>"><c:out value="${occupation.name}"/></option>
 								</c:forEach>
 							</select>
 						</div>
-						<div class="form-group form-group-job-offer-combos">
+						<div id="filterBySpecialtiesBox" class="form-group form-group-job-offer-combos <c:if test="${specialtyList == null}">hide</c:if>">
 							<label for="name" class="control-label">Filtrar por Especialidad</label>
 							
 							<div id="specialtiesSelectBox">
-								<select id="specialtiesSelect" class="selectpicker">
+								<select id="specialtiesSelect" class="selectpicker" title="" name="specialtyId">
 									<option value="-1">TODAS</option>
-									<c:forEach var="geo" items="${geoList}">
-										<option value="<c:out value="${geo.id}"/>"><c:out value="${geo.name}"/></option>
+									<c:forEach var="specialty" items="${specialtyList}">
+										<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
 									</c:forEach>
 								</select>
 							</div>					
 						</div>
-						<div class="form-group form-group-job-offer-combos">
+						<div id="filterByTasksBox" class="form-group form-group-job-offer-combos <c:if test="${taskList == null}">hide</c:if>">
 							<label for="name" class="control-label">Filtrar por Tarea</label>
 							
 							<div id="tasksSelectBox">					
-								<select id="tasksSelect" class="selectpicker">
+								<select id="tasksSelect" class="selectpicker" title="" name="taskId">
 									<option value="-1">TODAS</option>
-									<c:forEach var="geo" items="${geoList}">
-										<option value="<c:out value="${geo.id}"/>"><c:out value="${geo.name}"/></option>
+									<c:forEach var="task" items="${taskList}">
+										<option value="<c:out value="${task.id}"/>"><c:out value="${task.name}"/></option>
 									</c:forEach>
 								</select>
 							</div>
@@ -104,7 +121,7 @@
 						<div class="form-group">
 							<label for="name" class="control-label">Seleccionar Provincias</label>
 													
-							<select id="geosSelect" class="selectpicker" multiple>
+							<select id="geosSelect" class="selectpicker" multiple title="TODAS">
 								<c:forEach var="geo" items="${geoList}">
 									<option value="<c:out value="${geo.id}"/>"><c:out value="${geo.name}"/></option>
 								</c:forEach>
@@ -115,7 +132,7 @@
 				
 				<div class="row">
 					<div class="col-md-offset-6 col-md-6">
-						<button type="submit" class="btn btn-success pull-left">Lanzar Reporte</button>
+						<button type="button" class="btn btn-success pull-left" onclick="submitForm();">Lanzar Reporte</button>
 					</div>
 				</div>
 				
@@ -126,19 +143,46 @@
 		
 		<div class="line-chart-separator"></div>
 		
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="wrapper">
-					<canvas id="chart-0" style="height:400px;padding: 15px;"></canvas>
+		<c:if test="${report != null}">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="wrapper">
+						<canvas id="chart-0" style="height:400px;padding: 15px;"></canvas>
+					</div>
 				</div>
 			</div>
-		</div>
+		</c:if>
 		
 		<script>
+			function submitForm() {
+				$("#startMonth").val($("#startDateForView").data('datepicker').getFormattedDate('mm'));
+				$("#startYear").val($("#startDateForView").data('datepicker').getFormattedDate('yyyy'));
+				
+				$("#endMonth").val($("#endDateForView").data('datepicker').getFormattedDate('mm'));
+				$("#endYear").val($("#endDateForView").data('datepicker').getFormattedDate('yyyy'));
+				
+				$("#filterForm").submit();
+			}
+		
+			//SET OCCUPATION
+			$('#occupationsSelect').selectpicker('val', ${filterForm.occupationId});
+		
 			$('#occupationsSelect').on('changed.bs.select', function (e) {
 				loadSpecialties();
 			});
 			
+			<c:if test="${specialtyList != null}">
+				$('#specialtiesSelect').selectpicker('val', ${filterForm.specialtyId});
+				$("#specialtiesSelect").on('changed.bs.select', function (e) {
+					loadTasks();
+				});
+			</c:if>
+			
+			<c:if test="${taskList != null}">
+				$('#tasksSelect').selectpicker('val', ${filterForm.taskId});
+			</c:if>
+			
+			//Set GEOS
 			$('#geosSelect').selectpicker('val', ${filterForm.geoLevels2});
 			
 			$('#geosSelect').on('changed.bs.select', function (e) {
@@ -181,92 +225,85 @@
 			}
 			
 			loadGeosInput();
-		</script>
-		
-		<script>
-			var presets = window.chartColors;
-			var inputs = {
-				min: 20,
-				max: 80,
-				count: 12,
-				decimals: 2,
-				continuity: 1
-			};
 			
-			labels = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-			
-			var first =  
-			[30, 40, 50, 60, 
-			 70, 80, 70, 60, 
-			 50, 30, 40, 50];
-			
-			var second =  
-			[10, 20, 30, 40, 
-			 50, 60, 50, 40, 
-			 20, 10, 20, 30];
-			
-			var third =  
-			[95, 85, 75, 75, 
-			 85, 95, 115, 125, 
-			 125, 115, 125, 135];
-			
-			var fourth =  
-			[110, 120, 130, 140, 
-			 150, 160, 150, 140, 
-			 120, 110, 120, 130];
-			
-			var fifth =  
-			[210, 220, 230, 240, 
-			 250, 260, 250, 240, 
-			 220, 210, 220, 230];
-		
-			var data = {
-				labels: labels,
-				datasets: [{
-					borderColor: presets.green,
-					data: first,
-					label: 'Avisos creados TOTALES',
-					fill: 'false'
-				}, {
-					borderColor: presets.red,
-					data: second,
-					label: 'Temporales',
-					fill: 'false'
-				}, {
-					borderColor: presets.blue,
-					data: third,
-					label: 'Permanentes',
-					fill: 'false'
-				}, {
-					borderColor: presets.yellow,
-					data: fourth,
-					label: 'Avisos creados Activos',
-					fill: 'false'
-				}, {
-					borderColor: presets.purple,
-					data: fifth,
-					label: 'Contrataciones',
-					fill: 'false'
-				}]
-			};
-			var options = {
-				maintainAspectRatio: false,
-				spanGaps: false,
-				elements: {
-					line: {
-						tension: 0.000001
-					}
-				},
-				scales: {
-				}
-			};
-			var chart = new Chart('chart-0', {
-				type: 'line',
-				data: data,
-				options: options
+			$('#startDateForView').datepicker({
+				autoclose: true,
+				format: "MM-yyyy",
+			    startView: "months", 
+			    minViewMode: "months",
+			    language: 'es'
 			});
 			
+			$('#endDateForView').datepicker({
+				autoclose: true,
+				format: "MM-yyyy",
+			    startView: "months", 
+			    minViewMode: "months",
+			    language: 'es'
+			});
+			
+			<c:if test="${filterForm.startYear != null && filterForm.startMonth != null}">
+				$('#startDateForView').datepicker('update', '${filterForm.startMonth}-${filterForm.startYear}');
+			</c:if>
+			
+			<c:if test="${filterForm.endYear != null && filterForm.endMonth != null}">
+				$('#endDateForView').datepicker('update', '${filterForm.endMonth}-${filterForm.endYear}');
+			</c:if>
 		</script>
+		
+		<c:if test="${report != null}">
+			<script>
+				var presets = window.chartColors;
+				var inputs = {
+					min: 20,
+					max: 80,
+					count: 12,
+					decimals: 2,
+					continuity: 1
+				};
+				
+				labels = [
+				<c:forEach var="monthString" items="${report.textMonths}">
+				"${monthString}",
+				</c:forEach>
+				];
+			
+				var data = {
+					labels: labels,
+					datasets: [
+					<c:forEach var="reportItem" items="${report.list}">
+						{
+							borderColor: '${reportItem.color}',
+							data: [
+								<c:forEach var="numberValue" items="${reportItem.values}">
+									${numberValue},
+								</c:forEach>
+							],
+							label: '${reportItem.name}',
+							fill: 'false'
+						},
+					</c:forEach>
+					]
+				};
+				var options = {
+					maintainAspectRatio: false,
+					spanGaps: false,
+					elements: {
+						line: {
+							tension: 0.000001
+						}
+					},
+					scales: {
+					}
+				};
+				var chart = new Chart('chart-0', {
+					type: 'line',
+					data: data,
+					options: options
+				});
+				
+			</script>
+		</c:if>
 		
 	</tiles:putAttribute>
 

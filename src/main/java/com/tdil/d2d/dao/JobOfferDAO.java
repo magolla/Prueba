@@ -25,5 +25,7 @@ public interface JobOfferDAO {
 	public List<Long> getOfferIdsByDate(Date date) throws DAOException;
 
 	List<JobOffer> getAllOffers() throws DAOException;
+	
+	List<Object> getJobOfferQuantitiesMonthly(Date dateFrom, Date dateTo) throws DAOException;
 
 }

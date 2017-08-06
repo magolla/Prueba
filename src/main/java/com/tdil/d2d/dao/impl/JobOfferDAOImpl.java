@@ -196,4 +196,28 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 
 		return query.list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getJobOfferQuantitiesMonthly(Date dateFrom, Date dateTo) throws DAOException {
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT count(*) as quantity, YEAR(creationDate) as reportYear, MONTH(creationDate) as reportMonth ");
+		queryString.append("FROM JobOffer offer ");
+		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
+		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+		return query.list();
+	}
+	
+	/*
+	 select 
+count(*) as quantity,
+YEAR(creationDate) as reportYear, 
+MONTH(creationDate) as reportMonth
+from d2d_joboffer
+GROUP BY YEAR(creationDate), MONTH(creationDate) 
+	 */
 }

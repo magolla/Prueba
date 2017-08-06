@@ -1,37 +1,55 @@
 package com.tdil.d2d.bo.dto;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FilterJobOfferReportDTO {
 
-	private Date startDate;
-	private Date endDate;
+	private Integer startMonth;
+	private Integer startYear;
+	private Integer endMonth;
+	private Integer endYear;
+	
 	private List<Long> geoLevels2;
 	private boolean activeOffers = false;
 	private boolean temporalOffers = false;
 	private boolean permanentOffers = false;
+	private boolean totalOffers = false;
+	private boolean contracted = false;
 	private Long occupationId;
 	private Long specialtyId;
 	private Long taskId;
 	
-	public Date getStartDate() {
-		return startDate;
+	public Integer getStartMonth() {
+		return startMonth;
 	}
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
+	public void setStartMonth(Integer startMonth) {
+		this.startMonth = startMonth;
 	}
 
-	public Date getEndDate() {
-		return endDate;
+	public Integer getStartYear() {
+		return startYear;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setStartYear(Integer startYear) {
+		this.startYear = startYear;
+	}
+
+	public Integer getEndMonth() {
+		return endMonth;
+	}
+
+	public void setEndMonth(Integer endMonth) {
+		this.endMonth = endMonth;
+	}
+
+	public Integer getEndYear() {
+		return endYear;
+	}
+
+	public void setEndYear(Integer endYear) {
+		this.endYear = endYear;
 	}
 
 	public List<Long> getGeoLevels2() {
@@ -68,6 +86,22 @@ public class FilterJobOfferReportDTO {
 	public void setPermanentOffers(boolean permanentOffers) {
 		this.permanentOffers = permanentOffers;
 	}
+	
+	public boolean isTotalOffers() {
+		return totalOffers;
+	}
+
+	public void setTotalOffers(boolean totalOffers) {
+		this.totalOffers = totalOffers;
+	}
+
+	public boolean isContracted() {
+		return contracted;
+	}
+
+	public void setContracted(boolean contracted) {
+		this.contracted = contracted;
+	}
 
 	public Long getOccupationId() {
 		return occupationId;
@@ -92,42 +126,11 @@ public class FilterJobOfferReportDTO {
 	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
 	}
-
-	public String getStartDateForView() {
-		if(startDate == null) {
-			return null;
-		}
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		String format = formatter.format(startDate);
-		return format;
-	}
 	
-	public void setStartDateForView(String string) {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		try {
-			Date date = formatter.parse(string);
-			setStartDate(date);
-		} catch (ParseException e) {
-		}
-	}
-	
-	public String getEndDateForView() {
-		if(endDate == null) {
-			return null;
-		}
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		String format = formatter.format(endDate);
-		return format;
-	}
-	
-	public void setEndDateForView(String string) {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		try {
-			Date date = formatter.parse(string);
-			setEndDate(date);
-		} catch (ParseException e) {
-		}
+	public Integer getQuantityOfMonths() {
+		int m1 = startYear * 12 + startMonth;
+	    int m2 = endYear * 12 + endMonth;
+	    int quantity = m2 - m1 + 1;
+		return quantity;
 	}
 }

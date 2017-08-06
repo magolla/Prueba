@@ -32,6 +32,7 @@
 	<script src="<c:url value="/admin/adminlte/plugins/datatables/jszip.min.js" />" ></script>
 	<script src="<c:url value="/admin/adminlte/plugins/datatables/dataTables.buttons.min.js" />" ></script>
 	<script src="<c:url value="/admin/adminlte/plugins/datepicker/bootstrap-datepicker.js" />"></script>
+	<script src="<c:url value="/admin/adminlte/plugins/datepicker/locales/bootstrap-datepicker.es.js" />" charset="UTF-8"></script>
 
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/input-mask/jquery.inputmask.date.extensions.js" />"></script>
