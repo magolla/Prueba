@@ -11,6 +11,15 @@
 	<tiles:putAttribute name="body">
 	
 		<section class="content">
+		
+			<c:if test="${validations != null}">
+				<div class="alert alert-danger">
+					<c:forEach var="warningValidation" items="${validations}">
+						- ${warningValidation} <br>
+					</c:forEach>
+				</div>
+			</c:if>
+		
 			<form:form method="POST" id="filterForm" modelAttribute="filterForm" autocomplete="off" action="${pageContext.request.contextPath}/admin/reports/jobofferstats?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 				<input type="hidden" name="startMonth" id="startMonth">
 				<input type="hidden" name="startYear" id="startYear">

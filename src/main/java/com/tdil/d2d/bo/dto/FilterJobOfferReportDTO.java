@@ -104,6 +104,9 @@ public class FilterJobOfferReportDTO {
 	}
 
 	public Long getOccupationId() {
+		if(occupationId == null) {
+			return -1L;
+		}
 		return occupationId;
 	}
 
@@ -112,6 +115,9 @@ public class FilterJobOfferReportDTO {
 	}
 
 	public Long getSpecialtyId() {
+		if(specialtyId == null) {
+			return -1L;
+		}
 		return specialtyId;
 	}
 
@@ -120,6 +126,9 @@ public class FilterJobOfferReportDTO {
 	}
 
 	public Long getTaskId() {
+		if(taskId == null) {
+			return -1L;
+		}
 		return taskId;
 	}
 
@@ -132,5 +141,15 @@ public class FilterJobOfferReportDTO {
 	    int m2 = endYear * 12 + endMonth;
 	    int quantity = m2 - m1 + 1;
 		return quantity;
+	}
+	
+	public List<String> validate() {
+		List<String> validations = new ArrayList<String>();
+		
+		if(this.getQuantityOfMonths() <= 0) {
+			validations.add("El Período Desde no puede ser mayor que el Período Hasta");
+		}
+		
+		return validations;
 	}
 }

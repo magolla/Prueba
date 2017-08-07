@@ -178,8 +178,6 @@ public class AdminReportsController {
 	public ModelAndView jobOfferReportPost(@Valid FilterJobOfferReportDTO filterDTO, BindingResult bindingResult) {
 		try { 
 			
-			JobOfferReportDTO report = this.reportsService.getJobOfferReportDTO(filterDTO);
-			
 			ModelAndView model = new ModelAndView();
 			model.addObject("geoList", this.geoService.listGeoLevel2());
 			model.addObject("occupationList", this.specialtyService.listOccupations());
@@ -192,9 +190,16 @@ public class AdminReportsController {
 				model.addObject("taskList", this.specialtyService.listTasks(filterDTO.getSpecialtyId()));
 			}
 			
-			model.addObject("report", report);
-			
 			model.setViewName("admin/job-offer-report");
+			
+			List<String> validations = filterDTO.validate();
+			if(!validations.isEmpty()) {
+				model.addObject("validations", validations);
+				return model;
+			}
+			
+			JobOfferReportDTO report = this.reportsService.getJobOfferReportDTO(filterDTO);
+			model.addObject("report", report);
 	
 			return model;
 

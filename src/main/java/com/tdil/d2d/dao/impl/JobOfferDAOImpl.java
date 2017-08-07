@@ -230,6 +230,9 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("WHERE offer.creationDate >= :fromDate ");
 		queryString.append("AND offer.creationDate < :toDate ");
 		queryString.append("AND offer.id IN :ids ");
+		queryString.append("AND (:occupationId = -1L or offer.occupation.id = :occupationId) ");
+		queryString.append("AND (:specialtyId = -1L or offer.specialty.id = :specialtyId) ");
+		queryString.append("AND (:taskId = -1L or offer.task.id = :taskId) ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 
@@ -237,6 +240,9 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		query.setParameter("fromDate", from);
 		query.setParameter("toDate", to);
 		query.setParameterList("ids", offersIdByGeo);
+		query.setParameter("occupationId", filterDTO.getOccupationId());
+		query.setParameter("specialtyId", filterDTO.getSpecialtyId());
+		query.setParameter("taskId", filterDTO.getTaskId());
 
 		return query.list();
 	}
@@ -271,6 +277,9 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("AND offer.creationDate < :toDate ");
 		queryString.append("AND offer.permanent = :isPermanent ");
 		queryString.append("AND offer.id IN :ids ");
+		queryString.append("AND (:occupationId = -1L or offer.occupation.id = :occupationId) ");
+		queryString.append("AND (:specialtyId = -1L or offer.specialty.id = :specialtyId) ");
+		queryString.append("AND (:taskId = -1L or offer.task.id = :taskId) ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 
@@ -279,6 +288,9 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		query.setParameter("toDate", to);
 		query.setParameter("isPermanent", permanent);
 		query.setParameterList("ids", offersIdByGeo);
+		query.setParameter("occupationId", filterDTO.getOccupationId());
+		query.setParameter("specialtyId", filterDTO.getSpecialtyId());
+		query.setParameter("taskId", filterDTO.getTaskId());
 
 		return query.list();
 	}
@@ -316,6 +328,9 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("AND offer.offerDate >= :nowDate ");
 		queryString.append("AND offer.status != :closeStatus ");
 		queryString.append("AND offer.id IN :ids ");
+		queryString.append("AND (:occupationId = -1L or offer.occupation.id = :occupationId) ");
+		queryString.append("AND (:specialtyId = -1L or offer.specialty.id = :specialtyId) ");
+		queryString.append("AND (:taskId = -1L or offer.task.id = :taskId) ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 
@@ -325,6 +340,9 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		query.setParameter("nowDate", now);
 		query.setParameter("closeStatus", JobOffer.CLOSED);
 		query.setParameterList("ids", offersIdByGeo);
+		query.setParameter("occupationId", filterDTO.getOccupationId());
+		query.setParameter("specialtyId", filterDTO.getSpecialtyId());
+		query.setParameter("taskId", filterDTO.getTaskId());
 
 		return query.list();
 	}
@@ -358,6 +376,9 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("WHERE offer.creationDate >= :fromDate ");
 		queryString.append("AND offer.creationDate < :toDate ");
 		queryString.append("AND offer.id IN :ids ");
+		queryString.append("AND (:occupationId = -1L or offer.occupation.id = :occupationId) ");
+		queryString.append("AND (:specialtyId = -1L or offer.specialty.id = :specialtyId) ");
+		queryString.append("AND (:taskId = -1L or offer.task.id = :taskId) ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 
@@ -365,6 +386,9 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		query.setParameter("fromDate", from);
 		query.setParameter("toDate", to);
 		query.setParameterList("ids", offersIdByGeo);
+		query.setParameter("occupationId", filterDTO.getOccupationId());
+		query.setParameter("specialtyId", filterDTO.getSpecialtyId());
+		query.setParameter("taskId", filterDTO.getTaskId());
 
 		return query.list();
 	}
