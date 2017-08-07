@@ -287,34 +287,33 @@ public class BOReportsServiceImpl implements BOReportsService {
 		result.setEndMonth(filterDTO.getEndMonth());
 		result.setEndYear(filterDTO.getEndYear());
 		
-		List<Integer> temporals = new ArrayList<Integer>();
-		temporals.add(10);temporals.add(20);temporals.add(30);temporals.add(40);
-		temporals.add(50);temporals.add(60);temporals.add(50);temporals.add(40);
-		temporals.add(20);temporals.add(10);temporals.add(20);temporals.add(30);
-		
-		List<Integer> permanents = new ArrayList<Integer>();
-		permanents.add(95);permanents.add(85);permanents.add(75);permanents.add(75);
-		permanents.add(85);permanents.add(95);permanents.add(115);permanents.add(125);
-		permanents.add(125);permanents.add(115);permanents.add(125);permanents.add(135);
-		
-		List<Integer> actives = new ArrayList<Integer>();
-		actives.add(110);actives.add(120);actives.add(130);actives.add(140);
-		actives.add(150);actives.add(160);actives.add(150);actives.add(140);
-		actives.add(120);actives.add(110);actives.add(120);actives.add(130);
-		
-		List<Integer> contrateds = new ArrayList<Integer>();
-		contrateds.add(210);contrateds.add(220);contrateds.add(230);contrateds.add(240);
-		contrateds.add(250);contrateds.add(260);contrateds.add(250);contrateds.add(240);
-		contrateds.add(220);contrateds.add(210);contrateds.add(220);contrateds.add(230);
-		
-		List<Integer> totals = this.getTotalJobOfferQuantitiesMonthly(filterDTO);
-		
 		List<JobOfferReportItemDTO> items = new ArrayList<JobOfferReportItemDTO>();
-		items.add(new JobOfferReportItemDTO("Avisos creados TOTALES", "rgba(255, 165, 0, 1)", totals));
-		items.add(new JobOfferReportItemDTO("Avisos temporales", "rgba(0, 128, 128, 1)", temporals));
-		items.add(new JobOfferReportItemDTO("Avisos permanentes", "rgba(3, 72, 123, 1)", permanents));
-		items.add(new JobOfferReportItemDTO("Avisos creados Activos", "rgba(238,67,100, 1)", actives));
-		items.add(new JobOfferReportItemDTO("Contrataciones", "rgba(192,192,192, 1)", contrateds));
+		
+		if(filterDTO.isTotalOffers()) {
+			List<Integer> totals = this.getTotalJobOfferQuantitiesMonthly(filterDTO);
+			items.add(new JobOfferReportItemDTO("Avisos creados TOTALES", "rgba(255, 165, 0, 1)", totals));
+		}
+		
+		if(filterDTO.isTemporalOffers()) {
+			List<Integer> temporals = this.getTotalJobOfferQuantitiesMonthly(filterDTO, false);
+			items.add(new JobOfferReportItemDTO("Avisos temporales", "rgba(0, 128, 128, 1)", temporals));
+		}
+		
+		if(filterDTO.isPermanentOffers()) {
+			List<Integer> permanents = this.getTotalJobOfferQuantitiesMonthly(filterDTO, true);
+			items.add(new JobOfferReportItemDTO("Avisos permanentes", "rgba(3, 72, 123, 1)", permanents));
+		}
+		
+		if(filterDTO.isActiveOffers()) {
+			List<Integer> actives = this.getActiveJobOfferQuantitiesMonthly(filterDTO);
+			items.add(new JobOfferReportItemDTO("Avisos creados Activos", "rgba(238,67,100, 1)", actives));
+		}
+		
+		if(filterDTO.isContracted()) {
+			List<Integer> contrateds = this.getJobOfferContractedMonthly(filterDTO);
+			items.add(new JobOfferReportItemDTO("Contrataciones", "rgba(111,111,111, 1)", contrateds));
+		}
+		
 		result.setList(items);
 		
 		return result;
@@ -329,7 +328,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		
 		List<Object> quantityObjects = new ArrayList<Object>();
 		try {
-			quantityObjects = jobOfferDAO.getJobOfferQuantitiesMonthly(Calendar.getInstance().getTime(), Calendar.getInstance().getTime());
+			quantityObjects = jobOfferDAO.getJobOfferQuantitiesMonthly(filterDTO);
 			
 			Calendar now = Calendar.getInstance();
 			now.set(Calendar.DAY_OF_MONTH, 1);
@@ -341,7 +340,121 @@ public class BOReportsServiceImpl implements BOReportsService {
 				int qty = 0;
 				for(int j=initValue; j<quantityObjects.size(); j++) {
 					Object[] objects = (Object[]) quantityObjects.get(j);
-					if((int)objects[MONTH_COLUMN] == now.get(Calendar.MONTH) &&
+					if((int)objects[MONTH_COLUMN] - 1 == now.get(Calendar.MONTH) &&
+					   (int)objects[YEAR_COLUMN] == now.get(Calendar.YEAR)) {
+						initValue = j;
+						qty = Integer.valueOf(""+objects[QUANTITY_COLUMN]);
+						break;
+					}
+				}
+				totals.add(qty);
+				now.add(Calendar.MONTH, 1);
+			}
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return totals;
+	}
+	
+	private List<Integer> getTotalJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, boolean permanent) {
+		int QUANTITY_COLUMN = 0;
+		int YEAR_COLUMN = 1;
+		int MONTH_COLUMN = 2;
+
+		List<Integer >totals = new ArrayList<Integer>();
+		
+		List<Object> quantityObjects = new ArrayList<Object>();
+		try {
+			quantityObjects = jobOfferDAO.getJobOfferQuantitiesMonthly(filterDTO, permanent);
+			
+			Calendar now = Calendar.getInstance();
+			now.set(Calendar.DAY_OF_MONTH, 1);
+			now.set(Calendar.MONTH, filterDTO.getStartMonth() - 1);
+			now.set(Calendar.YEAR, filterDTO.getStartYear());
+			
+			int initValue = 0;
+			for (int i=0; i<filterDTO.getQuantityOfMonths(); i++) {
+				int qty = 0;
+				for(int j=initValue; j<quantityObjects.size(); j++) {
+					Object[] objects = (Object[]) quantityObjects.get(j);
+					if((int)objects[MONTH_COLUMN] - 1 == now.get(Calendar.MONTH) &&
+					   (int)objects[YEAR_COLUMN] == now.get(Calendar.YEAR)) {
+						initValue = j;
+						qty = Integer.valueOf(""+objects[QUANTITY_COLUMN]);
+						break;
+					}
+				}
+				totals.add(qty);
+				now.add(Calendar.MONTH, 1);
+			}
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return totals;
+	}
+	
+	private List<Integer> getActiveJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO) {
+		int QUANTITY_COLUMN = 0;
+		int YEAR_COLUMN = 1;
+		int MONTH_COLUMN = 2;
+
+		List<Integer >totals = new ArrayList<Integer>();
+		
+		List<Object> quantityObjects = new ArrayList<Object>();
+		try {
+			quantityObjects = jobOfferDAO.getActiveJobOfferQuantitiesMonthly(filterDTO);
+			
+			Calendar now = Calendar.getInstance();
+			now.set(Calendar.DAY_OF_MONTH, 1);
+			now.set(Calendar.MONTH, filterDTO.getStartMonth() - 1);
+			now.set(Calendar.YEAR, filterDTO.getStartYear());
+			
+			int initValue = 0;
+			for (int i=0; i<filterDTO.getQuantityOfMonths(); i++) {
+				int qty = 0;
+				for(int j=initValue; j<quantityObjects.size(); j++) {
+					Object[] objects = (Object[]) quantityObjects.get(j);
+					if((int)objects[MONTH_COLUMN] - 1 == now.get(Calendar.MONTH) &&
+					   (int)objects[YEAR_COLUMN] == now.get(Calendar.YEAR)) {
+						initValue = j;
+						qty = Integer.valueOf(""+objects[QUANTITY_COLUMN]);
+						break;
+					}
+				}
+				totals.add(qty);
+				now.add(Calendar.MONTH, 1);
+			}
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return totals;
+	}
+	
+	private List<Integer> getJobOfferContractedMonthly(FilterJobOfferReportDTO filterDTO) {
+		int QUANTITY_COLUMN = 0;
+		int YEAR_COLUMN = 1;
+		int MONTH_COLUMN = 2;
+
+		List<Integer >totals = new ArrayList<Integer>();
+		
+		List<Object> quantityObjects = new ArrayList<Object>();
+		try {
+			quantityObjects = jobOfferDAO.getJobOfferContractedMonthly(filterDTO);
+			
+			Calendar now = Calendar.getInstance();
+			now.set(Calendar.DAY_OF_MONTH, 1);
+			now.set(Calendar.MONTH, filterDTO.getStartMonth() - 1);
+			now.set(Calendar.YEAR, filterDTO.getStartYear());
+			
+			int initValue = 0;
+			for (int i=0; i<filterDTO.getQuantityOfMonths(); i++) {
+				int qty = 0;
+				for(int j=initValue; j<quantityObjects.size(); j++) {
+					Object[] objects = (Object[]) quantityObjects.get(j);
+					if((int)objects[MONTH_COLUMN] - 1 == now.get(Calendar.MONTH) &&
 					   (int)objects[YEAR_COLUMN] == now.get(Calendar.YEAR)) {
 						initValue = j;
 						qty = Integer.valueOf(""+objects[QUANTITY_COLUMN]);

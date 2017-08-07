@@ -13,6 +13,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.tdil.d2d.bo.dto.FilterJobOfferReportDTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.dto.SearchOfferDTO;
 import com.tdil.d2d.controller.api.request.InstitutionType;
@@ -199,25 +200,145 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> getJobOfferQuantitiesMonthly(Date dateFrom, Date dateTo) throws DAOException {
+	public List<Object> getJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO) throws DAOException {
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.MONTH, filterDTO.getStartMonth() - 1);
+		calendar.set(Calendar.YEAR, filterDTO.getStartYear());
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		Date from = calendar.getTime();
+		
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.MONTH, filterDTO.getEndMonth());
+		calendar.set(Calendar.YEAR, filterDTO.getEndYear());
+		Date to = calendar.getTime();
 		
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT count(*) as quantity, YEAR(creationDate) as reportYear, MONTH(creationDate) as reportMonth ");
 		queryString.append("FROM JobOffer offer ");
+		queryString.append("WHERE offer.creationDate >= :fromDate ");
+		queryString.append("AND offer.creationDate < :toDate ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("fromDate", from);
+		query.setParameter("toDate", to);
 
 		return query.list();
 	}
 	
-	/*
-	 select 
-count(*) as quantity,
-YEAR(creationDate) as reportYear, 
-MONTH(creationDate) as reportMonth
-from d2d_joboffer
-GROUP BY YEAR(creationDate), MONTH(creationDate) 
-	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, boolean permanent) throws DAOException {
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.MONTH, filterDTO.getStartMonth() - 1);
+		calendar.set(Calendar.YEAR, filterDTO.getStartYear());
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		Date from = calendar.getTime();
+		
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.MONTH, filterDTO.getEndMonth());
+		calendar.set(Calendar.YEAR, filterDTO.getEndYear());
+		Date to = calendar.getTime();
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT count(*) as quantity, YEAR(creationDate) as reportYear, MONTH(creationDate) as reportMonth ");
+		queryString.append("FROM JobOffer offer ");
+		queryString.append("WHERE offer.creationDate >= :fromDate ");
+		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("AND offer.permanent = :isPermanent ");
+		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
+		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("fromDate", from);
+		query.setParameter("toDate", to);
+		query.setParameter("isPermanent", permanent);
+
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getActiveJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO) throws DAOException {
+		
+		Calendar calendar = Calendar.getInstance();
+		Date now = calendar.getTime();
+		
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.MONTH, filterDTO.getStartMonth() - 1);
+		calendar.set(Calendar.YEAR, filterDTO.getStartYear());
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		Date from = calendar.getTime();
+		
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.MONTH, filterDTO.getEndMonth());
+		calendar.set(Calendar.YEAR, filterDTO.getEndYear());
+		Date to = calendar.getTime();
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT count(*) as quantity, YEAR(creationDate) as reportYear, MONTH(creationDate) as reportMonth ");
+		queryString.append("FROM JobOffer offer ");
+		queryString.append("WHERE offer.creationDate >= :fromDate ");
+		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("AND offer.offerDate >= :nowDate ");
+		queryString.append("AND offer.status != :closeStatus ");
+		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
+		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("fromDate", from);
+		query.setParameter("toDate", to);
+		query.setParameter("nowDate", now);
+		query.setParameter("closeStatus", JobOffer.CLOSED);
+
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getJobOfferContractedMonthly(FilterJobOfferReportDTO filterDTO) throws DAOException {
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.MONTH, filterDTO.getStartMonth() - 1);
+		calendar.set(Calendar.YEAR, filterDTO.getStartYear());
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		Date from = calendar.getTime();
+		
+		calendar.set(Calendar.DAY_OF_MONTH, 1);
+		calendar.set(Calendar.MONTH, filterDTO.getEndMonth());
+		calendar.set(Calendar.YEAR, filterDTO.getEndYear());
+		Date to = calendar.getTime();
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT count(jobApplication_id) as quantity, YEAR(creationDate) as reportYear, MONTH(creationDate) as reportMonth ");
+		queryString.append("FROM JobOffer offer ");
+		queryString.append("WHERE offer.creationDate >= :fromDate ");
+		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
+		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("fromDate", from);
+		query.setParameter("toDate", to);
+
+		return query.list();
+	}
 }

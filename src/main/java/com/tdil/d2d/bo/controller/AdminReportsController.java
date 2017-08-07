@@ -157,6 +157,9 @@ public class AdminReportsController {
 			model.addObject("occupationList", this.specialtyService.listOccupations());
 			model.addObject("filterForm", defaultFilterDTO);
 			
+			JobOfferReportDTO report = this.reportsService.getJobOfferReportDTO(defaultFilterDTO);
+			model.addObject("report", report);
+			
 			model.setViewName("admin/job-offer-report");
 	
 			return model;

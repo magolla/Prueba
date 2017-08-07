@@ -11,7 +11,6 @@ public class JobOfferReportDTO {
 
 	private Integer startMonth;
 	private Integer startYear;
-
 	private Integer endMonth;
 	private Integer endYear;
 	

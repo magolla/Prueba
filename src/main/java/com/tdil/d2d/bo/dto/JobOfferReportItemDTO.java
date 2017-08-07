@@ -33,4 +33,13 @@ public class JobOfferReportItemDTO {
 		this.values = values;
 	}
 	
+	public Integer getTotal() {
+		Integer sum = 0;
+		
+		for (Integer integer : values) {
+			sum += integer;
+		}
+		
+		return sum;
+	}
 }

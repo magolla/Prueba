@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import com.tdil.d2d.bo.dto.FilterJobOfferReportDTO;
 import com.tdil.d2d.controller.api.dto.SearchOfferDTO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.JobOffer;
@@ -25,7 +26,9 @@ public interface JobOfferDAO {
 	public List<Long> getOfferIdsByDate(Date date) throws DAOException;
 
 	List<JobOffer> getAllOffers() throws DAOException;
-	
-	List<Object> getJobOfferQuantitiesMonthly(Date dateFrom, Date dateTo) throws DAOException;
 
+	List<Object> getJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO) throws DAOException;
+	List<Object> getJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, boolean permanent) throws DAOException;
+	List<Object> getActiveJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO) throws DAOException;
+	List<Object> getJobOfferContractedMonthly(FilterJobOfferReportDTO filterDTO) throws DAOException;
 }

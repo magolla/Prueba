@@ -141,16 +141,26 @@
 			</form:form>
 		</section>
 		
-		<div class="line-chart-separator"></div>
-		
 		<c:if test="${report != null}">
 			<div class="row">
-				<div class="col-lg-12">
+				<div class="col-md-12">
 					<div class="wrapper">
 						<canvas id="chart-0" style="height:400px;padding: 15px;"></canvas>
 					</div>
 				</div>
 			</div>
+			
+			<div class="row" style="padding: 10px;">
+				<div class="col-md-12">
+					<label class="chart-resume">Resumen: valores totales del per&iacute;odo</label>
+					
+					<c:forEach var="reportItem" items="${report.list}">
+						<div class="chart-resume-element" style="color: ${reportItem.color};"><b>${reportItem.name}: ${reportItem.total}</b></div>
+					</c:forEach>
+					
+				</div>
+			</div>
+			
 		</c:if>
 		
 		<script>
