@@ -2,10 +2,13 @@ package com.tdil.d2d.dao.impl;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -200,7 +203,11 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> getJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO) throws DAOException {
+	public List<Object> getJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, Set<Long> offersIdByGeo) throws DAOException {
+		
+		if(offersIdByGeo.isEmpty()) {
+			return new ArrayList<Object>();
+		}
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -222,19 +229,25 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("FROM JobOffer offer ");
 		queryString.append("WHERE offer.creationDate >= :fromDate ");
 		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("AND offer.id IN :ids ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		query.setParameter("fromDate", from);
 		query.setParameter("toDate", to);
+		query.setParameterList("ids", offersIdByGeo);
 
 		return query.list();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> getJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, boolean permanent) throws DAOException {
+	public List<Object> getJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, boolean permanent, Set<Long> offersIdByGeo) throws DAOException {
+		
+		if(offersIdByGeo.isEmpty()) {
+			return new ArrayList<Object>();
+		}
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -257,6 +270,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("WHERE offer.creationDate >= :fromDate ");
 		queryString.append("AND offer.creationDate < :toDate ");
 		queryString.append("AND offer.permanent = :isPermanent ");
+		queryString.append("AND offer.id IN :ids ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 
@@ -264,13 +278,18 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		query.setParameter("fromDate", from);
 		query.setParameter("toDate", to);
 		query.setParameter("isPermanent", permanent);
+		query.setParameterList("ids", offersIdByGeo);
 
 		return query.list();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> getActiveJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO) throws DAOException {
+	public List<Object> getActiveJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, Set<Long> offersIdByGeo) throws DAOException {
+		
+		if(offersIdByGeo.isEmpty()) {
+			return new ArrayList<Object>();
+		}
 		
 		Calendar calendar = Calendar.getInstance();
 		Date now = calendar.getTime();
@@ -296,6 +315,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("AND offer.creationDate < :toDate ");
 		queryString.append("AND offer.offerDate >= :nowDate ");
 		queryString.append("AND offer.status != :closeStatus ");
+		queryString.append("AND offer.id IN :ids ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 
@@ -304,13 +324,18 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		query.setParameter("toDate", to);
 		query.setParameter("nowDate", now);
 		query.setParameter("closeStatus", JobOffer.CLOSED);
+		query.setParameterList("ids", offersIdByGeo);
 
 		return query.list();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> getJobOfferContractedMonthly(FilterJobOfferReportDTO filterDTO) throws DAOException {
+	public List<Object> getJobOfferContractedMonthly(FilterJobOfferReportDTO filterDTO, Set<Long> offersIdByGeo) throws DAOException {
+		
+		if(offersIdByGeo.isEmpty()) {
+			return new ArrayList<Object>();
+		}
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -332,13 +357,77 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("FROM JobOffer offer ");
 		queryString.append("WHERE offer.creationDate >= :fromDate ");
 		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("AND offer.id IN :ids ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		query.setParameter("fromDate", from);
 		query.setParameter("toDate", to);
+		query.setParameterList("ids", offersIdByGeo);
 
 		return query.list();
+	}
+	
+	@Override
+	public Set<Long> getByGeo(List<GeoLevelDTO> locations) throws DAOException {
+		try {
+			
+			Set<Long> result = new HashSet<Long>();
+			
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct offer.id ");
+			queryString.append("FROM JobOffer offer ");
+			
+			
+			if(!locations.isEmpty()) {
+				
+				String whereIn = "";
+				int count = 1;
+				for (GeoLevelDTO location : locations) {
+					whereIn = whereIn + "(" + location.getId() + ", " + location.getLevel() + "),";
+					
+					if(count > 1000){
+						
+						whereIn = whereIn.substring(0, whereIn.length() - 1);
+						queryString.append("WHERE (geoLevelId, geoLevelLevel) IN (" + whereIn + ")");
+						
+						Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+						result.addAll(query.list());
+						
+						queryString = new StringBuilder("");
+						queryString.append("SELECT distinct offer.id ");
+						queryString.append("FROM JobOffer offer ");
+						
+						whereIn = "";
+						
+						count = 0;
+					}
+					
+					count = count + 1;
+					
+				}
+				
+				whereIn = whereIn.substring(0, whereIn.length() - 1);
+				
+				queryString.append("WHERE (geoLevelId, geoLevelLevel) IN (" + whereIn + ")");
+				
+				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+				result.addAll(query.list());
+				
+				return result;
+				
+			} else {
+				
+				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+				result.addAll(query.list());
+				return result;
+			}
+			
+			
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
 	}
 }

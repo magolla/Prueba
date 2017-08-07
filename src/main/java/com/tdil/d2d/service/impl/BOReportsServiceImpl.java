@@ -281,6 +281,33 @@ public class BOReportsServiceImpl implements BOReportsService {
 	
 	@Override
 	public JobOfferReportDTO getJobOfferReportDTO(FilterJobOfferReportDTO filterDTO) throws ServiceException {
+		
+		Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
+		if(filterDTO.getGeoLevels2()!=null && !containsFilterAll(filterDTO.getGeoLevels2())){
+			
+			for(Long geoId : filterDTO.getGeoLevels2()){
+			
+				UserGeoLocation geoLocation = new UserGeoLocation();
+				geoLocation.setGeoLevelId(geoId);
+				geoLocation.setGeoLevelLevel(2);
+				
+				geoLocations.add(geoLocation);
+			}
+			
+		}
+		
+		Set<Long> offersIdByGeo = new HashSet<Long>();
+		
+		try {
+			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
+			offersIdByGeo = jobOfferDAO.getByGeo(geos);
+			
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		
+		/********/
+		
 		JobOfferReportDTO result = new JobOfferReportDTO();
 		result.setStartMonth(filterDTO.getStartMonth());
 		result.setStartYear(filterDTO.getStartYear());
@@ -290,27 +317,27 @@ public class BOReportsServiceImpl implements BOReportsService {
 		List<JobOfferReportItemDTO> items = new ArrayList<JobOfferReportItemDTO>();
 		
 		if(filterDTO.isTotalOffers()) {
-			List<Integer> totals = this.getTotalJobOfferQuantitiesMonthly(filterDTO);
+			List<Integer> totals = this.getTotalJobOfferQuantitiesMonthly(filterDTO, offersIdByGeo);
 			items.add(new JobOfferReportItemDTO("Avisos creados TOTALES", "rgba(255, 165, 0, 1)", totals));
 		}
 		
 		if(filterDTO.isTemporalOffers()) {
-			List<Integer> temporals = this.getTotalJobOfferQuantitiesMonthly(filterDTO, false);
+			List<Integer> temporals = this.getTotalJobOfferQuantitiesMonthly(filterDTO, false, offersIdByGeo);
 			items.add(new JobOfferReportItemDTO("Avisos temporales", "rgba(0, 128, 128, 1)", temporals));
 		}
 		
 		if(filterDTO.isPermanentOffers()) {
-			List<Integer> permanents = this.getTotalJobOfferQuantitiesMonthly(filterDTO, true);
+			List<Integer> permanents = this.getTotalJobOfferQuantitiesMonthly(filterDTO, true, offersIdByGeo);
 			items.add(new JobOfferReportItemDTO("Avisos permanentes", "rgba(3, 72, 123, 1)", permanents));
 		}
 		
 		if(filterDTO.isActiveOffers()) {
-			List<Integer> actives = this.getActiveJobOfferQuantitiesMonthly(filterDTO);
+			List<Integer> actives = this.getActiveJobOfferQuantitiesMonthly(filterDTO, offersIdByGeo);
 			items.add(new JobOfferReportItemDTO("Avisos creados Activos", "rgba(238,67,100, 1)", actives));
 		}
 		
 		if(filterDTO.isContracted()) {
-			List<Integer> contrateds = this.getJobOfferContractedMonthly(filterDTO);
+			List<Integer> contrateds = this.getJobOfferContractedMonthly(filterDTO, offersIdByGeo);
 			items.add(new JobOfferReportItemDTO("Contrataciones", "rgba(111,111,111, 1)", contrateds));
 		}
 		
@@ -319,7 +346,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		return result;
 	}
 	
-	private List<Integer> getTotalJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO) {
+	private List<Integer> getTotalJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, Set<Long> offersIdByGeo) {
 		int QUANTITY_COLUMN = 0;
 		int YEAR_COLUMN = 1;
 		int MONTH_COLUMN = 2;
@@ -328,7 +355,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		
 		List<Object> quantityObjects = new ArrayList<Object>();
 		try {
-			quantityObjects = jobOfferDAO.getJobOfferQuantitiesMonthly(filterDTO);
+			quantityObjects = jobOfferDAO.getJobOfferQuantitiesMonthly(filterDTO, offersIdByGeo);
 			
 			Calendar now = Calendar.getInstance();
 			now.set(Calendar.DAY_OF_MONTH, 1);
@@ -357,7 +384,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		return totals;
 	}
 	
-	private List<Integer> getTotalJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, boolean permanent) {
+	private List<Integer> getTotalJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, boolean permanent, Set<Long> offersIdByGeo) {
 		int QUANTITY_COLUMN = 0;
 		int YEAR_COLUMN = 1;
 		int MONTH_COLUMN = 2;
@@ -366,7 +393,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		
 		List<Object> quantityObjects = new ArrayList<Object>();
 		try {
-			quantityObjects = jobOfferDAO.getJobOfferQuantitiesMonthly(filterDTO, permanent);
+			quantityObjects = jobOfferDAO.getJobOfferQuantitiesMonthly(filterDTO, permanent, offersIdByGeo);
 			
 			Calendar now = Calendar.getInstance();
 			now.set(Calendar.DAY_OF_MONTH, 1);
@@ -395,7 +422,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		return totals;
 	}
 	
-	private List<Integer> getActiveJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO) {
+	private List<Integer> getActiveJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, Set<Long> offersIdByGeo) {
 		int QUANTITY_COLUMN = 0;
 		int YEAR_COLUMN = 1;
 		int MONTH_COLUMN = 2;
@@ -404,7 +431,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		
 		List<Object> quantityObjects = new ArrayList<Object>();
 		try {
-			quantityObjects = jobOfferDAO.getActiveJobOfferQuantitiesMonthly(filterDTO);
+			quantityObjects = jobOfferDAO.getActiveJobOfferQuantitiesMonthly(filterDTO, offersIdByGeo);
 			
 			Calendar now = Calendar.getInstance();
 			now.set(Calendar.DAY_OF_MONTH, 1);
@@ -433,7 +460,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		return totals;
 	}
 	
-	private List<Integer> getJobOfferContractedMonthly(FilterJobOfferReportDTO filterDTO) {
+	private List<Integer> getJobOfferContractedMonthly(FilterJobOfferReportDTO filterDTO, Set<Long> offersIdByGeo) {
 		int QUANTITY_COLUMN = 0;
 		int YEAR_COLUMN = 1;
 		int MONTH_COLUMN = 2;
@@ -442,7 +469,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		
 		List<Object> quantityObjects = new ArrayList<Object>();
 		try {
-			quantityObjects = jobOfferDAO.getJobOfferContractedMonthly(filterDTO);
+			quantityObjects = jobOfferDAO.getJobOfferContractedMonthly(filterDTO, offersIdByGeo);
 			
 			Calendar now = Calendar.getInstance();
 			now.set(Calendar.DAY_OF_MONTH, 1);

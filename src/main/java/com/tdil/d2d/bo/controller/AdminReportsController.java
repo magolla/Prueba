@@ -137,6 +137,9 @@ public class AdminReportsController {
 		try{ 
 			
 			FilterJobOfferReportDTO defaultFilterDTO = new FilterJobOfferReportDTO();
+			List<Long> geoLevels2 = new ArrayList<Long>();
+			geoLevels2.add(-1L);
+			defaultFilterDTO.setGeoLevels2(geoLevels2);
 			
 			Calendar now = Calendar.getInstance();
 			defaultFilterDTO.setEndMonth(now.get(Calendar.MONTH) + 1);

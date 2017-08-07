@@ -122,6 +122,7 @@
 							<label for="name" class="control-label">Seleccionar Provincias</label>
 													
 							<select id="geosSelect" class="selectpicker" multiple title="TODAS">
+								<option value="-1" selected>TODAS</option>
 								<c:forEach var="geo" items="${geoList}">
 									<option value="<c:out value="${geo.id}"/>"><c:out value="${geo.name}"/></option>
 								</c:forEach>
