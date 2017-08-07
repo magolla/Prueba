@@ -133,6 +133,11 @@
 						<i class="fa fa-book"></i> <span>Reporte: Detalle de avisos</span>
 					</a>
 				</li>
+				<li class="treeview">
+					<a href="<c:url value="/admin/logs" />">
+						<i class="fa fa-book"></i> <span>Logs</span>
+					</a>
+				</li>
 			</ul>
 		</section>
 		<!-- /.sidebar -->
