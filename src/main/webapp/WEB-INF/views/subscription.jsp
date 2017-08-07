@@ -56,7 +56,7 @@
 					<div class="msg">${msg}</div>
 				</c:if>
 	
-				<form name='loginForm' action="<c:url value='/suscribirme' />" method='POST'  modelAttribute="formRequest">
+				<form name='loginForm' action="<c:url value='/suscribirme?${_csrf.parameterName}=${_csrf.token}' />" method='POST'  modelAttribute="formRequest">
 					<div class="box-body">
 						<div class="form-group">
 							<label for="number" class="col-md-offset-2 col-sm-2 control-label">Celular</label>
