@@ -201,10 +201,18 @@ public class BOReportsServiceImpl implements BOReportsService {
 			
 			
 			List<ReportItemDTO> items = new ArrayList<ReportItemDTO>();
-			items.add(new ReportItemDTO("Suscripciones pagas android mercado pago", paidSubcriptions, "rgba(255, 165, 0, 1)"));
-			items.add(new ReportItemDTO("Suscripciones por sponsor", sponsorSubcriptions, "rgba(0, 128, 128, 1)"));
-			items.add(new ReportItemDTO("Suscripciones inapp iOS", iosSubcriptions, "rgba(3, 72, 123, 1)"));
-			items.add(new ReportItemDTO("Suscripciones gratuitas dtd", freeSubcriptions, "rgba(238,67,100, 1)"));
+			if(filterDTO.getAndroid()){
+				items.add(new ReportItemDTO("Suscripciones pagas android mercado pago", paidSubcriptions, "rgba(255, 165, 0, 1)"));
+			}
+			if(filterDTO.isSponsor()){
+				items.add(new ReportItemDTO("Suscripciones por sponsor", sponsorSubcriptions, "rgba(0, 128, 128, 1)"));
+			}
+			if(filterDTO.isIos()){
+				items.add(new ReportItemDTO("Suscripciones inapp iOS", iosSubcriptions, "rgba(3, 72, 123, 1)"));
+			}
+			if(filterDTO.isFree()){
+				items.add(new ReportItemDTO("Suscripciones gratuitas dtd", freeSubcriptions, "rgba(238,67,100, 1)"));
+			}	
 			items.add(new ReportItemDTO("Otros usuarios candidatos", (int)(usersIdByGeo.size() - result.getCountSubscriptions()), "rgba(192,192,192, 1)"));
 			result.setList(items);
 		   
