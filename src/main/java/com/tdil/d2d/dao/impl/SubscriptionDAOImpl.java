@@ -2,6 +2,7 @@ package com.tdil.d2d.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -233,8 +234,11 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 				queryString.append("SELECT distinct subscription ");
 				queryString.append("FROM Subscription subscription ");
 				queryString.append("WHERE subscription.user.id IN :ids ");
+				queryString.append("AND subscription.expirationDate > :currentDate ");
+				queryString.append("group by subscription.user.id ");
 				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 				query.setParameterList("ids", ids);
+				query.setParameter("currentDate", new Date());
 				return (List<Subscription> ) query.list();
 			} catch (Exception e) {
 				throw new DAOException(e);
