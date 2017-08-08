@@ -43,6 +43,7 @@ public class AdminLogsController {
 			String path = System.getProperty( "catalina.base" );
 
 			path = path + "/logs/catalina.out";
+			//path = path + "/bin/target/server.log";
 
 			System.out.println("El path relativo es: " + path);
 			FileInputStream is = new FileInputStream(path);
