@@ -118,8 +118,8 @@ public class BONoteServiceImpl implements BONoteService {
 			note.setContent(noteDTO.getContent());
 			note.setExpirationDate(noteDTO.getExpirationDate());
 			note.setCategory(NoteCategory.getCategoryEnum(noteDTO.getCategory()));
-			note.setCreationDate(noteDTO.getCreationDate());
-			note.setPublishingDate(noteDTO.getExpirationDate());
+			note.setCreationDate(noteDTO.getPublishingDate());
+			note.setPublishingDate(noteDTO.getPublishingDate());
 			note.setTitle(noteDTO.getTitle());
 			note.setSubtitle(noteDTO.getSubtitle());
 			if(noteDTO.getImage() != null) {
