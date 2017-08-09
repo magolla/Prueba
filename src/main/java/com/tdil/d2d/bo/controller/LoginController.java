@@ -7,6 +7,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -26,6 +28,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tdil.d2d.controller.api.dto.GoogleCaptchaResultDTO;
+import com.tdil.d2d.service.impl.UserServiceImplTest;
+import com.tdil.d2d.utils.LoggerManager;
 
 import okhttp3.CacheControl;
 import okhttp3.FormBody;
@@ -35,6 +39,8 @@ import okhttp3.Response;
 
 @Controller
 public class LoginController {
+	
+	private Logger logger = LogManager.getLogger(UserServiceImplTest.class);
     
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -111,6 +117,7 @@ public class LoginController {
 						));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			} catch (Exception e) {
+				LoggerManager.error(this, "El email o la contraseña ingresada es incorrecta");
 				httpResponse.sendRedirect(servletContext.getContextPath() + "/admin/login");
 				return;
 			}

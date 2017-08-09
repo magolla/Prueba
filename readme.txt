@@ -5,13 +5,13 @@ Caso de uso de ingreso con codigo validando
 Bajarse Tomcat7, descomprimirlo en algun directorio.
 
 Bajarse el eclipse Neon
-Agregarle el plugin specialclientstools.appspot.com/wtf_update_site/
+Agregarle el plugin http://specialclientstools.appspot.com/wtf_update_site/
 Setearle al plugin que use tomcat 7
 Reiniciar el eclipse
 Agregar al eclipse la variable de 
 Java >> Build Path >> Classpath variables
 TOMCAT7_HOME apuntando al folder de donde este instalado el tomcat7, ejemplo: /home/mgodoy/apache-tomcat-7.0.42
-
+Ir a preferencias >> WTF >> Cambiar la version del tomcat a 7
 Importar los proyectos del git.
 
 Crear la base de datos,
