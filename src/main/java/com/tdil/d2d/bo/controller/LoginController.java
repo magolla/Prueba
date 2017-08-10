@@ -7,10 +7,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tdil.d2d.controller.api.dto.GoogleCaptchaResultDTO;
-import com.tdil.d2d.service.impl.UserServiceImplTest;
 import com.tdil.d2d.utils.LoggerManager;
 
 import okhttp3.CacheControl;
@@ -39,15 +34,14 @@ import okhttp3.Response;
 
 @Controller
 public class LoginController {
-	
-	private Logger logger = LogManager.getLogger(UserServiceImplTest.class);
     
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
-	@Autowired
-	@Qualifier("jwtUserDetailsService")
-	private UserDetailsService userDetailsService;
+	
+//	@Autowired
+//	@Qualifier("jwtUserDetailsService")
+//	private UserDetailsService userDetailsService;
 
 	@Autowired
     private ServletContext servletContext;

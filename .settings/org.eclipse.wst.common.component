@@ -400,9 +400,6 @@
     <dependent-module archiveName="ognl-2.7.3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/ognl/ognl/2.7.3/ognl-2.7.3.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="javassist-3.7.ga.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/jboss/javassist/3.7.ga/javassist-3.7.ga.jar">
-      <dependency-type>uses</dependency-type>
-    </dependent-module>
     <dependent-module archiveName="tiles-compat-3.0.5.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/apache/tiles/tiles-compat/3.0.5/tiles-compat-3.0.5.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>

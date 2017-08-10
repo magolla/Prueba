@@ -154,7 +154,6 @@
   <classpathentry kind="var" path="M2_REPO/org/mvel/mvel2/2.0.11/mvel2-2.0.11.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/tiles/tiles-ognl/3.0.5/tiles-ognl-3.0.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/ognl/ognl/2.7.3/ognl-2.7.3.jar"/>
-  <classpathentry kind="var" path="M2_REPO/jboss/javassist/3.7.ga/javassist-3.7.ga.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/tiles/tiles-compat/3.0.5/tiles-compat-3.0.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.3.1/gson-2.3.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/imgscalr/imgscalr-lib/4.2/imgscalr-lib-4.2.jar"/>
