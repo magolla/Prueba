@@ -29,7 +29,7 @@
 		
 	</script>
 </head>
-<!-- Versión de la aplicación backend: WebApp DTD v 1.02.04 -->
+<!-- Versión de la aplicación backend: WebApp DTD v 1.02.05 -->
 <body class="bg-macaroni">
 <div class="row">
 	<div class="col-md-offset-3 col-md-6">
