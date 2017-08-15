@@ -57,7 +57,7 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 				criteria.add(Restrictions.eq(key, value));
 			}
 		});
-		
+
 		criteria.setFirstResult((page - 1) * size);
 		criteria.setMaxResults(((page - 1) * size) + size);
 		criteria.addOrder(Order.desc("id"));
@@ -66,7 +66,7 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 
 	@Override
 	public List<Note> getNotesForUser(int page, int size,List<Long> ocuppations, List<Long> specialities,User user) {
-		
+
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT distinct note ");
 		queryString.append("FROM Note note ");
@@ -80,23 +80,25 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 			queryString.append("OR (occupation.id IN (:ocuppations) AND specialty.id is null AND note.active = 1) ");
 			queryString.append("OR (occupation.id is null AND specialty.id is null AND note.active = 1)) ");
 		}
-		queryString.append("AND (note.expirationDate > now() OR note.expirationDate is null) ");
-		queryString.append("AND (note.publishingDate < now() OR note.publishingDate is null) ");
+		queryString.append("AND (note.expirationDate >= now() OR note.expirationDate is null) ");
+		queryString.append("AND (note.publishingDate <= now() OR note.publishingDate is null) ");
 		queryString.append("order by note.creationDate desc ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
-		query.setParameterList("ocuppations", ocuppations);
-		query.setParameterList("specialities", specialities);
+		if(user.isUserb()) {
+			query.setParameterList("ocuppations", ocuppations);
+			query.setParameterList("specialities", specialities);
+		}
 		query.setFirstResult((page - 1) * size);
 		query.setMaxResults(((page - 1) * size) + size);
 
 
 		List<Note> list = query.list();
-		
+
 		return list;
 	}
 
-	
+
 	@Override
 	public Note getNoteById(Long id) {
 		return this.getHibernateTemplate().get(Note.class, id);

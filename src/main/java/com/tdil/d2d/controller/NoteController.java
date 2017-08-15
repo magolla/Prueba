@@ -57,17 +57,37 @@ public class NoteController {
 	@RequestMapping(value = "/notes", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotes(@RequestParam Map<String, Object> params) {
 
-		String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
-	    String page = (String) (String)params.getOrDefault("page", "0");
-
-	    params.remove("size");
-	    params.remove("page");
-	    
-		List<Note> notes = this.noteService.getNotes(Integer.valueOf(page), Integer.valueOf(size), params);
-
-		List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
-
-		return ResponseEntity.ok(new GenericResponse<>(200, response));
+//		String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
+//	    String page = (String) (String)params.getOrDefault("page", "0");
+//
+//	    params.remove("size");
+//	    params.remove("page");
+//	    
+//		List<Note> notes = this.noteService.getNotes(Integer.valueOf(page), Integer.valueOf(size), params);
+//
+//		List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
+//
+//		return ResponseEntity.ok(new GenericResponse<>(200, response));
+		
+		//TODO:Se copio el contenido de la otra funcion, en el futuro hay que unificarlas.En las apps se llaman a diferentes url dependiendo el tipo de usuario 
+		try{
+	        	
+	        	String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
+	    	    String page = (String) (String)params.getOrDefault("page", "0");
+	        	
+				List<Note> notes = this.noteService.getNotesForUser(Integer.valueOf(page), Integer.valueOf(size));
+		
+				List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
+		
+				return ResponseEntity.ok(new GenericResponse<>(200, response));
+				
+	        } catch (ServiceException e) {
+	            LoggerManager.error(this, e);
+	            RegistrationResponse response = new RegistrationResponse(0);
+	            response.addError(e.getLocalizedMessage());
+	            return new ResponseEntity<GenericResponse<List<NoteDTO>>> ((GenericResponse<List<NoteDTO>>) null, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		
 	}
 
 	@RequestMapping(value = "/notesforuser", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
