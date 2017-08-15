@@ -45,7 +45,7 @@ public class AdminNoteController {
 	@Autowired
 	private SpecialtyService specialtyService;
 	
-	@RequestMapping(value = {"/notes"} , method = RequestMethod.GET)
+	@RequestMapping(value = {"/BoNotes"} , method = RequestMethod.GET)
 	public ModelAndView homePage() {
 
 		ModelAndView model = new ModelAndView();
@@ -147,7 +147,7 @@ public class AdminNoteController {
 			}
 			
 			ModelAndView model = new ModelAndView();
-			model.setViewName("redirect:/admin/notes");
+			model.setViewName("redirect:/admin/BoNotes");
 
 			return model;
 			

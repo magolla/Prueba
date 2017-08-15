@@ -31,7 +31,7 @@ public class BONoteDTO {
 	private List<Long> occupations;
 
 	private List<Long> specialties; 
-	
+
 	public long getId() {
 		return id;
 	}
@@ -112,17 +112,17 @@ public class BONoteDTO {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	
+
 	public String getPublishingDateForView() {
 		if(publishingDate == null) {
 			return null;
 		}
-		
+
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		String format = formatter.format(publishingDate);
 		return format;
 	}
-	
+
 	public void setPublishingDateForView(String string) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		try {
@@ -132,53 +132,57 @@ public class BONoteDTO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String getExpirationDateForView() {
 		if(expirationDate == null) {
 			return null;
 		}
-		
+
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		String format = formatter.format(expirationDate);
 		return format;
 	}
-	
+
 	public void setExpirationDateForView(String string) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		try {
-			Date date = formatter.parse(string);
-			setExpirationDate(date);
+			if(string.equals("")) {
+				setExpirationDate(null);	
+			} else {
+				Date date = formatter.parse(string);
+				setExpirationDate(date);
+			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public List<Long> getOccupations() {
 		if(this.occupations == null) {
 			this.occupations = new ArrayList<Long>();
 		}
 		return occupations;
 	}
-	
+
 	public void setOccupations(List<Long> occupations) {
 		this.occupations = occupations;
 	}
-	
+
 	public List<Long> getSpecialties() {
 		if(this.specialties == null) {
 			this.specialties = new ArrayList<Long>();
 		}
 		return specialties;
 	}
-	
+
 	public void setSpecialties(List<Long> specialties) {
 		this.specialties = specialties;
 	}
-	
+
 	public void addOccupation(Long occupation) {
 		getOccupations().add(occupation);
 	}
-	
+
 	public void addSpecialty(Long specialty) {
 		getSpecialties().add(specialty);
 	}

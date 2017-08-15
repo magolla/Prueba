@@ -114,7 +114,7 @@
 					</a>
 				</li>
 				<li class="treeview">
-					<a href="<c:url value="/admin/notes" />">
+					<a href="<c:url value="/admin/BoNotes" />">
 						<i class="fa fa-book"></i> <span>ABM de Notas</span>
 					</a>
 				</li>

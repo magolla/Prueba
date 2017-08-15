@@ -32,7 +32,7 @@ public class NoteServiceImpl implements NoteService {
 	private final NoteDAO noteDAO;
 	private final SpecialtyDAO specialtyDAO;
 	private final UserDAO userDAO;
-	
+
 	@Autowired
 	public NoteServiceImpl(NoteDAO noteDAO, SpecialtyDAO specialtyDAO, UserDAO userDAO) {
 		this.noteDAO = noteDAO;
@@ -50,56 +50,56 @@ public class NoteServiceImpl implements NoteService {
 	public List<Note> getNotes(int page, int size, Map<String, Object> params) {
 		return this.noteDAO.getNotes(page, size, params);
 	}
-	
+
 	@Override
 	public List<Note> getNotesForUser(int page, int size) throws ServiceException {
-		
+
 		User user = getLoggedUser();
-		
+
 		List<Long> specialities = new ArrayList<Long>();
 		List<Long> ocuppations = new ArrayList<Long>();
 		
-		for (Specialty speciality : user.getSpecialties()){
-			specialities.add(speciality.getId());
-			if(speciality.getOccupation()!=null)
-		 	  ocuppations.add(speciality.getOccupation().getId());
+		if(user.isUserb()) {
+			for (Specialty speciality : user.getSpecialties()){
+				specialities.add(speciality.getId());
+				if(speciality.getOccupation()!=null)
+					ocuppations.add(speciality.getOccupation().getId());
+			}
+			if(specialities.size()==0){
+				return new ArrayList<Note>();
+			}
 		}
-		
-		if(specialities.size()==0){
-			return new ArrayList<Note>();
-		}
-		
 		return this.noteDAO.getNotesForUser(page, size, ocuppations, specialities, user);
 	}
-	
+
 	@Override
 	public Note getHomeNote() throws ServiceException {
-		
+
 		User user = getLoggedUser();
-		
+
 		List<Long> specialities = new ArrayList<Long>();
 		List<Long> ocuppations = new ArrayList<Long>();
-		
+
 		for (Specialty speciality : user.getSpecialties()){
 			specialities.add(speciality.getId());
 			if(speciality.getOccupation()!=null)
-		 	  ocuppations.add(speciality.getOccupation().getId());
+				ocuppations.add(speciality.getOccupation().getId());
 		}
-		
+
 		if(specialities.size()==0){
 			return null;
 		}
-		
+
 		List<Note> notes = this.noteDAO.getNotesForUser(1, 1, ocuppations, specialities,user);
-		
+
 		if(notes.size()>0){
 			return notes.get(0);
 		}else{
 			return null;
 		}
-	
+
 	}
-	
+
 	public User getLoggedUser() throws ServiceException {
 		try {
 			return userDAO.getById(User.class, com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
@@ -157,11 +157,11 @@ public class NoteServiceImpl implements NoteService {
 		note.setActive(false);
 		this.save(note);
 	}
-	
+
 	private List<NoteDTO> toDtoList(Collection<Note> list) {
 		return list.stream().map(note -> toDto(note)).collect(Collectors.toList());
 	}
-	
+
 	private  NoteDTO toDto(Note note) {
 		NoteDTO result = new NoteDTO();
 
