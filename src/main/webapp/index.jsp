@@ -30,7 +30,7 @@
 		
 	</script>
   </head>
-  <!-- Versión de la aplicación backend: WebApp DTD v 1.02.05 -->
+  <!-- Versión de la aplicación backend: WebApp DTD v 1.02.06 -->
   <body>
     <!-- Page-->
     <div class="page text-center">
