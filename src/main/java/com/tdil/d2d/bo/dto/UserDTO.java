@@ -1,10 +1,17 @@
 package com.tdil.d2d.bo.dto;
 
+import java.util.List;
+
+import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
+import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
+
 public class UserDTO {
 
 	private long id;
 	
 	private String name;
+	
+	private String lastname;
 
 	private String email;
 	
@@ -27,6 +34,14 @@ public class UserDTO {
 	private String mobilePhone;
 	
 	private String avatar;
+	
+	private String institutionType;
+	
+	private String userOccupation;
+	
+	private List<SpecialtyDTO> userSpecialty;
+	
+	private List<GeoLevelDTO> geoLevels;
 	
 	
 	public String getLicense() {
@@ -132,8 +147,44 @@ public class UserDTO {
 	public void setLastLoginDate(String lastLoginDate) {
 		this.lastLoginDate = lastLoginDate;
 	}
-	
-	
-	
-	
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getInstitutionType() {
+		return institutionType;
+	}
+
+	public void setInstitutionType(String institutionType) {
+		this.institutionType = institutionType;
+	}
+
+	public String getUserOccupation() {
+		return userOccupation;
+	}
+
+	public void setUserOccupation(String userOccupation) {
+		this.userOccupation = userOccupation;
+	}
+
+	public List<SpecialtyDTO> getUserSpecialty() {
+		return userSpecialty;
+	}
+
+	public void setUserSpecialty(List<SpecialtyDTO> userSpecialty) {
+		this.userSpecialty = userSpecialty;
+	}
+
+	public List<GeoLevelDTO> getGeoLevels() {
+		return geoLevels;
+	}
+
+	public void setGeoLevels(List<GeoLevelDTO> geoLevels) {
+		this.geoLevels = geoLevels;
+	}
 }

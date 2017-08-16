@@ -20,136 +20,182 @@
 						</div>
 						
 						<div class="box-body">
-						  <div class="col-md-6">
-						                <div class="row">
-						                    <div class="col-md-4">
-								              <label for="name" class="control-label">Id Usuario:</label>
+							<div class="col-md-6">
+								<h2>Perfil del usuario</h2>
+								
+								<div class="row">
+									<img style="border:2px solid #000; max-height:180px; margin:15px 0 20px 15px;" src="data:image/jpg;base64,<c:out value='${user.avatar}'/>" />
+								</div>
+								
+				                <div class="row">
+				                    <div class="col-md-4">
+						              <label for="name" class="control-label">Id Usuario:</label>
+									</div>
+									
+									<div class="col-md-8">
+										${user.id}
+									</div>
+								</div>
+								<div class="row">
+				                	<div class="col-md-4">
+						              <label for="name" class="control-label">Nombre y apellido:</label>
+									</div>
+									<div class="col-md-8">
+										${user.name} ${user.lastname}
+									</div>
+								</div>    
+								<div class="row">
+				                	<div class="col-md-4">
+						              <label for="name" class="control-label">Email:</label>
+									</div>
+									<div class="col-md-8">
+										${user.email}
+									</div>
+								</div>    
+								<div class="row">
+				                	<div class="col-md-4">
+						              <label for="name" class="control-label">Sistema Operativo:</label>
+									</div>
+									<div class="col-md-8">
+										${user.operativeSystem}
+									</div>
+								</div>   
+								<div class="row">
+				                	<div class="col-md-4">
+						              <label for="name" class="control-label">Fecha de registro:</label>
+									</div>
+									<div class="col-md-8">
+										${user.creationDate}
+									</div>
+								</div>
+								<div class="row">
+				                	<div class="col-md-4">
+						              <label for="name" class="control-label">Último Login:</label>
+									</div>
+									<div class="col-md-8">
+										${user.lastLoginDate}
+									</div>
+								</div>
+								<div class="row">
+				                	<div class="col-md-4">
+						              <label for="name" class="control-label">Estado:</label>
+									</div>
+									<div class="col-md-8">
+										<c:choose>
+										    <c:when test="${user.active}">
+										        Activo 
+										    </c:when>    
+										    <c:otherwise>
+										        Inactivo 
+										    </c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+								<div class="row">
+				                	<div class="col-md-4">
+						              <label for="name" class="control-label">Tipo de Usuario:</label>
+									</div>
+									<div class="col-md-8">
+										<c:choose>
+										    <c:when test="${user.userB}">
+										        Candidato 
+										    </c:when>    
+										    <c:otherwise>
+										        Oferente
+										    </c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+								<div class="row">
+				                	<div class="col-md-4">
+						              <label for="name" class="control-label">Estado Suscripción:</label>
+									</div>
+									<div class="col-md-8">
+									    <c:if test="${user.userB}">
+											<c:choose>
+										    <c:when test="${user.hasActiveSuscription}">
+										        Suscripto 
+										    </c:when>    
+										    <c:otherwise>
+										        No suscripto
+										    </c:otherwise>
+										</c:choose>
+										</c:if>
+									</div>
+								</div>
+								<c:if test="${user.userB}">
+									<c:choose>
+										<c:when test="${user.hasActiveSuscription}">
+											<div class="row">
+							                	<div class="col-md-4">
+									              <label for="name" class="control-label">Fecha Expiración:</label>
+												</div>
+												<div class="col-md-8">${user.expirationDate}</div>
 											</div>
-											
-											<div class="col-md-8">
-												${user.id}
-											</div>
+										</c:when>
+									</c:choose>
+									
+									<h2>Datos Profesionales</h2>
+
+									<div class="row">
+					                	<div class="col-md-4">
+							              <label for="name" class="control-label">Profesión:</label>
 										</div>
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Nombre:</label>
-											</div>
-											<div class="col-md-8">
-												${user.name}
-											</div>
-										</div>    
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Email:</label>
-											</div>
-											<div class="col-md-8">
-												${user.email}
-											</div>
-										</div>    
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Sistema Operativo:</label>
-											</div>
-											<div class="col-md-8">
-												${user.operativeSystem}
-											</div>
-										</div>   
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Fecha de registro:</label>
-											</div>
-											<div class="col-md-8">
-												${user.creationDate}
-											</div>
+										<div class="col-md-8">
+											${user.userOccupation}
 										</div>
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Último Login:</label>
-											</div>
-											<div class="col-md-8">
-												${user.lastLoginDate}
-											</div>
+									</div>
+									
+									<div class="row">
+					                	<div class="col-md-4">
+							              <label for="name" class="control-label">Matricula:</label>
 										</div>
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Matricula:</label>
-											</div>
-											<div class="col-md-8">
-												${user.license}
-											</div>
+										<div class="col-md-8">
+											${user.license}
 										</div>
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Estado:</label>
-											</div>
-											<div class="col-md-8">
-												<c:choose>
-												    <c:when test="${user.active}">
-												        Activo 
-												    </c:when>    
-												    <c:otherwise>
-												        Inactivo 
-												    </c:otherwise>
-												</c:choose>
-											</div>
+									</div>
+									
+									<div class="row">
+					                	<div class="col-md-4">
+							              <label class="control-label">Tipo de Institución:</label>
 										</div>
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Tipo de Usuario:</label>
-											</div>
-											<div class="col-md-8">
-												<c:choose>
-												    <c:when test="${user.userB}">
-												        Candidato 
-												    </c:when>    
-												    <c:otherwise>
-												        Oferente
-												    </c:otherwise>
-												</c:choose>
-											</div>
+										<div class="col-md-8">
+											<c:choose>
+												<c:when test="${user.institutionType == 'PUBLIC'}">
+													Públicas
+												</c:when>
+												<c:when test="${user.institutionType == 'PRIVATE'}">
+													Privadas
+												</c:when>
+												<c:otherwise>
+													Publicas y Privadas
+												</c:otherwise>
+											</c:choose>
 										</div>
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Estado Suscripción:</label>
-											</div>
-											<div class="col-md-8">
-											    <c:if test="${user.userB}">
-													<c:choose>
-												    <c:when test="${user.hasActiveSuscription}">
-												        Suscripto 
-												    </c:when>    
-												    <c:otherwise>
-												        No suscripto
-												    </c:otherwise>
-												</c:choose>
-												</c:if>
-											</div>
-										</div>		
-										<div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Fecha Expiración:</label>
-											</div>
-											<div class="col-md-8">
-											      <c:if test="${user.userB}">
-													${user.expirationDate}
-												</c:if>
-												
-											</div>
-										</div>		
-										
-						               <div class="row">
-						                	<div class="col-md-4">
-								              <label for="name" class="control-label">Avatar:</label>
-											</div>
-											<div class="col-md-8">
-											   <img src="data:image/jpg;base64,<c:out value='${user.avatar}'/>" />
-												
-											</div>
-										</div>								
-							</div>	
+									</div>
+									
+									<table id="specialties" class="display" cellspacing="0" width="100%">
+										<c:forEach items="${user.userSpecialty}" var="specialty">
+											<tr>
+												<td class="user-specialty-td-one"><span class="user-specialty">${specialty.name}</span></td>
+												<td class="user-specialty-td-two">
+												    <c:forEach items="${specialty.taskList}" var="tasks">
+												    	<span class="user-task">${tasks.name}</span>
+													</c:forEach>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+											</tr>
+										</c:forEach>
+									</table>
+								</c:if>
+							</div>
+
 							<div  class="col-md-6">
-							
-							<table id="users" class="display" cellspacing="0" width="100%">
+								<h2>Actividad del usuario</h2>
+								
+								<table id="users" class="display" cellspacing="0" width="100%">
 							        <thead>
 							            <tr>
 							                <th>Fecha</th>
@@ -163,11 +209,21 @@
 							            </tr>
 							        </tfoot>
 							    </table>
-							
-							</div>			
+							    
+							    <c:if test="${user.userB}">
+							    	<h2>Zonas</h2>
+									
+									<c:forEach items="${user.geoLevels}" var="geolevels">
+										<div class="row">
+											<div class="col-md-12 geolevels">
+												${geolevels.name}
+											</div>
+										</div>
+									</c:forEach>
+								</c:if>
+							</div>
 						</div>
-					</div>	
-		
+					</div>
 				</div>
 			</div>
 		</section>

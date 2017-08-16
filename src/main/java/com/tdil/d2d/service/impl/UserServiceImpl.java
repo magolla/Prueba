@@ -49,6 +49,7 @@ import com.tdil.d2d.controller.api.dto.MatchesSummaryDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.ProfileResponseDTO;
 import com.tdil.d2d.controller.api.dto.SearchOfferDTO;
+import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.request.AddLocationRequest;
 import com.tdil.d2d.controller.api.request.AddLocationsRequest;
 import com.tdil.d2d.controller.api.request.AddSpecialtiesRequest;
@@ -143,7 +144,7 @@ public class UserServiceImpl implements UserService {
 
 	@Value("${smsservice.password}")
 	private String smsPassword;
-	
+
 	@Autowired
 	private UserDAO userDAO;
 	@Autowired
@@ -166,7 +167,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private SystemPropertyDAO systemPropertyDAO;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -235,7 +236,7 @@ public class UserServiceImpl implements UserService {
 			user.setCompanyScreenName(registrationRequest.getCompanyScreenName());
 			user.setTacAccepted(registrationRequest.isTacAccepted());
 			user.setTacAcceptDate(registrationDate);
-			
+
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 
@@ -245,7 +246,7 @@ public class UserServiceImpl implements UserService {
 				notificationConfiguration.setUser(user);
 				this.notificationConfigurationDAO.save(notificationConfiguration);
 			}
-			
+
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
 
 			try {
@@ -257,26 +258,26 @@ public class UserServiceImpl implements UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	private void sendSMS(String mobilePhone, String mobileHash) throws IOException{
 		OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-		      .url("http://servicio.smsmasivos.com.ar/enviar_sms.asp?api=1&"
-		      		+ "usuario=" + smsUser +"&clave=" + smsPassword + "&tos=" + mobilePhone + "&texto=" + mobileHash)
-		      .build();
-        Response smsResponse = client.newCall(request).execute();;
-        if("OK".equals(smsResponse.body().string())){
-        	logger.info("Code sent succesfully to " + mobilePhone + " - Code: " + mobileHash);
-        } else {
-        	logger.info("Can't send code by SMS. Error: " + smsResponse.toString());
-        }
+		Request request = new Request.Builder()
+				.url("http://servicio.smsmasivos.com.ar/enviar_sms.asp?api=1&"
+						+ "usuario=" + smsUser +"&clave=" + smsPassword + "&tos=" + mobilePhone + "&texto=" + mobileHash)
+				.build();
+		Response smsResponse = client.newCall(request).execute();;
+		if("OK".equals(smsResponse.body().string())){
+			logger.info("Code sent succesfully to " + mobilePhone + " - Code: " + mobileHash);
+		} else {
+			logger.info("Can't send code by SMS. Error: " + smsResponse.toString());
+		}
 	}
 
 	@Override
@@ -301,7 +302,7 @@ public class UserServiceImpl implements UserService {
 			user.setTacAccepted(registrationRequest.isTacAccepted());
 			user.setTacAcceptDate(registrationDate);
 			user.setMobileHash(RandomStringUtils.randomAlphanumeric(4));
-			
+
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 
@@ -311,9 +312,9 @@ public class UserServiceImpl implements UserService {
 				notificationConfiguration.setUser(user);
 				this.notificationConfigurationDAO.save(notificationConfiguration);
 			}
-			
+
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
-			
+
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link "
 						+ user.getEmailHash();
@@ -341,7 +342,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private String encriptDeviceId(String deviceId, User user) throws InvalidKeyException, NoSuchAlgorithmException,
-			NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+	NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 		return cryptographicService.encrypt(deviceId, "", user.getSalt());
 	}
 
@@ -351,11 +352,11 @@ public class UserServiceImpl implements UserService {
 			ValidationCode validationCode = this.userDAO.getValidationCode(validationRequest.getMobilePhone(), validationRequest.getSmsCode());
 			if (validationCode!=null) {
 				logger.info("Code found = {}", validationCode.getCode());
-				
+
 				validationCode.setEnabled(false);
-				
+
 				this.userDAO.save(validationCode);
-				
+
 				return true;
 			}
 			return false;
@@ -441,9 +442,9 @@ public class UserServiceImpl implements UserService {
 	public boolean addLocations(AddLocationsRequest addLocationsRequest) throws ServiceException {
 		try {
 			User user = getLoggedUser();
-			
+
 			userDAO.deleteUserGeoLocations(user);
-			
+
 			user.getUserGeoLocations().clear();
 
 			for (int i = 0; i < addLocationsRequest.getGeoLevelId().length; i++) {
@@ -486,7 +487,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = getLoggedUser();
 			if(user.getAvatar()!=null)
-			  outputStream.write(user.getAvatar().getData());
+				outputStream.write(user.getAvatar().getData());
 		} catch (IOException e) {
 			throw new ServiceException(e);
 		}
@@ -507,7 +508,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = this.userDAO.getById(User.class, userId);
 			if(user.getAvatar()!=null)
-			   outputStream.write(user.getAvatar().getData());
+				outputStream.write(user.getAvatar().getData());
 		} catch (DAOException | IOException e) {
 			throw new ServiceException(e);
 		}
@@ -716,9 +717,9 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
-			
+
 			this.notifyToMatchedUsers(jobOffer.getId());
-			
+
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -752,7 +753,7 @@ public class UserServiceImpl implements UserService {
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-			
+
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -790,9 +791,9 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
-			
+
 			//this.notifyToMatchedUsers(jobOffer.getId());
-			
+
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -874,9 +875,9 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setApplications(jobOffer.getApplications() + 1);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.APPLY_TO_OFFER));
-			
+
 			sendNotification(NotificationType.NEW_APPLICATION, jobOffer.getOfferent(), jobOffer);
-			
+
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -941,8 +942,8 @@ public class UserServiceImpl implements UserService {
 		return this.getMyOffers(id);
 	}
 
-    @Override
-    public List<JobOfferStatusDTO> getPermanentOffersOpen() throws ServiceException {
+	@Override
+	public List<JobOfferStatusDTO> getPermanentOffersOpen() throws ServiceException {
 		return this.getAllPermanentOffersOpen();
 	}
 
@@ -979,17 +980,17 @@ public class UserServiceImpl implements UserService {
 		try {
 			List<JobOffer> result = new ArrayList<>();
 			SearchOfferDTO searchOfferDTO = new SearchOfferDTO();
-			
+
 			if(!Long.valueOf(0).equals(searchOfferRequest.getGeoLevelId())) {
 				UserGeoLocation geoLocation = new UserGeoLocation();
 				geoLocation.setGeoLevelId(searchOfferRequest.getGeoLevelId());
 				geoLocation.setGeoLevelLevel(searchOfferRequest.getGeoLevelLevel());
-				
+
 				Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
 				geoLocations.add(geoLocation);
-				
+
 				List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
-				
+
 				searchOfferDTO.setGeos(geos);
 			}			
 			if(!Long.valueOf(0).equals(searchOfferRequest.getSpecialtyId())) {
@@ -1002,15 +1003,15 @@ public class UserServiceImpl implements UserService {
 				searchOfferDTO.getTasks().add(searchOfferRequest.getTaskId());
 			}
 			searchOfferDTO.setInstitutionType(searchOfferRequest.getInstitutionType());
-			
+
 			searchOfferDTO.setPermanent(true);
-			
+
 			if(com.tdil.d2d.security.RuntimeContext.getCurrentUser() != null) {
 				searchOfferDTO.setOfferentIdToIgnore(com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
 			}
-			
+
 			result = (List<JobOffer>) this.jobDAO.getOffersBy(searchOfferDTO);
-			
+
 			return result.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -1021,36 +1022,36 @@ public class UserServiceImpl implements UserService {
 		try {
 			List<JobOffer> result = new ArrayList<>();
 			User user = getLoggedUser();
-			
+
 			List<GeoLevelDTO> geos = this.getGeoLevels(user.getUserGeoLocations());
-			
+
 			SearchOfferDTO searchOfferDTO = new SearchOfferDTO();
 			searchOfferDTO.setGeos(geos);
-			
+
 			UserProfile userProfile = this.userDAO.getUserProfile(user);
 			if (userProfile != null) {
 				searchOfferDTO.setInstitutionType(userProfile.getInstitutionType());
 				searchOfferDTO.setTasks(getTasks(userProfile.getTasks()));
 			}
-			
+
 			searchOfferDTO.setPermanent(permament);
-			
+
 			if(com.tdil.d2d.security.RuntimeContext.getCurrentUser() != null) {
 				searchOfferDTO.setOfferentIdToIgnore(com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
 			}
-			
+
 			result = (List<JobOffer>) this.jobDAO.getOffersBy(searchOfferDTO);
-			
+
 			return result.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	private List<GeoLevelDTO> getGeoLevels(Set<UserGeoLocation> userGeoLocations) throws DAOException {
 		List<GeoLevelDTO> geos = new ArrayList<GeoLevelDTO>();
 		GeoLevelDTO geoDto;
-		
+
 		for (UserGeoLocation location : userGeoLocations) {
 			geoDto = new GeoLevelDTO(location.getGeoLevelId(), location.getGeoLevelLevel());
 			geos.add(geoDto);
@@ -1063,7 +1064,7 @@ public class UserServiceImpl implements UserService {
 			if (location.getGeoLevelLevel() == 3) {
 				Geo3 geo3 = (Geo3) geoLevel;
 				geos.add(new GeoLevelDTO(geo3.getGeo2().getId(), 2));
-				
+
 				List<Geo4> geos4 = this.geoDAO.getListGeo4ByGeo3(location.getGeoLevelId());
 				for (Geo4 geo4 : geos4) {
 					geos.add(new GeoLevelDTO(geo4.getId(), 4));
@@ -1077,20 +1078,20 @@ public class UserServiceImpl implements UserService {
 				}
 			}
 		}
-		
+
 		return geos;
 	}
-	
+
 	private List<Long> getTasks(Set<Task> taskObjects) throws DAOException {
 		List<Long> tasks = new ArrayList<Long>();
-		
+
 		for (Task taskObject : taskObjects) {
 			tasks.add(taskObject.getId());
 		}
-		
+
 		return tasks;
 	}
-	
+
 	@Override
 	public List<JobApplicationDTO> offerApplications(long offerId) throws ServiceException {
 		try {
@@ -1145,21 +1146,21 @@ public class UserServiceImpl implements UserService {
 			this.jobDAO.save(offer);
 			this.jobApplicationDAO.save(application);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.ACCEPT_OFFER));
-			
+
 			sendNotification(NotificationType.APPLICATION_ACCEPTED, application.getUser(), offer);
-			
+
 			if(JobApplication.CLOSED.equals(offer.getStatus())){
 
-                //Notify rejected applications
+				//Notify rejected applications
 				List<JobApplication> applications = this.jobApplicationDAO.getJobApplications(offerId);
 				for(JobApplication rejectedApplication : applications){
 					if(!JobApplication.ACEPTED.equals(rejectedApplication.getStatus()) && rejectedApplication.getId() != applicationId){
 						sendNotification(NotificationType.JOB_OFFER_CLOSE, rejectedApplication.getUser(), offer);
 					}
 				}
-				
+
 			}
-			
+
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -1210,19 +1211,19 @@ public class UserServiceImpl implements UserService {
 			offer.setStatus(JobOffer.CLOSED);
 			this.jobDAO.save(offer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.CLOSED_OFFER));
-			
+
 			if(JobApplication.CLOSED.equals(offer.getStatus())){
 
-                //Notify rejected applications
+				//Notify rejected applications
 				List<JobApplication> applications = this.jobApplicationDAO.getJobApplications(offerId);
 				for(JobApplication rejectedApplication : applications){
 					if(!JobApplication.ACEPTED.equals(rejectedApplication.getStatus())){
 						sendNotification(NotificationType.JOB_OFFER_CLOSE, rejectedApplication.getUser(), offer);
 					}
 				}
-				
+
 			}
-			
+
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -1301,7 +1302,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean sendTestNotificationAndroid() throws ServiceException {
 
-        try {
+		try {
 			androidNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "PUT DEVICE TOKEN HERE");
 
 			return false;
@@ -1313,7 +1314,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean sendTestNotificationIOS() throws ServiceException {
 
-        try {
+		try {
 			iosNotificationService.sendNotification(NotificationType.NEW_APPLICATION, "PUT DEVICE TOKEN HERE");
 			return false;
 		} catch (Exception e) {
@@ -1337,11 +1338,11 @@ public class UserServiceImpl implements UserService {
 		// Linkedin CV
 		result.setLinkedinInCv(s.getLinkedInCv());
 		// Falta cvAttach
-				if(s.getUser().getPdfCV() != null) {
-					result.setCvAttach(new String(Base64.encodeBase64(s.getUser().getPdfCV().getData())));
-				}
-				// cvPlain
-				result.setCvPlain(s.getUser().getCV());
+		if(s.getUser().getPdfCV() != null) {
+			result.setCvAttach(new String(Base64.encodeBase64(s.getUser().getPdfCV().getData())));
+		}
+		// cvPlain
+		result.setCvPlain(s.getUser().getCV());
 		// FirstName
 		result.setFirstname(s.getUser().getFirstname());
 		// LastName
@@ -1349,27 +1350,27 @@ public class UserServiceImpl implements UserService {
 		// numberPhone
 		result.setMobilePhone(s.getUser().getMobilePhone());
 		// Occupation
-//		result.setOccupationName(s.getOffer().getOccupation().getName());
-		
+		//		result.setOccupationName(s.getOffer().getOccupation().getName());
+
 		Iterator iter = s.getUser().getSpecialties().iterator();
 		Specialty first = (Specialty) iter.next();
 		result.setOccupationName(first.getOccupation().getName());
 		// Specialty
 		result.setSpecialties(s.getUser().getSpecialties());
-		
+
 		//geolevel
-//		result.setGeoLevelId(s.getOffer().getGeoLevelId());
-//		result.setGeoLevelLevel(s.getOffer().getGeoLevelLevel());
-//		result.setUserGeoLocations(s.getUser().getUserGeoLocations());
+		//		result.setGeoLevelId(s.getOffer().getGeoLevelId());
+		//		result.setGeoLevelLevel(s.getOffer().getGeoLevelLevel());
+		//		result.setUserGeoLocations(s.getUser().getUserGeoLocations());
 		result.setGeoLevels(toDtoGeoLevel(s.getUser().getUserGeoLocations()));
 
-//		GeoLevel geoLevel;
-//		try {
-//			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getOffer().getGeoLevelId(), s.getOffer().getGeoLevelLevel());
-//			result.setGeoLevelName(geoLevel.getName());
-//		} catch (DAOException e) {
-//			throw new RuntimeException(e);
-//		}
+		//		GeoLevel geoLevel;
+		//		try {
+		//			geoLevel = this.geoDAO.getGeoByIdAndLevel(s.getOffer().getGeoLevelId(), s.getOffer().getGeoLevelLevel());
+		//			result.setGeoLevelName(geoLevel.getName());
+		//		} catch (DAOException e) {
+		//			throw new RuntimeException(e);
+		//		}
 
 		result.setComment(s.getComment());
 		return result;
@@ -1408,7 +1409,7 @@ public class UserServiceImpl implements UserService {
 		result.setTaskName(s.getTask().getName());
 		result.setApplications(s.getApplications());
 		if(s.getOfferent().getAvatar()!=null)
-		    result.setBase64img(new String(s.getOfferent().getAvatar().getData()));
+			result.setBase64img(new String(s.getOfferent().getAvatar().getData()));
 		result.setJobApplication_id(s.getJobApplication_id());
 		result.setOfferentFirstname(s.getOfferent().getFirstname());
 		result.setOfferentLastname(s.getOfferent().getLastname());
@@ -1431,7 +1432,7 @@ public class UserServiceImpl implements UserService {
 		}
 		return getUserDetailsResponse(user);
 	}
-	
+
 	@Override
 	public UserDTO getUserWebDetails(long id) throws ServiceException {
 		User user = null;
@@ -1443,7 +1444,7 @@ public class UserServiceImpl implements UserService {
 		return toDtoWebDetails(user);
 	}
 
-	
+
 	private UserDetailsResponse getUserDetailsResponse(User user) throws ServiceException {
 		UserDetailsResponse resp = new UserDetailsResponse(HttpStatus.OK.value());
 		resp.setUserId(String.valueOf(user.getId()));
@@ -1536,7 +1537,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public List<ActivityLogDTO> getWebActivityLog(Long userId) throws ServiceException {
 		try {
@@ -1578,11 +1579,11 @@ public class UserServiceImpl implements UserService {
 			SearchOfferDTO searchOfferDTO = new SearchOfferDTO();
 			searchOfferDTO.setPermanent(true);
 			searchOfferDTO.setInstitutionType(InstitutionType.BOTH);
-			
+
 			if(com.tdil.d2d.security.RuntimeContext.getCurrentUser() != null) {
 				searchOfferDTO.setOfferentIdToIgnore(com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
 			}
-			
+
 			Collection<JobOffer> offers = this.jobDAO.getOffersBy(searchOfferDTO);
 			return offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
 		} catch (DAOException e) {
@@ -1596,7 +1597,7 @@ public class UserServiceImpl implements UserService {
 			SearchOfferDTO searchOfferDTO = new SearchOfferDTO();
 			searchOfferDTO.setPermanent(false);
 			searchOfferDTO.setInstitutionType(InstitutionType.BOTH);
-			
+
 			if(com.tdil.d2d.security.RuntimeContext.getCurrentUser() != null) {
 				searchOfferDTO.setOfferentIdToIgnore(com.tdil.d2d.security.RuntimeContext.getCurrentUser().getId());
 			}
@@ -1610,26 +1611,26 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean setAvatar(User user, SetAvatarRequest setAvatarRequest) throws ServiceException {
 		try {
-			
+
 			Media media = userDAO.getMediaBy(user.getId(), MediaType.AVATAR);
 			if(media == null) {
 				media = new Media();
 				media.setType(MediaType.AVATAR);
 			}
-			
+
 			media.setData(setAvatarRequest.getAvatarBase64().getBytes());
 			user.setAvatar(media);
 			this.userDAO.save(media);
 			this.userDAO.save(user);
-			
+
 			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_AVATAR));
-			
+
 			return true;			
 
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
-		
+
 	}
 
 	@Override
@@ -1676,7 +1677,7 @@ public class UserServiceImpl implements UserService {
 	public String createMercadoPagoPreference(CreatePreferenceMPRequest createPreferenceMPRequest) throws ServiceException {
 
 
-        User user = getLoggedUser();
+		User user = getLoggedUser();
 		MP mp = new MP (clientId, secretId);
 		JSONObject createPreferenceResult;
 		try {
@@ -1711,23 +1712,23 @@ public class UserServiceImpl implements UserService {
 
 			return createPreferenceResult.toString();
 		} catch (Exception e) {
-             throw new ServiceException(e);
+			throw new ServiceException(e);
 		}
 	}
 
 	@Override
 	public boolean createPayment(CreatePaymentRequest createPaymentRequest) throws ServiceException {
 		try {
-            User user = getLoggedUser();
-            String idPayment = createPaymentRequest.getIdPaymentMP();
-            String item = createPaymentRequest.getItem();
-            BigDecimal price = new BigDecimal(createPaymentRequest.getPrice());
-            paymentDAO.save(new Payment(idPayment, item, price, user));
-            subscriptionService.register(user, createPaymentRequest.getSubscriptionDuration());
-            return true;
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
+			User user = getLoggedUser();
+			String idPayment = createPaymentRequest.getIdPaymentMP();
+			String item = createPaymentRequest.getItem();
+			BigDecimal price = new BigDecimal(createPaymentRequest.getPrice());
+			paymentDAO.save(new Payment(idPayment, item, price, user));
+			subscriptionService.register(user, createPaymentRequest.getSubscriptionDuration());
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	@Override
@@ -1740,21 +1741,21 @@ public class UserServiceImpl implements UserService {
 			JobApplication jobApplication = this.jobApplicationDAO.getById(JobApplication.class, jobOffer.getJobApplication_id());
 			User user = this.userDAO.getById(User.class, jobApplication.getUser().getId());
 			return getUserDetailsResponse(user);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
 	}
 
 	@Override
 	public void setPdfCV(Base64Request base64Request) throws ServiceException {
 		try {
 			User user = getLoggedUser();
-			
+
 			Media media = userDAO.getMediaBy(user.getId(), MediaType.PDF_CV);
 			if(media == null) {
 				media = new Media();
 			}
-			
+
 			media.setType(MediaType.PDF_CV);
 			media.setData(Base64.decodeBase64(base64Request.getData()));
 			user.setPdfCV(media);
@@ -1769,8 +1770,8 @@ public class UserServiceImpl implements UserService {
 	public Base64DTO getPdfCVBase64() throws ServiceException {
 		User user = getLoggedUser();
 		Base64DTO base64dto = new Base64DTO(
-			new String(Base64.encodeBase64(user.getPdfCV().getData()))
-		);
+				new String(Base64.encodeBase64(user.getPdfCV().getData()))
+				);
 		return base64dto;
 	}
 
@@ -1805,33 +1806,33 @@ public class UserServiceImpl implements UserService {
 	public List<MatchedUserDTO> getMatchedUsers(Long offerId) throws ServiceException {
 		try {
 			List<User> result = new ArrayList<>();
-			
+
 			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
-			
+
 			UserGeoLocation geoLocation = new UserGeoLocation();
 			geoLocation.setGeoLevelId(jobOffer.getGeoLevelId());
 			geoLocation.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
-			
+
 			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
 			geoLocations.add(geoLocation);
-			
+
 			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
-			
+
 			result = userDAO.getMatchedUsers(jobOffer, geos);
-			
+
 			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
 			for (User matchedUser : result) {
 				MatchedUserDTO matchedUserDTO = toMatchedUserDto(matchedUser);
 				matchedUserDTOs.add(matchedUserDTO);
 			}
-			
+
 			return matchedUserDTOs;
-			
+
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	private MatchedUserDTO toMatchedUserDto(User user) throws ServiceException {
 		MatchedUserDTO result = new MatchedUserDTO();
 		result.setUserId(user.getId());
@@ -1844,23 +1845,23 @@ public class UserServiceImpl implements UserService {
 		result.setNotificationConfigurationResponse(notificationConfigurationResponse);
 		return result;
 	}
-	
+
 	@Override
 	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException {
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
 		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
-			
+
 			boolean alreadyApplied = this.searchIfApplied(offerId,matchedUserDTO.getUserId());
-			
+
 			if(!alreadyApplied) {
-				
+
 				try {
-					
+
 					User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
 					JobOffer offer = jobDAO.getById(JobOffer.class, offerId);
-					
+
 					sendNotification(NotificationType.NEW_OFFER_MATCH, user,offer);
-					
+
 
 				} catch (DAOException e) {
 					logger.error("ERROR", e);
@@ -1869,47 +1870,47 @@ public class UserServiceImpl implements UserService {
 		}
 		return true;
 	}
-	
+
 	private void sendNotification(NotificationType type, User user, JobOffer offer){
-		
+
 		try {
-			
+
 			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
 			if(notificationConfiguration!=null && notificationConfiguration.isPush()){
-			
+
 				Notification notification = notificationDAO.getByUserOffer(user.getId(), offer.getId(), type.name());
-			
+
 				if(notification == null) {
-				
+
 					notification = new Notification();
 					notification.setCreationDate(new Date());
 					notification.setAction(type.name());
 					notification.setUser(user);
 					notification.setOffer(offer);
 					notification.setSeen(false);
-						
+
 					this.notificationDAO.save(notification);
-					
+
 					if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
-						
+
 						iosNotificationService.sendNotification(type, user.getIosPushId());
-						
+
 					} else if(user.getAndroidRegId()!=null){
-						
+
 						androidNotificationService.sendNotification(type,  user.getAndroidRegId());
-						
+
 					}
-					
+
 				}
-				
+
 			}
 
 		} catch (DAOException e) {
 			logger.error("ERROR", e);
 		}
-			
+
 	}
-		
+
 	@Override
 	public List<Long> getOfferIdsByDate(Date date) throws ServiceException {
 		try {
@@ -1923,22 +1924,22 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void sendSMS(SendSMSRequest request) throws ServiceException {
 		try {
-			
-			    ValidationCode validationCode = new ValidationCode();
-			    validationCode.setCreationDate(new Date());
-				validationCode.setMobilePhone(request.getMobilePhone());
-				validationCode.setCode(RandomStringUtils.randomAlphanumeric(4));
-				validationCode.setEnabled(true);
-				if(request.getMobilePhone().equals("94572109469428712369")) {
-					validationCode.setCode("M4c1");
-				}
-				userDAO.save(validationCode);
-				sendSMS(validationCode.getMobilePhone(), validationCode.getCode());
-				
+
+			ValidationCode validationCode = new ValidationCode();
+			validationCode.setCreationDate(new Date());
+			validationCode.setMobilePhone(request.getMobilePhone());
+			validationCode.setCode(RandomStringUtils.randomAlphanumeric(4));
+			validationCode.setEnabled(true);
+			if(request.getMobilePhone().equals("94572109469428712369")) {
+				validationCode.setCode("M4c1");
+			}
+			userDAO.save(validationCode);
+			sendSMS(validationCode.getMobilePhone(), validationCode.getCode());
+
 		} catch (IOException | DAOException e) {
 			throw new ServiceException(e);
 		}
-		
+
 	}
 
 	@Override
@@ -1949,50 +1950,108 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		} 
 	}
-	
+
 	private List<UserDTO> toDtoList(Collection<User> list) {
 		return list.stream().map(user -> toDto(user)).collect(Collectors.toList());
 	}
-	
-	
+
+
 	private  UserDTO toDtoWebDetails(User user) {
 		UserDTO result = toDto(user);
 
+		UserProfile userProfile = null;
+
+		List<SpecialtyDTO> specialtyDtoList = new ArrayList<SpecialtyDTO>();
+
+		try {
+			userProfile = this.userDAO.getUserProfile(user);
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
 		Date creationDate = user.getCreationDate();
 		if(creationDate!=null){
 			DateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
 			result.setCreationDate(formatter.format(creationDate));
 		}
-		
+
 		if(user.getAvatar()!=null){
 			result.setAvatar(new String(user.getAvatar().getData()));
 		}
-		
+
 		Date lastLogin = user.getLastLoginDate();
 		if(lastLogin!=null){
 			DateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
 			result.setLastLoginDate(formatter.format(lastLogin));
 		}
+		result.setInstitutionType(userProfile.getInstitutionType().name());
+
+		Iterator<Specialty> iter = user.getSpecialties().iterator();
+
+		Specialty first = iter.next();
+		result.setUserOccupation(first.getOccupation().getName());
+
+		for (Iterator<Task> iterator = userProfile.getTasks().iterator(); iterator.hasNext();) {
+			Task task = (Task) iterator.next();
+			int index = checkIfExist(task,specialtyDtoList);
+			if(index > -1) {
+				specialtyDtoList.get(index).getTaskList().add(task);
+			} else {
+				SpecialtyDTO specialtyDTO = new SpecialtyDTO();
+				specialtyDTO.setTaskList(new ArrayList<Task>());
+				specialtyDTO.setId(task.getSpecialty().getId());
+				specialtyDTO.setName(task.getSpecialty().getName());
+				specialtyDTO.getTaskList().add(task);
+				specialtyDtoList.add(specialtyDTO);
+			}
+		}
 		
+//		specialtyDtoList
+//		  .stream()
+//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
+		
+		result.setUserSpecialty(specialtyDtoList);
+
 		result.setLicense(user.getLicense());
-		
+
 		result.setOperativeSystem(user.getAndroidRegId()!=null?"Android":"IOS");
 		
+		List<GeoLevelDTO> geoList = new ArrayList<GeoLevelDTO>();
+		
+		for (Iterator<UserGeoLocation> iterator = user.getUserGeoLocations().iterator(); iterator.hasNext();) {
+			UserGeoLocation userGeo = (UserGeoLocation) iterator.next();
+			geoList.add(new GeoLevelDTO(userGeo.getId(),userGeo.getGeoLevelLevel(),userGeo.getGeoLevelName()));
+			
+		}
+		
+		result.setGeoLevels(geoList);
+
 		return result;
 	}
-	
+
+	private int checkIfExist(Task task, List<SpecialtyDTO> specialtyDtoList) {
+
+		int index = -1;
+		for(int i = 0; i < specialtyDtoList.size(); i++) {
+			if(specialtyDtoList.get(i).getId() == task.getSpecialty().getId()) {
+				index = i;
+			}
+		}
+		return index;
+	}
+
 	private  UserDTO toDto(User user){
-		
+
 		UserDTO result = new UserDTO();
 
 		result.setId(user.getId());
 		result.setEmail(user.getEmail());
 		result.setName(user.getFirstname());
+		result.setLastname(user.getLastname());
 		result.setActive(user.isPhoneValidated());
 		result.setUserB(user.isUserb());
 
 		result.setMobilePhone(user.getMobilePhone());
-		
+
 		Subscription subscription = subscriptionService.getActiveSubscription(user.getId());
 		if (subscription != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -2003,7 +2062,7 @@ public class UserServiceImpl implements UserService {
 				result.setHasActiveSuscription(false);
 			}
 		}
-		
+
 		try {
 			UserReceiptResponse receipt = subscriptionService.getLastReceipt(user.getId());
 
@@ -2019,12 +2078,12 @@ public class UserServiceImpl implements UserService {
 						result.setHasActiveSuscription(false);
 					}
 				}
-				
+
 			}
 		} catch (ServiceException e) {
 			logger.error("Can't load receipts", e);
 		}
-		
+
 		return result;
 	}
 }

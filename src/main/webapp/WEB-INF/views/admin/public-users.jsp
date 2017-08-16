@@ -27,6 +27,7 @@
 							                <th>ID</th>
 							                <th>Número Tel</th>
 							                <th>Nombre</th>
+							                <th>Apellido</th>
 							                <th>Email</th>
 							                <th>Estado</th>
 							                <th>Tipo Suscripción</th>
@@ -39,6 +40,7 @@
 							                <th>ID</th>
 							                <th>Número Tel</th>
 							                <th>Nombre</th>
+							                <th>Apellido</th>
 							                <th>Email</th>
 							                <th>Estado</th>
 							                <th>Tipo Suscripción</th>
@@ -74,6 +76,7 @@ $(document).ready(function() {
 					{ "data": "id" },
 					{ "data": "mobilePhone" },
                     { "data": "name" },
+                    { "data": "lastname" },
                     { "data": "email" },
                     {
                         "data": "active",

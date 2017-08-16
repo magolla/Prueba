@@ -214,3 +214,12 @@ input[type=checkbox], input[type=radio] {
     padding-bottom: 20px!important;
     margin-bottom: 0px;
 }
+
+.user-specialty-td-one		{ padding:3px 0 20px; border-right:1px solid #000; }
+.user-specialty-td-two		{ border-top:1px solid #000; border-bottom:1px solid #000; }
+.user-specialty				{ border-bottom:1px solid #000; width:100%; display:block; }
+.user-task					{ display: block; padding:3px 0 3px 10px; }
+.user-task:last-of-type		{  }
+.geolevels					{ font-size: 17px; padding: 3px 15px; }
+
+
