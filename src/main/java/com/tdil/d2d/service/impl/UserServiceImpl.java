@@ -1983,47 +1983,55 @@ public class UserServiceImpl implements UserService {
 			DateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
 			result.setLastLoginDate(formatter.format(lastLogin));
 		}
-		result.setInstitutionType(userProfile.getInstitutionType().name());
+		
+		if(user.isUserb()){
+			result.setInstitutionType(userProfile.getInstitutionType().name());
 
-		Iterator<Specialty> iter = user.getSpecialties().iterator();
+			Iterator<Specialty> iter = user.getSpecialties().iterator();
 
-		Specialty first = iter.next();
-		result.setUserOccupation(first.getOccupation().getName());
-
-		for (Iterator<Task> iterator = userProfile.getTasks().iterator(); iterator.hasNext();) {
-			Task task = (Task) iterator.next();
-			int index = checkIfExist(task,specialtyDtoList);
-			if(index > -1) {
-				specialtyDtoList.get(index).getTaskList().add(task);
-			} else {
-				SpecialtyDTO specialtyDTO = new SpecialtyDTO();
-				specialtyDTO.setTaskList(new ArrayList<Task>());
-				specialtyDTO.setId(task.getSpecialty().getId());
-				specialtyDTO.setName(task.getSpecialty().getName());
-				specialtyDTO.getTaskList().add(task);
-				specialtyDtoList.add(specialtyDTO);
+			Specialty first = iter.next();
+			result.setUserOccupation(first.getOccupation().getName());
+	
+			for (Iterator<Task> iterator = userProfile.getTasks().iterator(); iterator.hasNext();) {
+				Task task = (Task) iterator.next();
+				int index = checkIfExist(task,specialtyDtoList);
+				if(index > -1) {
+					specialtyDtoList.get(index).getTaskList().add(task);
+				} else {
+					SpecialtyDTO specialtyDTO = new SpecialtyDTO();
+					specialtyDTO.setTaskList(new ArrayList<Task>());
+					specialtyDTO.setId(task.getSpecialty().getId());
+					if(task.getSpecialty().getName().equals("")) {
+						specialtyDTO.setName(task.getSpecialty().getOccupation().getName());
+					} else {
+						specialtyDTO.setName(task.getSpecialty().getName());
+					}
+					
+					specialtyDTO.getTaskList().add(task);
+					specialtyDtoList.add(specialtyDTO);
+				}
 			}
+			
+	//		specialtyDtoList
+	//		  .stream()
+	//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
+			
+			result.setUserSpecialty(specialtyDtoList);
+	
+			result.setLicense(user.getLicense());
+			
+			List<GeoLevelDTO> geoList = new ArrayList<GeoLevelDTO>();
+			
+			for (Iterator<UserGeoLocation> iterator = user.getUserGeoLocations().iterator(); iterator.hasNext();) {
+				UserGeoLocation userGeo = (UserGeoLocation) iterator.next();
+				geoList.add(new GeoLevelDTO(userGeo.getId(),userGeo.getGeoLevelLevel(),userGeo.getGeoLevelName()));
+				
+			}
+			
+			result.setGeoLevels(geoList);
 		}
-		
-//		specialtyDtoList
-//		  .stream()
-//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
-		
-		result.setUserSpecialty(specialtyDtoList);
-
-		result.setLicense(user.getLicense());
 
 		result.setOperativeSystem(user.getAndroidRegId()!=null?"Android":"IOS");
-		
-		List<GeoLevelDTO> geoList = new ArrayList<GeoLevelDTO>();
-		
-		for (Iterator<UserGeoLocation> iterator = user.getUserGeoLocations().iterator(); iterator.hasNext();) {
-			UserGeoLocation userGeo = (UserGeoLocation) iterator.next();
-			geoList.add(new GeoLevelDTO(userGeo.getId(),userGeo.getGeoLevelLevel(),userGeo.getGeoLevelName()));
-			
-		}
-		
-		result.setGeoLevels(geoList);
 
 		return result;
 	}
