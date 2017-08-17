@@ -3,6 +3,7 @@ package com.tdil.d2d.bo.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tdil.d2d.bo.dto.FilterJobOfferDailyReportDTO;
 import com.tdil.d2d.bo.dto.FilterJobOfferReportDTO;
 import com.tdil.d2d.bo.dto.FilterSubscriptionReportDTO;
+import com.tdil.d2d.bo.dto.JobOfferDailyReportDTO;
 import com.tdil.d2d.bo.dto.JobOfferReportDTO;
 import com.tdil.d2d.bo.dto.SubscriptionReportDTO;
 import com.tdil.d2d.controller.api.dto.BOJobOfferDTO;
@@ -199,6 +202,79 @@ public class AdminReportsController {
 			}
 			
 			JobOfferReportDTO report = this.reportsService.getJobOfferReportDTO(filterDTO);
+			model.addObject("report", report);
+	
+			return model;
+
+		} catch(Exception e) {
+			e.printStackTrace();
+			ModelAndView model = new ModelAndView();
+			model.setViewName("admin/generic-error");
+			return model;	
+		}
+
+	}
+	
+	@RequestMapping(value = {"/reports/jobofferstats/daily"} , method = RequestMethod.GET)
+	public ModelAndView jobOfferReportDaily() {
+		try{ 
+			
+			FilterJobOfferDailyReportDTO defaultFilterDTO = new FilterJobOfferDailyReportDTO();
+			List<Long> geoLevels2 = new ArrayList<Long>();
+			geoLevels2.add(-1L);
+			defaultFilterDTO.setGeoLevels2(geoLevels2);
+			
+			defaultFilterDTO.setToDate(new Date());
+			defaultFilterDTO.setActiveOffers(true);
+			defaultFilterDTO.setTotalOffers(true);
+			defaultFilterDTO.setPermanentOffers(true);
+			defaultFilterDTO.setTemporalOffers(true);
+			defaultFilterDTO.setContracted(true);
+			
+			ModelAndView model = new ModelAndView();
+			model.addObject("geoList", this.geoService.listGeoLevel2());
+			model.addObject("occupationList", this.specialtyService.listOccupations());
+			model.addObject("filterForm", defaultFilterDTO);
+			
+			JobOfferDailyReportDTO report = this.reportsService.getJobOfferDailyReportDTO(defaultFilterDTO);
+			model.addObject("report", report);
+			
+			model.setViewName("admin/job-offer-daily-report");
+	
+			return model;
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			ModelAndView model = new ModelAndView();
+			model.setViewName("admin/generic-error");
+			return model;	
+		}
+	}
+	
+	@RequestMapping(value = "/reports/jobofferstats/daily", method = RequestMethod.POST)
+	public ModelAndView jobOfferReportDailyPost(@Valid FilterJobOfferDailyReportDTO filterDTO, BindingResult bindingResult) {
+		try { 
+			
+			ModelAndView model = new ModelAndView();
+			model.addObject("geoList", this.geoService.listGeoLevel2());
+			model.addObject("occupationList", this.specialtyService.listOccupations());
+			model.addObject("filterForm", filterDTO);
+			
+			if(filterDTO.getOccupationId() != null && filterDTO.getOccupationId() != -1) {
+				model.addObject("specialtyList", this.specialtyService.listSpecialties(filterDTO.getOccupationId()));
+			}
+			if(filterDTO.getSpecialtyId() != null && filterDTO.getSpecialtyId() != -1) {
+				model.addObject("taskList", this.specialtyService.listTasks(filterDTO.getSpecialtyId()));
+			}
+			
+			model.setViewName("admin/job-offer-daily-report");
+			
+			List<String> validations = filterDTO.validate();
+			if(!validations.isEmpty()) {
+				model.addObject("validations", validations);
+				return model;
+			}
+			
+			JobOfferDailyReportDTO report = this.reportsService.getJobOfferDailyReportDTO(filterDTO);
 			model.addObject("report", report);
 	
 			return model;

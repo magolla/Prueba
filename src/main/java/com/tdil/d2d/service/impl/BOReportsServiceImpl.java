@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.bo.dto.FilterJobOfferDailyReportDTO;
 import com.tdil.d2d.bo.dto.FilterJobOfferReportDTO;
 import com.tdil.d2d.bo.dto.FilterSubscriptionReportDTO;
+import com.tdil.d2d.bo.dto.JobOfferDailyReportDTO;
 import com.tdil.d2d.bo.dto.JobOfferReportDTO;
 import com.tdil.d2d.bo.dto.JobOfferReportItemDTO;
 import com.tdil.d2d.bo.dto.ReportItemDTO;
@@ -55,10 +57,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		this.geoDAO = geoDAO;
 		this.subscriptionDAO = subscriptionDAO;
 	}
-	
-	
-	
-	
+
 	@Override
 	public List<BOJobOfferDTO> getAllJobOffers() throws ServiceException {
 		try {
@@ -71,7 +70,6 @@ public class BOReportsServiceImpl implements BOReportsService {
 			throw new ServiceException(e);
 		}
 	}
-	
 	
 	private List<BOJobOfferDTO> toBoDtoList(Collection<JobOffer> list) {
 		return list.stream().map(jobOffer -> {
@@ -274,9 +272,6 @@ public class BOReportsServiceImpl implements BOReportsService {
 		return geos;
 	}
 
-
-
-
 	private boolean containts(List<GeoLevelDTO> geos, GeoLevelDTO geo3) {
 		for(GeoLevelDTO geoDTO : geos){
 			if(geoDTO.getId() == geo3.getId() 
@@ -286,6 +281,8 @@ public class BOReportsServiceImpl implements BOReportsService {
 		}
 		return false;
 	}
+	
+	/* BEGIN Method for monthly report */
 	
 	@Override
 	public JobOfferReportDTO getJobOfferReportDTO(FilterJobOfferReportDTO filterDTO) throws ServiceException {
@@ -313,8 +310,6 @@ public class BOReportsServiceImpl implements BOReportsService {
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
-		
-		/********/
 		
 		JobOfferReportDTO result = new JobOfferReportDTO();
 		result.setStartMonth(filterDTO.getStartMonth());
@@ -505,4 +500,238 @@ public class BOReportsServiceImpl implements BOReportsService {
 		
 		return totals;
 	}
+	
+	/* END Method for monthly report */
+	
+	/* BEGIN Method for daily report */
+	
+	@Override
+	public JobOfferDailyReportDTO getJobOfferDailyReportDTO(FilterJobOfferDailyReportDTO filterDTO) throws ServiceException {
+		
+		Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
+		if(filterDTO.getGeoLevels2()!=null && !containsFilterAll(filterDTO.getGeoLevels2())){
+			
+			for(Long geoId : filterDTO.getGeoLevels2()){
+			
+				UserGeoLocation geoLocation = new UserGeoLocation();
+				geoLocation.setGeoLevelId(geoId);
+				geoLocation.setGeoLevelLevel(2);
+				
+				geoLocations.add(geoLocation);
+			}
+			
+		}
+		
+		Set<Long> offersIdByGeo = new HashSet<Long>();
+		
+		try {
+			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
+			offersIdByGeo = jobOfferDAO.getByGeo(geos);
+			
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(filterDTO.getToDate());
+		calendar.set(Calendar.HOUR, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		
+		JobOfferDailyReportDTO result = new JobOfferDailyReportDTO();
+		result.setToDate(calendar.getTime());
+		
+		calendar.add(Calendar.DAY_OF_MONTH, filterDTO.getQuantityOfDays() * -1);
+		result.setFromDate(calendar.getTime());
+		
+		List<JobOfferReportItemDTO> items = new ArrayList<JobOfferReportItemDTO>();
+		
+		if(filterDTO.isTotalOffers()) {
+			List<Integer> totals = this.getTotalJobOfferQuantitiesDaily(filterDTO, offersIdByGeo);
+			items.add(new JobOfferReportItemDTO("Avisos creados TOTALES", "rgba(255, 165, 0, 1)", totals));
+		}
+		
+		if(filterDTO.isTemporalOffers()) {
+			List<Integer> temporals = this.getTotalJobOfferQuantitiesDaily(filterDTO, false, offersIdByGeo);
+			items.add(new JobOfferReportItemDTO("Avisos temporales", "rgba(0, 128, 128, 1)", temporals));
+		}
+		
+		if(filterDTO.isPermanentOffers()) {
+			List<Integer> permanents = this.getTotalJobOfferQuantitiesDaily(filterDTO, true, offersIdByGeo);
+			items.add(new JobOfferReportItemDTO("Avisos permanentes", "rgba(3, 72, 123, 1)", permanents));
+		}
+		
+		if(filterDTO.isActiveOffers()) {
+			List<Integer> actives = this.getActiveJobOfferQuantitiesDaily(filterDTO, offersIdByGeo);
+			items.add(new JobOfferReportItemDTO("Avisos creados Activos", "rgba(238,67,100, 1)", actives));
+		}
+		
+		if(filterDTO.isContracted()) {
+			List<Integer> contrateds = this.getJobOfferContractedDaily(filterDTO, offersIdByGeo);
+			items.add(new JobOfferReportItemDTO("Contrataciones", "rgba(111,111,111, 1)", contrateds));
+		}
+		
+		result.setList(items);
+		
+		return result;
+	}
+	
+	private List<Integer> getTotalJobOfferQuantitiesDaily(FilterJobOfferDailyReportDTO filterDTO, Set<Long> offersIdByGeo) {
+		int QUANTITY_COLUMN = 0;
+		int YEAR_COLUMN = 1;
+		int MONTH_COLUMN = 2;
+		int DAY_COLUMN = 3;
+
+		List<Integer >totals = new ArrayList<Integer>();
+		
+		List<Object> quantityObjects = new ArrayList<Object>();
+		try {
+			quantityObjects = jobOfferDAO.getJobOfferQuantitiesDaily(filterDTO, offersIdByGeo);
+			
+			Calendar now = Calendar.getInstance();
+			now.setTime(filterDTO.getToDate());
+			now.add(Calendar.DAY_OF_MONTH, filterDTO.getQuantityOfDays() * -1);
+			
+			int initValue = 0;
+			for (int i=0; i<filterDTO.getQuantityOfDays(); i++) {
+				int qty = 0;
+				for(int j=initValue; j<quantityObjects.size(); j++) {
+					Object[] objects = (Object[]) quantityObjects.get(j);
+					if((int)objects[DAY_COLUMN] == now.get(Calendar.DAY_OF_MONTH) &&
+					   (int)objects[MONTH_COLUMN] - 1 == now.get(Calendar.MONTH) &&
+					   (int)objects[YEAR_COLUMN] == now.get(Calendar.YEAR)) {
+						initValue = j;
+						qty = Integer.valueOf(""+objects[QUANTITY_COLUMN]);
+						break;
+					}
+				}
+				totals.add(qty);
+				now.add(Calendar.DAY_OF_MONTH, 1);
+			}
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return totals;
+	}
+	
+	private List<Integer> getTotalJobOfferQuantitiesDaily(FilterJobOfferDailyReportDTO filterDTO, boolean permanent, Set<Long> offersIdByGeo) {
+		int QUANTITY_COLUMN = 0;
+		int YEAR_COLUMN = 1;
+		int MONTH_COLUMN = 2;
+		int DAY_COLUMN = 3;
+
+		List<Integer >totals = new ArrayList<Integer>();
+		
+		List<Object> quantityObjects = new ArrayList<Object>();
+		try {
+			quantityObjects = jobOfferDAO.getJobOfferQuantitiesDaily(filterDTO, permanent, offersIdByGeo);
+			
+			Calendar now = Calendar.getInstance();
+			now.setTime(filterDTO.getToDate());
+			now.add(Calendar.DAY_OF_MONTH, filterDTO.getQuantityOfDays() * -1);
+			
+			int initValue = 0;
+			for (int i=0; i<filterDTO.getQuantityOfDays(); i++) {
+				int qty = 0;
+				for(int j=initValue; j<quantityObjects.size(); j++) {
+					Object[] objects = (Object[]) quantityObjects.get(j);
+					if((int)objects[DAY_COLUMN] == now.get(Calendar.DAY_OF_MONTH) &&
+					   (int)objects[MONTH_COLUMN] - 1 == now.get(Calendar.MONTH) &&
+					   (int)objects[YEAR_COLUMN] == now.get(Calendar.YEAR)) {
+						initValue = j;
+						qty = Integer.valueOf(""+objects[QUANTITY_COLUMN]);
+						break;
+					}
+				}
+				totals.add(qty);
+				now.add(Calendar.DAY_OF_MONTH, 1);
+			}
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return totals;
+	}
+	
+	private List<Integer> getActiveJobOfferQuantitiesDaily(FilterJobOfferDailyReportDTO filterDTO, Set<Long> offersIdByGeo) {
+		int QUANTITY_COLUMN = 0;
+		int YEAR_COLUMN = 1;
+		int MONTH_COLUMN = 2;
+		int DAY_COLUMN = 3;
+
+		List<Integer >totals = new ArrayList<Integer>();
+		
+		List<Object> quantityObjects = new ArrayList<Object>();
+		try {
+			quantityObjects = jobOfferDAO.getActiveJobOfferQuantitiesDaily(filterDTO, offersIdByGeo);
+			
+			Calendar now = Calendar.getInstance();
+			now.setTime(filterDTO.getToDate());
+			now.add(Calendar.DAY_OF_MONTH, filterDTO.getQuantityOfDays() * -1);
+			
+			int initValue = 0;
+			for (int i=0; i<filterDTO.getQuantityOfDays(); i++) {
+				int qty = 0;
+				for(int j=initValue; j<quantityObjects.size(); j++) {
+					Object[] objects = (Object[]) quantityObjects.get(j);
+					if((int)objects[DAY_COLUMN] == now.get(Calendar.DAY_OF_MONTH) &&
+					   (int)objects[MONTH_COLUMN] - 1 == now.get(Calendar.MONTH) &&
+					   (int)objects[YEAR_COLUMN] == now.get(Calendar.YEAR)) {
+						initValue = j;
+						qty = Integer.valueOf(""+objects[QUANTITY_COLUMN]);
+						break;
+					}
+				}
+				totals.add(qty);
+				now.add(Calendar.DAY_OF_MONTH, 1);
+			}
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return totals;
+	}
+	
+	private List<Integer> getJobOfferContractedDaily(FilterJobOfferDailyReportDTO filterDTO, Set<Long> offersIdByGeo) {
+		int QUANTITY_COLUMN = 0;
+		int YEAR_COLUMN = 1;
+		int MONTH_COLUMN = 2;
+		int DAY_COLUMN = 3;
+
+		List<Integer >totals = new ArrayList<Integer>();
+		
+		List<Object> quantityObjects = new ArrayList<Object>();
+		try {
+			quantityObjects = jobOfferDAO.getJobOfferContractedDaily(filterDTO, offersIdByGeo);
+			
+			Calendar now = Calendar.getInstance();
+			now.setTime(filterDTO.getToDate());
+			now.add(Calendar.DAY_OF_MONTH, filterDTO.getQuantityOfDays() * -1);
+			
+			int initValue = 0;
+			for (int i=0; i<filterDTO.getQuantityOfDays(); i++) {
+				int qty = 0;
+				for(int j=initValue; j<quantityObjects.size(); j++) {
+					Object[] objects = (Object[]) quantityObjects.get(j);
+					if((int)objects[DAY_COLUMN] == now.get(Calendar.DAY_OF_MONTH) &&
+					   (int)objects[MONTH_COLUMN] - 1 == now.get(Calendar.MONTH) &&
+					   (int)objects[YEAR_COLUMN] == now.get(Calendar.YEAR)) {
+						initValue = j;
+						qty = Integer.valueOf(""+objects[QUANTITY_COLUMN]);
+						break;
+					}
+				}
+				totals.add(qty);
+				now.add(Calendar.DAY_OF_MONTH, 1);
+			}
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return totals;
+	}
+	
+	/* END Method for daily report */
 }

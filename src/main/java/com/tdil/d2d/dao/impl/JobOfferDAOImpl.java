@@ -16,6 +16,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.tdil.d2d.bo.dto.FilterJobOfferDailyReportDTO;
 import com.tdil.d2d.bo.dto.FilterJobOfferReportDTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.dto.SearchOfferDTO;
@@ -381,6 +382,182 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		queryString.append("AND (:taskId = -1L or offer.task.id = :taskId) ");
 		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
 		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate) ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("fromDate", from);
+		query.setParameter("toDate", to);
+		query.setParameterList("ids", offersIdByGeo);
+		query.setParameter("occupationId", filterDTO.getOccupationId());
+		query.setParameter("specialtyId", filterDTO.getSpecialtyId());
+		query.setParameter("taskId", filterDTO.getTaskId());
+
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getJobOfferQuantitiesDaily(FilterJobOfferDailyReportDTO filterDTO, Set<Long> offersIdByGeo) throws DAOException {
+		
+		if(offersIdByGeo.isEmpty()) {
+			return new ArrayList<Object>();
+		}
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(filterDTO.getToDate());
+		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+		Date to = calendar.getTime();
+		
+		calendar.add(Calendar.DAY_OF_MONTH, filterDTO.getQuantityOfDays() * -1);
+		Date from = calendar.getTime();
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT count(*) as quantity, YEAR(creationDate) as reportYear, MONTH(creationDate) as reportMonth, DAY(creationDate) as reportDay ");
+		queryString.append("FROM JobOffer offer ");
+		queryString.append("WHERE offer.creationDate >= :fromDate ");
+		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("AND offer.id IN :ids ");
+		queryString.append("AND (:occupationId = -1L or offer.occupation.id = :occupationId) ");
+		queryString.append("AND (:specialtyId = -1L or offer.specialty.id = :specialtyId) ");
+		queryString.append("AND (:taskId = -1L or offer.task.id = :taskId) ");
+		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate), DAY(offer.creationDate) ");
+		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate), DAY(offer.creationDate) ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("fromDate", from);
+		query.setParameter("toDate", to);
+		query.setParameterList("ids", offersIdByGeo);
+		query.setParameter("occupationId", filterDTO.getOccupationId());
+		query.setParameter("specialtyId", filterDTO.getSpecialtyId());
+		query.setParameter("taskId", filterDTO.getTaskId());
+
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getJobOfferQuantitiesDaily(FilterJobOfferDailyReportDTO filterDTO, boolean permanent, Set<Long> offersIdByGeo) throws DAOException {
+		
+		if(offersIdByGeo.isEmpty()) {
+			return new ArrayList<Object>();
+		}
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(filterDTO.getToDate());
+		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+		Date to = calendar.getTime();
+		
+		calendar.add(Calendar.DAY_OF_MONTH, filterDTO.getQuantityOfDays() * -1);
+		Date from = calendar.getTime();
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT count(*) as quantity, YEAR(creationDate) as reportYear, MONTH(creationDate) as reportMonth, DAY(creationDate) as reportDay ");
+		queryString.append("FROM JobOffer offer ");
+		queryString.append("WHERE offer.creationDate >= :fromDate ");
+		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("AND offer.permanent = :isPermanent ");
+		queryString.append("AND offer.id IN :ids ");
+		queryString.append("AND (:occupationId = -1L or offer.occupation.id = :occupationId) ");
+		queryString.append("AND (:specialtyId = -1L or offer.specialty.id = :specialtyId) ");
+		queryString.append("AND (:taskId = -1L or offer.task.id = :taskId) ");
+		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate), DAY(offer.creationDate) ");
+		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate), DAY(offer.creationDate) ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("fromDate", from);
+		query.setParameter("toDate", to);
+		query.setParameter("isPermanent", permanent);
+		query.setParameterList("ids", offersIdByGeo);
+		query.setParameter("occupationId", filterDTO.getOccupationId());
+		query.setParameter("specialtyId", filterDTO.getSpecialtyId());
+		query.setParameter("taskId", filterDTO.getTaskId());
+
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getActiveJobOfferQuantitiesDaily(FilterJobOfferDailyReportDTO filterDTO, Set<Long> offersIdByGeo) throws DAOException {
+		
+		if(offersIdByGeo.isEmpty()) {
+			return new ArrayList<Object>();
+		}
+
+		Calendar calendar = Calendar.getInstance();
+		Date now = calendar.getTime();
+		
+		calendar.setTime(filterDTO.getToDate());
+		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+		Date to = calendar.getTime();
+		
+		calendar.add(Calendar.DAY_OF_MONTH, filterDTO.getQuantityOfDays() * -1);
+		Date from = calendar.getTime();
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT count(*) as quantity, YEAR(creationDate) as reportYear, MONTH(creationDate) as reportMonth, DAY(creationDate) as reportDay ");
+		queryString.append("FROM JobOffer offer ");
+		queryString.append("WHERE offer.creationDate >= :fromDate ");
+		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("AND offer.offerDate >= :nowDate ");
+		queryString.append("AND offer.status != :closeStatus ");
+		queryString.append("AND offer.id IN :ids ");
+		queryString.append("AND (:occupationId = -1L or offer.occupation.id = :occupationId) ");
+		queryString.append("AND (:specialtyId = -1L or offer.specialty.id = :specialtyId) ");
+		queryString.append("AND (:taskId = -1L or offer.task.id = :taskId) ");
+		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate), DAY(offer.creationDate) ");
+		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate), DAY(offer.creationDate) ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("fromDate", from);
+		query.setParameter("toDate", to);
+		query.setParameter("nowDate", now);
+		query.setParameter("closeStatus", JobOffer.CLOSED);
+		query.setParameterList("ids", offersIdByGeo);
+		query.setParameter("occupationId", filterDTO.getOccupationId());
+		query.setParameter("specialtyId", filterDTO.getSpecialtyId());
+		query.setParameter("taskId", filterDTO.getTaskId());
+
+		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getJobOfferContractedDaily(FilterJobOfferDailyReportDTO filterDTO, Set<Long> offersIdByGeo) throws DAOException {
+		
+		if(offersIdByGeo.isEmpty()) {
+			return new ArrayList<Object>();
+		}
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(filterDTO.getToDate());
+		calendar.set(Calendar.HOUR, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+		Date to = calendar.getTime();
+		
+		calendar.add(Calendar.DAY_OF_MONTH, filterDTO.getQuantityOfDays() * -1);
+		Date from = calendar.getTime();
+		
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT count(jobApplication_id) as quantity, YEAR(creationDate) as reportYear, MONTH(creationDate) as reportMonth, DAY(creationDate) as reportDay ");
+		queryString.append("FROM JobOffer offer ");
+		queryString.append("WHERE offer.creationDate >= :fromDate ");
+		queryString.append("AND offer.creationDate < :toDate ");
+		queryString.append("AND offer.id IN :ids ");
+		queryString.append("AND (:occupationId = -1L or offer.occupation.id = :occupationId) ");
+		queryString.append("AND (:specialtyId = -1L or offer.specialty.id = :specialtyId) ");
+		queryString.append("AND (:taskId = -1L or offer.task.id = :taskId) ");
+		queryString.append("GROUP BY YEAR(offer.creationDate), MONTH(offer.creationDate), DAY(offer.creationDate) ");
+		queryString.append("ORDER BY YEAR(offer.creationDate), MONTH(offer.creationDate), DAY(offer.creationDate) ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		query.setParameter("fromDate", from);
