@@ -125,7 +125,12 @@
 				</li>
 				<li class="treeview">
 					<a href="<c:url value="/admin/reports/jobofferstats" />">
-						<i class="fa fa-book"></i> <span>Reporte: Avisos (Cantidades)</span>
+						<i class="fa fa-book"></i> <span>Reporte: Avisos mensual</span>
+					</a>
+				</li>
+				<li class="treeview">
+					<a href="<c:url value="/admin/reports/jobofferstats/daily" />">
+						<i class="fa fa-book"></i> <span>Reporte: Avisos 30 d&iacute;as</span>
 					</a>
 				</li>
 				<li class="treeview">

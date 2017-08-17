@@ -5,7 +5,7 @@
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
-		Reporte: Avisos mensual
+		Reporte: Avisos 30 d&iacute;as
 	</tiles:putAttribute>
 
 	<tiles:putAttribute name="body">
@@ -20,11 +20,7 @@
 				</div>
 			</c:if>
 		
-			<form:form method="POST" id="filterForm" modelAttribute="filterForm" autocomplete="off" action="${pageContext.request.contextPath}/admin/reports/jobofferstats?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
-				<input type="hidden" name="startMonth" id="startMonth">
-				<input type="hidden" name="startYear" id="startYear">
-				<input type="hidden" name="endMonth" id="endMonth">
-				<input type="hidden" name="endYear" id="endYear">
+			<form:form method="POST" id="filterForm" modelAttribute="filterForm" autocomplete="off" action="${pageContext.request.contextPath}/admin/reports/jobofferstats/daily?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 				
 				<div class="row">
 					<div class="col-md-6">
@@ -34,22 +30,11 @@
 								<div class="input-group-addon">
 									<i class="fa fa-calendar"></i>
 								</div>
-								<input type="text" class="form-control pull-right" id="startDateForView" name="startDateForView" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+								<input type="text" class="form-control pull-right" id="toDateForView" name="toDateForView" value="${filterForm.toDateForView}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
 							</div>
 						</div>
 					</div>
 					
-					<div class="col-md-6">
-						<div class="form-group form-group-job-offer">
-							<label for="content" class="control-label">Per&iacute;odo hasta</label>
-							<div class="input-group date">
-								<div class="input-group-addon">
-									<i class="fa fa-calendar"></i>
-								</div>
-								<input type="text" class="form-control pull-right" id="endDateForView" name="endDateForView" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
-							</div>
-						</div>
-					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-6">
@@ -175,12 +160,6 @@
 		
 		<script>
 			function submitForm() {
-				$("#startMonth").val($("#startDateForView").data('datepicker').getFormattedDate('mm'));
-				$("#startYear").val($("#startDateForView").data('datepicker').getFormattedDate('yyyy'));
-				
-				$("#endMonth").val($("#endDateForView").data('datepicker').getFormattedDate('mm'));
-				$("#endYear").val($("#endDateForView").data('datepicker').getFormattedDate('yyyy'));
-				
 				$("#filterForm").submit();
 			}
 		
@@ -246,29 +225,11 @@
 			
 			loadGeosInput();
 			
-			$('#startDateForView').datepicker({
+			$('#toDateForView').datepicker({
 				autoclose: true,
-				format: "MM-yyyy",
-			    startView: "months", 
-			    minViewMode: "months",
-			    language: 'es'
+				format: "dd-mm-yyyy"
 			});
 			
-			$('#endDateForView').datepicker({
-				autoclose: true,
-				format: "MM-yyyy",
-			    startView: "months", 
-			    minViewMode: "months",
-			    language: 'es'
-			});
-			
-			<c:if test="${filterForm.startYear != null && filterForm.startMonth != null}">
-				$('#startDateForView').datepicker('update', '${filterForm.startMonth}-${filterForm.startYear}');
-			</c:if>
-			
-			<c:if test="${filterForm.endYear != null && filterForm.endMonth != null}">
-				$('#endDateForView').datepicker('update', '${filterForm.endMonth}-${filterForm.endYear}');
-			</c:if>
 		</script>
 		
 		<c:if test="${report != null}">
@@ -283,8 +244,8 @@
 				};
 				
 				labels = [
-				<c:forEach var="monthString" items="${report.textMonths}">
-				"${monthString}",
+				<c:forEach var="dayString" items="${report.textDays}">
+				"${dayString}",
 				</c:forEach>
 				];
 			
