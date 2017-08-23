@@ -1984,7 +1984,7 @@ public class UserServiceImpl implements UserService {
 			result.setLastLoginDate(formatter.format(lastLogin));
 		}
 		
-		if(user.isUserb()){
+		if(user.isUserb() && userProfile != null){
 			
 			if(userProfile.getInstitutionType() != null) {
 				result.setInstitutionType(userProfile.getInstitutionType().name());
