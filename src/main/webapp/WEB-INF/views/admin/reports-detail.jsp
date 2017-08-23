@@ -19,7 +19,6 @@
 									<thead>
 										<tr>
 											<th>Id</th>
-											<th>Aplicantes</th>
 											<th>Tipo de Oferta</th>
 											<th>Ocupación</th>
 											<th>Especialidad</th>
@@ -34,6 +33,7 @@
 											<th>Fecha de oferta</th>
 											<th>Horario de la oferta</th>
 											<th>Tipo de institución</th>
+											<th>Aplicantes</th>
 											<th>Usuario seleccionado</th>
 											<th>Estado</th>
 											<th>Vacantes</th>
@@ -42,7 +42,6 @@
 									<tfoot>
 										<tr>
 											<th>Id</th>
-											<th>Aplicantes</th>
 											<th>Tipo de Oferta</th>
 											<th>Ocupación</th>
 											<th>Especialidad</th>
@@ -57,6 +56,7 @@
 											<th>Fecha de oferta</th>
 											<th>Horario de la oferta</th>
 											<th>Tipo de institución</th>
+											<th>Aplicantes</th>
 											<th>Usuario seleccionado</th>
 											<th>Estado</th>
 											<th>Vacantes</th>
@@ -89,7 +89,6 @@ $(document).ready(function() {
           },
         "columns": [
                     { "data": "id" },
-                    { "data": "applications" },
                     {
                         "data": "permanent",
                         "render": function ( data, type, full, meta ) {
@@ -122,6 +121,7 @@ $(document).ready(function() {
                         	 }
                         }
                     },  
+                    { "data": "applications" },
                     { "data": "jobApplication_detail" },
                     {
                         "data": "status",
