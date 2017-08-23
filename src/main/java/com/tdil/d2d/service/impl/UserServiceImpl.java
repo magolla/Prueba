@@ -1985,39 +1985,40 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		if(user.isUserb()){
-			result.setInstitutionType(userProfile.getInstitutionType().name());
-
+			
+			if(userProfile.getInstitutionType() != null) {
+				result.setInstitutionType(userProfile.getInstitutionType().name());
+			}
 			Iterator<Specialty> iter = user.getSpecialties().iterator();
 
 			Specialty first = iter.next();
 			result.setUserOccupation(first.getOccupation().getName());
-	
-			for (Iterator<Task> iterator = userProfile.getTasks().iterator(); iterator.hasNext();) {
-				Task task = (Task) iterator.next();
-				int index = checkIfExist(task,specialtyDtoList);
-				if(index > -1) {
-					specialtyDtoList.get(index).getTaskList().add(task);
-				} else {
-					SpecialtyDTO specialtyDTO = new SpecialtyDTO();
-					specialtyDTO.setTaskList(new ArrayList<Task>());
-					specialtyDTO.setId(task.getSpecialty().getId());
-					if(task.getSpecialty().getName().equals("")) {
-						specialtyDTO.setName(task.getSpecialty().getOccupation().getName());
+			if(userProfile.getTasks() != null) {
+				for (Iterator<Task> iterator = userProfile.getTasks().iterator(); iterator.hasNext();) {
+					Task task = (Task) iterator.next();
+					int index = checkIfExist(task,specialtyDtoList);
+					if(index > -1) {
+						specialtyDtoList.get(index).getTaskList().add(task);
 					} else {
-						specialtyDTO.setName(task.getSpecialty().getName());
+						SpecialtyDTO specialtyDTO = new SpecialtyDTO();
+						specialtyDTO.setTaskList(new ArrayList<Task>());
+						specialtyDTO.setId(task.getSpecialty().getId());
+						if(task.getSpecialty().getName().equals("")) {
+							specialtyDTO.setName(task.getSpecialty().getOccupation().getName());
+						} else {
+							specialtyDTO.setName(task.getSpecialty().getName());
+						}
+						
+						specialtyDTO.getTaskList().add(task);
+						specialtyDtoList.add(specialtyDTO);
 					}
-					
-					specialtyDTO.getTaskList().add(task);
-					specialtyDtoList.add(specialtyDTO);
 				}
+		//		specialtyDtoList
+		//		  .stream()
+		//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
+				
+				result.setUserSpecialty(specialtyDtoList);
 			}
-			
-	//		specialtyDtoList
-	//		  .stream()
-	//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
-			
-			result.setUserSpecialty(specialtyDtoList);
-	
 			result.setLicense(user.getLicense());
 			
 			List<GeoLevelDTO> geoList = new ArrayList<GeoLevelDTO>();
