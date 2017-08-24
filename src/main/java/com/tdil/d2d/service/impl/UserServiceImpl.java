@@ -1871,6 +1871,9 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 
+	/**
+	 * Este metodo se usa para registrar eventos predefinidos, el nombre,titulo y cuerpo de la notificacion debe ser definida en NotificationType
+	 */
 	private void sendNotification(NotificationType type, User user, JobOffer offer){
 
 		try {
@@ -1887,7 +1890,11 @@ public class UserServiceImpl implements UserService {
 					notification.setAction(type.name());
 					notification.setUser(user);
 					notification.setOffer(offer);
-					notification.setSeen(false);
+					notification.setTitle(type.getTitle());
+					notification.setMessage(type.getMessage());
+					//TODO-Hacer logica
+					// notification.setActionId(1);
+					notification.setStatus("Enviado");
 
 					this.notificationDAO.save(notification);
 

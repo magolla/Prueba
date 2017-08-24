@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.bo.dto.NotificationBackofficeDTO;
 import com.tdil.d2d.communication.ProxyConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.service.NotificationService;
@@ -57,6 +58,12 @@ public class IOSNotificationServiceImpl implements NotificationService {
 		URL resource = IOSNotificationServiceImpl.class.getResource(IOSNotificationServiceImpl.CERTIFICATE_FILE_NAME);
 		
 		return resource.getPath();
+	}
+
+	@Override
+	public void sendNotification(NotificationBackofficeDTO notificationBackofficeDTO) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

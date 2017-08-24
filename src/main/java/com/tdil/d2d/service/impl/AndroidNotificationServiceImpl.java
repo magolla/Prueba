@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.communication.ProxyConfiguration;
+import com.tdil.d2d.persistence.Notification;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.service.NotificationService;
 import com.tdil.d2d.utils.LoggerManager;
@@ -39,9 +40,7 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 	private ExecutorService executor = Executors.newFixedThreadPool(5);
 	
     public static String HTTPS = "https://fcm.googleapis.com/fcm/send";
-	
-	
-	
+    
 	@Override
 	public void sendNotification(NotificationType notificationType, String regId) {
 		try {
@@ -59,6 +58,28 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 		} catch (JSONException e) {
 			 LoggerManager.error(this, e);
 		}
+	}
+	
+	@Override
+	public void sendNotification(Notification notification) {
+		
+	try {
+			
+			JSONObject request = new JSONObject();
+			request.put("to",notification.getUser().getAndroidRegId()); 
+			
+			JSONObject data = new JSONObject();
+			data.put("title", notification.getTitle());
+			data.put("message", notification.getMessage());
+			data.put("action", notification.getAction());
+			data.put("action_id", notification.getActionId());
+			request.put("data",data);
+			
+			executor.submit(new SendAndroidPushNotification(request.toString(), notification.getUser().getAndroidRegId(), this));
+		} catch (JSONException e) {
+			 LoggerManager.error(this, e);
+		}
+		
 	}
 		
 	private void send(SendAndroidPushNotification sendAndroidPushNotification) {
@@ -121,4 +142,5 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 		}
 
 	}
+
 }
