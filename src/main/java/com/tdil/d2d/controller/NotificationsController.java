@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tdil.d2d.bo.dto.NotificationBackofficeDTO;
+import com.tdil.d2d.controller.api.dto.NotificationDTO;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
-import com.tdil.d2d.persistence.Notification;
 import com.tdil.d2d.service.NotificationBackofficeService;
 
 /**
@@ -36,15 +36,20 @@ public class NotificationsController {
 			return null;
 		}
 	}
-	
-	 @RequestMapping(value = "/notification/getAllNotifications", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-	 public ResponseEntity<GenericResponse<List<Notification>>> sendNotification() {
-			List<Notification> list = this.notificationBackofficeService.getAllNotifications();
+
+	@RequestMapping(value = "/notification/getAllNotifications", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<List<NotificationDTO>>> sendNotification() {
+		try {
+			List<NotificationDTO> list = this.notificationBackofficeService.getAllNotifications();
 			if(list != null) {
-				return new ResponseEntity<GenericResponse<List<Notification>>>(new GenericResponse<List<Notification>>(list,HttpStatus.OK.value()), HttpStatus.OK);
+				return new ResponseEntity<GenericResponse<List<NotificationDTO>>>(new GenericResponse<List<NotificationDTO>>(list,HttpStatus.OK.value()), HttpStatus.OK);
 			} else {
-				return new ResponseEntity<GenericResponse<List<Notification>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+				return new ResponseEntity<GenericResponse<List<NotificationDTO>>>(new GenericResponse<List<NotificationDTO>>(null,HttpStatus.OK.value()), HttpStatus.OK);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<List<NotificationDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
 
 }

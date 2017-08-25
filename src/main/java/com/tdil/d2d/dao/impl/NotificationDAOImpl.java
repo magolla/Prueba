@@ -69,7 +69,24 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 
 		List<Notification> list = query.list();
 		
+		updateNotification(id);
+		
+		
 		return list.isEmpty() ? null : list;
 		
 	}
+	
+	
+	public void updateNotification(long id){
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("update Notification notification ");
+		queryString.append("set notification.status = 'Leído' ");
+		queryString.append("WHERE notification.user.id = :user_id ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("user_id", id);
+
+		int result = query.executeUpdate();
+	}
+
 }

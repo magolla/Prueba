@@ -1898,14 +1898,21 @@ public class UserServiceImpl implements UserService {
 
 					this.notificationDAO.save(notification);
 
-					if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
 
-						iosNotificationService.sendNotification(type, user.getIosPushId());
+					boolean sendNotif = NotificationServiceImpl.validateNotificationConfig(notificationConfiguration, type);
 
-					} else if(user.getAndroidRegId()!=null){
+					if(sendNotif) {
 
-						androidNotificationService.sendNotification(type,  user.getAndroidRegId());
+						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
 
+							iosNotificationService.sendNotification(type, user.getIosPushId());
+
+
+						} else if(user.getAndroidRegId()!=null){
+
+							androidNotificationService.sendNotification(type,  user.getAndroidRegId());
+
+						}
 					}
 
 				}
@@ -1990,9 +1997,9 @@ public class UserServiceImpl implements UserService {
 			DateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
 			result.setLastLoginDate(formatter.format(lastLogin));
 		}
-		
+
 		if(user.isUserb()){
-			
+
 			if(userProfile.getInstitutionType() != null) {
 				result.setInstitutionType(userProfile.getInstitutionType().name());
 			}
@@ -2015,27 +2022,27 @@ public class UserServiceImpl implements UserService {
 						} else {
 							specialtyDTO.setName(task.getSpecialty().getName());
 						}
-						
+
 						specialtyDTO.getTaskList().add(task);
 						specialtyDtoList.add(specialtyDTO);
 					}
 				}
-		//		specialtyDtoList
-		//		  .stream()
-		//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
-				
+				//		specialtyDtoList
+				//		  .stream()
+				//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
+
 				result.setUserSpecialty(specialtyDtoList);
 			}
 			result.setLicense(user.getLicense());
-			
+
 			List<GeoLevelDTO> geoList = new ArrayList<GeoLevelDTO>();
-			
+
 			for (Iterator<UserGeoLocation> iterator = user.getUserGeoLocations().iterator(); iterator.hasNext();) {
 				UserGeoLocation userGeo = (UserGeoLocation) iterator.next();
 				geoList.add(new GeoLevelDTO(userGeo.getId(),userGeo.getGeoLevelLevel(),userGeo.getGeoLevelName()));
-				
+
 			}
-			
+
 			result.setGeoLevels(geoList);
 		}
 

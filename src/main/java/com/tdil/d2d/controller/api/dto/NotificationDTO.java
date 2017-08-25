@@ -5,11 +5,14 @@ import java.util.Date;
 public class NotificationDTO {
 
 	private long id;
-	private long userId;
-	private long offerId;
 	private String action;
-	private boolean seen;
+	private long actionId;
 	private Date creationDate;
+	private String message;
+	private String status;
+	private String title;
+	private long offerId;
+	private long userId;
 	
 	public long getId() {
 		return id;
@@ -35,11 +38,29 @@ public class NotificationDTO {
 	public void setAction(String action) {
 		this.action = action;
 	}
-	public boolean isSeen() {
-		return seen;
+	public long getActionId() {
+		return actionId;
 	}
-	public void setSeen(boolean seen) {
-		this.seen = seen;
+	public void setActionId(long actionId) {
+		this.actionId = actionId;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	public Date getCreationDate() {
 		return creationDate;

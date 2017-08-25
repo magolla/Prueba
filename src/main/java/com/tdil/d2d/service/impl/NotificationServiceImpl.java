@@ -2,6 +2,7 @@ package com.tdil.d2d.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.bo.dto.NotificationBackofficeDTO;
+import com.tdil.d2d.controller.api.dto.NotificationDTO;
 import com.tdil.d2d.dao.NotificationConfigurationDAO;
 import com.tdil.d2d.dao.NotificationDAO;
 import com.tdil.d2d.dao.UserDAO;
@@ -88,7 +90,7 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 			this.notificationDAO.save(notification);
 
 
-			boolean sendNotif = validateNotificationConfig(notificationConfiguration,notificationBackofficeDTO, type);
+			boolean sendNotif = validateNotificationConfig(notificationConfiguration,type);
 
 			if(sendNotif) {
 				if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
@@ -108,13 +110,38 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 	
 	
 	@Override
-	public List<Notification> getAllNotifications() {
+	public List<NotificationDTO> getAllNotifications() {
 		User user = this.sessionService.getUserLoggedIn();
-		return this.notificationDAO.getAllNotificationByUserId(user.getId());
+		
+		List<Notification> list = this.notificationDAO.getAllNotificationByUserId(user.getId());
+		List<NotificationDTO> response = null;
+		if(list != null) {
+			response = list.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
+		}
+		return response;
+	}
+	
+	
+	private NotificationDTO toDTO(Notification elem) {
+		NotificationDTO dto = new NotificationDTO();
+
+		dto.setId(elem.getId());
+		dto.setAction(elem.getAction());
+		dto.setActionId(elem.getActionId());
+		dto.setCreationDate(elem.getCreationDate());
+		dto.setMessage(elem.getMessage());
+		if(elem.getOffer() != null) {
+			dto.setOfferId(elem.getOffer().getId());
+		}
+		dto.setStatus(elem.getStatus());
+		dto.setTitle(elem.getTitle());
+		dto.setUserId(elem.getUser().getId());
+		
+		return dto;
 	}
 
 
-	public boolean validateNotificationConfig(NotificationConfiguration notificationConfiguration, NotificationBackofficeDTO notificationBackofficeDTO, NotificationType type) {
+	public static boolean validateNotificationConfig(NotificationConfiguration notificationConfiguration, NotificationType type) {
 		boolean result = true;
 
 		NotificationType notification = type;
