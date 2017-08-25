@@ -38,7 +38,7 @@ public class NotificationsController {
 	}
 
 	@RequestMapping(value = "/notification/getAllNotifications", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse<List<NotificationDTO>>> sendNotification() {
+	public ResponseEntity<GenericResponse<List<NotificationDTO>>> getAllNotifications() {
 		try {
 			List<NotificationDTO> list = this.notificationBackofficeService.getAllNotifications();
 			if(list != null) {
@@ -49,6 +49,18 @@ public class NotificationsController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<GenericResponse<List<NotificationDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+
+	@RequestMapping(value = "/notification/getUnreadNotification", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<Integer>> getUnread() {
+		try {
+			Integer count = this.notificationBackofficeService.getUnreadNotifications();
+			return new ResponseEntity<GenericResponse<Integer>>(new GenericResponse<Integer>(count,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<Integer>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

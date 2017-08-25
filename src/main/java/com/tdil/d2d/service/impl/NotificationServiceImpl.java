@@ -94,9 +94,9 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 			if(sendNotif) {
 				if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
-					iosNotificationService.sendNotification(notification);
+					iosNotificationService.sendNotification(notification,type);
 				} else if(user.getAndroidRegId()!=null){
-					androidNotificationService.sendNotification(notification);
+					androidNotificationService.sendNotification(notification,type);
 				}
 			}
 			return true;
@@ -196,6 +196,16 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 		//		}
 
 		return result;
+	}
+
+
+	@Override
+	public Integer getUnreadNotifications() {
+		User user = this.sessionService.getUserLoggedIn();
+		
+		Integer count = this.notificationDAO.getCoutNotificationByUserId(user.getId());
+		
+		return count;
 	}
 
 

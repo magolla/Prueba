@@ -60,12 +60,12 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 		queryString.append("SELECT distinct notification ");
 		queryString.append("FROM Notification notification ");
 		queryString.append("WHERE notification.user.id = :user_id ");
-		queryString.append("AND notification.status = :status ");
+		queryString.append("AND notification.status <> :status ");
 		queryString.append("order by notification.creationDate desc");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		query.setParameter("user_id", id);
-		query.setParameter("status", "Enviado");
+		query.setParameter("status", "Eliminado");
 
 		List<Notification> list = query.list();
 		
@@ -87,6 +87,25 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 		query.setParameter("user_id", id);
 
 		int result = query.executeUpdate();
+	}
+
+	@Override
+	public Integer getCoutNotificationByUserId(long id) {
+	
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT count(*)");
+		queryString.append("FROM Notification notification ");
+		queryString.append("WHERE notification.user.id = :user_id ");
+		queryString.append("AND notification.status <> :status ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("user_id", id);
+		query.setParameter("status", "Eliminado");
+
+		int count = (int)(long) query.uniqueResult();
+		return count;
+
+		
 	}
 
 }

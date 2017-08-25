@@ -16,4 +16,6 @@ public interface NotificationDAO {
 	public Notification getByUserOffer(Long userId, Long offerId, String type);
 
 	public List<Notification> getAllNotificationByUserId(long id);
+
+	public Integer getCoutNotificationByUserId(long id);
 }

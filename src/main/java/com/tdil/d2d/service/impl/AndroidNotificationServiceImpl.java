@@ -61,7 +61,7 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 	}
 	
 	@Override
-	public void sendNotification(Notification notification) {
+	public void sendNotification(Notification notification, NotificationType type) {
 		
 	try {
 			
@@ -73,7 +73,13 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 			data.put("message", notification.getMessage());
 			data.put("action", notification.getAction());
 			data.put("action_id", notification.getActionId());
+			
+			JSONObject notificationValues = new JSONObject();
+			notificationValues.put("title", notification.getTitle());
+			notificationValues.put("body", notification.getMessage());
+			
 			request.put("data",data);
+//			request.put("notification",notificationValues);
 			
 			executor.submit(new SendAndroidPushNotification(request.toString(), notification.getUser().getAndroidRegId(), this));
 		} catch (JSONException e) {

@@ -7,6 +7,6 @@ public interface NotificationService {
 
 	public void sendNotification(NotificationType notificationType, String regId);
 
-	public void sendNotification(Notification notification);
+	public void sendNotification(Notification notification,NotificationType notificationType);
 }
 //notificationService.sendNotification(NotificationType.MATCH, null, “titulo”, “mesnaje”, “12312312332312312312312312”);
