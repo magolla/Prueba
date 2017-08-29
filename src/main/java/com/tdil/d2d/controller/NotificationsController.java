@@ -53,7 +53,7 @@ public class NotificationsController {
 	}
 
 
-	@RequestMapping(value = "/notification/getUnreadNotification", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/notification/getUnreadNotificationCount", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<Integer>> getUnread() {
 		try {
 			Integer count = this.notificationBackofficeService.getUnreadNotifications();
