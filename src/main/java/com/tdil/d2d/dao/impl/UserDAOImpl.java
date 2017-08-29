@@ -248,7 +248,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				queryString.append(") ");
 			}
 			
-			queryString.append("order by userProfile.user.lastLoginDate desc");
+			queryString.append("order by user.lastLoginDate desc");
 
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			query.setParameter("both", InstitutionType.BOTH);
