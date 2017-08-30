@@ -97,16 +97,16 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		if(!searchOfferDTO.getTasks().isEmpty()) {
 			queryString.append("AND offer.task.id in (:tasks) ");
 		}
-		//		if(!searchOfferDTO.getGeos().isEmpty()) {
-		//			queryString.append("AND (");
-		//			String OR = "";
-		//			for (GeoLevelDTO location : searchOfferDTO.getGeos()) {
-		//				//queryString.append(OR + location + " in elements(userProfile.user.userGeoLocations.id) ");
-		//				queryString.append(OR + "(offer.geoLevelId = " + location.getId() + " AND offer.geoLevelLevel = " + location.getLevel() + ") ");
-		//				OR = "OR ";
-		//			}	
-		//			queryString.append(") ");
-		//		}
+//		if(!searchOfferDTO.getGeos().isEmpty()) {
+//			queryString.append("AND (");
+//			String OR = "";
+//			for (GeoLevelDTO location : searchOfferDTO.getGeos()) {
+//				//queryString.append(OR + location + " in elements(userProfile.user.userGeoLocations.id) ");
+//				queryString.append(OR + "(offer.geoLevelId = " + location.getId() + " AND offer.geoLevelLevel = " + location.getLevel() + ") ");
+//				OR = "OR ";
+//			}	
+//			queryString.append(") ");
+//		}
 		queryString.append("order by offer.id asc");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
