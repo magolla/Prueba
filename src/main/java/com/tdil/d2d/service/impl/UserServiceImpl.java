@@ -792,7 +792,7 @@ public class UserServiceImpl implements UserService {
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
 
-			//this.notifyToMatchedUsers(jobOffer.getId());
+			this.notifyToMatchedUsers(jobOffer.getId());
 
 			return true;
 		} catch (Exception e) {
