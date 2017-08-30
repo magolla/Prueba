@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -96,16 +97,16 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		if(!searchOfferDTO.getTasks().isEmpty()) {
 			queryString.append("AND offer.task.id in (:tasks) ");
 		}
-		if(!searchOfferDTO.getGeos().isEmpty()) {
-			queryString.append("AND (");
-			String OR = "";
-			for (GeoLevelDTO location : searchOfferDTO.getGeos()) {
-				//queryString.append(OR + location + " in elements(userProfile.user.userGeoLocations.id) ");
-				queryString.append(OR + "(offer.geoLevelId = " + location.getId() + " AND offer.geoLevelLevel = " + location.getLevel() + ") ");
-				OR = "OR ";
-			}
-			queryString.append(") ");
-		}
+//		if(!searchOfferDTO.getGeos().isEmpty()) {
+//			queryString.append("AND (");
+//			String OR = "";
+//			for (GeoLevelDTO location : searchOfferDTO.getGeos()) {
+//				//queryString.append(OR + location + " in elements(userProfile.user.userGeoLocations.id) ");
+//				queryString.append(OR + "(offer.geoLevelId = " + location.getId() + " AND offer.geoLevelLevel = " + location.getLevel() + ") ");
+//				OR = "OR ";
+//			}	
+//			queryString.append(") ");
+//		}
 		queryString.append("order by offer.id asc");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
@@ -129,9 +130,34 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		}
 		query.setParameter("offerentId", searchOfferDTO.getOfferentIdToIgnore());
 		
-		return query.list();
+		Collection<JobOffer> jobOffer = query.list();
+		
+		
+		if(!jobOffer.isEmpty()) {
+			return filtrarGeolevels(searchOfferDTO,jobOffer);	
+		} else {
+			return query.list();	
+		}
 	}
 	
+	private Collection<JobOffer> filtrarGeolevels(SearchOfferDTO searchOfferDTO, Collection<JobOffer> jobOffer) {
+		
+		List<JobOffer> jobOffers = new ArrayList<JobOffer>();
+		for (Iterator iterator = jobOffer.iterator(); iterator.hasNext();) {
+			JobOffer jobOffer2 = (JobOffer) iterator.next();
+			
+			for (GeoLevelDTO geoLevelDTO: searchOfferDTO.getGeos()) {
+				if(geoLevelDTO.getId() == jobOffer2.getGeoLevelId() && geoLevelDTO.getLevel() == jobOffer2.getGeoLevelLevel()) {
+					jobOffers.add(jobOffer2);
+				}
+			}
+		}
+		
+		Collection<JobOffer> jCollection = jobOffers;
+		
+		return jCollection;
+	}
+
 	@Override
 	public List<JobOffer> getAllPermanentOffersOpen() throws DAOException {
 		try {
