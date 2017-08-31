@@ -833,6 +833,8 @@ public class UserServiceImpl implements UserService {
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
 
+			this.notifyToMatchedUsers(jobOffer.getId());
+			
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -1409,8 +1411,8 @@ public class UserServiceImpl implements UserService {
 		result.setTaskName(s.getTask().getName());
 		result.setApplications(s.getApplications());
 		if(s.getOfferent().getAvatar()!=null)
-//			result.setBase64img(new String(s.getOfferent().getAvatar().getData()));
-    	result.setBase64img(new String(""));
+			//			result.setBase64img(new String(s.getOfferent().getAvatar().getData()));
+			result.setBase64img(new String(""));
 		result.setJobApplication_id(s.getJobApplication_id());
 		result.setOfferentFirstname(s.getOfferent().getFirstname());
 		result.setOfferentLastname(s.getOfferent().getLastname());
@@ -1770,9 +1772,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Base64DTO getPdfCVBase64() throws ServiceException {
 		User user = getLoggedUser();
-		Base64DTO base64dto = new Base64DTO(
-				new String(Base64.encodeBase64(user.getPdfCV().getData()))
-				);
+		Base64DTO base64dto = null;
+		if(user != null && user.getPdfCV() != null) {
+			base64dto = new Base64DTO(new String(Base64.encodeBase64(user.getPdfCV().getData())));
+		}
 		return base64dto;
 	}
 
@@ -1984,9 +1987,9 @@ public class UserServiceImpl implements UserService {
 			DateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm");
 			result.setLastLoginDate(formatter.format(lastLogin));
 		}
-		
+
 		if(user.isUserb() && userProfile != null){
-			
+
 			if(userProfile.getInstitutionType() != null) {
 				result.setInstitutionType(userProfile.getInstitutionType().name());
 			}
@@ -2009,27 +2012,27 @@ public class UserServiceImpl implements UserService {
 						} else {
 							specialtyDTO.setName(task.getSpecialty().getName());
 						}
-						
+
 						specialtyDTO.getTaskList().add(task);
 						specialtyDtoList.add(specialtyDTO);
 					}
 				}
-		//		specialtyDtoList
-		//		  .stream()
-		//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
-				
+				//		specialtyDtoList
+				//		  .stream()
+				//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
+
 				result.setUserSpecialty(specialtyDtoList);
 			}
 			result.setLicense(user.getLicense());
-			
+
 			List<GeoLevelDTO> geoList = new ArrayList<GeoLevelDTO>();
-			
+
 			for (Iterator<UserGeoLocation> iterator = user.getUserGeoLocations().iterator(); iterator.hasNext();) {
 				UserGeoLocation userGeo = (UserGeoLocation) iterator.next();
 				geoList.add(new GeoLevelDTO(userGeo.getId(),userGeo.getGeoLevelLevel(),userGeo.getGeoLevelName()));
-				
+
 			}
-			
+
 			result.setGeoLevels(geoList);
 		}
 
