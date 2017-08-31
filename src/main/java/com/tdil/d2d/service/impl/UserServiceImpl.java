@@ -792,7 +792,7 @@ public class UserServiceImpl implements UserService {
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
 
-			//this.notifyToMatchedUsers(jobOffer.getId());
+			this.notifyToMatchedUsers(jobOffer.getId());
 
 			return true;
 		} catch (Exception e) {
@@ -1409,7 +1409,8 @@ public class UserServiceImpl implements UserService {
 		result.setTaskName(s.getTask().getName());
 		result.setApplications(s.getApplications());
 		if(s.getOfferent().getAvatar()!=null)
-			result.setBase64img(new String(s.getOfferent().getAvatar().getData()));
+//			result.setBase64img(new String(s.getOfferent().getAvatar().getData()));
+    	result.setBase64img(new String(""));
 		result.setJobApplication_id(s.getJobApplication_id());
 		result.setOfferentFirstname(s.getOfferent().getFirstname());
 		result.setOfferentLastname(s.getOfferent().getLastname());
