@@ -29,7 +29,7 @@
 									        <img style="border:2px solid #000; max-height:180px; margin:15px 0 20px 15px;" src="data:image/jpg;base64,<c:out value='${user.avatar}'/>" />
 									    </c:when>    
 									    <c:otherwise>
-										       
+										       <img style="border:2px solid #000; max-height:180px; margin:15px 0 20px 15px;" src="<c:url value="/images/ic_avatar.png" />" />
 									    </c:otherwise>
 									</c:choose>
 								</div>
