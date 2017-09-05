@@ -35,7 +35,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
 			criteria.add(Restrictions.eq("offerent.id", userId));
 			criteria.add(Restrictions.ge("offerDate", new Date()));
-			criteria.addOrder(Order.asc("id"));
+			criteria.addOrder(Order.desc("id"));
 			List<JobOffer> list = criteria.list();
 			return list;
 		} catch (Exception e) {
@@ -50,7 +50,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 			criteria.add(Restrictions.eq("offerent.id", userId));
 			criteria.add(Restrictions.eq("status", JobOffer.CLOSED));
 			criteria.add(Restrictions.ge("offerDate", new Date()));
-			criteria.addOrder(Order.asc("id"));
+			criteria.addOrder(Order.desc("id"));
 			List<JobOffer> list = criteria.list();
 			return list;
 		} catch (Exception e) {
@@ -66,7 +66,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 			criteria.add(Restrictions.eq("specialty.id", specialtyId));
 			criteria.add(Restrictions.eq("geoLevelId", geoLevelId));
 			criteria.add(Restrictions.eq("permanent", permanent));
-			criteria.addOrder(Order.asc("id"));
+			criteria.addOrder(Order.desc("id"));
 			List<JobOffer> list = criteria.list();
 			return list;
 		} catch (Exception e) {
@@ -160,9 +160,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 				}
 			}
 		}
-
 		Collection<JobOffer> jCollection = jobOffers;
-
 		return jCollection;
 	}
 
@@ -173,21 +171,19 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 			criteria.add(Restrictions.eq("permanent", true));
 			criteria.add(Restrictions.eq("status", JobOffer.VACANT));
 			criteria.add(Restrictions.ge("offerDate", new Date()));
-
-			criteria.addOrder(Order.asc("id"));
+			criteria.addOrder(Order.desc("id"));
 			List<JobOffer> list = criteria.list();
 			return list;
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
 	}
-
 
 	@Override
 	public List<JobOffer> getAllOffers() throws DAOException {
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
-			criteria.addOrder(Order.asc("id"));
+			criteria.addOrder(Order.desc("id"));
 			List<JobOffer> list = criteria.list();
 			return list;
 		} catch (Exception e) {
@@ -195,12 +191,9 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 		}
 	}
 
-
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Long> getOfferIdsByDate(Date date) throws DAOException {
-
 		Calendar calendarFrom = Calendar.getInstance();
 		calendarFrom.setTime(date);
 		calendarFrom.set(Calendar.HOUR_OF_DAY, 0);
@@ -239,7 +232,6 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> getJobOfferQuantitiesMonthly(FilterJobOfferReportDTO filterDTO, Set<Long> offersIdByGeo) throws DAOException {
-
 		if(offersIdByGeo.isEmpty()) {
 			return new ArrayList<Object>();
 		}
