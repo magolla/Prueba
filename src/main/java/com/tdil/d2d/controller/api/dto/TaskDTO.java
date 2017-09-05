@@ -4,7 +4,15 @@ public class TaskDTO {
 
 	private long id;
 	private String name;
-	
+
+	public TaskDTO() {
+
+	}
+
+	public TaskDTO(long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 	public long getId() {
 		return id;
 	}
@@ -17,6 +25,6 @@ public class TaskDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 
 }

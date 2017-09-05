@@ -30,8 +30,8 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 	private final SponsorCodeGenerator sponsorCodeGenerator;
 	private final SubscriptionDAO subscriptionDAO;
 	private final UserDAO userDAO;
-	
-	
+
+
 	@Autowired
 	public SponsorCodeServiceImpl(SponsorCodeGenerator sponsorCodeGenerator, SubscriptionDAO subscriptionDAO, UserDAO userDAO) {
 		this.sponsorCodeGenerator = sponsorCodeGenerator;
@@ -39,8 +39,8 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 		this.userDAO = userDAO;
 	}
 
-	
-	
+
+
 	@Override
 	public List<SponsorCode> generateSponsorCodes(long sponsorId, int codesCount, int units, SubscriptionTimeUnit timeUnit) {
 
@@ -49,8 +49,8 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 		Sponsor sponsor = subscriptionDAO.getSponsorById(sponsorId);
 
 		for (int i = 0; i < codesCount; i++) {
-			
-			
+
+
 			String code = this.sponsorCodeGenerator.generate(sponsor);
 			SponsorCode sponsorCode = new SponsorCode();
 			sponsorCode.setCode(code);
@@ -70,7 +70,7 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 	public Subscription consumeSponsorCode(User user, String code) {
 		try {
 			SponsorCode sponsorCode = this.subscriptionDAO.getSponsorCode(SponsorCode.class, code);
-			
+
 			if(sponsorCode==null || !sponsorCode.isEnabled()){
 				return null;
 			}
@@ -100,7 +100,21 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 
 	protected Date getExpirationDate(Calendar instance, SponsorCode sponsorCode) {
 		Calendar cal = Calendar.getInstance();
-		cal = sponsorCode.getTimeUnit().add(cal, sponsorCode.getUnits());
+
+		switch (sponsorCode.getTimeUnit()) {
+		case DAY:
+			cal.add(Calendar.DAY_OF_YEAR, sponsorCode.getUnits());
+			break;
+		case MONTH:
+			cal.add(Calendar.MONTH, sponsorCode.getUnits());
+			break;
+		case YEAR:
+			cal.add(Calendar.YEAR, sponsorCode.getUnits());
+			break;
+		default:
+			break;
+		}
+
 		return cal.getTime();
 	}
 
@@ -109,30 +123,30 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 	@Override
 	public Subscription consumeWebSponsorCode(String mobilePhone, String code)  throws ServiceException{
 		try{
-			
+
 			User user = userDAO.getUserByMobilePhone(mobilePhone);
-			
+
 			if(user==null){
 				user = register(mobilePhone);
 			}
 			Subscription subscription = this.consumeSponsorCode(user, code);
-					
+
 			return subscription;
-			
+
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	public User register(String mobilePhone) throws ServiceException {
 		try {
 			User user = new User();
 			user.setMobilePhone(mobilePhone);
 			Date registrationDate = new Date();
 			user.setCreationDate(registrationDate);
-			
+
 			this.userDAO.save(user);
-			
+
 			return user;
 		} catch (DAOException e){
 			throw new ServiceException(e);

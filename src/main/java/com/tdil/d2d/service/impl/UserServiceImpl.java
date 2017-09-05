@@ -834,7 +834,7 @@ public class UserServiceImpl implements UserService {
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-			
+
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -1988,43 +1988,59 @@ public class UserServiceImpl implements UserService {
 			result.setLastLoginDate(formatter.format(lastLogin));
 		}
 
-		if(user.isUserb() && userProfile != null){
+		if(user.isUserb()){
 
-			if(userProfile.getInstitutionType() != null) {
-				result.setInstitutionType(userProfile.getInstitutionType().name());
+			if(userProfile != null) {
+				if(userProfile.getInstitutionType() != null) {
+					result.setInstitutionType(userProfile.getInstitutionType().name());
+				}
 			}
+			if(user.getSpecialties().size() > 0) {
 			Iterator<Specialty> iter = user.getSpecialties().iterator();
 
 			Specialty first = iter.next();
 			result.setUserOccupation(first.getOccupation().getName());
-			if(userProfile.getTasks() != null) {
-				for (Iterator<Task> iterator = userProfile.getTasks().iterator(); iterator.hasNext();) {
-					Task task = (Task) iterator.next();
-					int index = checkIfExist(task,specialtyDtoList);
-					if(index > -1) {
-						specialtyDtoList.get(index).getTaskList().add(task);
-					} else {
-						SpecialtyDTO specialtyDTO = new SpecialtyDTO();
-						specialtyDTO.setTaskList(new ArrayList<Task>());
-						specialtyDTO.setId(task.getSpecialty().getId());
-						if(task.getSpecialty().getName().equals("")) {
-							specialtyDTO.setName(task.getSpecialty().getOccupation().getName());
+			if(userProfile != null ) {
+				if(userProfile.getTasks() != null) {
+					for (Iterator<Task> iterator = userProfile.getTasks().iterator(); iterator.hasNext();) {
+						Task task = (Task) iterator.next();
+						int index = checkIfExist(task,specialtyDtoList);
+						if(index > -1) {
+							specialtyDtoList.get(index).getTaskList().add(task);
 						} else {
-							specialtyDTO.setName(task.getSpecialty().getName());
+							SpecialtyDTO specialtyDTO = new SpecialtyDTO();
+							specialtyDTO.setTaskList(new ArrayList<Task>());
+							specialtyDTO.setId(task.getSpecialty().getId());
+							if(task.getSpecialty().getName().equals("")) {
+								specialtyDTO.setName(task.getSpecialty().getOccupation().getName());
+							} else {
+								specialtyDTO.setName(task.getSpecialty().getName());
+							}
+
+							specialtyDTO.getTaskList().add(task);
+							specialtyDtoList.add(specialtyDTO);
 						}
-
-						specialtyDTO.getTaskList().add(task);
-						specialtyDtoList.add(specialtyDTO);
 					}
+					//		specialtyDtoList
+					//		  .stream()
+					//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
+
+					result.setUserSpecialty(specialtyDtoList);
 				}
-				//		specialtyDtoList
-				//		  .stream()
-				//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
-
-				result.setUserSpecialty(specialtyDtoList);
+			} else {
+				result.setUserSpecialty(new ArrayList<SpecialtyDTO>());
+				for (Specialty specialty : user.getSpecialties()) {
+					List<Task> taskList = new ArrayList<Task>();
+					Task task = new Task();
+					task.setId(-1);
+					task.setName("No cargo tareas");
+					taskList.add(task);
+					result.getUserSpecialty().add(new SpecialtyDTO(specialty.getId(),specialty.getName(),taskList));
+				}
 			}
-			result.setLicense(user.getLicense());
-
+			} else {
+				result.setUserOccupation("No cargo la Profesión");
+			}
 			List<GeoLevelDTO> geoList = new ArrayList<GeoLevelDTO>();
 
 			for (Iterator<UserGeoLocation> iterator = user.getUserGeoLocations().iterator(); iterator.hasNext();) {
@@ -2035,7 +2051,9 @@ public class UserServiceImpl implements UserService {
 
 			result.setGeoLevels(geoList);
 		}
-
+		if(user.isUserb()) {
+			result.setLicense(user.getLicense());				
+		}
 		result.setOperativeSystem(user.getAndroidRegId()!=null?"Android":"IOS");
 
 		return result;

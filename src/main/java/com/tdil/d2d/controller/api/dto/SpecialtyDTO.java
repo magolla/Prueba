@@ -10,6 +10,15 @@ public class SpecialtyDTO {
 	private String name;
 	private List<Task> taskList;
 	
+	public SpecialtyDTO(long id, String name, List<Task> taskList) {
+		this.id = id;
+		this.name = name;
+		this.taskList = taskList;
+	}
+	
+	public SpecialtyDTO() {
+	}
+	
 	public long getId() {
 		return id;
 	}

@@ -35,7 +35,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
 			criteria.add(Restrictions.eq("offerent.id", userId));
 			criteria.add(Restrictions.ge("offerDate", new Date()));
-			criteria.addOrder(Order.desc("id"));
+			criteria.addOrder(Order.asc("offerDate"));
 			List<JobOffer> list = criteria.list();
 			return list;
 		} catch (Exception e) {
@@ -107,7 +107,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 //			}	
 //			queryString.append(") ");
 //		}
-		queryString.append("order by offer.id asc");
+		queryString.append("order by offer.creationDate desc");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		query.setParameter("permanent", searchOfferDTO.getPermanent());

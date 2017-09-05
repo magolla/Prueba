@@ -24,9 +24,15 @@
 								<h2>Perfil del usuario</h2>
 								
 								<div class="row">
-									<img style="border:2px solid #000; max-height:180px; margin:15px 0 20px 15px;" src="data:image/jpg;base64,<c:out value='${user.avatar}'/>" />
+									<c:choose>
+									    <c:when test="${user.avatar != null}">
+									        <img style="border:2px solid #000; max-height:180px; margin:15px 0 20px 15px;" src="data:image/jpg;base64,<c:out value='${user.avatar}'/>" />
+									    </c:when>    
+									    <c:otherwise>
+										       
+									    </c:otherwise>
+									</c:choose>
 								</div>
-								
 				                <div class="row">
 				                    <div class="col-md-4">
 						              <label for="name" class="control-label">Id Usuario:</label>
@@ -167,8 +173,11 @@
 												<c:when test="${user.institutionType == 'PRIVATE'}">
 													Privadas
 												</c:when>
-												<c:otherwise>
+												<c:when test="${user.institutionType == 'BOTH'}">
 													Publicas y Privadas
+												</c:when>
+												<c:otherwise>
+													- No lo cargó -
 												</c:otherwise>
 											</c:choose>
 										</div>
