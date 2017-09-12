@@ -17,10 +17,10 @@ public class ActivityLogDAOImpl  extends GenericDAO<ActivityLog> implements Acti
 	@Override
 	public List<ActivityLog> getLastLog(Long userId) throws DAOException {
 		try {
-			// TODO no mas de 10 ordenadas de las mas nuevas a las mas viejas
+			// TODO no mas de 10 ordenadas
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(ActivityLog.class);
 			criteria.add(Restrictions.eq("user.id", userId));
-			criteria.addOrder(Order.desc("id"));
+			criteria.addOrder(Order.asc("id"));
 			List<ActivityLog> list = criteria.list();
 			return list;
 		} catch (Exception e) {

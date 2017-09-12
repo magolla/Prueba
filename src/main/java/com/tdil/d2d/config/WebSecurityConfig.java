@@ -137,7 +137,7 @@ public class WebSecurityConfig  {
 	                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')").and()
 	                .csrf().and()
 	                .logout().logoutSuccessUrl("/admin/login?logout").and()
-					.exceptionHandling().accessDeniedPage("/403");
+					.exceptionHandling().accessDeniedPage("/admin/403");
 
 		    	httpSecurity
 			                .addFilterAfter(validationCaptchaFilterBean(), UsernamePasswordAuthenticationFilter.class);
