@@ -1886,6 +1886,8 @@ public class UserServiceImpl implements UserService {
 			if(notificationConfiguration!=null && notificationConfiguration.isPush()){
 
 				Notification notification = notificationDAO.getByUserOffer(user.getId(), offer.getId(), type.name());
+				
+				
 
 				if(notification == null) {
 
@@ -1908,7 +1910,7 @@ public class UserServiceImpl implements UserService {
 						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
 							iosNotificationService.sendNotification(type, user.getIosPushId());
 						} else if(user.getAndroidRegId()!=null){
-							androidNotificationService.sendNotification(type,  user.getAndroidRegId());
+							androidNotificationService.sendNotification(notification, type);
 						}
 					}
 				}

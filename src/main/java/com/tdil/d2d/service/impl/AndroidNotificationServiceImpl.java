@@ -49,7 +49,6 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 	@Override
 	public void sendNotification(NotificationType notificationType, String regId) {
 		try {
-
 			JSONObject request = new JSONObject();
 			request.put("to",regId); 
 
