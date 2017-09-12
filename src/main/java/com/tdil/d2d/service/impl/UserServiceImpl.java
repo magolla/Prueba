@@ -1896,8 +1896,7 @@ public class UserServiceImpl implements UserService {
 					notification.setOffer(offer);
 					notification.setTitle(type.getTitle());
 					notification.setMessage(type.getMessage());
-					//TODO-Hacer logica
-					// notification.setActionId(1);
+					notification.setActionId(offer.getId());
 					notification.setStatus("Enviado");
 
 					this.notificationDAO.save(notification);
