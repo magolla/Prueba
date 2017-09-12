@@ -1905,27 +1905,17 @@ public class UserServiceImpl implements UserService {
 					boolean sendNotif = NotificationServiceImpl.validateNotificationConfig(notificationConfiguration, type);
 
 					if(sendNotif) {
-
 						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
-
 							iosNotificationService.sendNotification(type, user.getIosPushId());
-
-
 						} else if(user.getAndroidRegId()!=null){
-
 							androidNotificationService.sendNotification(type,  user.getAndroidRegId());
-
 						}
 					}
-
 				}
-
 			}
-
 		} catch (DAOException e) {
 			logger.error("ERROR", e);
 		}
-
 	}
 
 	@Override
