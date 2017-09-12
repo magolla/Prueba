@@ -128,7 +128,7 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 		dto.setId(elem.getId());
 		dto.setAction(elem.getAction());
 		dto.setActionId(elem.getActionId());
-		dto.setCreationDate(elem.getCreationDate());
+		dto.setCreationDate(elem.getCreationDate().toString());
 		dto.setMessage(elem.getMessage());
 		if(elem.getOffer() != null) {
 			dto.setOfferId(elem.getOffer().getId());
@@ -203,7 +203,7 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 	public Integer getUnreadNotifications() {
 		User user = this.sessionService.getUserLoggedIn();
 		
-		Integer count = this.notificationDAO.getCoutNotificationByUserId(user.getId());
+		Integer count = this.notificationDAO.getCountNotificationByUserId(user.getId());
 		
 		return count;
 	}

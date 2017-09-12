@@ -2,6 +2,8 @@ package com.tdil.d2d.persistence;
 
 public enum NotificationType {
 	/*Este tipo es para notificar a un postulante que se publico una oferta que matchea el perfil*/
+	// Tiene que llevarme al detalle de la oferta.
+	//¿Que pasa si la oferta esta cerrada?
 	NEW_OFFER_MATCH {
 		@Override
 		public int getIntValue() {
@@ -19,6 +21,7 @@ public enum NotificationType {
 		}
 	},
 	/*Este tipo es para notificar a un oferente que alguien se postulo a una oferta*/
+	// Tiene que llevarme al detalle de la oferta
 	NEW_APPLICATION {
 		@Override
 		public int getIntValue() {
@@ -37,6 +40,7 @@ public enum NotificationType {
 		}
 	},
 	/*Esta oferta es para avisar al postulante que se acepto su postulacion*/
+	// Tiene que llevarme al detalle de la oferta
 	APPLICATION_ACCEPTED {
 		@Override
 		public int getIntValue() {
@@ -71,6 +75,7 @@ public enum NotificationType {
 		}
 	},
 	/*Esta notificacion es para avisar a los usuarios que hay una nueva beca*/
+	// Tiene que llevarme a las notas y centrarme en la clickeada(siempre y cuando no haya sido eliminada)
 	NEW_GRANT {
 		@Override
 		public int getIntValue() {

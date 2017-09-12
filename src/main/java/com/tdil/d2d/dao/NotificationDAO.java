@@ -17,5 +17,5 @@ public interface NotificationDAO {
 
 	public List<Notification> getAllNotificationByUserId(long id);
 
-	public Integer getCoutNotificationByUserId(long id);
+	public Integer getCountNotificationByUserId(long id);
 }

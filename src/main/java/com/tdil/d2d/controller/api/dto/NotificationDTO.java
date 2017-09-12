@@ -1,13 +1,11 @@
 package com.tdil.d2d.controller.api.dto;
 
-import java.util.Date;
-
 public class NotificationDTO {
 
 	private long id;
 	private String action;
 	private long actionId;
-	private Date creationDate;
+	private String creationDate;
 	private String message;
 	private String status;
 	private String title;
@@ -62,10 +60,10 @@ public class NotificationDTO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public Date getCreationDate() {
+	public String getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(String creationDate) {
 		this.creationDate = creationDate;
 	}
 }

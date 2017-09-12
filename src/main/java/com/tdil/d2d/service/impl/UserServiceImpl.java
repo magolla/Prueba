@@ -2109,4 +2109,55 @@ public class UserServiceImpl implements UserService {
 
 		return result;
 	}
+
+	@Override
+	public JobOfferStatusDTO getOfferById(long offerId) {
+		try {
+			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
+			
+			JobOfferStatusDTO jobOfferStatusDTO = new JobOfferStatusDTO();
+			
+			jobOfferStatusDTO.setId(jobOffer.getId());
+			jobOfferStatusDTO.setComment(jobOffer.getComment());
+			jobOfferStatusDTO.setCompanyScreenName(jobOffer.getCompanyScreenName());
+			jobOfferStatusDTO.setCreationDate(jobOffer.getCreationDate().toString());
+			jobOfferStatusDTO.setGeoLevelId(jobOffer.getGeoLevelId());
+			jobOfferStatusDTO.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
+			GeoLevel geoLevel;
+			try {
+				geoLevel = this.geoDAO.getGeoByIdAndLevel(jobOffer.getGeoLevelId(), jobOffer.getGeoLevelLevel());
+				jobOfferStatusDTO.setGeoLevelName(geoLevel.getName());
+			} catch (DAOException e) {
+				throw new RuntimeException(e);
+			}
+			jobOfferStatusDTO.setOfferHour(jobOffer.getHour());
+			jobOfferStatusDTO.setInstitutionType(jobOffer.getInstitutionType().toString());
+			jobOfferStatusDTO.setOfferDate(jobOffer.getOfferDate().toString());
+			jobOfferStatusDTO.setPermanent(jobOffer.isPermanent());
+			jobOfferStatusDTO.setStatus(jobOffer.getStatus());
+			jobOfferStatusDTO.setSubTitle(jobOffer.getSubtitle());
+			jobOfferStatusDTO.setTitle(jobOffer.getTitle());
+			jobOfferStatusDTO.setVacants(jobOffer.getVacants());
+			jobOfferStatusDTO.setOccupation_id(jobOffer.getOccupation().getId());
+			jobOfferStatusDTO.setOccupationName(jobOffer.getOccupation().getName());
+			jobOfferStatusDTO.setOfferent_id(jobOffer.getOfferent().getId());
+			jobOfferStatusDTO.setSpecialty_Id(jobOffer.getSpecialty().getId());
+			jobOfferStatusDTO.setSpecialtyName(jobOffer.getSpecialty().getName());
+			jobOfferStatusDTO.setTask_id(jobOffer.getTask().getId());
+			jobOfferStatusDTO.setTaskName(jobOffer.getTask().getName());
+			jobOfferStatusDTO.setApplications(jobOffer.getApplications());
+			if(jobOffer.getOfferent().getAvatar()!=null)
+				jobOfferStatusDTO.setBase64img(new String(jobOffer.getOfferent().getAvatar().getData()));
+			jobOfferStatusDTO.setJobApplication_id(jobOffer.getJobApplication_id());
+			jobOfferStatusDTO.setOfferentFirstname(jobOffer.getOfferent().getFirstname());
+			jobOfferStatusDTO.setOfferentLastname(jobOffer.getOfferent().getLastname());
+			
+			return jobOfferStatusDTO;
+			
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
 }

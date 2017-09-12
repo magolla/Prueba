@@ -70,7 +70,7 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 
 		try {
 
-			Integer count = this.notificationDAO.getCoutNotificationByUserId(notification.getUser().getId());
+			Integer count = this.notificationDAO.getCountNotificationByUserId(notification.getUser().getId());
 
 			JSONObject request = new JSONObject();
 			request.put("to",notification.getUser().getAndroidRegId()); 

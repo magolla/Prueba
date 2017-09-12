@@ -90,17 +90,17 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 	}
 
 	@Override
-	public Integer getCoutNotificationByUserId(long id) {
+	public Integer getCountNotificationByUserId(long id) {
 	
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT count(*)");
 		queryString.append("FROM Notification notification ");
 		queryString.append("WHERE notification.user.id = :user_id ");
-		queryString.append("AND notification.status <> :status ");
+		queryString.append("AND notification.status = :status ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		query.setParameter("user_id", id);
-		query.setParameter("status", "Eliminado");
+		query.setParameter("status", "Enviado");
 
 		int count = (int)(long) query.uniqueResult();
 		return count;
