@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.communication.ProxyConfiguration;
+import com.tdil.d2d.persistence.Notification;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.service.NotificationService;
 
@@ -18,11 +19,11 @@ import javapns.notification.PushNotificationBigPayload;
 @Transactional
 @Service("iosNotificationServiceImpl")
 public class IOSNotificationServiceImpl implements NotificationService {
-	
+
 	public static final String CERTIFICATE_FILE_NAME = "Certificates.p12";
 
 	private static ProxyConfiguration proxyConfiguration;
-	
+
 	private static ExecutorService executor = Executors.newFixedThreadPool(5);
 
 	public static ProxyConfiguration getProxyConfiguration() {
@@ -32,16 +33,16 @@ public class IOSNotificationServiceImpl implements NotificationService {
 	public static void setProxyConfiguration(ProxyConfiguration proxyConfiguration) {
 		IOSNotificationServiceImpl.proxyConfiguration = proxyConfiguration;
 	}
-	
+
 	@Override
 	public void sendNotification(NotificationType notificationType, String regId) {
 		try {
-			
+
 			PushNotificationBigPayload payload = PushNotificationBigPayload.complex();
 			payload.addCustomAlertTitle(notificationType.getTitle());
 			payload.addCustomAlertBody(notificationType.getMessage());
 			payload.addCustomDictionary("acme", notificationType.getIntValue());
-			
+
 			executor.submit(new SendIOSPushNotification(payload, 0, regId));
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -49,14 +50,33 @@ public class IOSNotificationServiceImpl implements NotificationService {
 
 	}
 	public static void send(int userId, int type, int level, String title, String message, String deviceId) {
-		
+
 	}
 
 	public static String getIosPushNoticationKeystoreLocation() throws URISyntaxException {
-		
+
 		URL resource = IOSNotificationServiceImpl.class.getResource(IOSNotificationServiceImpl.CERTIFICATE_FILE_NAME);
-		
+
 		return resource.getPath();
+	}
+
+	//-TODO agregar payload
+	@Override
+	public void sendNotification(Notification notification, NotificationType type) {
+		try {
+
+			PushNotificationBigPayload payload = PushNotificationBigPayload.complex();
+			payload.addCustomAlertTitle(notification.getTitle());
+			payload.addCustomAlertBody(notification.getMessage());
+
+
+			if(type != null) {
+				payload.addCustomDictionary("acme", type.getIntValue());
+			}
+			executor.submit(new SendIOSPushNotification(payload, 0, notification.getUser().getIosPushId()));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -177,4 +177,7 @@ public interface UserService {
 	public void sendSMS(SendSMSRequest request) throws ServiceException;
 	
 	public List<UserDTO> getAll() throws ServiceException;
+
+	public JobOfferStatusDTO getOfferById(long offerId);
+	
 }

@@ -1875,6 +1875,9 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 
+	/**
+	 * Este metodo se usa para registrar eventos predefinidos, el nombre,titulo y cuerpo de la notificacion debe ser definida en NotificationType
+	 */
 	private void sendNotification(NotificationType type, User user, JobOffer offer){
 
 		try {
@@ -1891,18 +1894,29 @@ public class UserServiceImpl implements UserService {
 					notification.setAction(type.name());
 					notification.setUser(user);
 					notification.setOffer(offer);
-					notification.setSeen(false);
+					notification.setTitle(type.getTitle());
+					notification.setMessage(type.getMessage());
+					//TODO-Hacer logica
+					// notification.setActionId(1);
+					notification.setStatus("Enviado");
 
 					this.notificationDAO.save(notification);
 
-					if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
 
-						iosNotificationService.sendNotification(type, user.getIosPushId());
+					boolean sendNotif = NotificationServiceImpl.validateNotificationConfig(notificationConfiguration, type);
 
-					} else if(user.getAndroidRegId()!=null){
+					if(sendNotif) {
 
-						androidNotificationService.sendNotification(type,  user.getAndroidRegId());
+						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
 
+							iosNotificationService.sendNotification(type, user.getIosPushId());
+
+
+						} else if(user.getAndroidRegId()!=null){
+
+							androidNotificationService.sendNotification(type,  user.getAndroidRegId());
+
+						}
 					}
 
 				}
@@ -2041,6 +2055,8 @@ public class UserServiceImpl implements UserService {
 			} else {
 				result.setUserOccupation("No cargo la Profesión");
 			}
+			result.setLicense(user.getLicense());
+
 			List<GeoLevelDTO> geoList = new ArrayList<GeoLevelDTO>();
 
 			for (Iterator<UserGeoLocation> iterator = user.getUserGeoLocations().iterator(); iterator.hasNext();) {
@@ -2116,5 +2132,56 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public JobOfferStatusDTO getOfferById(long offerId) {
+		try {
+			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
+			
+			JobOfferStatusDTO jobOfferStatusDTO = new JobOfferStatusDTO();
+			
+			jobOfferStatusDTO.setId(jobOffer.getId());
+			jobOfferStatusDTO.setComment(jobOffer.getComment());
+			jobOfferStatusDTO.setCompanyScreenName(jobOffer.getCompanyScreenName());
+			jobOfferStatusDTO.setCreationDate(jobOffer.getCreationDate().toString());
+			jobOfferStatusDTO.setGeoLevelId(jobOffer.getGeoLevelId());
+			jobOfferStatusDTO.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
+			GeoLevel geoLevel;
+			try {
+				geoLevel = this.geoDAO.getGeoByIdAndLevel(jobOffer.getGeoLevelId(), jobOffer.getGeoLevelLevel());
+				jobOfferStatusDTO.setGeoLevelName(geoLevel.getName());
+			} catch (DAOException e) {
+				throw new RuntimeException(e);
+			}
+			jobOfferStatusDTO.setOfferHour(jobOffer.getHour());
+			jobOfferStatusDTO.setInstitutionType(jobOffer.getInstitutionType().toString());
+			jobOfferStatusDTO.setOfferDate(jobOffer.getOfferDate().toString());
+			jobOfferStatusDTO.setPermanent(jobOffer.isPermanent());
+			jobOfferStatusDTO.setStatus(jobOffer.getStatus());
+			jobOfferStatusDTO.setSubTitle(jobOffer.getSubtitle());
+			jobOfferStatusDTO.setTitle(jobOffer.getTitle());
+			jobOfferStatusDTO.setVacants(jobOffer.getVacants());
+			jobOfferStatusDTO.setOccupation_id(jobOffer.getOccupation().getId());
+			jobOfferStatusDTO.setOccupationName(jobOffer.getOccupation().getName());
+			jobOfferStatusDTO.setOfferent_id(jobOffer.getOfferent().getId());
+			jobOfferStatusDTO.setSpecialty_Id(jobOffer.getSpecialty().getId());
+			jobOfferStatusDTO.setSpecialtyName(jobOffer.getSpecialty().getName());
+			jobOfferStatusDTO.setTask_id(jobOffer.getTask().getId());
+			jobOfferStatusDTO.setTaskName(jobOffer.getTask().getName());
+			jobOfferStatusDTO.setApplications(jobOffer.getApplications());
+			if(jobOffer.getOfferent().getAvatar()!=null)
+				jobOfferStatusDTO.setBase64img(new String(jobOffer.getOfferent().getAvatar().getData()));
+			jobOfferStatusDTO.setJobApplication_id(jobOffer.getJobApplication_id());
+			jobOfferStatusDTO.setOfferentFirstname(jobOffer.getOfferent().getFirstname());
+			jobOfferStatusDTO.setOfferentLastname(jobOffer.getOfferent().getLastname());
+			
+			return jobOfferStatusDTO;
+			
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 }

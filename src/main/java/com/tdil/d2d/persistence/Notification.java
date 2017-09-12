@@ -18,6 +18,7 @@ public class Notification implements PersistentEntity {
 	@Column(name = "id")
 	private long id;
 
+	
 	@ManyToOne
 	private User user;
 	
@@ -27,12 +28,54 @@ public class Notification implements PersistentEntity {
 	@Column(name = "action")
 	private String action;
 	
-	@Column(name = "seen")
-	private boolean seen;
+	@Column(name = "title")
+	private String title;
+	
+	@Column(name = "message")
+	private String message;
 	
 	@Column(name = "creationDate")
 	private Date creationDate;
 	
+	@Column(name = "status")
+	private String status;
+	
+	@Column(name = "actionId")
+	private long actionId;
+	
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public long getActionId() {
+		return actionId;
+	}
+
+	public void setActionId(long actionId) {
+		this.actionId = actionId;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -63,14 +106,6 @@ public class Notification implements PersistentEntity {
 	
 	public void setAction(String action) {
 		this.action = action;
-	}
-	
-	public boolean isSeen() {
-		return seen;
-	}
-	
-	public void setSeen(boolean read) {
-		this.seen = read;
 	}
 	
 	public Date getCreationDate() {
