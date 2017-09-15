@@ -83,6 +83,7 @@ public class IOSNotificationServiceImpl implements NotificationService {
 				payload.addCustomDictionary("action_id", notification.getActionId());
 				
 			}
+			System.out.println(payload);
 			executor.submit(new SendIOSPushNotification(payload, 0, notification.getUser().getIosPushId()));
 		} catch (JSONException e) {
 			e.printStackTrace();

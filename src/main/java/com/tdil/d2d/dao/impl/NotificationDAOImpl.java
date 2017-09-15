@@ -73,6 +73,7 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 		queryString.append("FROM Notification notification ");
 		queryString.append("WHERE notification.user.id = :user_id ");
 		queryString.append("AND notification.status <> :status ");
+		queryString.append("AND notification.actionId <> -1 ");
 		queryString.append("order by notification.creationDate desc");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());

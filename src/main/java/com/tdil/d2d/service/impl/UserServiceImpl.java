@@ -1959,17 +1959,14 @@ public class UserServiceImpl implements UserService {
 	 * Este metodo se usa para registrar eventos predefinidos, el nombre,titulo y cuerpo de la notificacion debe ser definida en NotificationType
 	 */
 	private void sendNotification(NotificationType type, User user, JobOffer offer){
-
 		try {
-
 			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
 			if(notificationConfiguration!=null && notificationConfiguration.isPush()){
-
-				Notification notification = notificationDAO.getByUserOffer(user.getId(), offer.getId(), type.name());
-				
-
+				Notification notification = null;
+				if(type != NotificationType.NEW_APPLICATION) {
+					notification = notificationDAO.getByUserOffer(user.getId(), offer.getId(), type.name());
+				}
 				if(notification == null) {
-
 					notification = new Notification();
 					notification.setCreationDate(new Date());
 					notification.setAction(type.name());
@@ -1979,15 +1976,13 @@ public class UserServiceImpl implements UserService {
 					notification.setMessage(type.getMessage());
 					notification.setActionId(offer.getId());
 					notification.setStatus("Enviado");
-
 					this.notificationDAO.save(notification);
-
 
 					boolean sendNotif = NotificationServiceImpl.validateNotificationConfig(notificationConfiguration, type);
 
 					if(sendNotif) {
 						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
-							iosNotificationService.sendNotification(type, user.getIosPushId());
+							iosNotificationService.sendNotification(notification, type);
 						} else if(user.getAndroidRegId()!=null){
 							androidNotificationService.sendNotification(notification, type);
 						}
