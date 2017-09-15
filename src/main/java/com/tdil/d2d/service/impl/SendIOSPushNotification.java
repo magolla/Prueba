@@ -75,6 +75,7 @@ public class SendIOSPushNotification implements Runnable {
 					try {
 						BasicDevice.validateTokenFormat(device.getToken());
 						PushedNotification notification = pushManager.sendNotification(device, payload, false);
+						System.out.println(notification);
 						notifications.add(notification);
 					} catch (InvalidDeviceTokenFormatException e) {
 						//notifications.add(new PushedNotification(device, payload, e));
