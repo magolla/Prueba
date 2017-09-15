@@ -8,6 +8,7 @@ import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
+import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
@@ -52,5 +53,7 @@ public interface UserDAO {
 	public Set<Long> getByGeo(List<GeoLevelDTO> geos) throws DAOException; 
 	
 	public long getCount() throws DAOException;
+
+	public List<User> getMatchedUsersNote(Note note) throws DAOException;
 	
 }

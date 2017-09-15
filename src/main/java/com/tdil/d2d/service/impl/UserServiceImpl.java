@@ -85,6 +85,7 @@ import com.tdil.d2d.dao.ActivityLogDAO;
 import com.tdil.d2d.dao.GeoDAO;
 import com.tdil.d2d.dao.JobApplicationDAO;
 import com.tdil.d2d.dao.JobOfferDAO;
+import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.dao.NotificationConfigurationDAO;
 import com.tdil.d2d.dao.NotificationDAO;
 import com.tdil.d2d.dao.PaymentDAO;
@@ -102,6 +103,7 @@ import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
+import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.Notification;
 import com.tdil.d2d.persistence.NotificationConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
@@ -161,6 +163,8 @@ public class UserServiceImpl implements UserService {
 	private ActivityLogDAO activityLogDAO;
 	@Autowired
 	private GeoDAO geoDAO;
+	@Autowired
+	private NoteDAO noteDAO;
 
 	@Autowired
 	private PaymentDAO paymentDAO;
@@ -1836,6 +1840,30 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	
+	@Override
+	public List<MatchedUserDTO> getMatchedUsersNote(Long noteId) throws ServiceException {
+		try {
+			List<User> result = new ArrayList<>();
+
+			Note note = this.noteDAO.getNoteById(noteId);
+
+			result = userDAO.getMatchedUsersNote(note);
+
+			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
+			for (User matchedUser : result) {
+				MatchedUserDTO matchedUserDTO = toMatchedUserDto(matchedUser);
+				matchedUserDTOs.add(matchedUserDTO);
+			}
+
+			return matchedUserDTOs;
+
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
 
 	private MatchedUserDTO toMatchedUserDto(User user) throws ServiceException {
 		MatchedUserDTO result = new MatchedUserDTO();
@@ -1874,6 +1902,58 @@ public class UserServiceImpl implements UserService {
 		}
 		return true;
 	}
+	
+	
+	@Override
+	public void notifyNewNotesToMatchedUsers(Long noteId,String category) throws ServiceException {
+		
+		
+		NotificationType type;
+	
+		
+		switch (category) {
+		case "CAT_1":
+			type = NotificationType.NEW_CONGRESS;
+			break;
+		case "CAT_2":
+			type = NotificationType.NEW_GRANT;
+			break;
+		case "CAT_3":
+			type = NotificationType.NEW_NOTE;
+			break;
+		case "CAT_4":
+			type = NotificationType.NEW_PROMOTION;
+			break;
+		case "CAT_5":
+			type = NotificationType.NEW_PRODUCTANDSERVICES;
+			break;
+		default:
+			System.out.println("Categoria erronea");
+			return;
+		}
+		
+		
+		
+		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsersNote(noteId);
+		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
+
+			//TODO - Ver si se aplica misma logica para las notas
+//			boolean alreadyApplied = this.searchIfApplied(noteId,matchedUserDTO.getUserId());
+
+//			if(!alreadyApplied) {
+
+				try {
+
+					User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
+					Note note = noteDAO.getNoteById(noteId);
+					sendNotificationNote(type, user,note);
+				} catch (DAOException e) {
+					logger.error("ERROR", e);
+				}
+//			}
+		}
+	}
+	
 
 	/**
 	 * Este metodo se usa para registrar eventos predefinidos, el nombre,titulo y cuerpo de la notificacion debe ser definida en NotificationType
@@ -1886,7 +1966,6 @@ public class UserServiceImpl implements UserService {
 			if(notificationConfiguration!=null && notificationConfiguration.isPush()){
 
 				Notification notification = notificationDAO.getByUserOffer(user.getId(), offer.getId(), type.name());
-				
 				
 
 				if(notification == null) {
@@ -1919,6 +1998,52 @@ public class UserServiceImpl implements UserService {
 			logger.error("ERROR", e);
 		}
 	}
+	
+	
+	/**
+	 * Este metodo se usa para registrar eventos predefinidos, el nombre,titulo y cuerpo de la notificacion debe ser definida en NotificationType
+	 */
+	private void sendNotificationNote(NotificationType type, User user, Note note){
+
+		try {
+
+			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
+			if(notificationConfiguration!=null && notificationConfiguration.isPush()){
+
+				Notification notification = notificationDAO.getByUserOffer(user.getId(), note.getId(), type.name());
+				
+
+				if(notification == null) {
+
+					notification = new Notification();
+					notification.setCreationDate(new Date());
+					notification.setAction(type.name());
+					notification.setUser(user);
+//					notification.setOffer(offer);
+					notification.setTitle(type.getTitle());
+					notification.setMessage(type.getMessage());
+					notification.setActionId(note.getId());
+					notification.setStatus("Enviado");
+
+					this.notificationDAO.save(notification);
+
+
+					boolean sendNotif = NotificationServiceImpl.validateNotificationConfig(notificationConfiguration, type);
+
+					if(sendNotif) {
+						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
+							iosNotificationService.sendNotification(type, user.getIosPushId());
+						} else if(user.getAndroidRegId()!=null){
+							androidNotificationService.sendNotification(notification, type);
+						}
+					}
+				}
+			}
+		} catch (DAOException e) {
+			logger.error("ERROR", e);
+		}
+	}
+	
 
 	@Override
 	public List<Long> getOfferIdsByDate(Date date) throws ServiceException {
@@ -2175,4 +2300,6 @@ public class UserServiceImpl implements UserService {
 		}
 		
 	}
+
+
 }

@@ -179,5 +179,11 @@ public interface UserService {
 	public List<UserDTO> getAll() throws ServiceException;
 
 	public JobOfferStatusDTO getOfferById(long offerId);
+
+
+
+	void notifyNewNotesToMatchedUsers(Long noteId, String category) throws ServiceException;
+
+	List<MatchedUserDTO> getMatchedUsersNote(Long noteId) throws ServiceException;
 	
 }

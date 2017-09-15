@@ -22,6 +22,7 @@ import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
+import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
@@ -261,6 +262,8 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 	}
+	
+	
 
 	@Override
 	public ValidationCode getValidationCode(String mobilePhone, String smsCode) throws DAOException {
@@ -368,6 +371,23 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	public long getCount() throws DAOException {
 		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
 		return (long)criteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	@Override
+	public List<User> getMatchedUsersNote(Note note) throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct user ");
+			queryString.append("FROM UserProfile userProfile ");
+			queryString.append("JOIN userProfile.user user ");
+			queryString.append("JOIN user.userGeoLocations location ");
+			queryString.append("order by user.lastLoginDate desc");
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
 	}
 
 }

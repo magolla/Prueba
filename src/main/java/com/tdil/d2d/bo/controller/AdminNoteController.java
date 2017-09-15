@@ -27,10 +27,13 @@ import com.tdil.d2d.bo.dto.ResultDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.NoteCategory;
 import com.tdil.d2d.service.BONoteService;
 import com.tdil.d2d.service.SpecialtyService;
+import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.ImageResizer;
 import com.tdil.d2d.utils.LoggerManager;
 
@@ -44,6 +47,12 @@ public class AdminNoteController {
 	
 	@Autowired
 	private SpecialtyService specialtyService;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private NoteDAO noteDao;
 	
 	@RequestMapping(value = {"/BoNotes"} , method = RequestMethod.GET)
 	public ModelAndView homePage() {
@@ -138,6 +147,8 @@ public class AdminNoteController {
 			ResultDTO result = noteService.save(note);
 			
 			if(!result.isSuccess()){
+				
+				
 				ModelAndView model = new ModelAndView();
 				model.setViewName("admin/note-editor");
 				model.addObject("errors", result.getErrors());
@@ -146,6 +157,8 @@ public class AdminNoteController {
 				return model;
 			}
 			
+			Note lastNote = noteDao.getLastNote();
+			this.userService.notifyNewNotesToMatchedUsers(lastNote.getId(), lastNote.getCategory().name());
 			ModelAndView model = new ModelAndView();
 			model.setViewName("redirect:/admin/BoNotes");
 

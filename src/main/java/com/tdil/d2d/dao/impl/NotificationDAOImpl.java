@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.tdil.d2d.dao.NotificationDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Notification;
+import com.tdil.d2d.persistence.NotificationType;
 
 @Repository
 public class NotificationDAOImpl  extends GenericDAO<Notification> implements NotificationDAO {
@@ -30,32 +31,43 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Notification getByUserOffer(Long userId, Long offerId, String type) {
-		
+
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT distinct notification ");
 		queryString.append("FROM Notification notification ");
-		queryString.append("WHERE notification.offer.id = :offer_id ");
-		queryString.append("AND notification.user.id = :user_id ");
+
+		queryString.append("WHERE notification.user.id = :user_id ");
+
+		if(type != NotificationType.NEW_NOTE.name() && type != NotificationType.NEW_CONGRESS.name() && type != NotificationType.NEW_GRANT.name() 
+				&& type != NotificationType.NEW_PRODUCTANDSERVICES.name() && type != NotificationType.NEW_NOTE.name()) {
+			queryString.append("AND notification.offer.id = :offer_id ");	
+		}
+
+
 		queryString.append("AND notification.action = :action ");
 		queryString.append("order by notification.creationDate desc");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
-		query.setParameter("offer_id", offerId);
+		if(type != NotificationType.NEW_NOTE.name() && type != NotificationType.NEW_CONGRESS.name() && type != NotificationType.NEW_GRANT.name() 
+				&& type != NotificationType.NEW_PRODUCTANDSERVICES.name() && type != NotificationType.NEW_NOTE.name()) {
+			query.setParameter("offer_id", offerId);
+		}
+
 		query.setParameter("user_id", userId);
 		query.setParameter("action", type);
 
 		List<Notification> list = query.list();
-		
+
 		return list.isEmpty() ? null : list.get(0);
 	}
 
 	@Override
 	public List<Notification> getAllNotificationByUserId(long id) {
-		
+
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT distinct notification ");
 		queryString.append("FROM Notification notification ");
@@ -68,15 +80,15 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 		query.setParameter("status", "Eliminado");
 
 		List<Notification> list = query.list();
-		
+
 		updateNotification(id);
-		
-		
+
+
 		return list.isEmpty() ? null : list;
-		
+
 	}
-	
-	
+
+
 	public void updateNotification(long id){
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("update Notification notification ");
@@ -91,7 +103,7 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 
 	@Override
 	public Integer getCountNotificationByUserId(long id) {
-	
+
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT count(*)");
 		queryString.append("FROM Notification notification ");
@@ -105,7 +117,7 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 		int count = (int)(long) query.uniqueResult();
 		return count;
 
-		
+
 	}
 
 }

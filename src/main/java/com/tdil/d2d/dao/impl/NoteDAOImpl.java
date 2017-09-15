@@ -110,4 +110,20 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Note.class);
 		return criteria.list();
 	}
+
+	@Override
+	public Note getLastNote() {
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT distinct note ");
+		queryString.append("FROM Note note ");
+		queryString.append("left join note.specialties as specialty ");
+		queryString.append("left join note.occupations as occupation ");
+		queryString.append("order by note.id desc ");
+
+		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+		List<Note> list = query.list();
+
+		return list.get(0);
+	}
 }

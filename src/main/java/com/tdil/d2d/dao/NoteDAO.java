@@ -17,5 +17,7 @@ public interface NoteDAO {
 
 	List<Note> getNotesForUser(int page, int size, List<Long> ocuppations, List<Long> specialities, User user);
 
-	List<Note> getAll() throws DAOException; 
+	List<Note> getAll() throws DAOException;
+
+	Note getLastNote(); 
 }
