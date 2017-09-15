@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.tdil.d2d.bo.dto.NotificationBackofficeDTO;
+import com.tdil.d2d.controller.api.dto.NotificationCountResponse;
 import com.tdil.d2d.controller.api.dto.NotificationDTO;
 import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
@@ -61,6 +62,20 @@ public class NotificationsController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<GenericResponse<Integer>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/notification/getUnreadNotificationsCountIos", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<NotificationCountResponse>> getUnreadIos() {
+		try {
+			Integer count = this.notificationBackofficeService.getUnreadNotifications();
+			NotificationCountResponse notificationCountResponse = new NotificationCountResponse();
+			notificationCountResponse.setNotifCount(count);
+			
+			return new ResponseEntity<GenericResponse<NotificationCountResponse>>(new GenericResponse<NotificationCountResponse>(notificationCountResponse,HttpStatus.OK.value()), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<NotificationCountResponse>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

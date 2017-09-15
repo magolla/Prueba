@@ -81,6 +81,7 @@ public class AndroidNotificationServiceImpl implements NotificationService {
 			data.put("action", notification.getAction());
 			data.put("action_id", notification.getActionId());
 			data.put("unreadNotifications", count.toString());
+			
 
 			JSONObject notificationValues = new JSONObject();
 			notificationValues.put("title", notification.getTitle());
