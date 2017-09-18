@@ -404,7 +404,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				boolean encontrado = false;
 				for (Specialty userSpecialty : user.getSpecialties()) {
 					for (Specialty noteSpecialty : note.getSpecialties()) {
-						if(userSpecialty.getId() == noteSpecialty.getId()) {
+						if(userSpecialty.getId() == noteSpecialty.getId() || !user.isUserb()) {
 							userList.add(user);
 							encontrado = true;
 							break;
