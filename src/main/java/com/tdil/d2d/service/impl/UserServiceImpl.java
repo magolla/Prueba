@@ -2028,7 +2028,8 @@ public class UserServiceImpl implements UserService {
 
 					if(sendNotif) {
 						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
-							iosNotificationService.sendNotification(type, user.getIosPushId());
+							//iosNotificationService.sendNotification(type, user.getIosPushId());
+							iosNotificationService.sendNotification(notification, type);
 						} else if(user.getAndroidRegId()!=null){
 							androidNotificationService.sendNotification(notification, type);
 						}
