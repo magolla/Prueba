@@ -1935,6 +1935,7 @@ public class UserServiceImpl implements UserService {
 		
 		
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsersNote(noteId);
+		Note note = noteDAO.getNoteById(noteId);
 		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
 
 			//TODO - Ver si se aplica misma logica para las notas
@@ -1945,7 +1946,7 @@ public class UserServiceImpl implements UserService {
 				try {
 
 					User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
-					Note note = noteDAO.getNoteById(noteId);
+					
 					sendNotificationNote(type, user,note);
 				} catch (DAOException e) {
 					logger.error("ERROR", e);

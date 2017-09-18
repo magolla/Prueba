@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import com.tdil.d2d.dao.NotificationDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Notification;
-import com.tdil.d2d.persistence.NotificationType;
 
 @Repository
 public class NotificationDAOImpl  extends GenericDAO<Notification> implements NotificationDAO {
@@ -42,20 +41,14 @@ public class NotificationDAOImpl  extends GenericDAO<Notification> implements No
 
 		queryString.append("WHERE notification.user.id = :user_id ");
 
-		if(type != NotificationType.NEW_NOTE.name() && type != NotificationType.NEW_CONGRESS.name() && type != NotificationType.NEW_GRANT.name() 
-				&& type != NotificationType.NEW_PRODUCTANDSERVICES.name() && type != NotificationType.NEW_NOTE.name()) {
-			queryString.append("AND notification.offer.id = :offer_id ");	
-		}
+		queryString.append("AND notification.actionId = :actionId ");	
 
 
 		queryString.append("AND notification.action = :action ");
 		queryString.append("order by notification.creationDate desc");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
-		if(type != NotificationType.NEW_NOTE.name() && type != NotificationType.NEW_CONGRESS.name() && type != NotificationType.NEW_GRANT.name() 
-				&& type != NotificationType.NEW_PRODUCTANDSERVICES.name() && type != NotificationType.NEW_NOTE.name()) {
-			query.setParameter("offer_id", offerId);
-		}
+		query.setParameter("actionId", offerId);
 
 		query.setParameter("user_id", userId);
 		query.setParameter("action", type);
