@@ -1,5 +1,6 @@
 package com.tdil.d2d.dao.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
 import com.tdil.d2d.persistence.Note;
+import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
@@ -156,23 +158,23 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 		}
 	}
 
-    @Override
-    public void save(UserLinkedinProfile linkedinProfile) throws DAOException {
-        String invocationDetails= "save(" + linkedinProfile.getClass().getName() + ") ";
-        try {
-            this.getHibernateTemplate().save(linkedinProfile);
-            this.getHibernateTemplate().flush();
-        } catch (DataIntegrityViolationException e) {
-            this.handleException(invocationDetails, e);
-        } catch (Exception e) {
-            this.handleException(invocationDetails, e);
-        }
-    }
+	@Override
+	public void save(UserLinkedinProfile linkedinProfile) throws DAOException {
+		String invocationDetails= "save(" + linkedinProfile.getClass().getName() + ") ";
+		try {
+			this.getHibernateTemplate().save(linkedinProfile);
+			this.getHibernateTemplate().flush();
+		} catch (DataIntegrityViolationException e) {
+			this.handleException(invocationDetails, e);
+		} catch (Exception e) {
+			this.handleException(invocationDetails, e);
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
+	@SuppressWarnings("unchecked")
+	@Override
 	public Media getMediaBy(long userId, MediaType mediaType) throws DAOException {
-    	try {
+		try {
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT media ");
 			queryString.append("FROM User user ");
@@ -186,42 +188,42 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			query.setParameter("userId", userId);
 
 			List<Media> list = query.list();
-			
+
 			return !list.isEmpty() ? list.get(0) : null;
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
-    }
-    
+	}
 
-    @Override
-    public void save(Media media) throws DAOException {
-        String invocationDetails= "save(" + Media.class.getName() + ") ";
-        try {
-            this.getHibernateTemplate().save(media);
-            this.getHibernateTemplate().flush();
-        } catch (DataIntegrityViolationException e) {
-            this.handleException(invocationDetails, e);
-        } catch (Exception e) {
-            this.handleException(invocationDetails, e);
-        }
-    }
+
+	@Override
+	public void save(Media media) throws DAOException {
+		String invocationDetails= "save(" + Media.class.getName() + ") ";
+		try {
+			this.getHibernateTemplate().save(media);
+			this.getHibernateTemplate().flush();
+		} catch (DataIntegrityViolationException e) {
+			this.handleException(invocationDetails, e);
+		} catch (Exception e) {
+			this.handleException(invocationDetails, e);
+		}
+	}
 
 	@Override
 	public void deleteUserGeoLocations(User user) throws DAOException{
-		 String invocationDetails= "deleteUserGeoLocations(" + user.getClass().getName() + ") ";
+		String invocationDetails= "deleteUserGeoLocations(" + user.getClass().getName() + ") ";
 		try {
-			
+
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(UserGeoLocation.class);
 			criteria.add(Restrictions.eq("user.id", user.getId()));
 			List<UserGeoLocation> list = criteria.list();
-			
+
 			for(UserGeoLocation geoLocation : list){
 				this.getHibernateTemplate().delete(geoLocation);
 			}
 		} catch (Exception e) {
-	          this.handleException(invocationDetails, e);
-	    }
+			this.handleException(invocationDetails, e);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -237,7 +239,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			queryString.append("AND :task in elements(userProfile.tasks) ");
 			queryString.append("AND user.userb = true ");
 			queryString.append("AND user.id != :offerentId ");
-			
+
 			if(!locations.isEmpty()) {
 				queryString.append("AND (");
 				String OR = "";
@@ -248,7 +250,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				}
 				queryString.append(") ");
 			}
-			
+
 			queryString.append("order by user.lastLoginDate desc");
 
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
@@ -262,8 +264,8 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 	}
-	
-	
+
+
 
 	@Override
 	public ValidationCode getValidationCode(String mobilePhone, String smsCode) throws DAOException {
@@ -282,7 +284,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public void save(ValidationCode validationCode) throws DAOException {
 		String invocationDetails = "save(" + validationCode.getClass().getName() + ") ";
@@ -295,78 +297,78 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			this.handleException(invocationDetails, e);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getAll() throws DAOException {
-			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
-			return criteria.list();
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
+		return criteria.list();
 	}
 
 	@Override
 	public Set<Long> getByGeo(List<GeoLevelDTO> locations) throws DAOException {
 		try {
-			
+
 			Set<Long> result = new HashSet<Long>();
-			
+
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user.id ");
 			queryString.append("FROM User user ");
 			if(!locations.isEmpty()) {
-				
+
 				String whereIn = "";
 				int count = 1;
 				for (GeoLevelDTO location : locations) {
 					whereIn = whereIn + "(" + location.getId() + ", " + location.getLevel() + "),";
-					
+
 					if(count > 1000){
-						
+
 						whereIn = whereIn.substring(0, whereIn.length() - 1);
-						
+
 						queryString.append("JOIN user.userGeoLocations location ");
 						queryString.append("WHERE user.userb=1 AND (location.geoLevelId, location.geoLevelLevel) IN (" + whereIn + ")");
-						
+
 						Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 
 						result.addAll(query.list());
-						
+
 						queryString = new StringBuilder("");
 						queryString.append("SELECT distinct user.id ");
 						queryString.append("FROM User user ");
-						
+
 						whereIn = "";
-						
+
 						count = 0;
 					}
-					
+
 					count = count + 1;
-					
+
 				}
-				
+
 				whereIn = whereIn.substring(0, whereIn.length() - 1);
-				
+
 				queryString.append("JOIN user.userGeoLocations location ");
 				queryString.append("WHERE  user.userb=1 AND (location.geoLevelId, location.geoLevelLevel) IN (" + whereIn + ")");
-				
+
 				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 				result.addAll(query.list());
-				
+
 				return result;
-				
+
 			} else {
-				
+
 				queryString.append("WHERE  user.userb=1 ");
 				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 				result.addAll(query.list());
 				return result;
 			}
-			
-			
+
+
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
 	}
-	
+
 	@Override
 	public long getCount() throws DAOException {
 		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
@@ -384,10 +386,43 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			queryString.append("order by user.lastLoginDate desc");
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 
+			List<User> filterUser = filterUsers(query.list(), note);
+
 			return query.list();
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+	}
+
+	private List<User> filterUsers(List<User> list, Note note) {
+
+		List<User> userList = new ArrayList<User>();
+
+		if(!note.getSpecialties().isEmpty()) {
+
+			for (User user : list) {
+				boolean encontrado = false;
+				for (Specialty userSpecialty : user.getSpecialties()) {
+					for (Specialty noteSpecialty : note.getSpecialties()) {
+						if(userSpecialty.getId() == noteSpecialty.getId()) {
+							userList.add(user);
+							encontrado = true;
+							break;
+						}
+					}
+					if(encontrado) {
+						break;
+					}
+				}
+			}
+		}
+
+		if(!userList.isEmpty()) {
+			return userList;	
+		} else {
+			return list;
+		}
+
 	}
 
 }
