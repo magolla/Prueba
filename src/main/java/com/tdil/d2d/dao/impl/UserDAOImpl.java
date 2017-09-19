@@ -382,7 +382,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			queryString.append("SELECT distinct user ");
 			queryString.append("FROM UserProfile userProfile ");
 			queryString.append("JOIN userProfile.user user ");
-			queryString.append("JOIN user.userGeoLocations location ");
+			//queryString.append("JOIN user.userGeoLocations location ");
 			queryString.append("order by user.lastLoginDate desc");
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 
