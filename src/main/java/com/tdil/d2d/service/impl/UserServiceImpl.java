@@ -1906,10 +1906,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void notifyNewNotesToMatchedUsers(Long noteId,String category) throws ServiceException {
-		
-		
 		NotificationType type;
-	
 		
 		switch (category) {
 		case "CAT_1":
@@ -1931,8 +1928,6 @@ public class UserServiceImpl implements UserService {
 			System.out.println("Categoria erronea");
 			return;
 		}
-		
-		
 		
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsersNote(noteId);
 		Note note = noteDAO.getNoteById(noteId);
