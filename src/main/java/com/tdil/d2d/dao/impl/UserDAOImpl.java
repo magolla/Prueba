@@ -380,15 +380,15 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 		try {
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
-			queryString.append("FROM UserProfile userProfile ");
-			queryString.append("JOIN userProfile.user user ");
-			queryString.append("JOIN user.userGeoLocations location ");
+			queryString.append("FROM User user ");
+//			queryString.append("JOIN userProfile.user user ");
+//			queryString.append("JOIN user.userGeoLocations location ");
 			queryString.append("order by user.lastLoginDate desc");
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 
 			List<User> filterUser = filterUsers(query.list(), note);
 
-			return query.list();
+			return filterUser;
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
@@ -402,14 +402,21 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
 			for (User user : list) {
 				boolean encontrado = false;
-				for (Specialty userSpecialty : user.getSpecialties()) {
-					for (Specialty noteSpecialty : note.getSpecialties()) {
-						if(userSpecialty.getId() == noteSpecialty.getId() || !user.isUserb()) {
-							userList.add(user);
-							encontrado = true;
-							break;
+				if(!user.isUserb()) {
+					userList.add(user);
+					encontrado = true;
+				}
+				
+				if(!encontrado) {
+					for (Specialty userSpecialty : user.getSpecialties()) {
+						for (Specialty noteSpecialty : note.getSpecialties()) {
+							if(userSpecialty.getId() == noteSpecialty.getId() || !user.isUserb()) {
+								userList.add(user);
+								encontrado = true;
+								break;
+							}
 						}
-					}
+					}	
 					if(encontrado) {
 						break;
 					}

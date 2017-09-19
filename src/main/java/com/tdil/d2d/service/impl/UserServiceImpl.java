@@ -1947,7 +1947,11 @@ public class UserServiceImpl implements UserService {
 
 					User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
 					
-					sendNotificationNote(type, user,note);
+					
+					if(!(user.getIosPushId() == null && user.getAndroidRegId() == null)) {
+						sendNotificationNote(type, user,note);	
+					}
+					
 				} catch (DAOException e) {
 					logger.error("ERROR", e);
 				}
