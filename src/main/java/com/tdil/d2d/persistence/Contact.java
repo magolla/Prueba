@@ -27,6 +27,25 @@ public class Contact implements PersistentEntity {
 	@Column(name="comment")
 	private String comment;
 	
+	@ManyToOne
+	private User user;
+	
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public long getId() {
 		return id;
 	}
