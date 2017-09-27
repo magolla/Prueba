@@ -1906,10 +1906,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void notifyNewNotesToMatchedUsers(Long noteId,String category) throws ServiceException {
-		
-		
 		NotificationType type;
-	
 		
 		switch (category) {
 		case "CAT_1":
@@ -1932,8 +1929,6 @@ public class UserServiceImpl implements UserService {
 			return;
 		}
 		
-		
-		
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsersNote(noteId);
 		Note note = noteDAO.getNoteById(noteId);
 		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
@@ -1947,7 +1942,11 @@ public class UserServiceImpl implements UserService {
 
 					User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
 					
-					sendNotificationNote(type, user,note);
+					
+					if(!(user.getIosPushId() == null && user.getAndroidRegId() == null)) {
+						sendNotificationNote(type, user,note);	
+					}
+					
 				} catch (DAOException e) {
 					logger.error("ERROR", e);
 				}
@@ -2028,7 +2027,6 @@ public class UserServiceImpl implements UserService {
 
 					if(sendNotif) {
 						if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
-							//iosNotificationService.sendNotification(type, user.getIosPushId());
 							iosNotificationService.sendNotification(notification, type);
 						} else if(user.getAndroidRegId()!=null){
 							androidNotificationService.sendNotification(notification, type);

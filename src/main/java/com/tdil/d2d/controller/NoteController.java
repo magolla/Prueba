@@ -43,7 +43,7 @@ public class NoteController {
 	private NoteService noteService;
 	@Autowired
 	private SessionService sessionService;
-	
+
 	@RequestMapping(value = "/notes", method = {RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<Note>> save(@RequestBody CreateNoteRequest request) {
 
@@ -57,80 +57,80 @@ public class NoteController {
 	@RequestMapping(value = "/notes", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotes(@RequestParam Map<String, Object> params) {
 
-//		String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
-//	    String page = (String) (String)params.getOrDefault("page", "0");
-//
-//	    params.remove("size");
-//	    params.remove("page");
-//	    
-//		List<Note> notes = this.noteService.getNotes(Integer.valueOf(page), Integer.valueOf(size), params);
-//
-//		List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
-//
-//		return ResponseEntity.ok(new GenericResponse<>(200, response));
-		
+		//		String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
+		//	    String page = (String) (String)params.getOrDefault("page", "0");
+		//
+		//	    params.remove("size");
+		//	    params.remove("page");
+		//	    
+		//		List<Note> notes = this.noteService.getNotes(Integer.valueOf(page), Integer.valueOf(size), params);
+		//
+		//		List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
+		//
+		//		return ResponseEntity.ok(new GenericResponse<>(200, response));
+
 		//TODO:Se copio el contenido de la otra funcion, en el futuro hay que unificarlas.En las apps se llaman a diferentes url dependiendo el tipo de usuario 
 		try{
-	        	
-	        	String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
-	    	    String page = (String) (String)params.getOrDefault("page", "0");
-	        	
-				List<Note> notes = this.noteService.getNotesForUser(Integer.valueOf(page), Integer.valueOf(size));
-		
-				List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
-		
-				return ResponseEntity.ok(new GenericResponse<>(200, response));
-				
-	        } catch (ServiceException e) {
-	            LoggerManager.error(this, e);
-	            RegistrationResponse response = new RegistrationResponse(0);
-	            response.addError(e.getLocalizedMessage());
-	            return new ResponseEntity<GenericResponse<List<NoteDTO>>> ((GenericResponse<List<NoteDTO>>) null, HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-		
+
+			String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
+			String page = (String) (String)params.getOrDefault("page", "0");
+
+			List<Note> notes = this.noteService.getNotesForUser(Integer.valueOf(page), Integer.valueOf(size));
+
+			List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
+
+			return ResponseEntity.ok(new GenericResponse<>(200, response));
+
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			RegistrationResponse response = new RegistrationResponse(0);
+			response.addError(e.getLocalizedMessage());
+			return new ResponseEntity<GenericResponse<List<NoteDTO>>> ((GenericResponse<List<NoteDTO>>) null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
 	@RequestMapping(value = "/notesforuser", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<NoteDTO>>> getNotesForUser(@RequestParam Map<String, Object> params) {
-        try{
-        	
-        	String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
-    	    String page = (String) (String)params.getOrDefault("page", "0");
-        	
+		try{
+
+			String size = (String) (String)params.getOrDefault("size", DEFAULT_PAGE_SIZE);
+			String page = (String) (String)params.getOrDefault("page", "0");
+
 			List<Note> notes = this.noteService.getNotesForUser(Integer.valueOf(page), Integer.valueOf(size));
-	
+
 			List<NoteDTO> response = notes.stream().map((elem) -> toDTO(elem)).collect(Collectors.toList());
-	
+
 			return ResponseEntity.ok(new GenericResponse<>(200, response));
-			
-        } catch (ServiceException e) {
-            LoggerManager.error(this, e);
-            RegistrationResponse response = new RegistrationResponse(0);
-            response.addError(e.getLocalizedMessage());
-            return new ResponseEntity<GenericResponse<List<NoteDTO>>> ((GenericResponse<List<NoteDTO>>) null, HttpStatus.INTERNAL_SERVER_ERROR);
+
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			RegistrationResponse response = new RegistrationResponse(0);
+			response.addError(e.getLocalizedMessage());
+			return new ResponseEntity<GenericResponse<List<NoteDTO>>> ((GenericResponse<List<NoteDTO>>) null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@RequestMapping(value = "/homenote", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<NoteDTO>> getHomeNote() {
-        try{
-        	
+		try{
+
 			Note note = this.noteService.getHomeNote();
-	
+
 			if(note != null){
-                NoteDTO dto = toDTO(note);
-			    return ResponseEntity.ok(new GenericResponse<>(200, dto));
+				NoteDTO dto = toDTO(note);
+				return ResponseEntity.ok(new GenericResponse<>(200, dto));
 			} else{
 				return ResponseEntity.ok(new GenericResponse<>(400, null));
 			}
-        } catch (ServiceException e) {
-            LoggerManager.error(this, e);
-            RegistrationResponse response = new RegistrationResponse(0);
-            response.addError(e.getLocalizedMessage());
-            return new ResponseEntity<GenericResponse<NoteDTO>> ((GenericResponse<NoteDTO>) null, HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			RegistrationResponse response = new RegistrationResponse(0);
+			response.addError(e.getLocalizedMessage());
+			return new ResponseEntity<GenericResponse<NoteDTO>> ((GenericResponse<NoteDTO>) null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@RequestMapping(value = "/notes/{id}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<NoteDTO>> getNoteById(@PathVariable("id") Long id) {
 		Note note = this.noteService.getNoteById(id);
@@ -192,7 +192,11 @@ public class NoteController {
 		dto.setActive(elem.isActive());
 		dto.setContent(elem.getContent());
 		dto.setExpirationDate(elem.getExpirationDate());
-		dto.setCategory(elem.getCategory().toString());
+		if(elem.getCategory() != null) {
+			dto.setCategory(elem.getCategory().toString());
+		} else {
+			dto.setCategory("");
+		}
 		dto.setCreationDate(elem.getCreationDate());
 		dto.setPublishingDate(elem.getPublishingDate());
 		dto.setTitle(elem.getTitle());

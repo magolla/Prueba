@@ -158,7 +158,9 @@ public class AdminNoteController {
 			}
 			
 			Note lastNote = noteDao.getLastNote();
-			this.userService.notifyNewNotesToMatchedUsers(lastNote.getId(), lastNote.getCategory().name());
+			if(lastNote.getCategory() != null) {
+				this.userService.notifyNewNotesToMatchedUsers(lastNote.getId(), lastNote.getCategory().name());
+			}
 			ModelAndView model = new ModelAndView();
 			model.setViewName("redirect:/admin/BoNotes");
 
