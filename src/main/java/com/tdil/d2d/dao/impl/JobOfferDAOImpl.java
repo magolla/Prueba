@@ -35,7 +35,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
 			criteria.add(Restrictions.eq("offerent.id", userId));
 			criteria.add(Restrictions.ge("offerDate", new Date()));
-			criteria.addOrder(Order.asc("offerDate"));
+			criteria.addOrder(Order.desc("offerDate"));
 			List<JobOffer> list = criteria.list();
 			return list;
 		} catch (Exception e) {
