@@ -178,7 +178,11 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT media ");
 			queryString.append("FROM User user ");
-			queryString.append("JOIN user.pdfCV media ");
+			if(mediaType.name().equals(MediaType.AVATAR.name())) {
+				queryString.append("JOIN user.avatar media ");
+			} else {
+				queryString.append("JOIN user.pdfCV media ");
+			}
 			queryString.append("WHERE media.type = :mediaType ");
 			queryString.append("AND user.id = :userId ");
 			queryString.append("order by media.id desc");
