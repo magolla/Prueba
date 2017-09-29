@@ -4,15 +4,12 @@ import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.tdil.d2d.esapi.validation.ValidInput;
-
 public class CreateContactRequest extends ApiRequest {
 	
 	@Min(value = 1)
 	private long contactMotiveId;
 	
 	@Length(max = 256)
-	@ValidInput
 	private String comment;
 
 	public long getContactMotiveId() {
