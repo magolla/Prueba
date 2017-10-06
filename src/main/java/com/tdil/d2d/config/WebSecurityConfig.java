@@ -134,7 +134,18 @@ public class WebSecurityConfig  {
 			    	.authorizeRequests().antMatchers("/admin/login").permitAll()
 	                .antMatchers("/admin/adminlte/**").permitAll()
 	                .antMatchers("/admin/bootstrap/**").permitAll()
-	                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')").and()
+	                //Este se va a usar para las syspro
+	                //.antMatchers("/admin/reports/**").access("hasRole('ROLE_SYSPRO')")
+	                .antMatchers("/admin/dashboard").authenticated()
+	                //Accesos del usuario con rol LOGS
+	                .antMatchers("/admin/logs").access("hasAnyRole('ROLE_LOGS','ROLE_ADMIN')")
+	                //Accesos del usuario con rol REPORTS
+	                .antMatchers("/admin/reports/**").access("hasAnyRole('ROLE_REPORTS','ROLE_ADMIN')")
+	                //Accesos del usuario con rol EDITOR
+	                .antMatchers("/admin/BoNotes","/admin/notes/**","/admin/list/bo-notes").access("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
+	                //Accesos del usuario con rol ADMIN
+	                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+	                .and()
 	                .csrf().and()
 	                .logout().logoutSuccessUrl("/admin/login?logout").and()
 					.exceptionHandling().accessDeniedPage("/admin/403");
