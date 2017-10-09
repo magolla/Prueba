@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -108,41 +109,57 @@
 						<i class="fa fa-dashboard"></i> <span>Inicio</span>
 					</a>
 				</li>
-				<li class="treeview">
+				<!--Roles para Usuarios -->
+				<sec:authorize access="hasRole('ROLE_ADMIN')">
+					<li class="treeview">
 					<a href="<c:url value="/admin/users" />">
 						<i class="fa fa-user"></i> <span>Usuarios</span>
 					</a>
 				</li>
-				<li class="treeview">
-					<a href="<c:url value="/admin/BoNotes" />">
-						<i class="fa fa-book"></i> <span>ABM de Notas</span>
-					</a>
-				</li>
-				<li class="treeview">
-					<a href="<c:url value="/admin/reports/subscription" />">
-						<i class="fa fa-book"></i> <span>Reporte: Suscripciones</span>
-					</a>
-				</li>
-				<li class="treeview">
-					<a href="<c:url value="/admin/reports/jobofferstats" />">
-						<i class="fa fa-book"></i> <span>Reporte: Avisos mensual</span>
-					</a>
-				</li>
-				<li class="treeview">
-					<a href="<c:url value="/admin/reports/jobofferstats/daily" />">
-						<i class="fa fa-book"></i> <span>Reporte: Avisos 30 d&iacute;as</span>
-					</a>
-				</li>
-				<li class="treeview">
-					<a href="<c:url value="/admin/reports/details" />">
-						<i class="fa fa-book"></i> <span>Reporte: Detalle de avisos</span>
-					</a>
-				</li>
-				<li class="treeview">
-					<a href="<c:url value="/admin/logs" />">
-						<i class="fa fa-book"></i> <span>Logs</span>
-					</a>
-				</li>
+				</sec:authorize>
+				
+				<!--Roles para Notas -->
+				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_EDITOR')">
+					<li class="treeview">
+						<a href="<c:url value="/admin/BoNotes" />">
+							<i class="fa fa-book"></i> <span>ABM de Notas</span>
+						</a>
+					</li>
+				</sec:authorize>
+			
+				<!--Roles para Reportes -->
+				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_REPORTS')">
+					<li class="treeview">
+						<a href="<c:url value="/admin/reports/subscription" />">
+							<i class="fa fa-book"></i> <span>Reporte: Suscripciones</span>
+						</a>
+					</li>
+					<li class="treeview">
+						<a href="<c:url value="/admin/reports/jobofferstats" />">
+							<i class="fa fa-book"></i> <span>Reporte: Avisos mensual</span>
+						</a>
+					</li>
+					<li class="treeview">
+						<a href="<c:url value="/admin/reports/jobofferstats/daily" />">
+							<i class="fa fa-book"></i> <span>Reporte: Avisos 30 d&iacute;as</span>
+						</a>
+					</li>
+					<li class="treeview">
+						<a href="<c:url value="/admin/reports/details" />">
+							<i class="fa fa-book"></i> <span>Reporte: Detalle de avisos</span>
+						</a>
+					</li>
+				</sec:authorize>
+				
+				<!--Roles para Logs -->
+				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_LOGS')">
+					<li class="treeview">
+						<a href="<c:url value="/admin/logs" />">
+							<i class="fa fa-book"></i> <span>Logs</span>
+						</a>
+					</li>
+				</sec:authorize>
+				
 			</ul>
 		</section>
 		<!-- /.sidebar -->
