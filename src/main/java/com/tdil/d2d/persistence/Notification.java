@@ -25,6 +25,9 @@ public class Notification implements PersistentEntity {
 	@ManyToOne
 	private JobOffer offer;
 	
+	@ManyToOne
+	private Note note;
+	
 	@Column(name = "action")
 	private String action;
 	
