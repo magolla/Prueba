@@ -42,7 +42,7 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 	@Autowired
 	private NotificationConfigurationDAO notificationConfigurationDAO;
-	
+
 	@Autowired
 	private SessionService sessionService;
 
@@ -107,12 +107,12 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 		}
 
 	}
-	
-	
+
+
 	@Override
 	public List<NotificationDTO> getAllNotifications() {
 		User user = this.sessionService.getUserLoggedIn();
-		
+
 		List<Notification> list = this.notificationDAO.getAllNotificationByUserId(user.getId());
 		List<NotificationDTO> response = null;
 		if(list != null) {
@@ -120,8 +120,8 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 		}
 		return response;
 	}
-	
-	
+
+
 	private NotificationDTO toDTO(Notification elem) {
 		NotificationDTO dto = new NotificationDTO();
 
@@ -136,7 +136,46 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 		dto.setStatus(elem.getStatus());
 		dto.setTitle(elem.getTitle());
 		dto.setUserId(elem.getUser().getId());
-		
+
+
+		if(elem.getOffer() != null) {
+
+			NotificationType type;
+			try {
+				type = NotificationType.valueOf(elem.getAction());	
+
+				switch (type) {
+				case NEW_OFFER_MATCH:
+					if(elem.getOffer().isPermanent()) {
+						dto.setMessage(elem.getOffer().getTitle() + " " + elem.getOffer().getSubtitle());
+					} else {
+						dto.setMessage(elem.getOffer().getOccupation().getName() + 
+								(elem.getOffer().getSpecialty().getName().isEmpty() ? "" :  ", " + elem.getOffer().getSpecialty().getName() + ",") +
+								" para trabajos de " + elem.getOffer().getTask().getName());
+					}
+					break;
+				case NEW_APPLICATION:
+					if(elem.getOffer().isPermanent()) {
+						dto.setMessage("Alguien se postulo a tu oferta " + elem.getOffer().getTitle() + " " + elem.getOffer().getSubtitle());
+					} else {
+						dto.setMessage("Alguien se postulo a tu oferta " + elem.getOffer().getOccupation().getName() +
+								(elem.getOffer().getSpecialty().getName().isEmpty() ? "" :  ", " + elem.getOffer().getSpecialty().getName() + ",") +
+								" para trabajos de " + elem.getOffer().getTask().getName());
+					}
+					break;
+				default:
+					break;
+				}
+			} catch (IllegalArgumentException e) {
+				System.out.println("La notificacion no posee action predefinido, no se cambiara el titulo y message");
+			}
+		}
+
+		if(elem.getNote() != null) {
+//			dto.setTitle(elem.getNote().getTitle());
+			dto.setMessage(elem.getNote().getTitle() + " " + elem.getNote().getSubtitle());
+		}
+
 		return dto;
 	}
 
@@ -202,9 +241,9 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 	@Override
 	public Integer getUnreadNotifications() {
 		User user = this.sessionService.getUserLoggedIn();
-		
+
 		Integer count = this.notificationDAO.getCountNotificationByUserId(user.getId());
-		
+
 		return count;
 	}
 

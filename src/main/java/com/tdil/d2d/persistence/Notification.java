@@ -27,7 +27,7 @@ public class Notification implements PersistentEntity {
 	
 	@ManyToOne
 	private Note note;
-	
+
 	@Column(name = "action")
 	private String action;
 	
@@ -101,6 +101,14 @@ public class Notification implements PersistentEntity {
 	
 	public void setOffer(JobOffer offer) {
 		this.offer = offer;
+	}
+	
+	public Note getNote() {
+		return note;
+	}
+
+	public void setNote(Note note) {
+		this.note = note;
 	}
 	
 	public String getAction() {

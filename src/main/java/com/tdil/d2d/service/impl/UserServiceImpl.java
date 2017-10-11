@@ -2019,6 +2019,7 @@ public class UserServiceImpl implements UserService {
 					notification.setMessage(type.getMessage());
 					notification.setActionId(note.getId());
 					notification.setStatus("Enviado");
+					notification.setNote(note);
 
 					this.notificationDAO.save(notification);
 
