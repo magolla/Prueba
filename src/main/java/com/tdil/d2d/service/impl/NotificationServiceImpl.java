@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.bo.dto.BoNotificationDTO;
 import com.tdil.d2d.bo.dto.NotificationBackofficeDTO;
 import com.tdil.d2d.controller.api.dto.NotificationDTO;
 import com.tdil.d2d.dao.NotificationConfigurationDAO;
@@ -172,7 +173,7 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 		}
 
 		if(elem.getNote() != null) {
-//			dto.setTitle(elem.getNote().getTitle());
+			//			dto.setTitle(elem.getNote().getTitle());
 			dto.setMessage(elem.getNote().getTitle() + " " + elem.getNote().getSubtitle());
 		}
 
@@ -245,6 +246,70 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 		Integer count = this.notificationDAO.getCountNotificationByUserId(user.getId());
 
 		return count;
+	}
+
+
+	@Override
+	public boolean sendBackOfficeNotification(BoNotificationDTO boNotificationDTO) {
+		try {
+
+			List<User> userList = userDAO.getUsersBoNotification(boNotificationDTO);
+
+			for (User user : userList) {
+				//
+				NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
+
+
+				//Dejar en el caso de implementar tipo de notificaciones desde el backoffice
+				//				NotificationType type;
+				//				try {
+				//					type = NotificationType.valueOf(notificationBackofficeDTO.getAction());	
+				//				} catch (IllegalArgumentException e) {
+				//					type = null;
+				//				}
+
+				Notification notification = new Notification();
+				//				notification.setAction(notificationBackofficeDTO.getAction());
+				//				notification.setActionId(notificationBackofficeDTO.getActionId());
+				notification.setCreationDate(new Date());
+
+				//				if(type == null) {
+				notification.setTitle(boNotificationDTO.getTitulo());
+				notification.setMessage(boNotificationDTO.getMessage());
+
+				//				} else {
+				//					if(notificationBackofficeDTO.getTitle().equals("") && notificationBackofficeDTO.getMessage().equals("")) {
+				//						notification.setTitle(type.getTitle());
+				//						notification.setMessage(type.getMessage());
+				//					} else {
+				//						notification.setTitle(notificationBackofficeDTO.getTitle());
+				//						notification.setMessage(notificationBackofficeDTO.getMessage());
+				//					}
+				//				}
+
+				notification.setStatus("Enviado");
+				notification.setUser(user);
+
+//				this.notificationDAO.save(notification);
+//
+//
+//				boolean sendNotif = validateNotificationConfig(notificationConfiguration,null);
+//
+//				if(sendNotif) {
+//					if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
+//						iosNotificationService.sendNotification(notification,null);
+//					} else if(user.getAndroidRegId()!=null){
+//						androidNotificationService.sendNotification(notification,null);
+//					}
+//				}
+			}
+
+			return true;
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 
 

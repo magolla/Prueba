@@ -1,9 +1,11 @@
 package com.tdil.d2d.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
@@ -16,6 +18,7 @@ import org.hibernate.criterion.Subqueries;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import com.tdil.d2d.bo.dto.BoNotificationDTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.request.InstitutionType;
 import com.tdil.d2d.dao.UserDAO;
@@ -433,6 +436,44 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			return userList;	
 		} else {
 			return list;
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO) throws DAOException {
+		try {
+			Query query;
+			
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct user ");
+			queryString.append("FROM User user ");
+			if(!boNotificationDTO.isAllUser()) {
+				queryString.append("JOIN user.specialties spec ");
+				//			queryString.append("JOIN userProfile.user user ");
+				//			queryString.append("JOIN user.userGeoLocations location ");
+				queryString.append("where spec.id in :specialties ");
+				queryString.append("or spec.occupation.id in :occupations ");
+				if(!boNotificationDTO.getUserIds().isEmpty()) {
+					queryString.append("or user.id in :users ");
+				}
+				queryString.append("order by user.lastLoginDate desc");
+				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+				query.setParameterList("specialties", boNotificationDTO.getSpecialties());
+				query.setParameterList("occupations", boNotificationDTO.getOccupations());
+				if(!boNotificationDTO.getUserIds().isEmpty()) {
+					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
+				}
+			} else {
+				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			}
+			List<User> filterUser = query.list();
+
+			return filterUser;
+		} catch (Exception e) {
+			throw new DAOException(e);
 		}
 
 	}

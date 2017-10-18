@@ -3,6 +3,7 @@ package com.tdil.d2d.dao;
 import java.util.List;
 import java.util.Set;
 
+import com.tdil.d2d.bo.dto.BoNotificationDTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.JobOffer;
@@ -55,5 +56,7 @@ public interface UserDAO {
 	public long getCount() throws DAOException;
 
 	public List<User> getMatchedUsersNote(Note note) throws DAOException;
+	
+	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO) throws DAOException;
 	
 }
