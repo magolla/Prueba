@@ -292,7 +292,7 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 				notification.setAction("Default");
 
 				if(user.getIosPushId() != null || user.getAndroidRegId() != null) {
-					this.notificationDAO.save(notification);	
+					this.notificationDAO.save(notification);
 				}
 
 				boolean sendNotif = validateNotificationConfig(notificationConfiguration,null);

@@ -5,6 +5,7 @@ import java.util.List;
 public class BoNotificationDTO {
 	boolean allUser;
 	String userIds;
+	String userTestIds;
 	String titulo;
 	String message;
 	private List<Long> occupations;
@@ -57,6 +58,14 @@ public class BoNotificationDTO {
 
 	public void setUserIds(String userIds) {
 		this.userIds = userIds;
+	}
+
+	public String getUserTestIds() {
+		return userTestIds;
+	}
+
+	public void setUserTestIds(String userTestIds) {
+		this.userTestIds = userTestIds;
 	}
 
 }

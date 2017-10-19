@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,10 @@ public class AdminNotificationController {
 
 	@Autowired
 	private SpecialtyService specialtyService;
-	
+
 	@Autowired
 	private NotificationBackofficeService notificationBackofficeService;
-	
+
 
 	@RequestMapping(value = {"/BoNotification"} , method = RequestMethod.GET)
 	public ModelAndView notificationHome() {
@@ -51,11 +52,17 @@ public class AdminNotificationController {
 
 
 	@RequestMapping(value = {"/BoNotification/send"} , method = RequestMethod.POST)
-	public ModelAndView sendNotification(@Valid @ModelAttribute("notificationForm") BoNotificationDTO boNotificationDTO,BindingResult result) {
+	public ModelAndView sendNotification(@Valid @ModelAttribute("notificationForm") BoNotificationDTO boNotificationDTO,BindingResult result,HttpServletRequest request) {
 
-		Map<String, String> errors = validateRequest(boNotificationDTO);
-		
-		
+		if(Boolean.parseBoolean(request.getParameter("sendTest"))) {
+			boNotificationDTO.setOccupations(null);
+			boNotificationDTO.setSpecialties(null);
+			boNotificationDTO.setUserIds(new String());
+		} else {
+			boNotificationDTO.setUserTestIds(new String());
+		}
+
+		Map<String, String> errors = validateRequest(boNotificationDTO, Boolean.parseBoolean(request.getParameter("sendTest")));
 
 		if(!errors.isEmpty()) {
 			ModelAndView model = new ModelAndView();
@@ -71,7 +78,7 @@ public class AdminNotificationController {
 			return model;
 		}
 
-		boolean userList = notificationBackofficeService.sendBackOfficeNotification(boNotificationDTO);
+		boolean sendSuccess = notificationBackofficeService.sendBackOfficeNotification(boNotificationDTO);
 
 		ModelAndView model = new ModelAndView();
 		model.addObject("notificationForm",boNotificationDTO);
@@ -80,24 +87,51 @@ public class AdminNotificationController {
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
+
+		if(sendSuccess) {
+			errors.put("pushResult", "Las notificaciones se enviaron existosamente");	
+		} else {
+			errors.put("pushResult", "Error al enviar las notificaciones");
+		}
+		model.addObject("errors",errors);
 		model.setViewName("admin/notification-form");
 
 		return model;
 	}
 
-	private Map<String, String> validateRequest(BoNotificationDTO boNotificationDTO) {
+	private Map<String, String> validateRequest(BoNotificationDTO boNotificationDTO, boolean isTest) {
 
 		Map<String, String> errors = new HashMap<String,String>(); 
 
-		if(!boNotificationDTO.isAllUser() && (boNotificationDTO.getUserIds() == null|| boNotificationDTO.getUserIds().trim().isEmpty()) && (boNotificationDTO.getOccupations() == null || boNotificationDTO.getOccupations().isEmpty())) {
-			errors.put("idsError","Se debe agregar Intereses o Id's de usuarios");
-		} else if (!boNotificationDTO.isAllUser()) {
-			if(!boNotificationDTO.getUserIds().trim().isEmpty()) {
-				try {
-					Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Integer::valueOf).toArray(Integer[]::new);
-				} catch (Exception e) {
-					errors.put("idsError","El formato de los id's es incorrecto");
-				}	
+		if(!isTest) {
+			if(!boNotificationDTO.isAllUser() && (boNotificationDTO.getUserIds() == null|| boNotificationDTO.getUserIds().trim().isEmpty()) && (boNotificationDTO.getOccupations() == null || boNotificationDTO.getOccupations().isEmpty())) {
+				errors.put("idsError","Se debe agregar Intereses o Id's de usuarios");
+			} else if (!boNotificationDTO.isAllUser()) {
+				if(!boNotificationDTO.getUserIds().trim().isEmpty()) {
+					try {
+						Integer[] userList = Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Integer::valueOf).toArray(Integer[]::new);
+						if(userList.length == 0) {
+							errors.put("idsError","El formato de los id's es incorrecto");
+						}
+					} catch (Exception e) {
+						errors.put("idsError","El formato de los id's es incorrecto");
+					}	
+				}
+			}	
+		} else {
+			if((boNotificationDTO.getUserTestIds() == null || boNotificationDTO.getUserTestIds().trim().isEmpty())) {
+				errors.put("idsTestError","Se debe agregar Id's de usuarios");
+			} else if (!boNotificationDTO.isAllUser()) {
+				if(!boNotificationDTO.getUserTestIds().trim().isEmpty()) {
+					try {
+						Integer[] userList = Stream.of(boNotificationDTO.getUserTestIds().split("\\s*,\\s*")).map(Integer::valueOf).toArray(Integer[]::new);
+						if(userList.length == 0) {
+							errors.put("idsTestError","El formato de los id's es incorrecto");
+						}
+					} catch (Exception e) {
+						errors.put("idsTestError","El formato de los id's es incorrecto");
+					}	
+				}
 			}
 		}
 

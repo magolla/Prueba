@@ -455,7 +455,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				//			queryString.append("JOIN user.userGeoLocations location ");
 
 
-				if(!boNotificationDTO.getUserIds().isEmpty()) {
+				if(!boNotificationDTO.getUserIds().isEmpty() || !boNotificationDTO.getUserTestIds().isEmpty()) {
 					queryString.append("where user.id in :users ");
 				} else {
 					//Se agrega esto para agregar una clausula "where" y poder manejar los "or" de abajo
@@ -479,6 +479,11 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				if(!boNotificationDTO.getUserIds().isEmpty()) {
 					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
 				}
+				
+				if(!boNotificationDTO.getUserTestIds().isEmpty()) {
+					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserTestIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
+				}
+				
 			} else {
 				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			}
