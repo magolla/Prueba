@@ -90,7 +90,7 @@ public class AdminNotificationController {
 		Map<String, String> errors = new HashMap<String,String>(); 
 
 		if(!boNotificationDTO.isAllUser() && (boNotificationDTO.getUserIds() == null|| boNotificationDTO.getUserIds().trim().isEmpty()) && (boNotificationDTO.getOccupations() == null || boNotificationDTO.getOccupations().isEmpty())) {
-			errors.put("idsError","Se debe agregar Ocupaciones o Id's de usuarios");
+			errors.put("idsError","Se debe agregar Intereses o Id's de usuarios");
 		} else if (!boNotificationDTO.isAllUser()) {
 			if(!boNotificationDTO.getUserIds().trim().isEmpty()) {
 				try {

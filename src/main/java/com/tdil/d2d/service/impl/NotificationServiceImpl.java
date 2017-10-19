@@ -289,19 +289,21 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 				notification.setStatus("Enviado");
 				notification.setUser(user);
+				notification.setAction("Default");
 
-//				this.notificationDAO.save(notification);
-//
-//
-//				boolean sendNotif = validateNotificationConfig(notificationConfiguration,null);
-//
-//				if(sendNotif) {
-//					if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
-//						iosNotificationService.sendNotification(notification,null);
-//					} else if(user.getAndroidRegId()!=null){
-//						androidNotificationService.sendNotification(notification,null);
-//					}
-//				}
+				if(user.getIosPushId() != null || user.getAndroidRegId() != null) {
+					this.notificationDAO.save(notification);	
+				}
+
+				boolean sendNotif = validateNotificationConfig(notificationConfiguration,null);
+
+				if(sendNotif) {
+					if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
+						iosNotificationService.sendNotification(notification,null);
+					} else if(user.getAndroidRegId()!=null){
+						androidNotificationService.sendNotification(notification,null);
+					}
+				}
 			}
 
 			return true;

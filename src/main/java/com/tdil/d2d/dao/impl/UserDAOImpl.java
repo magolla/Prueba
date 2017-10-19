@@ -445,7 +445,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO) throws DAOException {
 		try {
 			Query query;
-			
+
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
 			queryString.append("FROM User user ");
@@ -453,16 +453,29 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				queryString.append("JOIN user.specialties spec ");
 				//			queryString.append("JOIN userProfile.user user ");
 				//			queryString.append("JOIN user.userGeoLocations location ");
-				queryString.append("where spec.id in :specialties ");
-				queryString.append("or spec.occupation.id in :occupations ");
+
+
 				if(!boNotificationDTO.getUserIds().isEmpty()) {
-					queryString.append("or user.id in :users ");
+					queryString.append("where user.id in :users ");
+				} else {
+					//Se agrega esto para agregar una clausula "where" y poder manejar los "or" de abajo
+					queryString.append("where user.id = -1 ");
+				}
+				if(boNotificationDTO.getSpecialties() != null) {
+					queryString.append("or spec.id in :specialties ");	
+				}
+				if(boNotificationDTO.getOccupations() != null) {
+					queryString.append("or spec.occupation.id in :occupations ");
 				}
 				queryString.append("order by user.lastLoginDate desc");
 				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 
-				query.setParameterList("specialties", boNotificationDTO.getSpecialties());
-				query.setParameterList("occupations", boNotificationDTO.getOccupations());
+				if(boNotificationDTO.getSpecialties() != null) {
+					query.setParameterList("specialties", boNotificationDTO.getSpecialties());
+				}
+				if(boNotificationDTO.getOccupations() != null) {
+					query.setParameterList("occupations", boNotificationDTO.getOccupations());
+				}
 				if(!boNotificationDTO.getUserIds().isEmpty()) {
 					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
 				}
