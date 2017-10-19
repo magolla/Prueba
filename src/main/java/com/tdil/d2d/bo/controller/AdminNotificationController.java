@@ -121,17 +121,15 @@ public class AdminNotificationController {
 		} else {
 			if((boNotificationDTO.getUserTestIds() == null || boNotificationDTO.getUserTestIds().trim().isEmpty())) {
 				errors.put("idsTestError","Se debe agregar Id's de usuarios");
-			} else if (!boNotificationDTO.isAllUser()) {
-				if(!boNotificationDTO.getUserTestIds().trim().isEmpty()) {
-					try {
-						Integer[] userList = Stream.of(boNotificationDTO.getUserTestIds().split("\\s*,\\s*")).map(Integer::valueOf).toArray(Integer[]::new);
-						if(userList.length == 0) {
-							errors.put("idsTestError","El formato de los id's es incorrecto");
-						}
-					} catch (Exception e) {
+			} else if(!boNotificationDTO.getUserTestIds().trim().isEmpty()) {
+				try {
+					Integer[] userList = Stream.of(boNotificationDTO.getUserTestIds().split("\\s*,\\s*")).map(Integer::valueOf).toArray(Integer[]::new);
+					if(userList.length == 0) {
 						errors.put("idsTestError","El formato de los id's es incorrecto");
-					}	
-				}
+					}
+				} catch (Exception e) {
+					errors.put("idsTestError","El formato de los id's es incorrecto");
+				}	
 			}
 		}
 

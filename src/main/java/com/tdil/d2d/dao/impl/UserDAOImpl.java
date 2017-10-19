@@ -449,7 +449,9 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
 			queryString.append("FROM User user ");
-			if(!boNotificationDTO.isAllUser()) {
+			if(boNotificationDTO.isAllUser() && boNotificationDTO.getUserTestIds().isEmpty()) {
+				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			} else {
 				queryString.append("JOIN user.specialties spec ");
 				//			queryString.append("JOIN userProfile.user user ");
 				//			queryString.append("JOIN user.userGeoLocations location ");
@@ -484,8 +486,6 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserTestIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
 				}
 				
-			} else {
-				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			}
 			List<User> filterUser = query.list();
 

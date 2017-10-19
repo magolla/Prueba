@@ -35,7 +35,7 @@
 										<form:label  path="allUser" style="">Enviar a toda la base de usuario</form:label>
 									</div>
 									<!-- Segundo input-->
-									<label>IDs de usuarios especificos para <big>Test</big></label>
+									<label>IDs de usuarios especificos para Test</label>
 									<label>(Solo se aceptan numeros separados por coma)</label><br>
 									<form:input id="userTestIds" path="userTestIds" name="userTestIds"></form:input>
 									<c:if test="${not empty errors['idsTestError']}">
