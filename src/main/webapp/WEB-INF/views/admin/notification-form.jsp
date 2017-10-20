@@ -15,37 +15,56 @@
 					<!-- Custom Tabs -->
 					<div class="nav-tabs-custom">
 						<ul class="nav nav-tabs">
-							<li class="active"><a href="#tab_1" data-toggle="tab">Formulario de Notificaciones</a></li>
+							<li class="active"><a href="#tab_1" data-toggle="tab">Formulario
+									de Notificaciones</a></li>
 						</ul>
 						
 						<div class="tab-content">
 							<form:form method="POST" id="pushForm" modelAttribute="notificationForm" action="${pageContext.request.contextPath}/admin/BoNotification/send?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 								<div class="tab-pane active" id="tab_1">
-								<div class="col-md-12">
-									<h2>A quien se envia :</h2>
-								</div>
-									<div class="col-md-12">
+									<label>IDs de usuarios especificos</label>
+									<label>(Solo se aceptan numeros separados por coma)</label><br>
+									<form:input id="userIds" path="userIds" name="userIds"></form:input>
+									<c:if test="${not empty errors['idsError']}">
+										<br>
+										<c:out value="${errors['idsError']}"/>
+									</c:if>
+									<br>
+									<div>
 										<form:checkbox id="allUser" path="allUser" onchange="alluserAction(this)"/>
 										<form:label  path="allUser" style="">Enviar a toda la base de usuario</form:label>
 									</div>
-									<div class="col-md-12">
-										<label>IDs de usuarios especificos</label>
-										<label>(Solo se aceptan numeros separados por coma)</label>
-									</div>
-									<div class="col-md-12">
-										<form:input id="userIds" path="userIds" name="userIds" class="col-md-12"></form:input>
-									</div>
-									<div class="col-md-12">
-										<c:if test="${not empty errors['idsError']}">
-											<br>
-											<c:out value="${errors['idsError']}"/>
-										</c:if>
-									</div>
+									<!-- Segundo input-->
+									<label>IDs de usuarios especificos para Test</label>
+									<label>(Solo se aceptan numeros separados por coma)</label><br>
+									<form:input id="userTestIds" path="userTestIds" name="userTestIds"></form:input>
+									<c:if test="${not empty errors['idsTestError']}">
+										<br>
+										<c:out value="${errors['idsTestError']}"/>
+									</c:if>
+									<br>
+									<label>Titulo</label>
+									<br>
+									<form:input path="titulo" required="true" oninvalid="this.setCustomValidity('El titulo no puede estar vacio.')" oninput="setCustomValidity('')"></form:input>
+									<c:if test="${not empty errors['titleError']}">
+										<br>
+										<c:out value="${errors['titleError']}"/>
+									</c:if>
+									<br>
+									<form:label path="message">Message</form:label>
+									<br>
+									<form:input path="message" required="true" oninvalid="this.setCustomValidity('El mensaje no puede estar vacio.')" oninput="setCustomValidity('')"></form:input>
+									<c:if test="${not empty errors['messageError']}">
+										<br>
+										<c:out value="${errors['messageError']}"/>
+									</c:if>
 									<!-- Ocupaciones y Especialidades-->
 									<section id="note-editor" class="content">
 										<div class="row">
-											<div class="col-md-12">
+											<div class="col-md-offset-3 col-md-6">
+									
 												<div class="nav-tabs-custom">
+										
 													<c:if test="${not empty msg}">
 														<div class="msg">${msg}</div>
 													</c:if>
@@ -74,6 +93,7 @@
 																					</c:forEach>
 																				</select>
 																			</div>
+																			
 																			<script>
 																				$('#specialtiesSelect-${obj.key.id}').selectpicker('val', ${noteForm.specialties});
 																			</script>
@@ -86,9 +106,11 @@
 																		</script>
 																	</div>
 																</div>
+																
 																<div id="occupationIdsBox"></div>
 																<div id="specialtyIdsBox"></div>
 														</div>
+														<input path="id" type="hidden" />
 														<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 													
 							<%-- 						</form:form> --%>
@@ -97,51 +119,15 @@
 										</div>
 									</section>
 									<!--Fin Ocupaciones y Especialidades -->
-									<!-- Segundo input-->
-									<div class="col-md-12">
-										<label>IDs de usuarios especificos para Test</label>
-										<label>(Solo se aceptan numeros separados por coma)</label><br>
-									</div>
-									<div class="col-md-12">
-										<form:input id="userTestIds" path="userTestIds" name="userTestIds" class="col-md-12"></form:input>
-									</div>
-									<div class="col-md-12">
-										<c:if test="${not empty errors['idsTestError']}">
-											<br>
-											<c:out value="${errors['idsTestError']}"/>
-										</c:if>
-									</div>
-									<div class="col-md-12">
-										<button type="submit" formaction="${pageContext.request.contextPath}/admin/BoNotification/send?${_csrf.parameterName}=${_csrf.token}&sendTest=true"
-											 class="btn btn-info pull-right" style="margin-top: 30px">Enviar solo prueba</button>
-									</div>
-<!-- 									<hr style="width: 100%; color: black; height: 2px; background-color:black;" /> -->
-									<div class="col-md-12">
-										<label class="col-md-6">Titulo</label>
-										<form:label class="col-md-6" path="message">Message</form:label>
-									</div>
-									<div class="col-md-12">
-										<form:input class="col-md-6" path="titulo" required="true" oninvalid="this.setCustomValidity('El titulo no puede estar vacio.')" oninput="setCustomValidity('')"></form:input>
-										<form:input path="message" class="col-md-6" required="true" oninvalid="this.setCustomValidity('El mensaje no puede estar vacio.')" oninput="setCustomValidity('')"></form:input>
-									</div>
-									<div class="col-md-6">
-										<c:if test="${not empty errors['titleError']}">
-											<br>
-											<c:out value="${errors['titleError']}"/>
-										</c:if>
-									</div>
-									<div class="col-md-6">
-										<c:if test="${not empty errors['messageError']}">
-											<br>
-											<c:out value="${errors['messageError']}"/>
-										</c:if>
-									</div>
-									<div class="box-footer">
-										<div class="pull-left" style="margin-top: 30px">
-											<button type="submit"class="btn btn-info">Guardar Notificacion como Template</button>
+									<div class="box-footer" style="margin-top: 15px">
+										<div class="box-footer">
+											<button type="submit"class="btn btn-info pull-right">Guardar Notificacion como Template</button>
 										</div>
-										<div class="pull-right" style="margin-top: 30px">
-											<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Enviar Notificaciones</button>
+										<div class="box-footer">
+											<button type="submit" formaction="${pageContext.request.contextPath}/admin/BoNotification/send?${_csrf.parameterName}=${_csrf.token}&sendTest=true" class="btn btn-info pull-right">Enviar solo prueba</button>
+										</div>
+										<div class="box-footer">
+											<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Enviar Notificaciones</button>
 										</div>
 										<c:if test="${not empty errors['pushResult']}">
 										<br>
