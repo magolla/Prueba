@@ -159,12 +159,15 @@
 						</a>
 					</li>
 				</sec:authorize>
-				<li class="treeview">
-						<a href="<c:url value="/admin/BoNotification" />">
-							<i class="fa fa-book"></i> <span>Envio de notificaciones</span>
-						</a>
-				</li>
 				
+				<!-- Roles para Notificaciones -->
+				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_NOTIFICATIONS')">
+					<li class="treeview">
+							<a href="<c:url value="/admin/BoNotification" />">
+								<i class="fa fa-book"></i> <span>Envio de notificaciones</span>
+							</a>
+					</li>
+				</sec:authorize>
 			</ul>
 		</section>
 		<!-- /.sidebar -->

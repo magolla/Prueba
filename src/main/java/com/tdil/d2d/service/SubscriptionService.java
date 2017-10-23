@@ -1,5 +1,7 @@
 package com.tdil.d2d.service;
 
+import java.util.List;
+
 import com.tdil.d2d.controller.api.request.ReceiptSuscriptionRequest;
 import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.controller.api.response.UserReceiptResponse;
@@ -22,5 +24,7 @@ public interface SubscriptionService {
 	public UserReceiptResponse verifyAndRegisterSuscription(User user, ReceiptSuscriptionRequest receiptSuscriptionRequest) throws ServiceException ;
 
 	public UserReceiptResponse getLastReceipt(Long userId) throws ServiceException;
+	
+	public List<Subscription> getSuscriptionCloseExpire() throws ServiceException;
 }
 

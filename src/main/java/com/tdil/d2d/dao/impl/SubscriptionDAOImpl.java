@@ -1,5 +1,6 @@
 package com.tdil.d2d.dao.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -259,6 +260,28 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			query.setParameter("expiresDate", Calendar.getInstance().getTime().getTime());
 			return (List<Receipt> ) query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	@Override
+	public List<Subscription> getSuscriptionCloseExpire() throws DAOException {
+		try {
+			try {
+				StringBuilder queryString = new StringBuilder("");
+				queryString.append("SELECT distinct subscription ");
+				queryString.append("FROM Subscription subscription ");
+				queryString.append("WHERE subscription.expirationDate > :currentDate ");
+				queryString.append("AND subscription.expirationDate < :currentDatePlus ");
+				queryString.append("AND subscription.expirationNotified = false ");
+				Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+				query.setParameter("currentDate", new Date());
+				query.setParameter("currentDatePlus", LocalDateTime.from(new Date().toInstant()).plusDays(7));
+				return (List<Subscription> ) query.list();
+			} catch (Exception e) {
+				throw new DAOException(e);
+			}
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}

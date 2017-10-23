@@ -23,10 +23,21 @@ public class Subscription implements PersistentEntity {
 	
 	@Column(name = "expirationDate")
 	private Date expirationDate;
+	
+	@Column(name = "expirationNotified")
+	private boolean expirationNotified;
 
 	@ManyToOne
 	private User user;
 	
+	public boolean isExpirationNotified() {
+		return expirationNotified;
+	}
+
+	public void setExpirationNotified(boolean expirationNotified) {
+		this.expirationNotified = expirationNotified;
+	}
+
 	@ManyToOne
 	private SponsorCode sponsorCode;
 	

@@ -36,6 +36,7 @@ import com.tdil.d2d.persistence.SystemProperty;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.SessionService;
 import com.tdil.d2d.service.SubscriptionService;
+import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.Constants;
 import com.tdil.d2d.utils.LoggerManager;
 import com.tdil.d2d.utils.ServiceLocator;
@@ -55,6 +56,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Autowired
 	private SystemPropertyDAO systemPropertyDAO;
+	
+	@Autowired
+	private UserService	userService;
 
 	@Autowired
 	public SubscriptionServiceImpl(SessionService sessionService, SubscriptionDAO subscriptionDAO,
@@ -365,6 +369,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			throw new DTDException(ExceptionDefinition.DTD_2004, ex);
         }
         
+		return null;
+	}
+
+	@Override
+	public List<Subscription> getSuscriptionCloseExpire() throws ServiceException {
+		try {
+			List<Subscription> suscriptionList = this.subscriptionDAO.getSuscriptionCloseExpire();
+			
+			this.userService.notifyToMatchedUsersSubscription(suscriptionList);
+		} catch (DAOException e) {
+			LoggerManager.error(this, e);
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 }

@@ -7,7 +7,7 @@
     version="1.8">
 
 	<!-- Para obtener expresiones CRON ir al link y copy pastear en <cron-expression>: http://www.cronmaker.com/ -->
-
+	<!-- Este schedule se usa para enviar notificaciones permanentes ESTA DESHABILITADO -->
     <schedule>
         <job>
             <name>NotifyNewOffersJob</name>
@@ -19,6 +19,21 @@
                 <job-name>NotifyNewOffersJob</job-name>
                 <!-- Lunes a domingo a las 13:00 -->
                 <cron-expression>0 0 13 ? * MON,TUE,WED,THU,FRI,SAT,SUN *</cron-expression>
+            </cron>
+        </trigger>
+    </schedule>
+    <!-- Este schedule se usa para avisarle al usuario que su suscripcion esta por vencer -->
+    <schedule>
+        <job>
+            <name>NotifySuscriptionExpirancy</name>
+            <job-class>com.tdil.d2d.jobs.NotifySuscriptionExpirancy</job-class>
+        </job>
+        <trigger>
+            <cron>
+                <name>NotifySuscriptionExpirancy</name>
+                <job-name>NotifySuscriptionExpirancy</job-name>
+                <!-- Lunes a domingo a las 13:00 -->
+                <cron-expression>0 0 12 1/1 * ? *</cron-expression>
             </cron>
         </trigger>
     </schedule>
