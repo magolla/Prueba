@@ -159,6 +159,11 @@
 						</a>
 					</li>
 				</sec:authorize>
+				<li class="treeview">
+						<a href="<c:url value="/admin/BoNotification" />">
+							<i class="fa fa-book"></i> <span>Envio de notificaciones</span>
+						</a>
+				</li>
 				
 			</ul>
 		</section>

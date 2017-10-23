@@ -1,9 +1,11 @@
 package com.tdil.d2d.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
@@ -16,6 +18,7 @@ import org.hibernate.criterion.Subqueries;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import com.tdil.d2d.bo.dto.BoNotificationDTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.request.InstitutionType;
 import com.tdil.d2d.dao.UserDAO;
@@ -433,6 +436,62 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			return userList;	
 		} else {
 			return list;
+		}
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO) throws DAOException {
+		try {
+			Query query;
+
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct user ");
+			queryString.append("FROM User user ");
+			if(boNotificationDTO.isAllUser() && boNotificationDTO.getUserTestIds().isEmpty()) {
+				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			} else {
+				queryString.append("JOIN user.specialties spec ");
+				//			queryString.append("JOIN userProfile.user user ");
+				//			queryString.append("JOIN user.userGeoLocations location ");
+
+
+				if(!boNotificationDTO.getUserIds().isEmpty() || !boNotificationDTO.getUserTestIds().isEmpty()) {
+					queryString.append("where user.id in :users ");
+				} else {
+					//Se agrega esto para agregar una clausula "where" y poder manejar los "or" de abajo
+					queryString.append("where user.id = -1 ");
+				}
+				if(boNotificationDTO.getSpecialties() != null) {
+					queryString.append("or spec.id in :specialties ");	
+				}
+				if(boNotificationDTO.getOccupations() != null) {
+					queryString.append("or spec.occupation.id in :occupations ");
+				}
+				queryString.append("order by user.lastLoginDate desc");
+				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+				if(boNotificationDTO.getSpecialties() != null) {
+					query.setParameterList("specialties", boNotificationDTO.getSpecialties());
+				}
+				if(boNotificationDTO.getOccupations() != null) {
+					query.setParameterList("occupations", boNotificationDTO.getOccupations());
+				}
+				if(!boNotificationDTO.getUserIds().isEmpty()) {
+					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
+				}
+				
+				if(!boNotificationDTO.getUserTestIds().isEmpty()) {
+					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserTestIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
+				}
+				
+			}
+			List<User> filterUser = query.list();
+
+			return filterUser;
+		} catch (Exception e) {
+			throw new DAOException(e);
 		}
 
 	}
