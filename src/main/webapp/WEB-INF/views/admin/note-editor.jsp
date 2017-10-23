@@ -11,7 +11,7 @@
 	<tiles:putAttribute name="body">
 		<section id="note-editor" class="content">
 			<div class="row">
-				<div class="col-md-offset-3 col-md-6">
+				<div class="col-md-12">
 		
 					<div class="nav-tabs-custom">
 						<ul class="nav nav-tabs">
@@ -148,12 +148,16 @@
 											
 											<c:forEach var="obj" items="${specialtiesLists}">
 												<div id="specialtiesBox-${obj.key.id}" style="margin-top: 10px;">
-													<span>${obj.key.name}</span>
-													<select id="specialtiesSelect-${obj.key.id}" class="selectpicker specialtiesCombo" multiple>
-														<c:forEach var="specialty" items="${obj.value}">
-															<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
-														</c:forEach>
-													</select>
+													<div class="row">
+														<div class="col-md-2"><span>${obj.key.name}</span>
+													</div>
+													<div class="col-md-10">
+														<select id="specialtiesSelect-${obj.key.id}" class="selectpicker specialtiesCombo" multiple>
+															<c:forEach var="specialty" items="${obj.value}">
+																<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
+															</c:forEach>
+														</select>
+													</div>
 												</div>
 												
 												<script>

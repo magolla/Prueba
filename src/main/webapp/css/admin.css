@@ -222,4 +222,6 @@ input[type=checkbox], input[type=radio] {
 .user-task:last-of-type		{  }
 .geolevels					{ font-size: 17px; padding: 3px 15px; }
 
-
+.row						{ margin-right: 0; margin-left: 0; display: block; }
+.error,
+.msg						{ width: 100%; display: inline-block; }

@@ -89,9 +89,9 @@ public class AdminNotificationController {
 		}
 
 		if(sendSuccess) {
-			errors.put("pushResult", "Las notificaciones se enviaron existosamente");	
+			errors.put("pushSuccess", "Las notificaciones se enviaron existosamente");	
 		} else {
-			errors.put("pushResult", "Error al enviar las notificaciones");
+			errors.put("pushFailed", "Error al enviar las notificaciones");
 		}
 		model.addObject("errors",errors);
 		model.setViewName("admin/notification-form");

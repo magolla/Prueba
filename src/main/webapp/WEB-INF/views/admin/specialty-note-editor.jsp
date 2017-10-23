@@ -4,26 +4,38 @@
 
 
 <c:choose>
-  <c:when test="${empty specialtyList[0].name}">
-    <div id="specialtiesBox-${occupation.id}" style="display: none;" style="margin-top: 10px;">
-	<span>${occupation.name}</span>
-		<select id="specialtiesSelect-${occupation.id}" class="selectpicker specialtiesCombo" multiple>
-			<c:forEach var="specialty" items="${specialtyList}">
-				<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
-			</c:forEach>
-		</select>
-	</div>		
-  </c:when>
-  <c:otherwise>
-    <div id="specialtiesBox-${occupation.id}" style="margin-top: 10px;">
-	<span>${occupation.name}</span>
-		<select id="specialtiesSelect-${occupation.id}" class="selectpicker specialtiesCombo" multiple>
-			<c:forEach var="specialty" items="${specialtyList}">
-				<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
-			</c:forEach>
-		</select>
-	</div>		
-  </c:otherwise>
+	<c:when test="${empty specialtyList[0].name}">
+		<div id="specialtiesBox-${occupation.id}" style="display: none;" style="margin-top: 10px;">
+			<div class="row">
+				<div class="col-md-2">
+					<span>${occupation.name}</span>
+				</div>
+				<div class="col-md-10">
+					<select id="specialtiesSelect-${occupation.id}" class="selectpicker specialtiesCombo col-md-12" multiple>
+						<c:forEach var="specialty" items="${specialtyList}">
+							<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+		</div>		
+	</c:when>
+	<c:otherwise>
+		<div id="specialtiesBox-${occupation.id}" style="margin-top: 10px;">
+			<div class="row">
+				<div class="col-md-2">
+					<span>${occupation.name}</span>
+				</div>
+				<div class="col-md-10">
+					<select id="specialtiesSelect-${occupation.id}" class="selectpicker specialtiesCombo col-md-12" multiple>
+						<c:forEach var="specialty" items="${specialtyList}">
+							<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+		</div>
+	</c:otherwise>
 </c:choose>
 
 

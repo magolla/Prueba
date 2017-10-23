@@ -21,227 +21,185 @@
 						<div class="tab-content">
 							<form:form method="POST" id="pushForm" modelAttribute="notificationForm" action="${pageContext.request.contextPath}/admin/BoNotification/send?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
 								<div class="tab-pane active" id="tab_1">
-								<div class="col-md-12">
-									<h2>A quien se envia :</h2>
-								</div>
-									<div class="col-md-12">
-										<form:checkbox id="allUser" path="allUser" onchange="alluserAction(this)"/>
-										<form:label  path="allUser" style="">Enviar a toda la base de usuario</form:label>
-									</div>
-									<div class="col-md-12">
-										<label>IDs de usuarios especificos</label>
-										<label>(Solo se aceptan numeros separados por coma)</label>
-									</div>
-									<div class="col-md-12">
-										<form:input id="userIds" path="userIds" name="userIds" class="col-md-12"></form:input>
+									<div class="row" style="margin-bottom:15px;">
+										<div class="col-md-12">
+											<h2>A quién se envía:</h2>
+										</div>
 									</div>
 									<div class="col-md-12">
 										<c:if test="${not empty errors['idsError']}">
-											<br>
-											<c:out value="${errors['idsError']}"/>
+											<span class="error"><c:out value="${errors['idsError']}"/></span>
 										</c:if>
 									</div>
+									<div class="row" style="margin-bottom:10px;">
+										<div class="col-md-12">
+											<form:checkbox id="allUser" path="allUser" onchange="alluserAction(this)"/>
+											<form:label  path="allUser" style="">Enviar a toda la base de usuario</form:label>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<label>IDs de usuarios especificos</label>
+										</div>
+										<div class="col-md-12">
+											<form:textarea id="userIds" path="userIds" name="userIds" class="col-md-12" placeholder="Ejemplo: 1,2,55,678"></form:textarea>
+										</div>
+									</div>
+									<div class="row" style="margin-bottom:10px;">
+										<div class="col-md-12">									
+											<label style="font-weight:400;">(Solo se aceptan numeros separados por coma)</label>
+										</div>
+									</div>
+					
 									<!-- Ocupaciones y Especialidades-->
-									<section id="note-editor" class="content">
+									<div style="border: 1px solid #999; padding: 20px; display: inline-block; width: 100%; margin:0px;">
 										<div class="row">
 											<div class="col-md-12">
-												<div class="nav-tabs-custom">
-													<c:if test="${not empty msg}">
-														<div class="msg">${msg}</div>
-													</c:if>
-							<%-- 						<form:form method="POST" modelAttribute="noteForm" autocomplete="off"  action="${pageContext.request.contextPath}/admin/notes/save?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data"> --%>
-														<div class="tab-content">
-															
-																<div class="box-body">
-																<label for="name" class="control-label">Elegir Ocupaciones</label>
-																	
-																	<select id="occupationsSelect" class="selectpicker" multiple>
-																		<c:forEach var="occupation" items="${occupationList}">
-																			<option value="<c:out value="${occupation.id}"/>"><c:out value="${occupation.name}"/></option>
-																		</c:forEach>
-																	</select>
-																
-																	<div id="specialtiesBox" style="margin-top: 20px;">
-																		<label for="name" class="control-label">Elegir Especialidades</label>
-																		
-																		
-																		<c:forEach var="obj" items="${specialtiesLists}">
-																			<div id="specialtiesBox-${obj.key.id}" style="margin-top: 10px;">
-																				<span>${obj.key.name}</span>
-																				<select id="specialtiesSelect-${obj.key.id}" class="selectpicker specialtiesCombo" multiple>
-																					<c:forEach var="specialty" items="${obj.value}">
-																						<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
-																					</c:forEach>
-																				</select>
-																			</div>
-																			<script>
-																				$('#specialtiesSelect-${obj.key.id}').selectpicker('val', ${noteForm.specialties});
-																			</script>
-																		</c:forEach>
-																		
-																		<script>
-																			$(".specialtiesCombo").on('changed.bs.select', function (e) {
-																				loadSpecialtiesInput();
-																			});
-																		</script>
-																	</div>
-																</div>
-																<div id="occupationIdsBox"></div>
-																<div id="specialtyIdsBox"></div>
-														</div>
-														<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-													
-							<%-- 						</form:form> --%>
-												</div>
+												<h4>Seleccionar ocupaciones</h4>
 											</div>
 										</div>
-									</section>
-									<!--Fin Ocupaciones y Especialidades -->
-									<!-- Segundo input-->
-									<div class="col-md-12">
-										<label>IDs de usuarios especificos para Test</label>
-										<label>(Solo se aceptan numeros separados por coma)</label><br>
-									</div>
-									<div class="col-md-12">
-										<form:input id="userTestIds" path="userTestIds" name="userTestIds" class="col-md-12"></form:input>
-									</div>
-									<div class="col-md-12">
-										<c:if test="${not empty errors['idsTestError']}">
-											<br>
-											<c:out value="${errors['idsTestError']}"/>
-										</c:if>
-									</div>
-									<div class="col-md-12">
-										<button type="submit" formaction="${pageContext.request.contextPath}/admin/BoNotification/send?${_csrf.parameterName}=${_csrf.token}&sendTest=true"
-											 class="btn btn-info pull-right" style="margin-top: 30px">Enviar solo prueba</button>
-									</div>
-<!-- 									<hr style="width: 100%; color: black; height: 2px; background-color:black;" /> -->
-									<div class="col-md-12">
-										<label class="col-md-6">Titulo</label>
-										<form:label class="col-md-6" path="message">Message</form:label>
-									</div>
-									<div class="col-md-12">
-										<form:input class="col-md-6" path="titulo" required="true" oninvalid="this.setCustomValidity('El titulo no puede estar vacio.')" oninput="setCustomValidity('')"></form:input>
-										<form:input path="message" class="col-md-6" required="true" oninvalid="this.setCustomValidity('El mensaje no puede estar vacio.')" oninput="setCustomValidity('')"></form:input>
-									</div>
-									<div class="col-md-6">
-										<c:if test="${not empty errors['titleError']}">
-											<br>
-											<c:out value="${errors['titleError']}"/>
-										</c:if>
-									</div>
-									<div class="col-md-6">
-										<c:if test="${not empty errors['messageError']}">
-											<br>
-											<c:out value="${errors['messageError']}"/>
-										</c:if>
-									</div>
-									<div class="box-footer">
-										<div class="pull-left" style="margin-top: 30px">
-											<button type="submit"class="btn btn-info">Guardar Notificacion como Template</button>
+										<div class="row">
+											<div class="col-md-2">
+												<c:if test="${not empty msg}">
+													<div class="msg">${msg}</div>
+												</c:if>
+												<label>Ocupaciones: </label>
+											</div>
+											<div class="col-md-10">
+												<select id="occupationsSelect" class="selectpicker col-sm-12" multiple>
+													<c:forEach var="occupation" items="${occupationList}">
+														<option value="<c:out value="${occupation.id}"/>"><c:out value="${occupation.name}"/></option>
+													</c:forEach>
+												</select>
+											</div>
 										</div>
-										<div class="pull-right" style="margin-top: 30px">
+										<div class="row" style="margin-top:25px;">
+											<div class="col-md-12">
+												<h4>Seleccionar Especialidades</h4>
+											</div>
+										</div>
+										<div id="specialtiesBox">
+											<c:forEach var="obj" items="${specialtiesLists}">
+												<div id="specialtiesBox-${obj.key.id}" style="margin-top: 10px;">
+													<span>${obj.key.name}</span>
+													<select id="specialtiesSelect-${obj.key.id}" class="selectpicker specialtiesCombo" multiple>
+														<c:forEach var="specialty" items="${obj.value}">
+															<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
+														</c:forEach>
+													</select>
+												</div>
+												<script>
+													$('#specialtiesSelect-${obj.key.id}').selectpicker('val', ${noteForm.specialties});
+												</script>
+											</c:forEach>
+																
+											<script>
+												$(".specialtiesCombo").on('changed.bs.select', function (e) {
+													loadSpecialtiesInput();
+												});
+											</script>
+											<div id="occupationIdsBox"></div>
+											<div id="specialtyIdsBox"></div>
+										
+											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+										</div>
+									</div>
+									<!-- Fin de Ocupaciones y Especialidades -->
+									<hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+									
+									<div class="row">
+										<h4>Envío de test</h4>
+									</div>
+									<div class="row">
+										<div class="col-md-2">
+											<label>IDs de usuarios</label>
+										</div>
+										<div class="col-md-8">
+											<form:input id="userTestIds" path="userTestIds" name="userTestIds" class="col-md-12"></form:input>
+										</div>
+										<div class="col-md-2">
+											<button type="submit" formaction="${pageContext.request.contextPath}/admin/BoNotification/send?${_csrf.parameterName}=${_csrf.token}&sendTest=true"  class="btn btn-info pull-right">Enviar solo prueba</button>
+										</div>
+									</div>
+									<div class="row" style="margin-bottom:10px;">
+										<div class="col-md-12">									
+											<label style="font-weight:400;">(Usuarios para envios de test. Solo se aceptan numeros separados por coma)</label>
+										</div>
+									</div>
+									<div class="row">
+										<c:if test="${not empty errors['idsTestError']}">
+											<span class="error"><c:out value="${errors['idsTestError']}"/></span>
+										</c:if>
+									</div>
+									<hr style="width: 100%; color: black; height: 2px; background-color:black;" />
+									
+									<div class="row">
+										<h2>Contenido de la notificación</h2>
+									</div>
+									<div class="row" style="margin-top:25px;">
+										<div class="col-md-2">
+											<label>Título</label>
+										</div>
+										<div class="col-md-10">
+											<form:input class="col-md-12" path="titulo" required="true" oninvalid="this.setCustomValidity('El titulo no puede estar vacio.')" oninput="setCustomValidity('')"></form:input>
+										</div>
+									</div>
+									<c:if test="${not empty errors['titleError']}">
+										<div class="row">
+											<div class="col-md-12"><span class="error"><c:out value="${errors['titleError']}"/></span></div>
+										</div>
+									</c:if>
+									<div class="row" style="margin-top:25px;">
+										<div class="col-md-2">
+											<form:label path="message">Mensaje</form:label>
+										</div>
+										<div class="col-md-10">
+											<form:input path="message" class="col-md-12" required="true" oninvalid="this.setCustomValidity('El mensaje no puede estar vacio.')" oninput="setCustomValidity('')"></form:input>
+										</div>
+									</div>
+									<c:if test="${not empty errors['messageError']}">
+										<div class="row">
+											<div class="col-md-12"><span class="error"><c:out value="${errors['messageError']}"/></span></div>
+										</div>
+									</c:if>
+									
+									<hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+									
+									<div class="box-footer">
+										<div class="pull-left"">
+											<button type="submit"class="btn btn-info" style="display:none;">Guardar Notificacion como Template</button>
+										</div>
+										
+										<div class="pull-right"">
 											<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Enviar Notificaciones</button>
 										</div>
-										<c:if test="${not empty errors['pushResult']}">
-										<br>
-											<c:out value="${errors['pushResult']}"/>
-										</c:if>
 									</div>
+									
+									<c:if test="${not empty errors['pushSuccess']}">
+										<div class="row" style="margin-top:25px;">
+											<span class="msg"><c:out value="${errors['pushSuccess']}"/></span>
+										</div>
+									</c:if>
+									
+									<c:if test="${not empty errors['pushFailed']}">
+										<div class="row" style="margin-top:25px;">
+											<span class="error"><c:out value="${errors['pushFailed']}"/></span>
+										</div>
+									</c:if>
+										
+									<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+									<div id="occupationIdsBox"></div>
+									<div id="specialtyIdsBox"></div>
 								</div>
-								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-								<div id="occupationIdsBox"></div>
-								<div id="specialtyIdsBox"></div>
-							</form:form>
-							<!-- /.tab-pane -->
+							</form:form>		
 						</div>
-						<!-- /.tab-content -->
 					</div>
-					<!-- nav-tabs-custom -->
 				</div>
 			</div>
 		</section>
 	</tiles:putAttribute>
-</tiles:insertDefinition>
+</tiles:insertDefinition>	
 
-<!-- Modal de Intereses -->
-<!-- <div id="myModal" class="modal fade" role="dialog"> -->
-<!--   <div class="modal-dialog"> -->
-
-<!--     Modal content -->
-<!--     <div class="modal-content"> -->
-<!--       <div class="modal-header"> -->
-<!--         <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-<!--         <h4 class="modal-title">Definir Intereses</h4> -->
-<!--       </div> -->
-<!--       <div class="modal-body"> -->
-<!--         <section id="note-editor" class="content"> -->
-<!-- 			<div class="row"> -->
-<!-- 				<div class="col-md-offset-3 col-md-6"> -->
-		
-<!-- 					<div class="nav-tabs-custom"> -->
-			
-<%-- 						<c:if test="${not empty msg}"> --%>
-<%-- 							<div class="msg">${msg}</div> --%>
-<%-- 						</c:if> --%>
-<%-- <%-- 						<form:form method="POST" modelAttribute="noteForm" autocomplete="off"  action="${pageContext.request.contextPath}/admin/notes/save?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data"> --%> --%>
-<!-- 							<div class="tab-content"> -->
-								
-<!-- 									<div class="box-body"> -->
-<!-- 									<label for="name" class="control-label">Elegir Ocupaciones</label> -->
-										
-<!-- 										<select id="occupationsSelect" class="selectpicker" multiple> -->
-<%-- 											<c:forEach var="occupation" items="${occupationList}"> --%>
-<%-- 												<option value="<c:out value="${occupation.id}"/>"><c:out value="${occupation.name}"/></option> --%>
-<%-- 											</c:forEach> --%>
-<!-- 										</select> -->
-									
-<!-- 										<div id="specialtiesBox" style="margin-top: 20px;"> -->
-<!-- 											<label for="name" class="control-label">Elegir Especialidades</label> -->
-											
-											
-<%-- 											<c:forEach var="obj" items="${specialtiesLists}"> --%>
-<%-- 												<div id="specialtiesBox-${obj.key.id}" style="margin-top: 10px;"> --%>
-<%-- 													<span>${obj.key.name}</span> --%>
-<%-- 													<select id="specialtiesSelect-${obj.key.id}" class="selectpicker specialtiesCombo" multiple> --%>
-<%-- 														<c:forEach var="specialty" items="${obj.value}"> --%>
-<%-- 															<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option> --%>
-<%-- 														</c:forEach> --%>
-<!-- 													</select> -->
-<!-- 												</div> -->
-												
-<!-- 												<script> -->
-// 													$('#specialtiesSelect-${obj.key.id}').selectpicker('val', ${noteForm.specialties});
-<!-- 												</script> -->
-<%-- 											</c:forEach> --%>
-											
-<!-- 											<script> -->
-// 												$(".specialtiesCombo").on('changed.bs.select', function (e) {
-// 													loadSpecialtiesInput();
-// 												});
-<!-- 											</script> -->
-<!-- 										</div> -->
-<!-- 									</div> -->
-									
-<!-- 									<div id="occupationIdsBox"></div> -->
-<!-- 									<div id="specialtyIdsBox"></div> -->
-<!-- 							</div> -->
-<!-- 							<input path="id" type="hidden" /> -->
-<%-- 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> --%>
-						
-<%-- <%-- 						</form:form> --%> --%>
-<!-- 					</div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</section> -->
-<!--       </div> -->
-<!--       <div class="modal-footer"> -->
-<!--         <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button> -->
-<!--       </div> -->
-<!--     </div> -->
-
-<!--   </div> -->
-<!-- </div> -->
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
@@ -259,7 +217,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Editar datos</button>
-				<button type="button" class="btn btn-default" onclick="submitFormModal();">Enviar</button>
+				<button type="button" class="btn btn-success" onclick="submitFormModal();">Enviar</button>
 			</div>
 		</div>
 	</div>
@@ -267,7 +225,6 @@
 
 
 <script>
-
 $( document ).ready(function() {
 	alluserAction($("#allUser").get(0));
 	arrayOccupationIds = $("#occupationsSelect").val();
@@ -278,11 +235,9 @@ $( document ).ready(function() {
 	loadSpecialtiesInput();
 });
 
-
 function submitFormModal() {
 	$("#pushForm").submit();
 }
-
 
 function alluserAction(checkboxElem) {
 	console.log(checkboxElem);
@@ -351,5 +306,7 @@ function loadSpecialtiesInput() {
 		
 	});
 }
-	
+
 </script>
+
+
