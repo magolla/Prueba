@@ -90,6 +90,7 @@ import com.tdil.d2d.dao.NotificationConfigurationDAO;
 import com.tdil.d2d.dao.NotificationDAO;
 import com.tdil.d2d.dao.PaymentDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
+import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.SystemPropertyDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
@@ -190,6 +191,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private SubscriptionService subscriptionService;
+
+	@Autowired
+	private SubscriptionDAO subscriptionDAO;
 
 	@Override
 	public User getUserByUsername(String username) throws ServiceException {
@@ -1840,8 +1844,8 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
-	
+
+
 	@Override
 	public List<MatchedUserDTO> getMatchedUsersNote(Long noteId) throws ServiceException {
 		try {
@@ -1863,7 +1867,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 
 	private MatchedUserDTO toMatchedUserDto(User user) throws ServiceException {
 		MatchedUserDTO result = new MatchedUserDTO();
@@ -1902,12 +1906,12 @@ public class UserServiceImpl implements UserService {
 		}
 		return true;
 	}
-	
-	
+
+
 	@Override
 	public void notifyNewNotesToMatchedUsers(Long noteId,String category) throws ServiceException {
 		NotificationType type;
-		
+
 		switch (category) {
 		case "CAT_1":
 			type = NotificationType.NEW_CONGRESS;
@@ -1928,32 +1932,32 @@ public class UserServiceImpl implements UserService {
 			System.out.println("Categoria erronea");
 			return;
 		}
-		
+
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsersNote(noteId);
 		Note note = noteDAO.getNoteById(noteId);
 		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
 
 			//TODO - Ver si se aplica misma logica para las notas
-//			boolean alreadyApplied = this.searchIfApplied(noteId,matchedUserDTO.getUserId());
+			//			boolean alreadyApplied = this.searchIfApplied(noteId,matchedUserDTO.getUserId());
 
-//			if(!alreadyApplied) {
+			//			if(!alreadyApplied) {
 
-				try {
+			try {
 
-					User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
-					
-					
-					if(!(user.getIosPushId() == null && user.getAndroidRegId() == null)) {
-						sendNotificationNote(type, user,note);	
-					}
-					
-				} catch (DAOException e) {
-					logger.error("ERROR", e);
+				User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
+
+
+				if(!(user.getIosPushId() == null && user.getAndroidRegId() == null)) {
+					sendNotificationNote(type, user,note);	
 				}
-//			}
+
+			} catch (DAOException e) {
+				logger.error("ERROR", e);
+			}
+			//			}
 		}
 	}
-	
+
 
 	/**
 	 * Este metodo se usa para registrar eventos predefinidos, el nombre,titulo y cuerpo de la notificacion debe ser definida en NotificationType
@@ -1993,8 +1997,8 @@ public class UserServiceImpl implements UserService {
 			logger.error("ERROR", e);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Este metodo se usa para registrar eventos predefinidos, el nombre,titulo y cuerpo de la notificacion debe ser definida en NotificationType
 	 */
@@ -2006,7 +2010,7 @@ public class UserServiceImpl implements UserService {
 			if(notificationConfiguration!=null && notificationConfiguration.isPush()){
 
 				Notification notification = notificationDAO.getByUserOffer(user.getId(), note.getId(), type.name());
-				
+
 
 				if(notification == null) {
 
@@ -2014,7 +2018,7 @@ public class UserServiceImpl implements UserService {
 					notification.setCreationDate(new Date());
 					notification.setAction(type.name());
 					notification.setUser(user);
-//					notification.setOffer(offer);
+					//					notification.setOffer(offer);
 					notification.setTitle(type.getTitle());
 					notification.setMessage(type.getMessage());
 					notification.setActionId(note.getId());
@@ -2039,7 +2043,7 @@ public class UserServiceImpl implements UserService {
 			logger.error("ERROR", e);
 		}
 	}
-	
+
 
 	@Override
 	public List<Long> getOfferIdsByDate(Date date) throws ServiceException {
@@ -2122,48 +2126,48 @@ public class UserServiceImpl implements UserService {
 				}
 			}
 			if(user.getSpecialties().size() > 0) {
-			Iterator<Specialty> iter = user.getSpecialties().iterator();
+				Iterator<Specialty> iter = user.getSpecialties().iterator();
 
-			Specialty first = iter.next();
-			result.setUserOccupation(first.getOccupation().getName());
-			if(userProfile != null ) {
-				if(userProfile.getTasks() != null) {
-					for (Iterator<Task> iterator = userProfile.getTasks().iterator(); iterator.hasNext();) {
-						Task task = (Task) iterator.next();
-						int index = checkIfExist(task,specialtyDtoList);
-						if(index > -1) {
-							specialtyDtoList.get(index).getTaskList().add(task);
-						} else {
-							SpecialtyDTO specialtyDTO = new SpecialtyDTO();
-							specialtyDTO.setTaskList(new ArrayList<Task>());
-							specialtyDTO.setId(task.getSpecialty().getId());
-							if(task.getSpecialty().getName().equals("")) {
-								specialtyDTO.setName(task.getSpecialty().getOccupation().getName());
+				Specialty first = iter.next();
+				result.setUserOccupation(first.getOccupation().getName());
+				if(userProfile != null ) {
+					if(userProfile.getTasks() != null) {
+						for (Iterator<Task> iterator = userProfile.getTasks().iterator(); iterator.hasNext();) {
+							Task task = (Task) iterator.next();
+							int index = checkIfExist(task,specialtyDtoList);
+							if(index > -1) {
+								specialtyDtoList.get(index).getTaskList().add(task);
 							} else {
-								specialtyDTO.setName(task.getSpecialty().getName());
+								SpecialtyDTO specialtyDTO = new SpecialtyDTO();
+								specialtyDTO.setTaskList(new ArrayList<Task>());
+								specialtyDTO.setId(task.getSpecialty().getId());
+								if(task.getSpecialty().getName().equals("")) {
+									specialtyDTO.setName(task.getSpecialty().getOccupation().getName());
+								} else {
+									specialtyDTO.setName(task.getSpecialty().getName());
+								}
+
+								specialtyDTO.getTaskList().add(task);
+								specialtyDtoList.add(specialtyDTO);
 							}
-
-							specialtyDTO.getTaskList().add(task);
-							specialtyDtoList.add(specialtyDTO);
 						}
-					}
-					//		specialtyDtoList
-					//		  .stream()
-					//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
+						//		specialtyDtoList
+						//		  .stream()
+						//		  .sorted((object1, object2) -> object1.getName().compareTo(object2.getName()));
 
-					result.setUserSpecialty(specialtyDtoList);
+						result.setUserSpecialty(specialtyDtoList);
+					}
+				} else {
+					result.setUserSpecialty(new ArrayList<SpecialtyDTO>());
+					for (Specialty specialty : user.getSpecialties()) {
+						List<Task> taskList = new ArrayList<Task>();
+						Task task = new Task();
+						task.setId(-1);
+						task.setName("No cargo tareas");
+						taskList.add(task);
+						result.getUserSpecialty().add(new SpecialtyDTO(specialty.getId(),specialty.getName(),taskList));
+					}
 				}
-			} else {
-				result.setUserSpecialty(new ArrayList<SpecialtyDTO>());
-				for (Specialty specialty : user.getSpecialties()) {
-					List<Task> taskList = new ArrayList<Task>();
-					Task task = new Task();
-					task.setId(-1);
-					task.setName("No cargo tareas");
-					taskList.add(task);
-					result.getUserSpecialty().add(new SpecialtyDTO(specialty.getId(),specialty.getName(),taskList));
-				}
-			}
 			} else {
 				result.setUserOccupation("No cargo la Profesión");
 			}
@@ -2250,9 +2254,9 @@ public class UserServiceImpl implements UserService {
 	public JobOfferStatusDTO getOfferById(long offerId) {
 		try {
 			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
-			
+
 			JobOfferStatusDTO jobOfferStatusDTO = new JobOfferStatusDTO();
-			
+
 			jobOfferStatusDTO.setId(jobOffer.getId());
 			jobOfferStatusDTO.setComment(jobOffer.getComment());
 			jobOfferStatusDTO.setCompanyScreenName(jobOffer.getCompanyScreenName());
@@ -2287,14 +2291,54 @@ public class UserServiceImpl implements UserService {
 			jobOfferStatusDTO.setJobApplication_id(jobOffer.getJobApplication_id());
 			jobOfferStatusDTO.setOfferentFirstname(jobOffer.getOfferent().getFirstname());
 			jobOfferStatusDTO.setOfferentLastname(jobOffer.getOfferent().getLastname());
-			
+
 			return jobOfferStatusDTO;
-			
+
 		} catch (DAOException e) {
 			e.printStackTrace();
 			return null;
 		}
-		
+
+	}
+
+	@Override
+	public void notifyToMatchedUsersSubscription(List<Subscription> subscriptionsList) throws ServiceException, DAOException {
+
+
+		for (Subscription subscription : subscriptionsList) {
+			User user = subscription.getUser();
+
+			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
+
+			Notification notification = new Notification();
+			notification.setCreationDate(new Date());
+
+			notification.setTitle("Su suscripción de DOC to DOC está por vencer");
+			notification.setMessage("Mantené tu suscripción activa para acceder a las ofertas laborales.");
+
+			notification.setStatus("Enviado");
+			notification.setUser(user);
+			notification.setAction("Default");
+
+			if(user.getIosPushId() != null || user.getAndroidRegId() != null) {
+				this.notificationDAO.save(notification);
+			}
+
+			boolean sendNotif = NotificationServiceImpl.validateNotificationConfig(notificationConfiguration,null);
+
+			if(sendNotif) {
+				if(user.getIosPushId()!=null && !"NONE".equals(user.getIosPushId())){
+					iosNotificationService.sendNotification(notification,null);
+				} else if(user.getAndroidRegId()!=null){
+					androidNotificationService.sendNotification(notification,null);
+				}
+			}
+
+			subscription.setExpirationNotified(true);
+			this.subscriptionDAO.saveSubscription(subscription);
+
+		}
+
 	}
 
 

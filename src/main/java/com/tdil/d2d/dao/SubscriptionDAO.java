@@ -41,4 +41,6 @@ public interface SubscriptionDAO {
 	public List<Subscription> listAllSubscriptions(Set<Long> ids) throws DAOException;
 
 	public List<Receipt> listAllReceipts() throws DAOException;
+	
+	public List<Subscription> getSuscriptionCloseExpire() throws DAOException;
 }

@@ -6,6 +6,7 @@ INSERT INTO d2d_role (id,name,description) VALUES (2,'ROLE_SYSPRO','Sysprops');
 INSERT INTO d2d_role (id,name,description) VALUES (3,'ROLE_LOGS','Logs');
 INSERT INTO d2d_role (id,name,description) VALUES (4,'ROLE_REPORTS','Reports');
 INSERT INTO d2d_role (id,name,description) VALUES (5,'ROLE_EDITOR','Editor');
+INSERT INTO d2d_role (id,name,description) VALUES (6,'ROLE_NOTIFICATIONS','Notifications');
 
 INSERT INTO d2d_bouser_role (USER_ID,ROLE_ID) VALUES (1,1);
 

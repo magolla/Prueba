@@ -137,7 +137,7 @@ public class WebSecurityConfig  {
 	                //Este se va a usar para las syspro
 	                //.antMatchers("/admin/reports/**").access("hasRole('ROLE_SYSPRO')")
 	                .antMatchers("/admin/dashboard").authenticated()
-	                .antMatchers("/admin/BoNotification/**").authenticated()
+	                .antMatchers("/admin/BoNotification/**").access("hasAnyRole('ROLE_NOTIFICATIONS','ROLE_ADMIN')")
 	                //Accesos del usuario con rol LOGS
 	                .antMatchers("/admin/logs").access("hasAnyRole('ROLE_LOGS','ROLE_ADMIN')")
 	                //Accesos del usuario con rol REPORTS

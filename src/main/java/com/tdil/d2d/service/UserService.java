@@ -43,7 +43,9 @@ import com.tdil.d2d.controller.api.request.UserLinkedinProfileRequest;
 import com.tdil.d2d.controller.api.request.ValidationRequest;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
+import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
 
 public interface UserService {
@@ -185,5 +187,7 @@ public interface UserService {
 	void notifyNewNotesToMatchedUsers(Long noteId, String category) throws ServiceException;
 
 	List<MatchedUserDTO> getMatchedUsersNote(Long noteId) throws ServiceException;
+
+	void notifyToMatchedUsersSubscription(List<Subscription> subscriptionsList) throws ServiceException, DAOException;
 	
 }
