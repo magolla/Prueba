@@ -94,7 +94,8 @@ public class AdminNotificationController {
 			errors.put("pushFailed", "Error al enviar las notificaciones");
 		}
 		model.addObject("errors",errors);
-		model.setViewName("admin/notification-form");
+//		model.setViewName("admin/notification-form");
+		model.setViewName("redirect:/admin/BoNotification");
 
 		return model;
 	}

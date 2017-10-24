@@ -24,7 +24,7 @@ public class Subscription implements PersistentEntity {
 	@Column(name = "expirationDate")
 	private Date expirationDate;
 	
-	@Column(name = "expirationNotified")
+	@Column(name = "expirationNotified", columnDefinition = "boolean default false", nullable = false)
 	private boolean expirationNotified;
 
 	@ManyToOne
