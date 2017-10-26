@@ -28,6 +28,8 @@ import com.tdil.d2d.persistence.Receipt;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
+import com.tdil.d2d.persistence.SubscriptionTimeUnit;
+import com.tdil.d2d.utils.Utilidades;
 
 @Transactional
 @Repository
@@ -136,7 +138,7 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Subscription.class);
 			criteria.add(Restrictions.eq("user.id", userId));
 			criteria.add(Restrictions.gt("expirationDate", Calendar.getInstance().getTime()));
-			
+
 			List<Subscription> list = criteria.list();
 			return list;
 		} catch (Exception e) {
@@ -154,7 +156,7 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 	}
 
 	protected void handleException(String invocationDetails, Exception e) throws DAOException {
-//		LoggerManager.error(this, e.getMessage(), e);
+		//		LoggerManager.error(this, e.getMessage(), e);
 		throw new DAOException(e.getMessage(), e);
 	}
 
@@ -178,12 +180,12 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getStoredTransationIds(List<InAppPurchaseDTO> latestPurchases) {
-		
+
 		List<String> transactionIds = new ArrayList<String>();
 		for (InAppPurchaseDTO inAppPurchaseDTO : latestPurchases) {
 			transactionIds.add(inAppPurchaseDTO.getTransactionID());
 		}
-		
+
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT distinct receipt.transactionId ");
 		queryString.append("FROM Receipt receipt ");
@@ -196,7 +198,7 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 		List<String> list = query.list();
 		return list;
 	}
-	
+
 	@Override
 	public void saveReceipt(Receipt receipt) throws DAOException {
 		String invocationDetails = "save(" + receipt.getClass().getName() + ") ";
@@ -209,10 +211,10 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			this.handleException(invocationDetails, e);
 		}
 	}
-	
+
 	@Override
 	public Receipt getLastReceipt(Long userId) {
-		
+
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT distinct receipt ");
 		queryString.append("FROM Receipt receipt ");
@@ -268,13 +270,13 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 	public List<Subscription> getSuscriptionCloseExpire() throws DAOException {
 		try {
 			try {
-				
+
 				Date currentDate = new Date();
 				Calendar c = Calendar.getInstance(); 
 				c.setTime(currentDate); 
 				c.add(Calendar.DATE, 7);
 				Date dateExpiration = c.getTime();
-				
+
 				StringBuilder queryString = new StringBuilder("");
 				queryString.append("SELECT distinct subscription ");
 				queryString.append("FROM Subscription subscription ");
@@ -293,4 +295,52 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			throw new DAOException(e);
 		}
 	}
+
+	@Override
+	public List<SponsorCode> listSponsorCodeById(List<Long> sponsorsId) {
+		
+		if(Utilidades.isNullOrEmpty(sponsorsId)) {
+			return new ArrayList<SponsorCode>();
+		}
+		
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SponsorCode.class);
+		criteria.add(Restrictions.in("sponsor.id", sponsorsId));
+		criteria.add(Restrictions.isNotNull("consumer"));
+		List<SponsorCode> codes = criteria.list();
+		codes = filterDuplicates(codes);
+		logger.info("Sponsor codes found: {}", codes.size());
+		return codes;
+	}
+
+	private List<SponsorCode> filterDuplicates(List<SponsorCode> codes) {
+		List<SponsorCode> codeList = new ArrayList<>();
+		Date now = new Date();
+		for (SponsorCode sponsorCode : codes) {
+			Date expirationDate = null;
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(sponsorCode.getConsumeDate());
+			Calendar expirationCalendar;
+			switch (sponsorCode.getTimeUnit()) {
+			case DAY:
+				expirationCalendar = SubscriptionTimeUnit.DAY.add(cal, sponsorCode.getUnits());
+				expirationDate = expirationCalendar.getTime();
+				break;
+			case MONTH:
+				expirationCalendar = SubscriptionTimeUnit.MONTH.add(cal, sponsorCode.getUnits());
+				expirationDate = expirationCalendar.getTime();
+				break;
+			case YEAR:
+				expirationCalendar = SubscriptionTimeUnit.YEAR.add(cal, sponsorCode.getUnits());
+				expirationDate = expirationCalendar.getTime();
+				break;
+			}
+
+			if(expirationDate.after(now)) {
+				codeList.add(sponsorCode);
+			}
+
+		}
+		return codeList;
+	}
+
 }

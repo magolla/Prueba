@@ -2,6 +2,7 @@ package com.tdil.d2d.dao;
 
 import java.util.List;
 
+import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Sponsor;
 
 public interface SponsorDAO {
@@ -15,5 +16,7 @@ public interface SponsorDAO {
 	void delete(long id);
 
 	List<Sponsor> getAllSponsors();
+	
+	public List<Sponsor> listSponsorsByIds(List<Long> ids) throws DAOException;
 	
 }

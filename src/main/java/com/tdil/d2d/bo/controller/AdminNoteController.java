@@ -31,8 +31,10 @@ import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.NoteCategory;
+import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.service.BONoteService;
 import com.tdil.d2d.service.SpecialtyService;
+import com.tdil.d2d.service.SponsorService;
 import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.ImageResizer;
 import com.tdil.d2d.utils.LoggerManager;
@@ -53,6 +55,9 @@ public class AdminNoteController {
 	
 	@Autowired
 	private NoteDAO noteDao;
+	
+	@Autowired
+	private SponsorService sponsorService;
 	
 	@RequestMapping(value = {"/BoNotes"} , method = RequestMethod.GET)
 	public ModelAndView homePage() {
@@ -94,6 +99,10 @@ public class AdminNoteController {
 			}
 			model.addObject("specialtiesLists", specialtiesLists);
 			
+			List<Sponsor> sponsorList = this.sponsorService.getAllSponsors();
+			
+			model.addObject("sponsorList", sponsorList);
+			
 			model.setViewName("admin/note-editor");
 			
 			return model;
@@ -119,6 +128,8 @@ public class AdminNoteController {
 			model.addObject("noteForm", note);
 			model.addObject("categoryList", this.getCategoryList());
 			model.addObject("occupationList", this.specialtyService.listOccupations());
+			List<Sponsor> sponsorList = this.sponsorService.getAllSponsors();
+			model.addObject("sponsorList", sponsorList);
 			
 			return model;
 		
@@ -159,7 +170,7 @@ public class AdminNoteController {
 			
 			Note lastNote = noteDao.getLastNote();
 			if(lastNote.getCategory() != null) {
-				this.userService.notifyNewNotesToMatchedUsers(lastNote.getId(), lastNote.getCategory().name());
+				this.userService.notifyNewNotesToMatchedUsers(note, lastNote);
 			}
 			ModelAndView model = new ModelAndView();
 			model.setViewName("redirect:/admin/BoNotes");

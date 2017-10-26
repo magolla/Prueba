@@ -2,6 +2,7 @@ package com.tdil.d2d.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -27,12 +29,14 @@ import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
 import com.tdil.d2d.persistence.Note;
+import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
 import com.tdil.d2d.persistence.ValidationCode;
+import com.tdil.d2d.utils.Utilidades;
 
 @Repository
 public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
@@ -383,22 +387,90 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	}
 
 	@Override
-	public List<User> getMatchedUsersNote(Note note) throws DAOException {
+	public List<User> getMatchedUsersNote(Note note, List<User> userList) throws DAOException {
 		try {
+
+			boolean usedWhere = false;
+
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
 			queryString.append("FROM User user ");
-			//			queryString.append("JOIN userProfile.user user ");
-			//			queryString.append("JOIN user.userGeoLocations location ");
+			if(!Utilidades.isNullOrEmpty(note.getOccupations())) {
+				queryString.append("JOIN user.specialties spec ");	
+			}
+			
+
+			//			if(note.getSpecialties() != null && !note.getSpecialties().isEmpty()) {
+			//				queryString.append("where spec in :specialties ");
+			//				usedWhere = true;
+			//			}
+			//			if(note.getOccupations() != null && !note.getOccupations().isEmpty()) {
+			//				if(usedWhere) {
+			//					queryString.append("and spec.occupation in :occupations ");	
+			//				}else {
+			//					queryString.append("where spec.occupation in :occupations ");
+			//					usedWhere = true;
+			//				}
+			//			}
+
+			if(userList != null && !userList.isEmpty()) {
+				queryString.append("where user in (:userList) ");
+				usedWhere = true;
+			}
+
+
+			queryString.append(checkInterests(note.getSpecialties(), note.getOccupations(), usedWhere));
 			queryString.append("order by user.lastLoginDate desc");
+//			queryString.append("order by user.id desc");
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 
-			List<User> filterUser = filterUsers(query.list(), note);
+			if(!userList.isEmpty()) {
+				query.setParameterList("userList", userList);
+			}
 
-			return filterUser;
+			if(note.getSpecialties() != null && !note.getSpecialties().isEmpty()) {
+				query.setParameterList("specialties", note.getSpecialties());
+			}
+
+			if(note.getOccupations() != null && !note.getOccupations().isEmpty()) {
+				query.setParameterList("occupations", note.getOccupations());
+			}
+
+			return query.list();
+
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+	}
+
+	private Object checkInterests(Set<Specialty> specialties, Set<Occupation> occupations, boolean usedWhere) {
+
+		StringBuilder query = new StringBuilder("");
+
+		if(!isNullOrEmpty(occupations) && !isNullOrEmpty(specialties)) {
+
+			if(usedWhere) {
+				query.append(" and ");
+			} else {
+				query.append(" where ");
+			}
+
+			query.append(" (spec in (:specialties) or spec.occupation in (:occupations)) " );
+
+		} else if(isNullOrEmpty(occupations) && !isNullOrEmpty(specialties)) {
+			query.append(" and spec in (:specialties)  " );
+		} else if(!isNullOrEmpty(occupations) && isNullOrEmpty(specialties)) {
+			query.append(" and spec.occupation in (:occupations) " );
+		} else {
+			query = new StringBuilder("");
+		}
+
+		return query;
+	}
+
+
+	public static boolean isNullOrEmpty( final Collection< ? > c ) {
+		return c == null || c.isEmpty();
 	}
 
 	private List<User> filterUsers(List<User> list, Note note) {
@@ -481,11 +553,11 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				if(!boNotificationDTO.getUserIds().isEmpty()) {
 					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
 				}
-				
+
 				if(!boNotificationDTO.getUserTestIds().isEmpty()) {
 					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserTestIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
 				}
-				
+
 			}
 			List<User> filterUser = query.list();
 
@@ -494,6 +566,33 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersBNoSponsor() {
+
+		StringBuilder queryString = new StringBuilder("select * from d2d_prod.D2D_USER where D2D_USER.id not in(select  distinct something.id from (SELECT * FROM D2D_USER) AS something join D2D_SPONSOR_CODE on something.id = D2D_SPONSOR_CODE.consumer_id)");
+
+		SQLQuery query = this.getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+		query.addEntity(User.class);
+		List<User> filterUser = (List<User>)query.list();
+
+		return filterUser;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersASponsor() {
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT distinct user ");
+		queryString.append("FROM User user ");
+		queryString.append("where user.userb = :userB ");
+
+		Query query = this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("userB", false);
+
+		return query.list();
 	}
 
 }

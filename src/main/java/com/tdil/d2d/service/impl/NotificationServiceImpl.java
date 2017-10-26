@@ -256,36 +256,13 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 			List<User> userList = userDAO.getUsersBoNotification(boNotificationDTO);
 
 			for (User user : userList) {
-				//
 				NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
 
-
-				//Dejar en el caso de implementar tipo de notificaciones desde el backoffice
-				//				NotificationType type;
-				//				try {
-				//					type = NotificationType.valueOf(notificationBackofficeDTO.getAction());	
-				//				} catch (IllegalArgumentException e) {
-				//					type = null;
-				//				}
-
 				Notification notification = new Notification();
-				//				notification.setAction(notificationBackofficeDTO.getAction());
-				//				notification.setActionId(notificationBackofficeDTO.getActionId());
 				notification.setCreationDate(new Date());
 
-				//				if(type == null) {
 				notification.setTitle(boNotificationDTO.getTitulo());
 				notification.setMessage(boNotificationDTO.getMessage());
-
-				//				} else {
-				//					if(notificationBackofficeDTO.getTitle().equals("") && notificationBackofficeDTO.getMessage().equals("")) {
-				//						notification.setTitle(type.getTitle());
-				//						notification.setMessage(type.getMessage());
-				//					} else {
-				//						notification.setTitle(notificationBackofficeDTO.getTitle());
-				//						notification.setMessage(notificationBackofficeDTO.getMessage());
-				//					}
-				//				}
 
 				notification.setStatus("Enviado");
 				notification.setUser(user);

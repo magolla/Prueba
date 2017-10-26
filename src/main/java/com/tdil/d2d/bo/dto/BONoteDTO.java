@@ -31,6 +31,12 @@ public class BONoteDTO {
 	private List<Long> occupations;
 
 	private List<Long> specialties; 
+	
+	private List<Long> sponsors; 
+	
+	private boolean sendUserB;
+	
+	private boolean sendUserA;
 
 	public long getId() {
 		return id;
@@ -185,5 +191,29 @@ public class BONoteDTO {
 
 	public void addSpecialty(Long specialty) {
 		getSpecialties().add(specialty);
+	}
+
+	public List<Long> getSponsors() {
+		return sponsors;
+	}
+
+	public void setSponsors(List<Long> sponsors) {
+		this.sponsors = sponsors;
+	}
+
+	public boolean isSendUserB() {
+		return sendUserB;
+	}
+
+	public void setSendUserB(boolean sendUserB) {
+		this.sendUserB = sendUserB;
+	}
+
+	public boolean isSendUserA() {
+		return sendUserA;
+	}
+
+	public void setSendUserA(boolean sendUserA) {
+		this.sendUserA = sendUserA;
 	}
 }

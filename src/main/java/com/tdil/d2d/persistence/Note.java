@@ -55,6 +55,13 @@ public class Note implements PersistentEntity {
 			inverseJoinColumns = {@JoinColumn(name = "OCCUPATION_ID",
 					nullable = false, updatable = false)})
 	private Set<Occupation> occupations;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "D2D_NOTE_SPONSOR", joinColumns = {
+			@JoinColumn(name = "NOTE_ID", nullable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name = "SPONSOR_ID",
+					nullable = false, updatable = false)})
+	private Set<Sponsor> sponsors;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "category")
@@ -175,5 +182,13 @@ public class Note implements PersistentEntity {
 
 	public void setBase64img(byte[] base64img) {
 		this.base64img = base64img;
+	}
+
+	public Set<Sponsor> getSponsors() {
+		return sponsors;
+	}
+
+	public void setSponsors(Set<Sponsor> sponsors) {
+		this.sponsors = sponsors;
 	}
 }
