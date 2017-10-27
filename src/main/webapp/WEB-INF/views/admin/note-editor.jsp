@@ -5,7 +5,7 @@
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
-		ABM de Notas
+		Administrar de Notas
 	</tiles:putAttribute>
 
 	<tiles:putAttribute name="body">
@@ -203,7 +203,7 @@
 								</div>
 								<div class="tab-pane" id="tab_3">
 									<div class="box-body">
-										<label for="name" class="control-label">Sponsors</label>
+										<h3>Seleccionar Sponsors de la publicación</h3>
 										<c:forEach var="obj" items="${sponsorList}">
 											<div class="row">
 												<div>
@@ -212,6 +212,10 @@
 												</div>
 											</div>
 										</c:forEach>
+										
+										<hr style="width:100%; color: black; height:1px; background-color:black;" />
+										
+										<h4>Configuraciones adicionales</h4>
 										<div class="row">
 											<div>
 												<input type="checkbox" name="sendUserB" checked="checked"/>
@@ -229,7 +233,7 @@
 							</div>
 
 							<div class="box-footer">
-								<button type="submit" class="btn btn-info pull-right">Guardar</button>
+								<button type="submit" class="btn btn-info pull-right">Guardar y Publicar</button>
 							</div>
 							<form:input path="id" type="hidden" />
 							<input type="hidden" name="${_csrf.parameterName}"
