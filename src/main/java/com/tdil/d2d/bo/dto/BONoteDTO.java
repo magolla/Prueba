@@ -37,6 +37,8 @@ public class BONoteDTO {
 	private boolean sendUserB;
 	
 	private boolean sendUserA;
+	
+	private boolean sendUserBAllSponsor;
 
 	public long getId() {
 		return id;
@@ -215,5 +217,13 @@ public class BONoteDTO {
 
 	public void setSendUserA(boolean sendUserA) {
 		this.sendUserA = sendUserA;
+	}
+
+	public boolean isSendUserBAllSponsor() {
+		return sendUserBAllSponsor;
+	}
+
+	public void setSendUserBAllSponsor(boolean sendUserBAllSponsor) {
+		this.sendUserBAllSponsor = sendUserBAllSponsor;
 	}
 }

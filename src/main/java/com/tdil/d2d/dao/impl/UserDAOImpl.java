@@ -441,9 +441,9 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			query.append(" (spec in (:specialties) or spec.occupation in (:occupations)) " );
 
 		} else if(isNullOrEmpty(occupations) && !isNullOrEmpty(specialties)) {
-			query.append(" and spec in (:specialties)  " );
+			query.append(" where spec in (:specialties)  " );
 		} else if(!isNullOrEmpty(occupations) && isNullOrEmpty(specialties)) {
-			query.append(" and spec.occupation in (:occupations) " );
+			query.append(" where spec.occupation in (:occupations) " );
 		} else {
 			query = new StringBuilder("");
 		}
