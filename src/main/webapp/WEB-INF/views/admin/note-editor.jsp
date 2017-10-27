@@ -206,7 +206,7 @@
 										<h3>Seleccionar Sponsors de la publicación</h3>
 										<div class="row">
 											<input id="sendUserBAllSponsor" type="checkbox" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
-											<span>Enviar a todos los Sponsors</span>
+											<span><b>Enviar a todos los Sponsors</b></span>
 										</div>
 										<div id="sponsorsBox">
 											<c:forEach var="obj" items="${sponsorList}">
@@ -222,12 +222,12 @@
 										
 										<h4>Configuraciones adicionales</h4>
 										<div class="row">
-												<input type="checkbox" name="sendUserB" checked="checked"/>
-												<span>Enviar a los Usuarios B sin Sponsor</span>
+											<input type="checkbox" name="sendUserB" checked="checked"/>
+											<span>Enviar a los Usuarios B sin Sponsor</span>
 										</div>
 										<div class="row">
-												<input type="checkbox" name="sendUserA" checked="checked"/>
-												<span>Enviar a los Usuarios A</span>
+											<input type="checkbox" name="sendUserA" checked="checked"/>
+											<span>Enviar a los Usuarios A</span>
 										</div>
 									</div>
 								</div>
