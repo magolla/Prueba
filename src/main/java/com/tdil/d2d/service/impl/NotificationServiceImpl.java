@@ -1,5 +1,6 @@
 package com.tdil.d2d.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -252,8 +253,21 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 	@Override
 	public boolean sendBackOfficeNotification(BoNotificationDTO boNotificationDTO) {
 		try {
+			
+			
+			List<User> userListFrom = new ArrayList<User>();
+			
+			if(boNotificationDTO.isSendUserA()) {
+				userListFrom.addAll(userDAO.getUsersASponsor());
+			}
+			
+			if(boNotificationDTO.isSendUserB()) {
+				userListFrom.addAll(userDAO.getUsersBNoSponsor());
+			}
+			
+			List<Long> userIdList = userListFrom.stream().map(User::getId).collect(Collectors.toList());
 
-			List<User> userList = userDAO.getUsersBoNotification(boNotificationDTO);
+			List<User> userList = userDAO.getUsersBoNotification(boNotificationDTO,userIdList);
 
 			for (User user : userList) {
 				NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());

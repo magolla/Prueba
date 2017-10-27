@@ -11,6 +11,26 @@ public class BoNotificationDTO {
 	private List<Long> occupations;
 
 	private List<Long> specialties; 
+	
+	private boolean sendUserA;
+	
+	private boolean sendUserB;
+
+	public boolean isSendUserA() {
+		return sendUserA;
+	}
+
+	public void setSendUserA(boolean sendUserA) {
+		this.sendUserA = sendUserA;
+	}
+
+	public boolean isSendUserB() {
+		return sendUserB;
+	}
+
+	public void setSendUserB(boolean sendUserB) {
+		this.sendUserB = sendUserB;
+	}
 
 	public String getTitulo() {
 		return titulo;

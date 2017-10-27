@@ -170,7 +170,7 @@
 
 											<c:forEach var="obj" items="${specialtiesLists}">
 												<div id="specialtiesBox-${obj.key.id}"
-													style="margin-top: 10px;">
+													style="margin-top: 10px;"></div>
 													<div class="row">
 														<div class="col-md-2">
 															<span>${obj.key.name}</span>

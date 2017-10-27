@@ -57,7 +57,7 @@ public interface UserDAO {
 
 	public List<User> getMatchedUsersNote(Note note, List<User> userList) throws DAOException;
 	
-	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO) throws DAOException;
+	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO, List<Long> userIdList) throws DAOException;
 
 	public List<User> getUsersBNoSponsor();
 

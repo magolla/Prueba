@@ -514,14 +514,16 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO) throws DAOException {
+	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO,List<Long> idList) throws DAOException {
 		try {
+			
+			List<Long> userIdsList = new ArrayList<Long>();
 			Query query;
 
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
 			queryString.append("FROM User user ");
-			if(boNotificationDTO.isAllUser() && boNotificationDTO.getUserTestIds().isEmpty()) {
+			if((boNotificationDTO.isAllUser() && boNotificationDTO.getUserTestIds().isEmpty())) {
 				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			} else {
 				queryString.append("JOIN user.specialties spec ");
@@ -551,7 +553,15 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 					query.setParameterList("occupations", boNotificationDTO.getOccupations());
 				}
 				if(!boNotificationDTO.getUserIds().isEmpty()) {
-					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
+					userIdsList.addAll(Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
+				}
+				
+				if(!idList.isEmpty()) {
+					userIdsList.addAll(idList);
+				}
+				
+				if(!idList.isEmpty() || !boNotificationDTO.getUserIds().isEmpty()) {
+					query.setParameterList("users", userIdsList);
 				}
 
 				if(!boNotificationDTO.getUserTestIds().isEmpty()) {
@@ -572,7 +582,8 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	@Override
 	public List<User> getUsersBNoSponsor() {
 
-		StringBuilder queryString = new StringBuilder("select * from d2d_prod.D2D_USER where D2D_USER.id not in(select  distinct something.id from (SELECT * FROM D2D_USER) AS something join D2D_SPONSOR_CODE on something.id = D2D_SPONSOR_CODE.consumer_id)");
+		StringBuilder queryString = new StringBuilder("select * from d2d_prod.D2D_USER where D2D_USER.userb is true && D2D_USER.id not in(select  distinct something.id from (SELECT * FROM D2D_USER) AS something \n" + 
+				"join D2D_SPONSOR_CODE on something.id = D2D_SPONSOR_CODE.consumer_id join D2D_SUBSCRIPTION on D2D_SUBSCRIPTION.sponsorCode_id = D2D_SPONSOR_CODE.id where D2D_SUBSCRIPTION.expirationDate > now())");
 
 		SQLQuery query = this.getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
 		query.addEntity(User.class);

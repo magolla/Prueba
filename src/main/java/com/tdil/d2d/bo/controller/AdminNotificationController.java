@@ -2,6 +2,7 @@ package com.tdil.d2d.bo.controller;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -21,8 +22,10 @@ import com.tdil.d2d.bo.dto.BoNotificationDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.service.NotificationBackofficeService;
 import com.tdil.d2d.service.SpecialtyService;
+import com.tdil.d2d.service.SponsorService;
 
 @Controller
 public class AdminNotificationController {
@@ -32,6 +35,9 @@ public class AdminNotificationController {
 
 	@Autowired
 	private NotificationBackofficeService notificationBackofficeService;
+	
+	@Autowired
+	private SponsorService sponsorService;
 
 
 	@RequestMapping(value = {"/BoNotification"} , method = RequestMethod.GET)
@@ -45,6 +51,12 @@ public class AdminNotificationController {
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
+		
+		List<Sponsor> sponsorList = this.sponsorService.getAllSponsors();
+		
+		model.addObject("sponsorList", sponsorList);
+		
+		
 		model.setViewName("admin/notification-form");
 
 		return model;

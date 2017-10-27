@@ -164,13 +164,35 @@
 									</c:if>
 									
 									<hr style="width: 100%; color: black; height: 1px; background-color:black;" />
-									
+									<!--Sponsors -->
+									<label for="name" class="control-label">Sponsors</label>
+									<c:forEach var="obj" items="${sponsorList}">
+										<div class="row">
+											<div>
+												<input type="checkbox" name="sponsors" value="${obj.id}" />
+												<span>${obj.name}</span>
+											</div>
+										</div>
+									</c:forEach>
+									<div class="row">
+										<div>
+											<input type="checkbox" name="sendUserB" />
+											<span>Enviar a los Usuarios B sin Sponsor</span>
+										</div>
+									</div>
+									<div class="row">
+										<div>
+											<input type="checkbox" name="sendUserA" />
+											<span>Enviar a los Usuarios A</span>
+										</div>
+									</div>
+									<!-- Fin Sponsors -->
 									<div class="box-footer">
-										<div class="pull-left"">
+										<div class="pull-left">
 											<button type="submit"class="btn btn-info" style="display:none;">Guardar Notificacion como Template</button>
 										</div>
 										
-										<div class="pull-right"">
+										<div class="pull-right">
 											<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Enviar Notificaciones</button>
 										</div>
 									</div>
