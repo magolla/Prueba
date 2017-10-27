@@ -48,4 +48,6 @@ public interface SubscriptionDAO {
 	List<SponsorCode> listSponsorCodeById(List<Long> sponsorsId);
 
 	Subscription getSubscriptionByUser(User user);
+
+	public List<SponsorCode> listAllSponsorCode();
 }

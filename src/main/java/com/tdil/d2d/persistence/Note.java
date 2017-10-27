@@ -88,6 +88,14 @@ public class Note implements PersistentEntity {
 	@Column(name = "sendAllSponsor", columnDefinition = "boolean default true", nullable = false)
 	private boolean sendUserBAllSponsor;
 
+	public boolean isSendUserBAllSponsor() {
+		return sendUserBAllSponsor;
+	}
+
+	public void setSendUserBAllSponsor(boolean sendUserBAllSponsor) {
+		this.sendUserBAllSponsor = sendUserBAllSponsor;
+	}
+
 	public long getId() {
 		return id;
 	}

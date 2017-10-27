@@ -398,30 +398,13 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			if(!Utilidades.isNullOrEmpty(note.getOccupations())) {
 				queryString.append("JOIN user.specialties spec ");	
 			}
-			
-
-			//			if(note.getSpecialties() != null && !note.getSpecialties().isEmpty()) {
-			//				queryString.append("where spec in :specialties ");
-			//				usedWhere = true;
-			//			}
-			//			if(note.getOccupations() != null && !note.getOccupations().isEmpty()) {
-			//				if(usedWhere) {
-			//					queryString.append("and spec.occupation in :occupations ");	
-			//				}else {
-			//					queryString.append("where spec.occupation in :occupations ");
-			//					usedWhere = true;
-			//				}
-			//			}
 
 			if(userList != null && !userList.isEmpty()) {
 				queryString.append("where user in (:userList) ");
 				usedWhere = true;
 			}
-
-
 			queryString.append(checkInterests(note.getSpecialties(), note.getOccupations(), usedWhere));
 			queryString.append("order by user.lastLoginDate desc");
-//			queryString.append("order by user.id desc");
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 
 			if(!userList.isEmpty()) {

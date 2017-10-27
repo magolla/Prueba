@@ -12,6 +12,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -359,6 +360,16 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 			return codes.get(0);		
 		}
 	
+	}
+
+	@Override
+	public List<SponsorCode> listAllSponsorCode() {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SponsorCode.class);
+		criteria.setProjection(Projections.distinct(Projections.property("id")));
+		criteria.add(Restrictions.isNotNull("consumer"));
+		List<SponsorCode> codes = criteria.list();
+		logger.info("Sponsor codes found: {}", codes.size());
+		return codes;		
 	}
 
 }

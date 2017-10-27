@@ -1872,7 +1872,13 @@ public class UserServiceImpl implements UserService {
 			List<Long> ids = note.getSponsors().stream()
                     .map(Sponsor::getId).collect(Collectors.toList());
 			
-			List<SponsorCode> sponsorList = this.subscriptionDAO.listSponsorCodeById(ids);
+			List<SponsorCode> sponsorList;
+			
+			if(note.isSendUserBAllSponsor()) {
+				sponsorList = this.subscriptionDAO.listAllSponsorCode();
+			} else {
+				sponsorList = this.subscriptionDAO.listSponsorCodeById(ids);	
+			}
 
 			List<User> userList = sponsorList.stream().map(SponsorCode::getConsumer).collect(Collectors.toList());
 			

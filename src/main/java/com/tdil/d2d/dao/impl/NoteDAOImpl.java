@@ -73,9 +73,6 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		queryString.append("FROM Note note ");
 		queryString.append("left join note.specialties as specialty ");
 		queryString.append("left join note.occupations as occupation ");
-//		if(userSubscription.getSponsorCode() != null) {
-//			queryString.append("left join note.sponsors as sponsor ");
-//		}
 		if(!user.isUserb()) {
 			queryString.append("WHERE note.active = 1");
 			if(!user.isUserb()) {
@@ -88,11 +85,10 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 			queryString.append("OR (occupation.id is null AND specialty.id is null AND note.active = 1)) ");
 			
 			if(userSubscription.getSponsorCode() != null) {
-				queryString.append("AND (note.sendUserBNoSponsor is true )");
-			}
-			
-			if(userSubscription.getSponsorCode() != null) {
-				queryString.append("AND (:sponsorId in sponsor.id)");
+				queryString.append("AND ((:sponsorId in sponsor.id)");
+				queryString.append("OR (note.sendUserBAllSponsor is true ))");
+			} else {
+				queryString.append(" AND (note.sendUserBNoSponsor is true )");
 			}
 		}
 		queryString.append("AND (note.expirationDate >= now() OR note.expirationDate is null) ");
