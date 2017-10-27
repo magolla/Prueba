@@ -29,6 +29,7 @@ import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.SubscriptionTimeUnit;
+import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.utils.Utilidades;
 
 @Transactional
@@ -341,6 +342,23 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 
 		}
 		return codeList;
+	}
+	
+	
+	@Override
+	public Subscription getSubscriptionByUser(User user) {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Subscription.class);
+		criteria.add(Restrictions.eq("user", user));
+		criteria.add(Restrictions.ge("expirationDate", new Date()));
+		List<Subscription> codes = criteria.list();
+		logger.info("Sponsor codes found: {}", codes.size());
+		
+		if(codes.isEmpty()){
+			return new Subscription();
+		} else {
+			return codes.get(0);		
+		}
+	
 	}
 
 }

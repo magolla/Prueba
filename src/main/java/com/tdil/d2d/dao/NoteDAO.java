@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Note;
+import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
 
 public interface NoteDAO {
@@ -15,7 +16,7 @@ public interface NoteDAO {
 
 	Note getNoteById(Long id);
 
-	List<Note> getNotesForUser(int page, int size, List<Long> ocuppations, List<Long> specialities, User user);
+	List<Note> getNotesForUser(int page, int size, List<Long> ocuppations, List<Long> specialities, User user, Subscription userSubscription);
 
 	List<Note> getAll() throws DAOException;
 

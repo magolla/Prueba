@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tdil.d2d.controller.api.dto.NoteDTO;
 import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
+import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.DTDException;
@@ -22,6 +23,7 @@ import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
+import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.NoteService;
 
@@ -32,6 +34,9 @@ public class NoteServiceImpl implements NoteService {
 	private final NoteDAO noteDAO;
 	private final SpecialtyDAO specialtyDAO;
 	private final UserDAO userDAO;
+	
+	@Autowired
+	private SubscriptionDAO subscriptionDAO;
 
 	@Autowired
 	public NoteServiceImpl(NoteDAO noteDAO, SpecialtyDAO specialtyDAO, UserDAO userDAO) {
@@ -69,7 +74,9 @@ public class NoteServiceImpl implements NoteService {
 				return new ArrayList<Note>();
 			}
 		}
-		return this.noteDAO.getNotesForUser(page, size, ocuppations, specialities, user);
+		Subscription userSubscription = this.subscriptionDAO.getSubscriptionByUser(user);
+		
+		return this.noteDAO.getNotesForUser(page, size, ocuppations, specialities, user, userSubscription);
 	}
 
 	@Override
@@ -90,7 +97,9 @@ public class NoteServiceImpl implements NoteService {
 			return null;
 		}
 
-		List<Note> notes = this.noteDAO.getNotesForUser(1, 1, ocuppations, specialities,user);
+		Subscription userSubscription = this.subscriptionDAO.getSubscriptionByUser(user);
+		
+		List<Note> notes = this.noteDAO.getNotesForUser(1, 1, ocuppations, specialities,user,userSubscription);
 
 		if(notes.size()>0){
 			return notes.get(0);

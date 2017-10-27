@@ -268,7 +268,7 @@ function alluserAction(checkboxElem) {
 	  } else {
 		  $("#userIds").prop('disabled', false);
 	  }
-	}
+}
 	
 $('#occupationsSelect').selectpicker('val', ${noteForm.occupations});
 

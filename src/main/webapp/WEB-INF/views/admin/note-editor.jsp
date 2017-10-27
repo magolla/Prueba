@@ -204,29 +204,30 @@
 								<div class="tab-pane" id="tab_3">
 									<div class="box-body">
 										<h3>Seleccionar Sponsors de la publicación</h3>
-										<c:forEach var="obj" items="${sponsorList}">
-											<div class="row">
-												<div>
-													<input type="checkbox" name="sponsors" value="${obj.id}" />
-													<span>${obj.name}</span>
+										<div class="row">
+											<input id="sendUserBAllSponsor" type="checkbox" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
+											<span>Enviar a todos los Sponsors</span>
+										</div>
+										<div id="sponsorsBox">
+											<c:forEach var="obj" items="${sponsorList}">
+												<div class="row">
+													<div>
+														<input type="checkbox" name="sponsors" value="${obj.id}" />
+														<span>${obj.name}</span>
+													</div>
 												</div>
-											</div>
-										</c:forEach>
-										
+											</c:forEach>
+										</div>
 										<hr style="width:100%; color: black; height:1px; background-color:black;" />
 										
 										<h4>Configuraciones adicionales</h4>
 										<div class="row">
-											<div>
 												<input type="checkbox" name="sendUserB" checked="checked"/>
 												<span>Enviar a los Usuarios B sin Sponsor</span>
-											</div>
 										</div>
 										<div class="row">
-											<div>
 												<input type="checkbox" name="sendUserA" checked="checked"/>
 												<span>Enviar a los Usuarios A</span>
-											</div>
 										</div>
 									</div>
 								</div>
@@ -315,6 +316,7 @@
 			}
 			
 			$(document).ready(function() {
+				alluserAction($("#sendUserBAllSponsor").get(0));
 				arrayOccupationIds = $("#occupationsSelect").val();
 	
 				for (var i = 0; i < arrayOccupationIds.length; i++) {
@@ -324,6 +326,16 @@
 				
 				loadSpecialtiesInput();
 			});
+			
+			function alluserAction(checkboxElem) {
+				console.log(checkboxElem);
+				  if (checkboxElem.checked) {
+					  $("#sponsorsBox").css('display','none');
+				  } else {
+					  $("#sponsorsBox").css('display','block');
+				  }
+			}
+			
 		</script>
 	</tiles:putAttribute>
 </tiles:insertDefinition>

@@ -9,6 +9,7 @@ import com.tdil.d2d.persistence.Receipt;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
+import com.tdil.d2d.persistence.User;
 
 public interface SubscriptionDAO {
 
@@ -45,4 +46,6 @@ public interface SubscriptionDAO {
 	public List<Subscription> getSuscriptionCloseExpire() throws DAOException;
 	
 	List<SponsorCode> listSponsorCodeById(List<Long> sponsorsId);
+
+	Subscription getSubscriptionByUser(User user);
 }

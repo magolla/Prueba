@@ -78,6 +78,15 @@ public class Note implements PersistentEntity {
 
 	@Column(name = "expiration_date")
 	private Date expirationDate;
+	
+	@Column(name = "sendUserA", columnDefinition = "boolean default true", nullable = false)
+	private boolean sendUserA;
+	
+	@Column(name = "sendUserBNoSponsor", columnDefinition = "boolean default true", nullable = false)
+	private boolean sendUserBNoSponsor;
+	
+	@Column(name = "sendAllSponsor", columnDefinition = "boolean default true", nullable = false)
+	private boolean sendUserBAllSponsor;
 
 	public long getId() {
 		return id;
@@ -190,5 +199,21 @@ public class Note implements PersistentEntity {
 
 	public void setSponsors(Set<Sponsor> sponsors) {
 		this.sponsors = sponsors;
+	}
+
+	public boolean isSendUserA() {
+		return sendUserA;
+	}
+
+	public void setSendUserA(boolean sendUserA) {
+		this.sendUserA = sendUserA;
+	}
+
+	public boolean isSendUserBNoSponsor() {
+		return sendUserBNoSponsor;
+	}
+
+	public void setSendUserBNoSponsor(boolean sendUserBNoSponsor) {
+		this.sendUserBNoSponsor = sendUserBNoSponsor;
 	}
 }
