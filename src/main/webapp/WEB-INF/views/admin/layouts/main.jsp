@@ -126,7 +126,16 @@
 						</a>
 					</li>
 				</sec:authorize>
-			
+
+				<!-- Roles para Notificaciones -->
+				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_NOTIFICATIONS')">
+					<li class="treeview">
+							<a href="<c:url value="/admin/BoNotification" />">
+								<i class="fa fa-book"></i> <span>Envio de notificaciones</span>
+							</a>
+					</li>
+				</sec:authorize>
+
 				<!--Roles para Reportes -->
 				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_REPORTS')">
 					<li class="treeview">
@@ -157,15 +166,6 @@
 						<a href="<c:url value="/admin/logs" />">
 							<i class="fa fa-book"></i> <span>Logs</span>
 						</a>
-					</li>
-				</sec:authorize>
-				
-				<!-- Roles para Notificaciones -->
-				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_NOTIFICATIONS')">
-					<li class="treeview">
-							<a href="<c:url value="/admin/BoNotification" />">
-								<i class="fa fa-book"></i> <span>Envio de notificaciones</span>
-							</a>
 					</li>
 				</sec:authorize>
 			</ul>
