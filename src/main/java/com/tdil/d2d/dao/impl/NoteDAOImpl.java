@@ -73,6 +73,9 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		queryString.append("FROM Note note ");
 		queryString.append("left join note.specialties as specialty ");
 		queryString.append("left join note.occupations as occupation ");
+		if(userSubscription.getSponsorCode() != null) {
+			queryString.append("left join fetch note.sponsors as sponsor ");
+		}
 		if(!user.isUserb()) {
 			queryString.append("WHERE note.active = 1");
 			if(!user.isUserb()) {
@@ -85,7 +88,7 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 			queryString.append("OR (occupation.id is null AND specialty.id is null AND note.active = 1)) ");
 			
 			if(userSubscription.getSponsorCode() != null) {
-				queryString.append("AND ((:sponsorId in sponsor.id)");
+				queryString.append("AND ((sponsor.id = :sponsorId )");
 				queryString.append("OR (note.sendUserBAllSponsor is true ))");
 			} else {
 				queryString.append(" AND (note.sendUserBNoSponsor is true )");
@@ -99,9 +102,9 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		if(user.isUserb()) {
 			query.setParameterList("ocuppations", ocuppations);
 			query.setParameterList("specialities", specialities);
-//			if(userSubscription.getSponsorCode() != null) {
-//				query.setParameter("sponsorId", userSubscription.getSponsorCode());
-//			}
+			if(userSubscription.getSponsorCode() != null) {
+				query.setParameter("sponsorId", userSubscription.getSponsorCode().getId());
+			}
 		}
 		query.setFirstResult((page - 1) * size);
 		query.setMaxResults(((page - 1) * size) + size);
