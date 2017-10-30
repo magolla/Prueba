@@ -103,7 +103,7 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 			query.setParameterList("ocuppations", ocuppations);
 			query.setParameterList("specialities", specialities);
 			if(userSubscription.getSponsorCode() != null) {
-				query.setParameter("sponsorId", userSubscription.getSponsorCode().getId());
+				query.setParameter("sponsorId", userSubscription.getSponsorCode().getSponsor().getId());
 			}
 		}
 		query.setFirstResult((page - 1) * size);
