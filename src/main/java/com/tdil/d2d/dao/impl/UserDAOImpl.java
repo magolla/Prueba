@@ -509,22 +509,20 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			if((boNotificationDTO.isAllUser() && boNotificationDTO.getUserTestIds().isEmpty())) {
 				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			} else {
-				queryString.append("JOIN user.specialties spec ");
-				//			queryString.append("JOIN userProfile.user user ");
-				//			queryString.append("JOIN user.userGeoLocations location ");
-
-
+				if(boNotificationDTO.getOccupations() != null || boNotificationDTO.getSpecialties() != null) {
+					queryString.append("JOIN user.specialties spec ");
+				}
 				if(!boNotificationDTO.getUserIds().isEmpty() || !boNotificationDTO.getUserTestIds().isEmpty()) {
 					queryString.append("where user.id in :users ");
 				} else {
 					//Se agrega esto para agregar una clausula "where" y poder manejar los "or" de abajo
-					queryString.append("where user.id = -1 ");
+					queryString.append("where user.id > -1 ");
 				}
 				if(boNotificationDTO.getSpecialties() != null) {
-					queryString.append("or spec.id in :specialties ");	
+					queryString.append("AND spec.id in :specialties ");	
 				}
 				if(boNotificationDTO.getOccupations() != null) {
-					queryString.append("or spec.occupation.id in :occupations ");
+					queryString.append("AND spec.occupation.id in :occupations ");
 				}
 				queryString.append("order by user.lastLoginDate desc");
 				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());

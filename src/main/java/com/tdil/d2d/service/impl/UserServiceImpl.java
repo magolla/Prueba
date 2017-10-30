@@ -1869,14 +1869,14 @@ public class UserServiceImpl implements UserService {
 				note.getOccupations().remove(occupationToRemove);
 			}
 			
-			List<Long> ids = note.getSponsors().stream()
-                    .map(Sponsor::getId).collect(Collectors.toList());
+			
 			
 			List<SponsorCode> sponsorList;
 			
 			if(note.isSendUserBAllSponsor()) {
 				sponsorList = this.subscriptionDAO.listAllSponsorCode();
 			} else {
+				List<Long> ids = note.getSponsors().stream().map(Sponsor::getId).collect(Collectors.toList());
 				sponsorList = this.subscriptionDAO.listSponsorCodeById(ids);	
 			}
 

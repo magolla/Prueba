@@ -208,7 +208,7 @@
 											<input id="sendUserBAllSponsor" type="checkbox" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
 											<span><b>Enviar a todos los Sponsors</b></span>
 										</div>
-										<div id="sponsorsBox">
+										<div id="sponsorsBox" style="display: block;">
 											<c:forEach var="obj" items="${sponsorList}">
 												<div class="row">
 													<div>
@@ -330,8 +330,10 @@
 			function alluserAction(checkboxElem) {
 				console.log(checkboxElem);
 				  if (checkboxElem.checked) {
+					  console.log("INVI");
 					  $("#sponsorsBox").css('display','none');
 				  } else {
+					  console.log("NO INVI");
 					  $("#sponsorsBox").css('display','block');
 				  }
 			}

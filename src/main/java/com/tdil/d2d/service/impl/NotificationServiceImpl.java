@@ -15,11 +15,13 @@ import com.tdil.d2d.bo.dto.NotificationBackofficeDTO;
 import com.tdil.d2d.controller.api.dto.NotificationDTO;
 import com.tdil.d2d.dao.NotificationConfigurationDAO;
 import com.tdil.d2d.dao.NotificationDAO;
+import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Notification;
 import com.tdil.d2d.persistence.NotificationConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
+import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.NotificationBackofficeService;
 import com.tdil.d2d.service.NotificationService;
@@ -47,6 +49,10 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 	@Autowired
 	private SessionService sessionService;
+	
+	@Autowired
+	private SubscriptionDAO subscriptionDAO;
+	
 
 
 	/**
@@ -256,6 +262,17 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 			
 			
 			List<User> userListFrom = new ArrayList<User>();
+			
+			
+			List<SponsorCode> sponsorList;
+			
+			if(boNotificationDTO.isSendUserBAllSponsor()) {
+				sponsorList = this.subscriptionDAO.listAllSponsorCode();
+			} else {
+				sponsorList = this.subscriptionDAO.listSponsorCodeById(boNotificationDTO.getSponsors());	
+			}
+			
+			userListFrom.addAll(sponsorList.stream().map(SponsorCode::getConsumer).collect(Collectors.toList()));
 			
 			if(boNotificationDTO.isSendUserA()) {
 				userListFrom.addAll(userDAO.getUsersASponsor());

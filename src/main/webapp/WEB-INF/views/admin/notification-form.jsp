@@ -165,24 +165,31 @@
 									
 									<hr style="width: 100%; color: black; height: 1px; background-color:black;" />
 									<!--Sponsors -->
-									<label for="name" class="control-label">Sponsors</label>
-									<c:forEach var="obj" items="${sponsorList}">
+									<div class="box-body">
+										<h3>Seleccionar Sponsors de la publicación</h3>
 										<div class="row">
-											<div>
-												<input type="checkbox" name="sponsors" value="${obj.id}" />
-												<span>${obj.name}</span>
-											</div>
+											<input id="sendUserBAllSponsor" type="checkbox" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
+											<span><b>Enviar a todos los Sponsors</b></span>
 										</div>
-									</c:forEach>
-									<div class="row">
-										<div>
-											<input type="checkbox" name="sendUserB" />
+										<div id="sponsorsBox" style="display: block;">
+											<c:forEach var="obj" items="${sponsorList}">
+												<div class="row">
+													<div>
+														<input type="checkbox" name="sponsors" value="${obj.id}" />
+														<span>${obj.name}</span>
+													</div>
+												</div>
+											</c:forEach>
+										</div>
+										<hr style="width:100%; color: black; height:1px; background-color:black;" />
+										
+										<h4>Configuraciones adicionales</h4>
+										<div class="row">
+											<input type="checkbox" name="sendUserB" checked="checked"/>
 											<span>Enviar a los Usuarios B sin Sponsor</span>
 										</div>
-									</div>
-									<div class="row">
-										<div>
-											<input type="checkbox" name="sendUserA" />
+										<div class="row">
+											<input type="checkbox" name="sendUserA" checked="checked"/>
 											<span>Enviar a los Usuarios A</span>
 										</div>
 									</div>
@@ -248,7 +255,7 @@
 
 <script>
 $( document ).ready(function() {
-	alluserAction($("#allUser").get(0));
+	alluserAction($("#sendUserBAllSponsor").get(0));
 	arrayOccupationIds = $("#occupationsSelect").val();
 	for (var i = 0; i < arrayOccupationIds.length; i++) {
 		id = arrayOccupationIds[i];
@@ -327,6 +334,17 @@ function loadSpecialtiesInput() {
 		}
 		
 	});
+}
+
+function alluserAction(checkboxElem) {
+	console.log(checkboxElem);
+	  if (checkboxElem.checked) {
+		  console.log("INVI");
+		  $("#sponsorsBox").css('display','none');
+	  } else {
+		  console.log("NO INVI");
+		  $("#sponsorsBox").css('display','block');
+	  }
 }
 
 </script>

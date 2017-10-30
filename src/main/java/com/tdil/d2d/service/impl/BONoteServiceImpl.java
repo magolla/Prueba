@@ -151,6 +151,7 @@ public class BONoteServiceImpl implements BONoteService {
 			note.setSponsors(sponsors);
 			note.setSendUserA(noteDTO.isSendUserA());
 			note.setSendUserBNoSponsor(noteDTO.isSendUserB());
+			note.setSendUserBAllSponsor(noteDTO.isSendUserBAllSponsor());
 			
 		} catch (DAOException e) {
 			e.printStackTrace();
