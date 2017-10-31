@@ -106,6 +106,11 @@ public class BONoteServiceImpl implements BONoteService {
 		for (Specialty specialty : note.getSpecialties()) {
 			result.addSpecialty(specialty.getId());
 		}
+
+		result.setSendUserA(note.isSendUserA());
+		result.setSendUserB(note.isSendUserBNoSponsor());
+		result.setSendUserBAllSponsor(note.isSendUserBAllSponsor());
+		result.setSponsors(note.getSponsors().stream().map(Sponsor::getId).collect(Collectors.toList()));
 		
 		return result;
 	}

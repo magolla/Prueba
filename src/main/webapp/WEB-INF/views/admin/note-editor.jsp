@@ -205,14 +205,28 @@
 									<div class="box-body">
 										<h3>Seleccionar Sponsors de la publicación</h3>
 										<div class="row">
-											<input id="sendUserBAllSponsor" type="checkbox" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
+										<c:choose>
+										    <c:when test="${noteForm.sendUserBAllSponsor eq true}">
+												<input id="sendUserBAllSponsor" type="checkbox" checked="checked" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
+										    </c:when>    
+										    <c:otherwise>
+												<input id="sendUserBAllSponsor" type="checkbox" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
+										    </c:otherwise>
+										</c:choose>
 											<span><b>Enviar a todos los Sponsors</b></span>
 										</div>
 										<div id="sponsorsBox" style="display: block;">
 											<c:forEach var="obj" items="${sponsorList}">
 												<div class="row">
 													<div>
-														<input type="checkbox" name="sponsors" value="${obj.id}" />
+														<c:choose>
+														    <c:when test="${obj.active eq true}">
+																<input type="checkbox" name="sponsors" checked="checked" value="${obj.id}" />
+														    </c:when>    
+														    <c:otherwise>
+																<input type="checkbox" name="sponsors" value="${obj.id}" />
+														    </c:otherwise>
+														</c:choose>
 														<span>${obj.name}</span>
 													</div>
 												</div>
@@ -222,11 +236,25 @@
 										
 										<h4>Configuraciones adicionales</h4>
 										<div class="row">
-											<input type="checkbox" name="sendUserB" checked="checked"/>
+										<c:choose>
+										    <c:when test="${noteForm.sendUserB eq true}">
+												<input type="checkbox" name="sendUserB" checked="checked"/>
+										    </c:when>    
+										    <c:otherwise>
+												<input type="checkbox" name="sendUserB"/>
+										    </c:otherwise>
+										</c:choose>
 											<span>Enviar a los Usuarios B sin Sponsor</span>
 										</div>
 										<div class="row">
-											<input type="checkbox" name="sendUserA" checked="checked"/>
+										<c:choose>
+										    <c:when test="${noteForm.sendUserA eq true}">
+												<input type="checkbox" name="sendUserA" checked="checked"/>
+										    </c:when>    
+										    <c:otherwise>
+												<input type="checkbox" name="sendUserA"/>
+										    </c:otherwise>
+										</c:choose>
 											<span>Enviar a los Usuarios A</span>
 										</div>
 									</div>
