@@ -389,6 +389,11 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	@Override
 	public List<User> getMatchedUsersNote(Note note, List<User> userList) throws DAOException {
 		try {
+			
+			if((userList == null || userList.isEmpty()) && (note.getSpecialties() == null || note.getSpecialties().isEmpty())
+					&& (note.getOccupations() == null || note.getOccupations().isEmpty())) {
+				return new ArrayList<User>();
+			}
 
 			boolean usedWhere = false;
 
