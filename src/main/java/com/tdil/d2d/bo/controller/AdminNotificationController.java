@@ -131,7 +131,10 @@ public class AdminNotificationController {
 			if((!boNotificationDTO.isAllUser()) && 
 					(boNotificationDTO.getUserIds() == null|| boNotificationDTO.getUserIds().trim().isEmpty()) &&
 					(boNotificationDTO.getOccupations() == null || boNotificationDTO.getOccupations().isEmpty()) &&
-					(boNotificationDTO.getSponsors() == null || boNotificationDTO.getSponsors().isEmpty())) {
+					(boNotificationDTO.getSponsors() == null || boNotificationDTO.getSponsors().isEmpty()) &&
+					(!boNotificationDTO.isSendUserA()) &&
+					(!boNotificationDTO.isSendUserB()) &&
+					(!boNotificationDTO.isSendUserBAllSponsor())) {
 				errors.put("idsError","Se debe agregar Intereses, Id's de usuarios o Sponsors");
 			} else if (!boNotificationDTO.isAllUser()) {
 				if(!boNotificationDTO.getUserIds().trim().isEmpty()) {
