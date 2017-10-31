@@ -298,17 +298,18 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 	}
 
 	@Override
-	public List<SponsorCode> listSponsorCodeById(List<Long> sponsorsId) {
+	public List<Subscription> listSponsorCodeById(List<Long> sponsorsId) {
 		
 		if(Utilidades.isNullOrEmpty(sponsorsId)) {
-			return new ArrayList<SponsorCode>();
+			return new ArrayList<Subscription>();
 		}
 		
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SponsorCode.class);
-		criteria.add(Restrictions.in("sponsor.id", sponsorsId));
-		criteria.add(Restrictions.isNotNull("consumer"));
-		List<SponsorCode> codes = criteria.list();
-		codes = filterDuplicates(codes);
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Subscription.class);
+		criteria.createAlias("sponsorCode", "sc");
+		criteria.add(Restrictions.in("sc.sponsor.id", sponsorsId));
+		criteria.add(Restrictions.ge("expirationDate", new Date()));
+		List<Subscription> codes = criteria.list();
+//		codes = filterDuplicates(codes);
 		logger.info("Sponsor codes found: {}", codes.size());
 		return codes;
 	}
@@ -362,11 +363,11 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 	}
 
 	@Override
-	public List<SponsorCode> listAllSponsorCode() {
-		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(SponsorCode.class);
-		criteria.add(Restrictions.isNotNull("consumer"));
-		List<SponsorCode> codes = criteria.list();
-		codes = filterDuplicates(codes);
+	public List<Subscription> listAllSubscription() {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Subscription.class);
+		criteria.add(Restrictions.ge("expirationDate", new Date()));
+		List<Subscription> codes = criteria.list();
+//		codes = filterDuplicates(codes);
 		logger.info("Sponsor codes found: {}", codes.size());
 		return codes;		
 	}

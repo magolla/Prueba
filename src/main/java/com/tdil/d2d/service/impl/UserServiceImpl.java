@@ -113,7 +113,6 @@ import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Payment;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Sponsor;
-import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
@@ -1871,16 +1870,16 @@ public class UserServiceImpl implements UserService {
 			
 			
 			
-			List<SponsorCode> sponsorList;
+			List<Subscription> subscriptionList;
 			
 			if(note.isSendUserBAllSponsor()) {
-				sponsorList = this.subscriptionDAO.listAllSponsorCode();
+				subscriptionList = this.subscriptionDAO.listAllSubscription();
 			} else {
 				List<Long> ids = note.getSponsors().stream().map(Sponsor::getId).collect(Collectors.toList());
-				sponsorList = this.subscriptionDAO.listSponsorCodeById(ids);	
+				subscriptionList = this.subscriptionDAO.listSponsorCodeById(ids);	
 			}
 
-			List<User> userList = sponsorList.stream().map(SponsorCode::getConsumer).collect(Collectors.toList());
+			List<User> userList = subscriptionList.stream().map(Subscription::getUser).collect(Collectors.toList());
 			
 			if(boNoteDTO.isSendUserA()) {
 				userList.addAll(userDAO.getUsersASponsor());
