@@ -30,14 +30,6 @@ public class Subscription implements PersistentEntity {
 	@ManyToOne
 	private User user;
 	
-	public boolean isExpirationNotified() {
-		return expirationNotified;
-	}
-
-	public void setExpirationNotified(boolean expirationNotified) {
-		this.expirationNotified = expirationNotified;
-	}
-
 	@ManyToOne
 	private SponsorCode sponsorCode;
 	
@@ -98,4 +90,13 @@ public class Subscription implements PersistentEntity {
 	public void setFreeSuscription(Boolean freeSuscription) {
 		this.freeSuscription = freeSuscription;
 	}
+	
+	public boolean isExpirationNotified() {
+		return expirationNotified;
+	}
+
+	public void setExpirationNotified(boolean expirationNotified) {
+		this.expirationNotified = expirationNotified;
+	}
+
 }

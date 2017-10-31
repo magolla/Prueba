@@ -55,8 +55,12 @@ public interface UserDAO {
 	
 	public long getCount() throws DAOException;
 
-	public List<User> getMatchedUsersNote(Note note) throws DAOException;
+	public List<User> getMatchedUsersNote(Note note, List<User> userList) throws DAOException;
 	
-	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO) throws DAOException;
+	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO, List<Long> userIdList) throws DAOException;
+
+	public List<User> getUsersBNoSponsor();
+
+	public List<User> getUsersASponsor();
 	
 }

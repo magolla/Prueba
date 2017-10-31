@@ -9,8 +9,45 @@ public class BoNotificationDTO {
 	String titulo;
 	String message;
 	private List<Long> occupations;
+	private List<Long> specialties;
+	private List<Long> sponsors; 
+	private boolean sendUserA;
+	private boolean sendUserB;
+	private boolean sendUserBAllSponsor;
+	
+	
+	
+	public List<Long> getSponsors() {
+		return sponsors;
+	}
 
-	private List<Long> specialties; 
+	public void setSponsors(List<Long> sponsors) {
+		this.sponsors = sponsors;
+	}
+
+	public boolean isSendUserBAllSponsor() {
+		return sendUserBAllSponsor;
+	}
+
+	public void setSendUserBAllSponsor(boolean sendUserBAllSponsor) {
+		this.sendUserBAllSponsor = sendUserBAllSponsor;
+	}
+
+	public boolean isSendUserA() {
+		return sendUserA;
+	}
+
+	public void setSendUserA(boolean sendUserA) {
+		this.sendUserA = sendUserA;
+	}
+
+	public boolean isSendUserB() {
+		return sendUserB;
+	}
+
+	public void setSendUserB(boolean sendUserB) {
+		this.sendUserB = sendUserB;
+	}
 
 	public String getTitulo() {
 		return titulo;

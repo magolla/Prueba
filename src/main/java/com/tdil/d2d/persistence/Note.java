@@ -55,6 +55,13 @@ public class Note implements PersistentEntity {
 			inverseJoinColumns = {@JoinColumn(name = "OCCUPATION_ID",
 					nullable = false, updatable = false)})
 	private Set<Occupation> occupations;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "D2D_NOTE_SPONSOR", joinColumns = {
+			@JoinColumn(name = "NOTE_ID", nullable = false, updatable = false)},
+			inverseJoinColumns = {@JoinColumn(name = "SPONSOR_ID",
+					nullable = false, updatable = false)})
+	private Set<Sponsor> sponsors;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "category")
@@ -71,6 +78,23 @@ public class Note implements PersistentEntity {
 
 	@Column(name = "expiration_date")
 	private Date expirationDate;
+	
+	@Column(name = "sendUserA", columnDefinition = "boolean default true", nullable = false)
+	private boolean sendUserA;
+	
+	@Column(name = "sendUserBNoSponsor", columnDefinition = "boolean default true", nullable = false)
+	private boolean sendUserBNoSponsor;
+	
+	@Column(name = "sendAllSponsor", columnDefinition = "boolean default true", nullable = false)
+	private boolean sendUserBAllSponsor;
+
+	public boolean isSendUserBAllSponsor() {
+		return sendUserBAllSponsor;
+	}
+
+	public void setSendUserBAllSponsor(boolean sendUserBAllSponsor) {
+		this.sendUserBAllSponsor = sendUserBAllSponsor;
+	}
 
 	public long getId() {
 		return id;
@@ -175,5 +199,29 @@ public class Note implements PersistentEntity {
 
 	public void setBase64img(byte[] base64img) {
 		this.base64img = base64img;
+	}
+
+	public Set<Sponsor> getSponsors() {
+		return sponsors;
+	}
+
+	public void setSponsors(Set<Sponsor> sponsors) {
+		this.sponsors = sponsors;
+	}
+
+	public boolean isSendUserA() {
+		return sendUserA;
+	}
+
+	public void setSendUserA(boolean sendUserA) {
+		this.sendUserA = sendUserA;
+	}
+
+	public boolean isSendUserBNoSponsor() {
+		return sendUserBNoSponsor;
+	}
+
+	public void setSendUserBNoSponsor(boolean sendUserBNoSponsor) {
+		this.sendUserBNoSponsor = sendUserBNoSponsor;
 	}
 }

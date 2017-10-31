@@ -1,5 +1,6 @@
 package com.tdil.d2d.bo.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tdil.d2d.bo.dto.BONoteDTO;
+import com.tdil.d2d.bo.dto.BOSponsorListDTO;
 import com.tdil.d2d.bo.dto.ResultDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
@@ -31,8 +33,10 @@ import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.NoteCategory;
+import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.service.BONoteService;
 import com.tdil.d2d.service.SpecialtyService;
+import com.tdil.d2d.service.SponsorService;
 import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.ImageResizer;
 import com.tdil.d2d.utils.LoggerManager;
@@ -53,6 +57,9 @@ public class AdminNoteController {
 	
 	@Autowired
 	private NoteDAO noteDao;
+	
+	@Autowired
+	private SponsorService sponsorService;
 	
 	@RequestMapping(value = {"/BoNotes"} , method = RequestMethod.GET)
 	public ModelAndView homePage() {
@@ -94,6 +101,13 @@ public class AdminNoteController {
 			}
 			model.addObject("specialtiesLists", specialtiesLists);
 			
+			List<Sponsor> allSponsorList = this.sponsorService.getAllSponsors();
+			List<BOSponsorListDTO> sponsorList = new ArrayList<>();
+			
+			sponsorList = getActives(allSponsorList, note);
+			
+			model.addObject("sponsorList", sponsorList);
+			
 			model.setViewName("admin/note-editor");
 			
 			return model;
@@ -107,6 +121,27 @@ public class AdminNoteController {
 
 	}
 	
+	private List<BOSponsorListDTO> getActives(List<Sponsor> allSponsorList, BONoteDTO note) {
+		
+		List<BOSponsorListDTO> sponsorList =  new ArrayList<>();
+		
+		if(note.getSponsors() == null) {
+			note.setSponsors(new ArrayList<>());
+		}
+		
+		for (Sponsor sponsor : allSponsorList) {
+			BOSponsorListDTO boSponsorListDTO = new BOSponsorListDTO(sponsor.getId(), sponsor.getName(), false);
+			for (Long id : note.getSponsors()) {
+				if(sponsor.getId() == id) {
+					boSponsorListDTO.setActive(true);	
+				}
+			}
+			sponsorList.add(boSponsorListDTO);
+		}
+		
+		return sponsorList;
+	}
+
 	@RequestMapping(value = {"/notes/new-note"} , method = RequestMethod.GET)
 	public ModelAndView userNew() {
 		try{ 
@@ -116,9 +151,17 @@ public class AdminNoteController {
 			
 			BONoteDTO note = new BONoteDTO();
 			note.setActive(true);
+			note.setSendUserB(true);
+			note.setSendUserA(true);
 			model.addObject("noteForm", note);
 			model.addObject("categoryList", this.getCategoryList());
 			model.addObject("occupationList", this.specialtyService.listOccupations());
+			List<Sponsor> allSponsorList = this.sponsorService.getAllSponsors();
+			List<BOSponsorListDTO> sponsorList = new ArrayList<>();
+			
+			sponsorList = getActives(allSponsorList, note);
+			
+			model.addObject("sponsorList", sponsorList);
 			
 			return model;
 		
@@ -159,7 +202,7 @@ public class AdminNoteController {
 			
 			Note lastNote = noteDao.getLastNote();
 			if(lastNote.getCategory() != null) {
-				this.userService.notifyNewNotesToMatchedUsers(lastNote.getId(), lastNote.getCategory().name());
+				this.userService.notifyNewNotesToMatchedUsers(note, lastNote);
 			}
 			ModelAndView model = new ModelAndView();
 			model.setViewName("redirect:/admin/BoNotes");

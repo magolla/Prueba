@@ -1,8 +1,12 @@
 package com.tdil.d2d.dao.impl;
 
-import com.tdil.d2d.dao.SponsorDAO;
-import com.tdil.d2d.persistence.Sponsor;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +15,9 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import java.util.List;
+import com.tdil.d2d.dao.SponsorDAO;
+import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.Sponsor;
 
 @Transactional
 @Repository
@@ -62,5 +67,25 @@ public class SponsorDAOImpl extends HibernateDaoSupport implements SponsorDAO {
 		List sponsors = criteria.list();
 		logger.info("Sponsors found: {}", sponsors.size());
 		return sponsors;
+	}
+
+	@Override
+	public List<Sponsor> listSponsorsByIds(List<Long> ids) throws DAOException {
+		if(ids == null || ids.isEmpty()) {
+			return new ArrayList<Sponsor>();
+		}
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct s ");
+			queryString.append("FROM Sponsor s ");
+			queryString.append("WHERE s.id in(:ids) ");
+			
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameterList("ids", ids);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
 	}
 }

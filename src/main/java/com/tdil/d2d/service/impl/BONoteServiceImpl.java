@@ -15,6 +15,7 @@ import com.tdil.d2d.bo.dto.BONoteDTO;
 import com.tdil.d2d.bo.dto.ResultDTO;
 import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
+import com.tdil.d2d.dao.SponsorDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
@@ -22,6 +23,7 @@ import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.NoteCategory;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
+import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.service.BONoteService;
 
 @Transactional
@@ -31,6 +33,9 @@ public class BONoteServiceImpl implements BONoteService {
 	private final NoteDAO noteDAO;
 	private final SpecialtyDAO specialtyDAO;
 	private final UserDAO userDAO;
+	
+	@Autowired
+	private SponsorDAO sponsorDao;
 	
 	@Autowired
 	public BONoteServiceImpl(NoteDAO noteDAO, SpecialtyDAO specialtyDAO, UserDAO userDAO) {
@@ -101,6 +106,11 @@ public class BONoteServiceImpl implements BONoteService {
 		for (Specialty specialty : note.getSpecialties()) {
 			result.addSpecialty(specialty.getId());
 		}
+
+		result.setSendUserA(note.isSendUserA());
+		result.setSendUserB(note.isSendUserBNoSponsor());
+		result.setSendUserBAllSponsor(note.isSendUserBAllSponsor());
+		result.setSponsors(note.getSponsors().stream().map(Sponsor::getId).collect(Collectors.toList()));
 		
 		return result;
 	}
@@ -136,8 +146,17 @@ public class BONoteServiceImpl implements BONoteService {
 				specialties.add(specialty);
 			}
 			
+			Set<Sponsor> sponsors = new HashSet<Sponsor>(0);
+			for (Sponsor sponsor : sponsorDao.listSponsorsByIds(noteDTO.getSponsors())) {
+				sponsors.add(sponsor);
+			}
+			
 			note.setOccupations(occupations);
 			note.setSpecialties(specialties);
+			note.setSponsors(sponsors);
+			note.setSendUserA(noteDTO.isSendUserA());
+			note.setSendUserBNoSponsor(noteDTO.isSendUserB());
+			note.setSendUserBAllSponsor(noteDTO.isSendUserBAllSponsor());
 			
 		} catch (DAOException e) {
 			e.printStackTrace();

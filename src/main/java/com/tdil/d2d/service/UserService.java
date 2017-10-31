@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 
+import com.tdil.d2d.bo.dto.BONoteDTO;
 import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
@@ -45,6 +46,7 @@ import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
 
@@ -184,9 +186,9 @@ public interface UserService {
 
 
 
-	void notifyNewNotesToMatchedUsers(Long noteId, String category) throws ServiceException;
+	void notifyNewNotesToMatchedUsers(BONoteDTO boNoteDTO, Note lastNote) throws ServiceException;
 
-	List<MatchedUserDTO> getMatchedUsersNote(Long noteId) throws ServiceException;
+	List<MatchedUserDTO> getMatchedUsersNote(BONoteDTO boNoteDTO, long noteId) throws ServiceException;
 
 	void notifyToMatchedUsersSubscription(List<Subscription> subscriptionsList) throws ServiceException, DAOException;
 	

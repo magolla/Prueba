@@ -2,6 +2,7 @@ package com.tdil.d2d.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -27,12 +29,14 @@ import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
 import com.tdil.d2d.persistence.Note;
+import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
 import com.tdil.d2d.persistence.UserProfile;
 import com.tdil.d2d.persistence.ValidationCode;
+import com.tdil.d2d.utils.Utilidades;
 
 @Repository
 public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
@@ -383,22 +387,75 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	}
 
 	@Override
-	public List<User> getMatchedUsersNote(Note note) throws DAOException {
+	public List<User> getMatchedUsersNote(Note note, List<User> userList) throws DAOException {
 		try {
+			
+			if((userList == null || userList.isEmpty()) && (note.getSpecialties() == null || note.getSpecialties().isEmpty())
+					&& (note.getOccupations() == null || note.getOccupations().isEmpty())) {
+				return new ArrayList<User>();
+			}
+
+			boolean usedWhere = false;
+
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
 			queryString.append("FROM User user ");
-			//			queryString.append("JOIN userProfile.user user ");
-			//			queryString.append("JOIN user.userGeoLocations location ");
+			if(!Utilidades.isNullOrEmpty(note.getOccupations())) {
+				queryString.append("JOIN user.specialties spec ");	
+			}
+
+			if(userList != null && !userList.isEmpty()) {
+				queryString.append("where user in (:userList) ");
+				usedWhere = true;
+			}
+			queryString.append(checkInterests(note.getSpecialties(), note.getOccupations(), usedWhere));
 			queryString.append("order by user.lastLoginDate desc");
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 
-			List<User> filterUser = filterUsers(query.list(), note);
+			if(!userList.isEmpty()) {
+				query.setParameterList("userList", userList);
+			}
 
-			return filterUser;
+			if(note.getSpecialties() != null && !note.getSpecialties().isEmpty()) {
+				query.setParameterList("specialties", note.getSpecialties());
+			}
+
+			if(note.getOccupations() != null && !note.getOccupations().isEmpty()) {
+				query.setParameterList("occupations", note.getOccupations());
+			}
+
+			return query.list();
+
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+	}
+
+	private Object checkInterests(Set<Specialty> specialties, Set<Occupation> occupations, boolean usedWhere) {
+
+		StringBuilder query = new StringBuilder("");
+		
+		if(usedWhere) {
+			query.append(" and ");
+		} else {
+			query.append(" where ");
+		}
+
+		if(!isNullOrEmpty(occupations) && !isNullOrEmpty(specialties)) {
+			query.append(" (spec in (:specialties) or spec.occupation in (:occupations)) " );
+		} else if(isNullOrEmpty(occupations) && !isNullOrEmpty(specialties)) {
+			query.append(" spec in (:specialties)  " );
+		} else if(!isNullOrEmpty(occupations) && isNullOrEmpty(specialties)) {
+			query.append(" spec.occupation in (:occupations) " );
+		} else {
+			query = new StringBuilder("");
+		}
+		return query;
+	}
+
+
+	public static boolean isNullOrEmpty( final Collection< ? > c ) {
+		return c == null || c.isEmpty();
 	}
 
 	private List<User> filterUsers(List<User> list, Note note) {
@@ -442,32 +499,32 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO) throws DAOException {
+	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO,List<Long> idList) throws DAOException {
 		try {
+			
+			List<Long> userIdsList = new ArrayList<Long>();
 			Query query;
 
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
 			queryString.append("FROM User user ");
-			if(boNotificationDTO.isAllUser() && boNotificationDTO.getUserTestIds().isEmpty()) {
+			if((boNotificationDTO.isAllUser() && boNotificationDTO.getUserTestIds().isEmpty())) {
 				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			} else {
-				queryString.append("JOIN user.specialties spec ");
-				//			queryString.append("JOIN userProfile.user user ");
-				//			queryString.append("JOIN user.userGeoLocations location ");
-
-
-				if(!boNotificationDTO.getUserIds().isEmpty() || !boNotificationDTO.getUserTestIds().isEmpty()) {
+				if(boNotificationDTO.getOccupations() != null || boNotificationDTO.getSpecialties() != null) {
+					queryString.append("JOIN user.specialties spec ");
+				}
+				if(!boNotificationDTO.getUserIds().isEmpty() || !boNotificationDTO.getUserTestIds().isEmpty() || !idList.isEmpty()) {
 					queryString.append("where user.id in :users ");
 				} else {
 					//Se agrega esto para agregar una clausula "where" y poder manejar los "or" de abajo
-					queryString.append("where user.id = -1 ");
+					queryString.append("where user.id > -1 ");
 				}
 				if(boNotificationDTO.getSpecialties() != null) {
-					queryString.append("or spec.id in :specialties ");	
+					queryString.append("AND spec.id in :specialties ");	
 				}
 				if(boNotificationDTO.getOccupations() != null) {
-					queryString.append("or spec.occupation.id in :occupations ");
+					queryString.append("AND spec.occupation.id in :occupations ");
 				}
 				queryString.append("order by user.lastLoginDate desc");
 				query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
@@ -479,13 +536,21 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 					query.setParameterList("occupations", boNotificationDTO.getOccupations());
 				}
 				if(!boNotificationDTO.getUserIds().isEmpty()) {
-					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
+					userIdsList.addAll(Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
 				}
 				
+				if(!idList.isEmpty()) {
+					userIdsList.addAll(idList);
+				}
+				
+				if(!idList.isEmpty() || !boNotificationDTO.getUserIds().isEmpty()) {
+					query.setParameterList("users", userIdsList);
+				}
+
 				if(!boNotificationDTO.getUserTestIds().isEmpty()) {
 					query.setParameterList("users", Arrays.asList(Stream.of(boNotificationDTO.getUserTestIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
 				}
-				
+
 			}
 			List<User> filterUser = query.list();
 
@@ -494,6 +559,34 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			throw new DAOException(e);
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersBNoSponsor() {
+
+		StringBuilder queryString = new StringBuilder("select * from d2d_prod.D2D_USER where D2D_USER.userb is true && D2D_USER.id not in(select  distinct something.id from (SELECT * FROM D2D_USER) AS something \n" + 
+				"join D2D_SPONSOR_CODE on something.id = D2D_SPONSOR_CODE.consumer_id join D2D_SUBSCRIPTION on D2D_SUBSCRIPTION.sponsorCode_id = D2D_SPONSOR_CODE.id where D2D_SUBSCRIPTION.expirationDate > now())");
+
+		SQLQuery query = this.getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+		query.addEntity(User.class);
+		List<User> filterUser = (List<User>)query.list();
+
+		return filterUser;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUsersASponsor() {
+		StringBuilder queryString = new StringBuilder("");
+		queryString.append("SELECT distinct user ");
+		queryString.append("FROM User user ");
+		queryString.append("where user.userb = :userB ");
+
+		Query query = this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		query.setParameter("userB", false);
+
+		return query.list();
 	}
 
 }

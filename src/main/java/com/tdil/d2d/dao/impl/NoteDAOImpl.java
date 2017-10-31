@@ -19,6 +19,7 @@ import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.NoteCategory;
+import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
 
 @Repository
@@ -65,20 +66,33 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 	}
 
 	@Override
-	public List<Note> getNotesForUser(int page, int size,List<Long> ocuppations, List<Long> specialities,User user) {
+	public List<Note> getNotesForUser(int page, int size,List<Long> ocuppations, List<Long> specialities,User user,Subscription userSubscription) {
 
 		StringBuilder queryString = new StringBuilder("");
 		queryString.append("SELECT distinct note ");
 		queryString.append("FROM Note note ");
 		queryString.append("left join note.specialties as specialty ");
 		queryString.append("left join note.occupations as occupation ");
+		if(userSubscription.getSponsorCode() != null) {
+			queryString.append("left join fetch note.sponsors as sponsor ");
+		}
 		if(!user.isUserb()) {
 			queryString.append("WHERE note.active = 1");
+			if(!user.isUserb()) {
+				queryString.append("AND (note.sendUserA is true )");
+			}
 		} else {
 			queryString.append("WHERE ((occupation.id IN (:ocuppations) ");
 			queryString.append("AND specialty.id IN (:specialities) AND note.active = 1) ");
 			queryString.append("OR (occupation.id IN (:ocuppations) AND specialty.id is null AND note.active = 1) ");
 			queryString.append("OR (occupation.id is null AND specialty.id is null AND note.active = 1)) ");
+			
+			if(userSubscription.getSponsorCode() != null) {
+				queryString.append("AND ((sponsor.id = :sponsorId )");
+				queryString.append("OR (note.sendUserBAllSponsor is true ))");
+			} else {
+				queryString.append(" AND (note.sendUserBNoSponsor is true )");
+			}
 		}
 		queryString.append("AND (note.expirationDate >= now() OR note.expirationDate is null) ");
 		queryString.append("AND (note.publishingDate <= now() OR note.publishingDate is null) ");
@@ -88,6 +102,9 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		if(user.isUserb()) {
 			query.setParameterList("ocuppations", ocuppations);
 			query.setParameterList("specialities", specialities);
+			if(userSubscription.getSponsorCode() != null) {
+				query.setParameter("sponsorId", userSubscription.getSponsorCode().getSponsor().getId());
+			}
 		}
 		query.setFirstResult((page - 1) * size);
 		query.setMaxResults(((page - 1) * size) + size);

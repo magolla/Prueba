@@ -1,5 +1,6 @@
 package com.tdil.d2d.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,11 +15,13 @@ import com.tdil.d2d.bo.dto.NotificationBackofficeDTO;
 import com.tdil.d2d.controller.api.dto.NotificationDTO;
 import com.tdil.d2d.dao.NotificationConfigurationDAO;
 import com.tdil.d2d.dao.NotificationDAO;
+import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.Notification;
 import com.tdil.d2d.persistence.NotificationConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
+import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.NotificationBackofficeService;
 import com.tdil.d2d.service.NotificationService;
@@ -46,6 +49,10 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 	@Autowired
 	private SessionService sessionService;
+	
+	@Autowired
+	private SubscriptionDAO subscriptionDAO;
+	
 
 
 	/**
@@ -87,7 +94,7 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 			notification.setStatus("Enviado");
 			notification.setUser(user);
-
+			
 			this.notificationDAO.save(notification);
 
 
@@ -182,6 +189,11 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 
 	public static boolean validateNotificationConfig(NotificationConfiguration notificationConfiguration, NotificationType type) {
+		
+		if(notificationConfiguration == null){
+			return false;
+		}
+		
 		boolean result = true;
 
 		NotificationType notification = type;
@@ -252,40 +264,41 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 	@Override
 	public boolean sendBackOfficeNotification(BoNotificationDTO boNotificationDTO) {
 		try {
+			
+			
+			List<User> userListFrom = new ArrayList<User>();
+			
+			
+			List<Subscription> sponsorList;
+			
+			if(boNotificationDTO.isSendUserBAllSponsor()) {
+				sponsorList = this.subscriptionDAO.listAllSubscription();
+			} else {
+				sponsorList = this.subscriptionDAO.listSponsorCodeById(boNotificationDTO.getSponsors());	
+			}
+			
+			userListFrom.addAll(sponsorList.stream().map(Subscription::getUser).collect(Collectors.toList()));
+			
+			if(boNotificationDTO.isSendUserA()) {
+				userListFrom.addAll(userDAO.getUsersASponsor());
+			}
+			
+			if(boNotificationDTO.isSendUserB()) {
+				userListFrom.addAll(userDAO.getUsersBNoSponsor());
+			}
+			
+			List<Long> userIdList = userListFrom.stream().map(User::getId).collect(Collectors.toList());
 
-			List<User> userList = userDAO.getUsersBoNotification(boNotificationDTO);
+			List<User> userList = userDAO.getUsersBoNotification(boNotificationDTO,userIdList);
 
 			for (User user : userList) {
-				//
 				NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
 
-
-				//Dejar en el caso de implementar tipo de notificaciones desde el backoffice
-				//				NotificationType type;
-				//				try {
-				//					type = NotificationType.valueOf(notificationBackofficeDTO.getAction());	
-				//				} catch (IllegalArgumentException e) {
-				//					type = null;
-				//				}
-
 				Notification notification = new Notification();
-				//				notification.setAction(notificationBackofficeDTO.getAction());
-				//				notification.setActionId(notificationBackofficeDTO.getActionId());
 				notification.setCreationDate(new Date());
 
-				//				if(type == null) {
 				notification.setTitle(boNotificationDTO.getTitulo());
 				notification.setMessage(boNotificationDTO.getMessage());
-
-				//				} else {
-				//					if(notificationBackofficeDTO.getTitle().equals("") && notificationBackofficeDTO.getMessage().equals("")) {
-				//						notification.setTitle(type.getTitle());
-				//						notification.setMessage(type.getMessage());
-				//					} else {
-				//						notification.setTitle(notificationBackofficeDTO.getTitle());
-				//						notification.setMessage(notificationBackofficeDTO.getMessage());
-				//					}
-				//				}
 
 				notification.setStatus("Enviado");
 				notification.setUser(user);

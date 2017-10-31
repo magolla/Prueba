@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mercadopago.MP;
+import com.tdil.d2d.bo.dto.BONoteDTO;
 import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
@@ -1847,13 +1848,48 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public List<MatchedUserDTO> getMatchedUsersNote(Long noteId) throws ServiceException {
+	public List<MatchedUserDTO> getMatchedUsersNote(BONoteDTO boNoteDTO, long noteId) throws ServiceException {
 		try {
 			List<User> result = new ArrayList<>();
 
+			
+			
 			Note note = this.noteDAO.getNoteById(noteId);
+			
+			//Chequea si fue seleccionada alguna especialidad para medico, en caso afirmativo se quita Medico de la lista de ocupaciones
+			if(note.getSpecialties().stream().anyMatch(dto -> dto.getOccupation().getId() == 1)) {
+				Occupation occupationToRemove = note.getOccupations().stream().filter(e -> e.getId() == 1).findFirst().get();
+				note.getOccupations().remove(occupationToRemove);
+			}
+			
+			//Chequea si fue seleccionada alguna especialidad para odontologo, en caso afirmativo se quita Odontologo de la lista de ocupaciones
+			if(note.getSpecialties().stream().anyMatch(dto -> dto.getOccupation().getId() == 2)) {
+				Occupation occupationToRemove = note.getOccupations().stream().filter(e -> e.getId() == 2).findFirst().get();
+				note.getOccupations().remove(occupationToRemove);
+			}
+			
+			
+			
+			List<Subscription> subscriptionList;
+			
+			if(note.isSendUserBAllSponsor()) {
+				subscriptionList = this.subscriptionDAO.listAllSubscription();
+			} else {
+				List<Long> ids = note.getSponsors().stream().map(Sponsor::getId).collect(Collectors.toList());
+				subscriptionList = this.subscriptionDAO.listSponsorCodeById(ids);	
+			}
 
-			result = userDAO.getMatchedUsersNote(note);
+			List<User> userList = subscriptionList.stream().map(Subscription::getUser).collect(Collectors.toList());
+			
+			if(boNoteDTO.isSendUserA()) {
+				userList.addAll(userDAO.getUsersASponsor());
+			}
+			
+			if(boNoteDTO.isSendUserB()) {
+				userList.addAll(userDAO.getUsersBNoSponsor());
+			}
+			
+			result = userDAO.getMatchedUsersNote(note,userList);
 
 			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
 			for (User matchedUser : result) {
@@ -1909,10 +1945,10 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public void notifyNewNotesToMatchedUsers(Long noteId,String category) throws ServiceException {
+	public void notifyNewNotesToMatchedUsers(BONoteDTO boNoteDTO, Note note) throws ServiceException {
 		NotificationType type;
 
-		switch (category) {
+		switch (boNoteDTO.getCategory()) {
 		case "CAT_1":
 			type = NotificationType.NEW_CONGRESS;
 			break;
@@ -1933,8 +1969,7 @@ public class UserServiceImpl implements UserService {
 			return;
 		}
 
-		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsersNote(noteId);
-		Note note = noteDAO.getNoteById(noteId);
+		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsersNote(boNoteDTO,note.getId());
 		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
 
 			//TODO - Ver si se aplica misma logica para las notas
@@ -2322,6 +2357,10 @@ public class UserServiceImpl implements UserService {
 
 			if(user.getIosPushId() != null || user.getAndroidRegId() != null) {
 				this.notificationDAO.save(notification);
+			}
+			
+			if(notificationConfiguration == null) {
+				break;
 			}
 
 			boolean sendNotif = NotificationServiceImpl.validateNotificationConfig(notificationConfiguration,null);
