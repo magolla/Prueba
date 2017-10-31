@@ -2358,6 +2358,10 @@ public class UserServiceImpl implements UserService {
 			if(user.getIosPushId() != null || user.getAndroidRegId() != null) {
 				this.notificationDAO.save(notification);
 			}
+			
+			if(notificationConfiguration == null) {
+				break;
+			}
 
 			boolean sendNotif = NotificationServiceImpl.validateNotificationConfig(notificationConfiguration,null);
 

@@ -85,7 +85,13 @@ public class AdminNotificationController {
 				e.printStackTrace();
 			}
 			model.addObject("errors",errors);
-			model.setViewName("admin/notification-form");
+			List<Sponsor> sponsorList = this.sponsorService.getAllSponsors();
+			
+			model.addObject("sponsorList", sponsorList);
+			
+			model.addObject("notificationForm", boNotificationDTO); 
+			
+			model.setViewName("redirect:/admin/BoNotification");
 
 			return model;
 		}
@@ -106,6 +112,11 @@ public class AdminNotificationController {
 			errors.put("pushFailed", "Error al enviar las notificaciones");
 		}
 		model.addObject("errors",errors);
+		
+		List<Sponsor> sponsorList = this.sponsorService.getAllSponsors();
+		
+		model.addObject("sponsorList", sponsorList);
+		
 //		model.setViewName("admin/notification-form");
 		model.setViewName("redirect:/admin/BoNotification");
 
@@ -118,7 +129,7 @@ public class AdminNotificationController {
 
 		if(!isTest) {
 			if(!boNotificationDTO.isAllUser() && (boNotificationDTO.getUserIds() == null|| boNotificationDTO.getUserIds().trim().isEmpty()) && (boNotificationDTO.getOccupations() == null || boNotificationDTO.getOccupations().isEmpty())) {
-				errors.put("idsError","Se debe agregar Intereses o Id's de usuarios");
+				errors.put("idsError","Se debe agregar Intereses, Id's de usuarios o Sponsors");
 			} else if (!boNotificationDTO.isAllUser()) {
 				if(!boNotificationDTO.getUserIds().trim().isEmpty()) {
 					try {

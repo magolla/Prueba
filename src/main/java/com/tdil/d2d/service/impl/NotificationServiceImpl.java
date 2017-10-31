@@ -94,7 +94,7 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 			notification.setStatus("Enviado");
 			notification.setUser(user);
-
+			
 			this.notificationDAO.save(notification);
 
 
@@ -189,6 +189,11 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 
 	public static boolean validateNotificationConfig(NotificationConfiguration notificationConfiguration, NotificationType type) {
+		
+		if(notificationConfiguration == null){
+			return false;
+		}
+		
 		boolean result = true;
 
 		NotificationType notification = type;
