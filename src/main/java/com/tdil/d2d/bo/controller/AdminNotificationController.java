@@ -128,7 +128,10 @@ public class AdminNotificationController {
 		Map<String, String> errors = new HashMap<String,String>(); 
 
 		if(!isTest) {
-			if(!boNotificationDTO.isAllUser() && (boNotificationDTO.getUserIds() == null|| boNotificationDTO.getUserIds().trim().isEmpty()) && (boNotificationDTO.getOccupations() == null || boNotificationDTO.getOccupations().isEmpty())) {
+			if((!boNotificationDTO.isAllUser()) && 
+					(boNotificationDTO.getUserIds() == null|| boNotificationDTO.getUserIds().trim().isEmpty()) &&
+					(boNotificationDTO.getOccupations() == null || boNotificationDTO.getOccupations().isEmpty()) &&
+					(boNotificationDTO.getSponsors() == null || boNotificationDTO.getSponsors().isEmpty())) {
 				errors.put("idsError","Se debe agregar Intereses, Id's de usuarios o Sponsors");
 			} else if (!boNotificationDTO.isAllUser()) {
 				if(!boNotificationDTO.getUserIds().trim().isEmpty()) {
