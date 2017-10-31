@@ -89,9 +89,10 @@ public class AdminNotificationController {
 			
 			model.addObject("sponsorList", sponsorList);
 			
-			model.addObject("notificationForm", boNotificationDTO); 
+//			model.addObject("notificationForm", boNotificationDTO); 
 			
-			model.setViewName("redirect:/admin/BoNotification");
+			model.setViewName("admin/notification-form");
+//			model.setViewName("redirect:/admin/BoNotification");
 
 			return model;
 		}
