@@ -370,5 +370,4 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 		logger.info("Sponsor codes found: {}", codes.size());
 		return codes;		
 	}
-
 }

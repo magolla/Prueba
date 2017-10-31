@@ -434,25 +434,22 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	private Object checkInterests(Set<Specialty> specialties, Set<Occupation> occupations, boolean usedWhere) {
 
 		StringBuilder query = new StringBuilder("");
+		
+		if(usedWhere) {
+			query.append(" and ");
+		} else {
+			query.append(" where ");
+		}
 
 		if(!isNullOrEmpty(occupations) && !isNullOrEmpty(specialties)) {
-
-			if(usedWhere) {
-				query.append(" and ");
-			} else {
-				query.append(" where ");
-			}
-
 			query.append(" (spec in (:specialties) or spec.occupation in (:occupations)) " );
-
 		} else if(isNullOrEmpty(occupations) && !isNullOrEmpty(specialties)) {
-			query.append(" where spec in (:specialties)  " );
+			query.append(" spec in (:specialties)  " );
 		} else if(!isNullOrEmpty(occupations) && isNullOrEmpty(specialties)) {
-			query.append(" where spec.occupation in (:occupations) " );
+			query.append(" spec.occupation in (:occupations) " );
 		} else {
 			query = new StringBuilder("");
 		}
-
 		return query;
 	}
 
