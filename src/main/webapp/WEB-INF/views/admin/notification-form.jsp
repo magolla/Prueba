@@ -106,6 +106,37 @@
 									</div>
 									<!-- Fin de Ocupaciones y Especialidades -->
 									<hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+									<!--Sponsors -->
+									<div class="box-body">
+										<h3>Seleccionar Sponsors de la publicación</h3>
+										<div class="row">
+											<input id="sendUserBAllSponsor" type="checkbox" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
+											<span><b>Enviar a todos los Sponsors</b></span>
+										</div>
+										<div id="sponsorsBox" style="display: block;">
+											<c:forEach var="obj" items="${sponsorList}">
+												<div class="row">
+													<div>
+														<input type="checkbox" name="sponsors" value="${obj.id}" />
+														<span>${obj.name}</span>
+													</div>
+												</div>
+											</c:forEach>
+										</div>
+										<hr style="width:100%; color: black; height:1px; background-color:black;" />
+										
+										<h4>Configuraciones adicionales</h4>
+										<div class="row">
+											<input type="checkbox" name="sendUserB" checked="checked"/>
+											<span>Enviar a los Usuarios B sin Sponsor</span>
+										</div>
+										<div class="row">
+											<input type="checkbox" name="sendUserA" checked="checked"/>
+											<span>Enviar a los Usuarios A</span>
+										</div>
+									</div>
+									<!-- Fin Sponsors -->
+									<hr style="width: 100%; color: black; height: 1px; background-color:black;" />
 									
 									<div class="row">
 										<h4>Envío de test</h4>
@@ -163,37 +194,6 @@
 										</div>
 									</c:if>
 									
-									<hr style="width: 100%; color: black; height: 1px; background-color:black;" />
-									<!--Sponsors -->
-									<div class="box-body">
-										<h3>Seleccionar Sponsors de la publicación</h3>
-										<div class="row">
-											<input id="sendUserBAllSponsor" type="checkbox" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
-											<span><b>Enviar a todos los Sponsors</b></span>
-										</div>
-										<div id="sponsorsBox" style="display: block;">
-											<c:forEach var="obj" items="${sponsorList}">
-												<div class="row">
-													<div>
-														<input type="checkbox" name="sponsors" value="${obj.id}" />
-														<span>${obj.name}</span>
-													</div>
-												</div>
-											</c:forEach>
-										</div>
-										<hr style="width:100%; color: black; height:1px; background-color:black;" />
-										
-										<h4>Configuraciones adicionales</h4>
-										<div class="row">
-											<input type="checkbox" name="sendUserB" checked="checked"/>
-											<span>Enviar a los Usuarios B sin Sponsor</span>
-										</div>
-										<div class="row">
-											<input type="checkbox" name="sendUserA" checked="checked"/>
-											<span>Enviar a los Usuarios A</span>
-										</div>
-									</div>
-									<!-- Fin Sponsors -->
 									<div class="box-footer">
 										<div class="pull-left">
 											<button type="submit"class="btn btn-info" style="display:none;">Guardar Notificacion como Template</button>
