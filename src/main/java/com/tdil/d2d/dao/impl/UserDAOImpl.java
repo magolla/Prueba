@@ -514,7 +514,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				if(boNotificationDTO.getOccupations() != null || boNotificationDTO.getSpecialties() != null) {
 					queryString.append("JOIN user.specialties spec ");
 				}
-				if(!boNotificationDTO.getUserIds().isEmpty() || !boNotificationDTO.getUserTestIds().isEmpty()) {
+				if(!boNotificationDTO.getUserIds().isEmpty() || !boNotificationDTO.getUserTestIds().isEmpty() || !idList.isEmpty()) {
 					queryString.append("where user.id in :users ");
 				} else {
 					//Se agrega esto para agregar una clausula "where" y poder manejar los "or" de abajo
