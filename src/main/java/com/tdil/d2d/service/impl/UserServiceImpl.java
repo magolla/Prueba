@@ -1856,16 +1856,19 @@ public class UserServiceImpl implements UserService {
 			
 			Note note = this.noteDAO.getNoteById(noteId);
 			
+			
+			Set<Occupation> occupationToRemove = new HashSet<>();
+			
 			//Chequea si fue seleccionada alguna especialidad para medico, en caso afirmativo se quita Medico de la lista de ocupaciones
 			if(note.getSpecialties().stream().anyMatch(dto -> dto.getOccupation().getId() == 1)) {
-				Occupation occupationToRemove = note.getOccupations().stream().filter(e -> e.getId() == 1).findFirst().get();
-				note.getOccupations().remove(occupationToRemove);
+				occupationToRemove.add(note.getOccupations().stream().filter(e -> e.getId() == 1).findFirst().get());
+				note.getOccupations().remove(note.getOccupations().stream().filter(e -> e.getId() == 1).findFirst().get());
 			}
 			
 			//Chequea si fue seleccionada alguna especialidad para odontologo, en caso afirmativo se quita Odontologo de la lista de ocupaciones
 			if(note.getSpecialties().stream().anyMatch(dto -> dto.getOccupation().getId() == 2)) {
-				Occupation occupationToRemove = note.getOccupations().stream().filter(e -> e.getId() == 2).findFirst().get();
-				note.getOccupations().remove(occupationToRemove);
+				occupationToRemove.add(note.getOccupations().stream().filter(e -> e.getId() == 2).findFirst().get());
+				note.getOccupations().remove(note.getOccupations().stream().filter(e -> e.getId() == 2).findFirst().get());
 			}
 			
 			
@@ -1890,6 +1893,10 @@ public class UserServiceImpl implements UserService {
 			}
 			
 			result = userDAO.getMatchedUsersNote(note,userList);
+			
+			if(occupationToRemove != null) {
+				note.getOccupations().addAll(occupationToRemove);
+			}
 
 			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
 			for (User matchedUser : result) {

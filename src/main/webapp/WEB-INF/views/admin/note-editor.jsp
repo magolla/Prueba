@@ -166,26 +166,48 @@
 										<div id="specialtiesBox" style="margin-top: 20px;">
 											<label for="name" class="control-label">Elegir
 												Especialidades</label>
-
-
 											<c:forEach var="obj" items="${specialtiesLists}">
-												<div id="specialtiesBox-${obj.key.id}"
-													style="margin-top: 10px;"></div>
-													<div class="row">
-														<div class="col-md-2">
-															<span>${obj.key.name}</span>
+												<c:choose>
+													<c:when test="${empty obj.value[0].name}">
+														<div style="display: none;">
+															<div id="specialtiesBox-${obj.key.id}"
+																style="margin-top: 10px;"></div>
+															<div class="row">
+																<div class="col-md-2">
+																	<span>${obj.key.name}</span>
+																</div>
+																<div class="col-md-10">
+																	<select id="specialtiesSelect-${obj.key.id}"
+																		class="selectpicker specialtiesCombo" multiple>
+																		<c:forEach var="specialty" items="${obj.value}">
+																			<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
+																		</c:forEach>
+																	</select>
+																</div>
+															</div>
 														</div>
-														<div class="col-md-10">
-															<select id="specialtiesSelect-${obj.key.id}"
-																class="selectpicker specialtiesCombo" multiple>
-																<c:forEach var="specialty" items="${obj.value}">
-																	<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
-																</c:forEach>
-															</select>
+													</c:when>
+													<c:otherwise>
+														<div>
+															<div id="specialtiesBox-${obj.key.id}"
+																style="margin-top: 10px;"></div>
+															<div class="row">
+																<div class="col-md-2">
+																	<span>${obj.key.name}</span>
+																</div>
+																<div class="col-md-10">
+																	<select id="specialtiesSelect-${obj.key.id}"
+																		class="selectpicker specialtiesCombo" multiple>
+																		<c:forEach var="specialty" items="${obj.value}">
+																			<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
+																		</c:forEach>
+																	</select>
+																</div>
+															</div>
 														</div>
-													</div>
-
-													<script>
+													</c:otherwise>
+												</c:choose>
+												<script>
 													$('#specialtiesSelect-${obj.key.id}').selectpicker('val', ${noteForm.specialties});
 												</script>
 											</c:forEach>
