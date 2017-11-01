@@ -401,7 +401,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
 			queryString.append("FROM User user ");
-			if(!Utilidades.isNullOrEmpty(note.getOccupations())) {
+			if(!Utilidades.isNullOrEmpty(note.getOccupations()) || !Utilidades.isNullOrEmpty(note.getSpecialties())) {
 				queryString.append("JOIN user.specialties spec ");	
 			}
 
