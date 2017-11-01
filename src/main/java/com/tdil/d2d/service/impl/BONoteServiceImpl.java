@@ -128,26 +128,29 @@ public class BONoteServiceImpl implements BONoteService {
 		
 		Note note = this.noteDAO.getNoteById(noteDTO.getId());
 		
+		
+		
+		LocalTime midnight = LocalTime.MIDNIGHT;
+		LocalDate today = LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires"));
+		LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
+		Date out = Date.from(todayMidnight.atZone(ZoneId.systemDefault()).toInstant());
+		
 		try {
 			if(note == null) {
 				note = new Note();
-			}
+				note.setCreationDate(out);
+			} 
 			
-		
-			
-			LocalTime midnight = LocalTime.MIDNIGHT;
-			LocalDate today = LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires"));
-			LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
-			Date out = Date.from(todayMidnight.atZone(ZoneId.systemDefault()).toInstant());
+
 
 			// Se pone por default la fecha de HOY a la madrugada
-			note.setPublishingDate(out);
+			note.setPublishingDate(noteDTO.getPublishingDate());
 			
 			note.setActive(noteDTO.isActive());
 			note.setContent(noteDTO.getContent());
 			note.setExpirationDate(noteDTO.getExpirationDate());
 			note.setCategory(NoteCategory.getCategoryEnum(noteDTO.getCategory()));
-			note.setCreationDate(noteDTO.getPublishingDate());
+			
 //			note.setPublishingDate(noteDTO.getPublishingDate());
 			note.setTitle(noteDTO.getTitle());
 			note.setSubtitle(noteDTO.getSubtitle());
