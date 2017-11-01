@@ -96,7 +96,7 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 		}
 		queryString.append("AND (note.expirationDate >= now() OR note.expirationDate is null) ");
 		queryString.append("AND (note.publishingDate <= now() OR note.publishingDate is null) ");
-		queryString.append("order by note.creationDate desc ");
+		queryString.append("order by note.publishingDate desc ");
 
 		Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		if(user.isUserb()) {

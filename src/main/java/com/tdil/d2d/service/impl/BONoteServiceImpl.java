@@ -1,6 +1,11 @@
 package com.tdil.d2d.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -124,12 +129,22 @@ public class BONoteServiceImpl implements BONoteService {
 				note = new Note();
 			}
 			
+		
+			
+			LocalTime midnight = LocalTime.MIDNIGHT;
+			LocalDate today = LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires"));
+			LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
+			Date out = Date.from(todayMidnight.atZone(ZoneId.systemDefault()).toInstant());
+
+			// Se pone por default la fecha de HOY a la madrugada
+			note.setPublishingDate(out);
+			
 			note.setActive(noteDTO.isActive());
 			note.setContent(noteDTO.getContent());
 			note.setExpirationDate(noteDTO.getExpirationDate());
 			note.setCategory(NoteCategory.getCategoryEnum(noteDTO.getCategory()));
 			note.setCreationDate(noteDTO.getPublishingDate());
-			note.setPublishingDate(noteDTO.getPublishingDate());
+//			note.setPublishingDate(noteDTO.getPublishingDate());
 			note.setTitle(noteDTO.getTitle());
 			note.setSubtitle(noteDTO.getSubtitle());
 			if(noteDTO.getImage() != null) {
