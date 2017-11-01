@@ -90,7 +90,7 @@
 												<label for="content" class="control-label">Publicaci&oacute;n</label>
 											</div>
 											<div class=col-sm-10>
-												<div class="input-group date">
+												<div class="input-group date" id="publishDatePicker">
 													<div class="input-group-addon">
 														<i class="fa fa-calendar"></i>
 													</div>
@@ -277,6 +277,7 @@
 		<script>
 			$('#publishingDateForView').datepicker({
 				autoclose: true,
+				endDate: 'now',
 				format: "dd-mm-yyyy"
 			});
 			$('#expirationDateForView').datepicker({
@@ -344,6 +345,7 @@
 			}
 			
 			$(document).ready(function() {
+				
 				alluserAction($("#sendUserBAllSponsor").get(0));
 				arrayOccupationIds = $("#occupationsSelect").val();
 	
@@ -355,6 +357,7 @@
 				loadSpecialtiesInput();
 			});
 			
+
 			function alluserAction(checkboxElem) {
 				console.log(checkboxElem);
 				  if (checkboxElem.checked) {
@@ -365,6 +368,7 @@
 					  $("#sponsorsBox").css('display','block');
 				  }
 			}
+
 			
 		</script>
 	</tiles:putAttribute>

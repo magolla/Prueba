@@ -76,6 +76,10 @@ public class BONoteServiceImpl implements BONoteService {
 			return ResultDTO.error("La categoría es obligatoria");
 		}
 		
+		if(noteDTO.getPublishingDate().after(new Date())){
+			return ResultDTO.error("La fecha de publicacion no puede ser mayor a la actual");
+		}
+		
 		Note note = toPersistent(noteDTO);
 		this.noteDAO.save(note);
 		
