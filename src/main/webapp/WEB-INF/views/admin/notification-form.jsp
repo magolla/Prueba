@@ -127,8 +127,8 @@
 								<div class="box-body">
 									<h3>Seleccionar usuario por Sponsors</h3>
 									<div class="row">
-										<input id="sendUserBAllSponsor" type="checkbox" name="sendUserBAllSponsor" onchange="alluserAction(this)"/>
-										<span><b>Enviar a todos los Sponsors</b></span>
+										<form:checkbox id="sendUserBAllSponsor" path="sendUserBAllSponsor" onchange="allSponsoredUserAction(this)"/>
+										<form:label path="sendUserBAllSponsor">Enviar a todos los Sponsors</form:label>
 									</div>
 									<div id="sponsorsBox" style="display: block;">
 										<c:forEach var="obj" items="${sponsorList}">
@@ -353,7 +353,7 @@ function loadSpecialtiesInput() {
 	});
 }
 
-function alluserAction(checkboxElem) {
+function allSponsoredUserAction(checkboxElem) {
 	console.log(checkboxElem);
 	  if (checkboxElem.checked) {
 		  console.log("INVI");
