@@ -6,12 +6,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -31,6 +31,7 @@ import com.tdil.d2d.persistence.MediaType;
 import com.tdil.d2d.persistence.Note;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Specialty;
+import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.persistence.UserLinkedinProfile;
@@ -561,16 +562,43 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
 	}
 
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public List<User> getUsersBNoSponsor() {
+//
+//		StringBuilder queryString = new StringBuilder("select * from d2d_prod.D2D_USER where D2D_USER.userb is true && D2D_USER.id not in(select  distinct something.id from (SELECT * FROM D2D_USER) AS something \n" + 
+//				"join D2D_SPONSOR_CODE on something.id = D2D_SPONSOR_CODE.consumer_id join D2D_SUBSCRIPTION on D2D_SUBSCRIPTION.sponsorCode_id = D2D_SPONSOR_CODE.id where D2D_SUBSCRIPTION.expirationDate > now())");
+//
+//		SQLQuery query = this.getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+//		query.addEntity(User.class);
+//		List<User> filterUser = (List<User>)query.list();
+//
+//		return filterUser;
+//	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsersBNoSponsor() {
 
-		StringBuilder queryString = new StringBuilder("select * from d2d_prod.D2D_USER where D2D_USER.userb is true && D2D_USER.id not in(select  distinct something.id from (SELECT * FROM D2D_USER) AS something \n" + 
-				"join D2D_SPONSOR_CODE on something.id = D2D_SPONSOR_CODE.consumer_id join D2D_SUBSCRIPTION on D2D_SUBSCRIPTION.sponsorCode_id = D2D_SPONSOR_CODE.id where D2D_SUBSCRIPTION.expirationDate > now())");
+		StringBuilder queryString = new StringBuilder("SELECT distinct subscription ");
+		queryString.append("FROM Subscription subscription ");
+		queryString.append("where subscription.sponsorCode is not null ");
+		queryString.append("and subscription.expirationDate >= now() ");
 
-		SQLQuery query = this.getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
-		query.addEntity(User.class);
-		List<User> filterUser = (List<User>)query.list();
+		Query query = this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+		List<Subscription> filterSubscription = (List<Subscription>)query.list();
+		
+		List<User> listUser = filterSubscription.stream().map(Subscription::getUser).collect(Collectors.toList());
+		
+		StringBuilder queryStringUser = new StringBuilder("");
+		queryStringUser.append("SELECT distinct user ");
+		queryStringUser.append("FROM User user ");
+		queryStringUser.append("where user.userb is true ");
+		queryStringUser.append("and user not in :userList ");
+		Query queryUser = this.getSessionFactory().getCurrentSession().createQuery(queryStringUser.toString());
+		queryUser.setParameterList("userList", listUser);
+		
+		List<User> filterUser = (List<User>)queryUser.list();
 
 		return filterUser;
 	}
