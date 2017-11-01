@@ -16,7 +16,7 @@
 					<li class="active"><a href="#tab_1" data-toggle="tab">Formulario de Notificaciones</a></li>
 				</ul>
 				
-				<div class="row" style="margin:15px;">
+				<div class="row" style="margin:35px!important;">
 					<span class="msg">
 						<h3>Recomendaciones para la carga del formulario</h3>
 						<p>En la sección "A quién se envía" hay varias subsecciones para determinar si se le envía a:</p>
