@@ -12,7 +12,6 @@
 		<section id="note-editor" class="content">
 			<div class="row">
 				<div class="col-md-12">
-		
 					<div class="nav-tabs-custom">
 						<ul class="nav nav-tabs">
 							<li class="active"><a href="#tab_1" data-toggle="tab">Datos de la nota</a></li>
@@ -282,7 +281,6 @@
 									</div>
 								</div>
 							</div>
-
 							<div class="box-footer">
 								<button type="submit" class="btn btn-info pull-right">Guardar y Publicar</button>
 							</div>

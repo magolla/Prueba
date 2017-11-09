@@ -126,7 +126,14 @@
 						</a>
 					</li>
 				</sec:authorize>
-
+				
+				<!-- TODO: Roles para Offers -->
+				<li class="treeview">
+					<a href="<c:url value="/admin/BoOffers" />">
+						<i class="fa fa-book"></i> <span>ABM de Ofertas</span>
+					</a>
+				</li>
+				
 				<!-- Roles para Notificaciones -->
 				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_NOTIFICATIONS')">
 					<li class="treeview">
@@ -168,12 +175,6 @@
 						</a>
 					</li>
 				</sec:authorize>
-				
-				<li class="treeview">
-					<a href="<c:url value="/admin/BoOffers" />">
-						<i class="fa fa-book"></i> <span>ABM de Ofertas</span>
-					</a>
-				</li>
 			</ul>
 		</section>
 		<!-- /.sidebar -->
