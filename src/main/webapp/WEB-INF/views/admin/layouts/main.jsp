@@ -168,6 +168,12 @@
 						</a>
 					</li>
 				</sec:authorize>
+				
+				<li class="treeview">
+					<a href="<c:url value="/admin/reports/details" />">
+						<i class="fa fa-book"></i> <span>ABM de Ofertas</span>
+					</a>
+				</li>
 			</ul>
 		</section>
 		<!-- /.sidebar -->
