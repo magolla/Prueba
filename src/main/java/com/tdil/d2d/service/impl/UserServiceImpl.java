@@ -2387,5 +2387,12 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	@Override
+	public void deleteOfferById(int offerId) throws DAOException  {
+		JobOffer jobOffer = jobDAO.getById(JobOffer.class, offerId);
+		jobOffer.setStatus(JobOffer.CLOSED);
+		jobDAO.save(jobOffer);
+	}
+
 
 }

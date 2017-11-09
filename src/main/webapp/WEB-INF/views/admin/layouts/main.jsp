@@ -170,7 +170,7 @@
 				</sec:authorize>
 				
 				<li class="treeview">
-					<a href="<c:url value="/admin/reports/details" />">
+					<a href="<c:url value="/admin/BoOffers" />">
 						<i class="fa fa-book"></i> <span>ABM de Ofertas</span>
 					</a>
 				</li>
