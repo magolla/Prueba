@@ -193,5 +193,7 @@ public interface UserService {
 	void notifyToMatchedUsersSubscription(List<Subscription> subscriptionsList) throws ServiceException, DAOException;
 	
 	void deleteOfferById(int offerId) throws ServiceException, DAOException;
+
+	User getUserById(long id) throws ServiceException;
 	
 }

@@ -1444,6 +1444,19 @@ public class UserServiceImpl implements UserService {
 		}
 		return getUserDetailsResponse(user);
 	}
+	
+	
+	@Override
+	public User getUserById(long id) throws ServiceException {
+		User user = null;
+		try {
+			user = this.userDAO.getById(User.class, id);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+		return user;
+	}
+	
 
 	@Override
 	public UserDTO getUserWebDetails(long id) throws ServiceException {

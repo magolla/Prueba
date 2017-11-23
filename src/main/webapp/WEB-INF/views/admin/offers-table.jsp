@@ -63,6 +63,14 @@
 										  <option value="Vacant">Vacante</option>
 										</select>
 								</div>
+								
+								<div class="box-footer" style="margin-top:15px">
+										<select id="offerJobType">
+										  <option value="All">Todos</option>
+										  <option value="Temporal">Temporales</option>
+										  <option value="Permanent">Permanentes</option>
+										</select>
+								</div>
 								<div class="box-footer" style="margin-top:15px">
 									<a type="submit" class="btn btn-info pull-right" href="<c:url value='/admin/new-offer'/>">Nuevo</a>
 								</div>
@@ -75,7 +83,7 @@
 
 		<script>
 		
-// 		Esta funcion se usa para aplicar el ellipsis
+// 		Esta funcion se usa para aplicar el ellipsis en Datatable
 		 $.fn.dataTable.render.ellipsis = function ( cutoff, wordbreak, escapeHtml ) {
 		        var esc = function ( t ) {
 		            return t
@@ -202,7 +210,6 @@
     
 	//Se agrega funcion en el change del select para que filtre segun VACANTE, CERRADO y TODOS
    $('#offerStatus').on( 'change', function (selection) {
-	   
 	   if(this.value == 'Vacant') {
 		   table.column(0).search('VACANT', true, false).draw();
 	   } else if(this.value == 'Closed') {
@@ -210,10 +217,18 @@
 	   } else {
 		   table.column(0).search('', true, false).draw();   
 	   }
-	   
-	   
-	   console.log( this.value);
     } );
+	
+	$('#offerJobType').on( 'change', function (selection) {
+	   if(this.value == 'Permanent') {
+		   table.column(1).search('Permanente', true, false).draw();
+	   } else if(this.value == 'Temporal') {
+		   table.column(1).search('Temporal', true, false).draw();   
+	   } else {
+		   table.column(1).search('', true, false).draw();   
+	   }
+    } );
+	
     
     
     $('#offers-table tbody').on( 'click', 'button', function (e) {

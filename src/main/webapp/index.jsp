@@ -439,5 +439,6 @@
     <!-- Java script-->
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
   </body>
 </html>

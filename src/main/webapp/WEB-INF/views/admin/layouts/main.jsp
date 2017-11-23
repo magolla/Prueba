@@ -25,6 +25,7 @@
 	<link rel="stylesheet" href="<c:url value="/bootstrap-select/css/bootstrap-select.min.css" />">
    
 	<script src="<c:url value="/admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js" />"></script>
+	<script src="<c:url value="/admin/adminlte/plugins/jQueryUI/jquery-ui.min.js" />"></script>
 	<script src="<c:url value="/admin/bootstrap/js/bootstrap.min.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/fastclick/fastclick.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/dist/js/app.min.js" />"></script>

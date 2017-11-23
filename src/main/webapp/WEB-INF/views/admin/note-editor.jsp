@@ -75,12 +75,8 @@
 												<label for="state" class="control-label">Estado</label>
 											</div>
 											<div class="col-sm-10">
-												<form:radiobutton path="active" value="true"
-													element="span class='radio'" />
-												Activo <br>
-												<form:radiobutton path="active" value="false"
-													element="span class='radio'" />
-												Inactivo
+												<form:radiobutton path="active" value="true" element="span class='radio'" />Activo <br>
+												<form:radiobutton path="active" value="false" element="span class='radio'" />Inactivo
 											</div>
 										</div>
 
