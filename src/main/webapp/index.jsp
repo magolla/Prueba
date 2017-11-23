@@ -15,6 +15,12 @@
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,700,900">
 	<link rel="stylesheet" href="css/style.css">
+<!-- 	<script -->
+<!-- 			  src="https://code.jquery.com/jquery-3.2.1.js" -->
+<!-- 			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" -->
+<!-- 			  crossorigin="anonymous"></script> -->
+			  
+			  <script src="/d2d/admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js" /></script>
 	<!--[if lt IE 10]>
 	<div style="background: #212121; padding: 10px 0; box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3); clear: both; text-align:center; position: relative; z-index:1;"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
 	<script src="js/html5shiv.min.js"></script>
@@ -27,6 +33,22 @@
 		
 		ga('create', 'UA-90094059-1', 'auto');
 		ga('send', 'pageview');
+		
+		
+		
+		$(document).ready(function() {
+			$.ajax({
+		        url: 'admin/public/lastOffers',
+		        type: 'GET',
+		        success: function(data) {
+				console.log(data);
+		        }
+		    });
+		});
+		
+		
+			
+		
 		
 	</script>
 	<!-- Facebook Pixel Code -->
@@ -361,6 +383,28 @@
               </div>
             </div>
           </section>
+<!--           Lista de ofertas -->
+          <section class="section-80 bg-caribbean context-dark">
+            <div class="navigation-wrap">
+              <nav class="navigation">
+                <ul class="navigation-list dark-section">
+                  <li><a href="#" data-custom-scroll-to="home">Inicio</a></li>
+                  <li><a href="#" data-custom-scroll-to="features">Funciones</a></li>
+                  <li class="active"><a href="#" data-custom-scroll-to="help">Soporte</a></li>
+                  <li><a href="#" data-custom-scroll-to="publish">Publicar</a></li>
+                  <li><a href="#" data-custom-scroll-to="testimonials">Testimonios</a></li>
+                </ul>
+              </nav>
+            </div>
+            <div class="shell">
+              <div class="range range-xs-center">
+                <div class="cell-xs-10 cell-md-12">
+                sfasf
+                </div>
+              </div>
+            </div>
+          </section>
+<!-- Lista de ofertas END -->
           <!--Clients-->
           <section class="section-50 bg-gray-lighter">
             <div class="shell">

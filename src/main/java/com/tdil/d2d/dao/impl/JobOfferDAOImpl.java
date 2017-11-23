@@ -657,4 +657,14 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 			throw new DAOException(e);
 		}
 	}
+
+	@Override
+	public List<JobOffer> getLastOffers() {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
+//		criteria.add(Restrictions.ge("offerDate", new Date()));
+		criteria.addOrder(Order.desc("offerDate"));
+		criteria.setMaxResults(5);
+		List<JobOffer> list = criteria.list();
+		return list;
+	}
 }

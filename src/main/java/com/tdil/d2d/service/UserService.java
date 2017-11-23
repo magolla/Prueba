@@ -191,5 +191,7 @@ public interface UserService {
 	List<MatchedUserDTO> getMatchedUsersNote(BONoteDTO boNoteDTO, long noteId) throws ServiceException;
 
 	void notifyToMatchedUsersSubscription(List<Subscription> subscriptionsList) throws ServiceException, DAOException;
+
+	public List<JobOfferStatusDTO> getLastOffers();
 	
 }
