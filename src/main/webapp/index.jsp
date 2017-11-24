@@ -251,7 +251,7 @@
               </div>
 
 				<!-- Lista de ofertas -->
-				<h3 style="margin-top:50px;" class="">Últimas 5 ofertas publicadas</h2>
+				<h3 class="fivelast">Últimas 5 ofertas publicadas</h2>
 				<h4>Ingresá a la aplicación y postulate en los avisos de trabajo que coincidan con tu perfil.</h4>
 				
 				<div class="range range-xs-center">

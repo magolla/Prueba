@@ -7899,10 +7899,11 @@ iframe {
   /*max-width: 480px;*/
 }
 
+h3.fivelast							{ color:#02AAB0; margin-top:50px; }
 div#jobOfferBlock					{ padding:15px; }
 table#jobstable tr td,
 table#jobstable tr th				{ border:solid 1px #d8d8d8; font-size:15px; text-align:left; min-width:20px; padding:6px 7px; }
-table#jobstable tr th				{ background-color:#f8f8f8; }
+table#jobstable tr th				{ background-color:#f8f8f8; color:#02AAB0; }
 		
 		
 @media (max-width: 640px) {
