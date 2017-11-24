@@ -36,20 +36,64 @@
 		
 		
 		
+
 		$(document).ready(function() {
-			$.ajax({
-		        url: 'admin/public/lastOffers',
-		        type: 'GET',
-		        success: function(data) {
-				console.log(data);
-		        }
-		    });
-		});
-		
-		
 			
-		
-		
+// 			Titulo, subtitulo, zona
+// 			Categorias,zona y fecha
+			
+			$.ajax({
+				url : 'admin/public/lastOffers',
+				type : 'GET',
+				success : function(data) {
+					
+					console.log(data)
+					
+					var counter = 0
+					var html = '<table style="width:100%">'
+					html += '<tr><th>Zona</th><th>Titulo</th><th>Subtitulo</th><th>Categorias</th><th>Fecha</th></tr>'
+					
+					counter = 0
+					data.data.forEach(function(offer) {
+						
+						var category = ''
+						var title = ''
+						var subtitle = ''
+						
+						
+						if(offer.occupationName != '') {
+							category += offer.occupationName
+						}
+						
+						if(offer.specialtyName != '') {
+							category +=  ', ' + offer.specialtyName
+						}
+						
+						if(offer.taskName != '') {
+							category += ' para trabajos de ' + offer.taskName
+						}
+						
+						if(offer.title != null) {
+							title = offer.title
+						} 
+						
+						if(offer.subtitle != null) {
+							subtitle = offer.subtitle
+						}
+						
+
+						html += '<tr><th>'+ offer.geoLevelName +'</th><th>' + title + '</th><th>' + subtitle + '</th><th>' + category + '</th><th>' + offer.offerDate.split(" ")[0] + '</th></tr>'
+						counter ++
+					});
+					
+					html += '</table>'
+					
+					$( "#jobOfferBlock" ).append( html );
+				}
+			});
+			
+			
+		});
 	</script>
 	<!-- Facebook Pixel Code -->
 	<script>
@@ -399,7 +443,7 @@
             <div class="shell">
               <div class="range range-xs-center">
                 <div class="cell-xs-10 cell-md-12">
-                sfasf
+                <div id="jobOfferBlock"></div>
                 </div>
               </div>
             </div>
