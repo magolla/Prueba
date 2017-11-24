@@ -134,6 +134,7 @@ public class WebSecurityConfig  {
 			    	.authorizeRequests().antMatchers("/admin/login").permitAll()
 	                .antMatchers("/admin/adminlte/**").permitAll()
 	                .antMatchers("/admin/bootstrap/**").permitAll()
+	                .antMatchers("/admin/public/**").permitAll()
 	                //Este se va a usar para las syspro
 	                //.antMatchers("/admin/reports/**").access("hasRole('ROLE_SYSPRO')")
 	                .antMatchers("/admin/dashboard").authenticated()

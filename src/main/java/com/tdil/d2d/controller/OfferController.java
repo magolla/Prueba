@@ -344,5 +344,6 @@ public class OfferController extends AbstractController {
 			return new ResponseEntity<GenericResponse<JobOfferStatusDTO>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
 
 }

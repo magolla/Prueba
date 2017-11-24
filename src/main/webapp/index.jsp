@@ -15,6 +15,12 @@
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,700,900">
 	<link rel="stylesheet" href="css/style.css">
+<!-- 	<script -->
+<!-- 			  src="https://code.jquery.com/jquery-3.2.1.js" -->
+<!-- 			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" -->
+<!-- 			  crossorigin="anonymous"></script> -->
+			  
+			  <script src="/d2d/admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js" /></script>
 	<!--[if lt IE 10]>
 	<div style="background: #212121; padding: 10px 0; box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3); clear: both; text-align:center; position: relative; z-index:1;"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
 	<script src="js/html5shiv.min.js"></script>
@@ -28,6 +34,79 @@
 		ga('create', 'UA-90094059-1', 'auto');
 		ga('send', 'pageview');
 		
+		
+		
+
+		$(document).ready(function() {
+			
+// 			Titulo, subtitulo, zona
+// 			Categorias,zona y fecha
+			
+			$.ajax({
+				url : 'admin/public/lastOffers',
+				type : 'GET',
+				success : function(data) {
+					
+					console.log(data)
+					
+					var counter = 0
+					var html = '<table id="jobstable" style="width:100%">'
+					html += '<tr><th>Tipo de oferta</th><th>Profesión y tareas</th><th>Zona</th><th>Publicada</th></tr>'
+					
+					counter = 0
+					data.data.forEach(function(offer) {
+						
+						var category = ''
+						var title = ''
+						var subtitle = ''
+						
+						
+						if(offer.occupationName != '') {
+							category += offer.occupationName
+						}
+						
+						if(offer.specialtyName != '') {
+							category +=  ', ' + offer.specialtyName
+						}
+						
+						if(offer.taskName != '') {
+							category += ' para trabajos de ' + offer.taskName
+						}
+						
+						if(offer.title != null) {
+							title = offer.title
+						} 
+						
+						if(offer.subtitle != null) {
+							subtitle = offer.subtitle
+						}
+						
+						
+						if(offer.permanent == true) {
+							type = "Permanente"
+						} else {
+							type = "Temporal"
+						}
+						
+						var something = offer.offerHour
+						
+						var a = offer.offerHour
+						var b = ":";
+						var position = 2;
+						var offerHour = [a.slice(0, position), b, a.slice(position)].join('');
+
+						html += '<tr><td>' + type + '</td><td>' + category + '</td><td>'+ offer.geoLevelName +'</td><td>' + offer.offerDate.split(" ")[0] + " " + offerHour + '</td></tr>'
+						counter ++
+					});
+					
+					html += '</table>'
+					
+					$( "#jobOfferBlock" ).append( html );
+				}
+			});
+			
+			
+		});
 	</script>
 	<!-- Facebook Pixel Code -->
 	<script>
@@ -170,9 +249,19 @@
                   </div>
                 </div>
               </div>
+
+				<!-- Lista de ofertas -->
+				<h3 style="margin-top:50px;" class="">Últimas 5 ofertas publicadas</h2>
+				<h4>Ingresá a la aplicación y postulate en los avisos de trabajo que coincidan con tu perfil.</h4>
+				
+				<div class="range range-xs-center">
+					<div class="cell-xs-10 cell-md-12">
+						<div id="jobOfferBlock"></div>
+					</div>
+				</div>
+				<!-- Lista de ofertas END -->
               
-              
-              <h4 style="margin-top:50px;"></h4>
+              <h4 style="margin-top:50px;">Más Beneficios</h4>
 
               <div class="range offset-top-50">
                 <div class="cell-sm-4"><img src="images/icon-curriculum.jpg" width="123" height="92" alt="" class="img-responsive reveal-inline-block">

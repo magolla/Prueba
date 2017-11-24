@@ -18,6 +18,7 @@ import com.tdil.d2d.bo.dto.ResultDTO;
 import com.tdil.d2d.bo.dto.RoleDTO;
 import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
+import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.service.BOUserService;
@@ -199,5 +200,13 @@ public class AdminUserController {
 			return new ResponseEntity<GenericResponse<List<ActivityLogDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	
+	@RequestMapping(value = "/public/lastOffers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>> getLastOffers() {
+		List<JobOfferStatusDTO> myOffers = this.userService.getLastOffers();
+		return new ResponseEntity<GenericResponse<List<JobOfferStatusDTO>>>(new GenericResponse<List<JobOfferStatusDTO>>(myOffers,HttpStatus.OK.value()), HttpStatus.OK);
+	}
+	
 }
     

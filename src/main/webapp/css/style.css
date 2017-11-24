@@ -7896,9 +7896,19 @@ iframe {
 .shell,
 .shell-wide {
   min-width: 300px;
-  max-width: 480px;
+  /*max-width: 480px;*/
 }
 
+div#jobOfferBlock					{ padding:15px; }
+table#jobstable tr td,
+table#jobstable tr th				{ border:solid 1px #d8d8d8; font-size:15px; text-align:left; min-width:20px; padding:6px 7px; }
+table#jobstable tr th				{ background-color:#f8f8f8; }
+		
+		
+@media (max-width: 640px) {
+	table#jobstable tr td,
+	table#jobstable tr th				{ font-size:12px; padding:2px 5px; }
+}
 @media (min-width: 768px) {
   .shell,
   .shell-wide {

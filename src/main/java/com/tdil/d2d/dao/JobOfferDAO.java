@@ -40,5 +40,7 @@ public interface JobOfferDAO {
 	List<Object> getActiveJobOfferQuantitiesDaily(FilterJobOfferDailyReportDTO filterDTO, Set<Long> offersIdByGeo) throws DAOException;
 	List<Object> getJobOfferContractedDaily(FilterJobOfferDailyReportDTO filterDTO, Set<Long> offersIdByGeo) throws DAOException;
 
-	Set<Long> getByGeo(List<GeoLevelDTO> geos) throws DAOException; 
+	Set<Long> getByGeo(List<GeoLevelDTO> geos) throws DAOException;
+
+	public List<JobOffer> getLastOffers(); 
 }
