@@ -163,7 +163,7 @@
                       <div class="offset-md-top-30">
                         <h3 class="text-bold">¡Enterate antes que nadie de los mejores empleos!</h3>
                         <p><b>DOC to DOC</b> es la primera aplicación móvil orientada a la búsqueda de empleos y reclutamiento del campo de la salud, apuntando a todas las especialidades. La aplicación le permite a las instituciones públicas o privadas, empresas de medicina prepaga, clínicas, sanatorios, servicios de salud y todo aquel que se encuentre en la búsqueda de profesionales para tareas temporales y permanentes, crear un usuario y publicar ofertas de forma gratuita.</p>
-                        <p><b>La aplicación matchea con:</b> médicos, odontólogos, psicólogos, kinesiólogos fisiatras, nutricionistas e instrumentadoras, según el perfil cargado.<br/>El candidato adquiere diferentes beneficios, como por ejemplo alertas de trabajos disponibles según sus preferencias, novedades del rubro, y de esta forma te convertís en parte de una comunidad de cientos de empleadores.</p>
+                        <p><b>La aplicación matchea con:</b> médicos, odontólogos, psicólogos, kinesiólogos fisiatras, nutricionistas, instrumentadoras, técnico en hemoterapia y enfermería profesional, según el perfil cargado.<br/>El candidato adquiere diferentes beneficios, como por ejemplo alertas de trabajos disponibles según sus preferencias, novedades del rubro, y de esta forma te convertís en parte de una comunidad de cientos de empleadores.</p>
               			<p><b>¡Registrate en pocos pasos y comenzá a beneficiarte de la red de trabajo más grande del campo de la salud. Con tu perfil completo, podrás recibir notificaciones de ofertas laborales de acuerdo a tu búsqueda, sea temporal o permanente y luego ponerte en contacto con tu futuro empleador!</b></p>
                       </div>
                     </div>
@@ -180,7 +180,7 @@
                     <h6>COMO CANDIDATO</h6>
                   </div>
                   <div class="offset-top-10">
-					<p>Podes cargar tu CV en PDF o relacionar tu perfil de LinkedIn, especificando tu especialidad y completando un perfil con datos relacionados a tu experiencia y objetivos. ¡Descubrí todos los días nuevos empleos de las mejores empresas del rubro de la Medicina, Odontología, Psicología, Kinesiología, Obstetricia, Nutrición, e Instrumentación quirúrgica y postulate en cuestión de segundos!</p>
+					<p>Podes cargar tu CV en PDF o relacionar tu perfil de LinkedIn, especificando tu especialidad y completando un perfil con datos relacionados a tu experiencia y objetivos. ¡Descubrí todos los días nuevos empleos de las mejores empresas del rubro de la Medicina, Odontología, Psicología, Kinesiología, Obstetricia, Nutrición, Instrumentación quirúrgica, Técnico en hemoterapia y Enfermería profesional, y postulate en cuestión de segundos!</p>
                   </div>
                 </div>
                 <div class="cell-sm-4 offset-top-50 offset-sm-top-0"><img src="images/icon-empleos.jpg" width="123" height="92" alt="" class="img-responsive reveal-inline-block">
