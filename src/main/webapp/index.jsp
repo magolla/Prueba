@@ -82,13 +82,20 @@
 						}
 						
 						
-						if(offer.type != null) {
-							type = offer.offerDate
+						if(offer.permanent == true) {
+							type = "Permanente"
 						} else {
-							type = offer.offerDate
+							type = "Temporal"
 						}
+						
+						var something = offer.offerHour
+						
+						var a = offer.offerHour
+						var b = ":";
+						var position = 2;
+						var offerHour = [a.slice(0, position), b, a.slice(position)].join('');
 
-						html += '<tr><td>' + type + '</td><td>' + category + '</td><td>'+ offer.geoLevelName +'</td><td>' + offer.offerDate.split(" ")[0] + '</td></tr>'
+						html += '<tr><td>' + type + '</td><td>' + category + '</td><td>'+ offer.geoLevelName +'</td><td>' + offer.offerDate.split(" ")[0] + " " + offerHour + '</td></tr>'
 						counter ++
 					});
 					
