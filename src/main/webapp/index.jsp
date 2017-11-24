@@ -93,7 +93,7 @@
 						var position = 2;
 						var offerHour = [a.slice(0, position), b, a.slice(position)].join('');
 
-						html += '<tr><td>' + type + '</td><td>' + category + '</td><td>'+ offer.geoLevelName +'</td><td>' + offer.offerDate.split(" ")[0] + " " + offerHour + '</td></tr>'
+						html += '<tr><td>' + type + '</td><td>' + category + '</td><td>'+ offer.geoLevelName +'</td><td>' + offer.creationDate.split(":")[0] + ":" + offer.creationDate.split(":")[1] + '</td></tr>'
 						counter ++
 					});
 					
@@ -126,7 +126,7 @@
 	</noscript>
 	<!-- End Facebook Pixel Code -->
   </head>
-  <!-- Versión de la aplicación backend: WebApp DTD v 1.03.04.B2 -->
+  <!-- Versión de la aplicación backend: WebApp DTD v 1.03.04.B3 -->
   <body>
     <!-- Page-->
     <div class="page text-center">
