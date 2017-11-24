@@ -662,7 +662,7 @@ public class JobOfferDAOImpl extends GenericDAO<JobOffer> implements JobOfferDAO
 	public List<JobOffer> getLastOffers() {
 		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(JobOffer.class);
 		criteria.addOrder(Order.desc("creationDate"));
-		criteria.add(Restrictions.le("offerDate", new Date()));
+		criteria.add(Restrictions.ge("offerDate", new Date()));
 		criteria.add(Restrictions.eq("status", JobOffer.VACANT));
 		criteria.setMaxResults(5);
 		List<JobOffer> list = criteria.list();
