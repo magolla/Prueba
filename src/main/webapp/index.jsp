@@ -50,8 +50,8 @@
 					console.log(data)
 					
 					var counter = 0
-					var html = '<table style="width:100%">'
-					html += '<tr><th>Zona</th><th>Titulo</th><th>Subtitulo</th><th>Categorias</th><th>Fecha</th></tr>'
+					var html = '<table id="jobstable" style="width:100%">'
+					html += '<tr><th>Tipo de oferta</th><th>Profesión y tareas</th><th>Zona</th><th>Publicada</th></tr>'
 					
 					counter = 0
 					data.data.forEach(function(offer) {
@@ -81,8 +81,14 @@
 							subtitle = offer.subtitle
 						}
 						
+						
+						if(offer.type != null) {
+							type = offer.offerDate
+						} else {
+							type = offer.offerDate
+						}
 
-						html += '<tr><th>'+ offer.geoLevelName +'</th><th>' + title + '</th><th>' + subtitle + '</th><th>' + category + '</th><th>' + offer.offerDate.split(" ")[0] + '</th></tr>'
+						html += '<tr><td>' + type + '</td><td>' + category + '</td><td>'+ offer.geoLevelName +'</td><td>' + offer.offerDate.split(" ")[0] + '</td></tr>'
 						counter ++
 					});
 					
@@ -236,9 +242,19 @@
                   </div>
                 </div>
               </div>
+
+				<!-- Lista de ofertas -->
+				<h3 style="margin-top:50px;" class="">Últimas 5 ofertas publicadas</h2>
+				<h4>Ingresá a la aplicación y postulate en los avisos de trabajo que coincidan con tu perfil.</h4>
+				
+				<div class="range range-xs-center">
+					<div class="cell-xs-10 cell-md-12">
+						<div id="jobOfferBlock"></div>
+					</div>
+				</div>
+				<!-- Lista de ofertas END -->
               
-              
-              <h4 style="margin-top:50px;"></h4>
+              <h4 style="margin-top:50px;">Más Beneficios</h4>
 
               <div class="range offset-top-50">
                 <div class="cell-sm-4"><img src="images/icon-curriculum.jpg" width="123" height="92" alt="" class="img-responsive reveal-inline-block">
@@ -427,28 +443,6 @@
               </div>
             </div>
           </section>
-<!--           Lista de ofertas -->
-          <section class="section-80 bg-caribbean context-dark">
-            <div class="navigation-wrap">
-              <nav class="navigation">
-                <ul class="navigation-list dark-section">
-                  <li><a href="#" data-custom-scroll-to="home">Inicio</a></li>
-                  <li><a href="#" data-custom-scroll-to="features">Funciones</a></li>
-                  <li class="active"><a href="#" data-custom-scroll-to="help">Soporte</a></li>
-                  <li><a href="#" data-custom-scroll-to="publish">Publicar</a></li>
-                  <li><a href="#" data-custom-scroll-to="testimonials">Testimonios</a></li>
-                </ul>
-              </nav>
-            </div>
-            <div class="shell">
-              <div class="range range-xs-center">
-                <div class="cell-xs-10 cell-md-12">
-                <div id="jobOfferBlock"></div>
-                </div>
-              </div>
-            </div>
-          </section>
-<!-- Lista de ofertas END -->
           <!--Clients-->
           <section class="section-50 bg-gray-lighter">
             <div class="shell">
