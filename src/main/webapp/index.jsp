@@ -20,7 +20,7 @@
 <!-- 			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" -->
 <!-- 			  crossorigin="anonymous"></script> -->
 			  
-			  <script src="/d2d/admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js" /></script>
+			  <script src="js/jquery-2.2.3.min.js" /></script>
 	<!--[if lt IE 10]>
 	<div style="background: #212121; padding: 10px 0; box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3); clear: both; text-align:center; position: relative; z-index:1;"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
 	<script src="js/html5shiv.min.js"></script>
@@ -46,8 +46,6 @@
 				url : 'admin/public/lastOffers',
 				type : 'GET',
 				success : function(data) {
-					
-					console.log(data)
 					
 					var counter = 0
 					var html = '<table id="jobstable" style="width:100%">'
@@ -128,7 +126,7 @@
 	</noscript>
 	<!-- End Facebook Pixel Code -->
   </head>
-  <!-- Versión de la aplicación backend: WebApp DTD v 1.03.04 -->
+  <!-- Versión de la aplicación backend: WebApp DTD v 1.03.04.B2 -->
   <body>
     <!-- Page-->
     <div class="page text-center">
