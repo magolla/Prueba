@@ -166,7 +166,7 @@ Texto del aviso
 													<div class="input-group-addon">
 														<i class="fa fa-calendar"></i>
 													</div>
-													<input type="text" name="offerHour" id="offerHour" required oninvalid="this.setCustomValidity('Este campo no puede quedar vacio.')" oninput="setCustomValidity('')">
+													<input type="text" name="offerHour" id="offerHour" required oninvalid="this.setCustomValidity('Este campo no puede quedar vacio.')" oninput="setCustomValidity('')" onblur="hourBlur(this);">
 												</div>
 											</div>
 										</div>
@@ -203,13 +203,13 @@ Texto del aviso
 								</div>
 								<div class="form-wpp-offer-bottom">
 									<div class="form-wpp-offer-bottom-title-container">
-										<span class="form-wpp-title form-wpp-title-sm">Occupation, Specialty</span>
-										<span class="form-wpp-subtitle">Para trabajos de Task</span>
+										<span id="previewInterest" class="form-wpp-title form-wpp-title-sm">Occupation, Specialty</span>
+										<span id="previewTask" class="form-wpp-subtitle">Para trabajos de Task</span>
 									</div>
 									<div style="padding:0 17px 0; display:inline-block;">
 										<span class="form-wpp-body-text">Fecha: 10/11/2017</span>
 										<span class="form-wpp-body-text">Hora: 10:29hs</span>
-										<span class="form-wpp-body-text">Zona: SECTOR ANTARTICO ARGENTINO, TIERRA DEL FUEGO</span>
+										<span id="previewZone" class="form-wpp-body-text">Zona: SECTOR ANTARTICO ARGENTINO, TIERRA DEL FUEGO</span>
 										<span class="form-wpp-body-text" style="margin:18px 0 0;">Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso </span>
 									</div>
 								</div>
@@ -296,19 +296,15 @@ Texto del aviso
 			endDate: 'now',
 			format: "dd-mm-yyyy"
 		});
-// 		$('#expirationDateForView').datepicker({
-// 			autoclose: true,
-// 			format: "HH:mm:ss"
-// 		});
 		
 		$('input[id$="offerHour"]').inputmask(
-        "hh:mm", {
-        placeholder: "HH:MM", 
-        insertMode: false, 
-        showMaskOnHover: false,
-        hourFormat: 12
-      }
-      );
+	        "hh:mm", {
+		        placeholder: "HH:MM", 
+		        insertMode: false, 
+		        showMaskOnHover: false,
+		        hourFormat: 12
+	      	}
+    	);
 		
 		
 		$(document).ready(function() {
@@ -472,6 +468,7 @@ Texto del aviso
 			    	$('#zoneName').val(ui.item.label);
 			    	$('#zoneLevel').val(ui.item.level);
 			    	$("#zones").prop('disabled', true);
+			    	$('#previewZone').text('Zona: ' + ui.item.label)
 			   	},
 			   	minLength: 3
 			});
@@ -505,6 +502,9 @@ Texto del aviso
 		
 		function loadSpecialties() {
 			occupation_id = $("#occupationsSelect").val();
+			var occupation_name = $("#occupationsSelect option:selected").text();
+			$('#previewInterest').text(occupation_name)
+			
 			$.ajax({
 		        url: 'BoOffers/specialties/' + occupation_id,
 		        type: 'GET',
@@ -529,6 +529,20 @@ Texto del aviso
 		        	$('#mobileOfferType').text("Publicar oferta temporal")
 		        }
 		}
+		
+		function hourBlur(hour) {
+			var hour = $('#offerHour')
+			console.log(hour.val())
+				
+			var res = hour.val().split(":");
+			
+			if($.isNumeric(res[0]) &&  $.isNumeric(res[1]))
+			{
+			   console.log('lo numerito')
+			}
+			
+		}
+		
 		</script>
 	</tiles:putAttribute>
 </tiles:insertDefinition>
