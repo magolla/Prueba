@@ -207,8 +207,8 @@ Texto del aviso
 										<span id="previewTask" class="form-wpp-subtitle">Para trabajos de Task</span>
 									</div>
 									<div style="padding:0 17px 0; display:inline-block;">
-										<span class="form-wpp-body-text">Fecha: 10/11/2017</span>
-										<span class="form-wpp-body-text">Hora: 10:29hs</span>
+										<span id="previewDate" class="form-wpp-body-text">Fecha: 10-11-2017</span>
+										<span id="previewHour" class="form-wpp-body-text">Hora: 10:29hs</span>
 										<span id="previewZone" class="form-wpp-body-text">Zona: SECTOR ANTARTICO ARGENTINO, TIERRA DEL FUEGO</span>
 										<span class="form-wpp-body-text" style="margin:18px 0 0;">Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso </span>
 									</div>
@@ -295,6 +295,9 @@ Texto del aviso
 			autoclose: true,
 			endDate: 'now',
 			format: "dd-mm-yyyy"
+		}).on("changeDate", function (e) {
+			console.log($('#offerDateForView').val())
+			$('#previewDate').text('Fecha:' + " " + $('#offerDateForView').val())
 		});
 		
 		$('input[id$="offerHour"]').inputmask(
@@ -538,7 +541,7 @@ Texto del aviso
 			
 			if($.isNumeric(res[0]) &&  $.isNumeric(res[1]))
 			{
-			   console.log('lo numerito')
+			   $('#previewHour').text('Hora: ' + hour.val() + 'hs')
 			}
 			
 		}
