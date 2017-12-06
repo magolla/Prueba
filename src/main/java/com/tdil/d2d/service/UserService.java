@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 
 import com.tdil.d2d.bo.dto.BONoteDTO;
+import com.tdil.d2d.bo.dto.BoJobDTO;
 import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
@@ -67,9 +68,9 @@ public interface UserService {
 
 	public boolean validateEmail(String email, String hash) throws ServiceException;
 
-	public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest) throws ServiceException;
+	public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest, User user, int offerId) throws ServiceException;
 	public boolean editJobOffer(CreateTemporaryJobOfferRequest createOfferRequest, long offerId) throws ServiceException;
-	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest) throws ServiceException;
+	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest, User user, int offerId) throws ServiceException;
 	public boolean editJobOffer(CreatePermanentJobOfferRequest createOfferRequest, long offerId) throws ServiceException;
 
 	public List<JobOfferStatusDTO> getMyOffers() throws ServiceException;
@@ -195,5 +196,7 @@ public interface UserService {
 	void deleteOfferById(int offerId) throws ServiceException, DAOException;
 
 	User getUserById(long id) throws ServiceException;
-	
+
+	public void addOffer(BoJobDTO boJob, int offerId);
+
 }

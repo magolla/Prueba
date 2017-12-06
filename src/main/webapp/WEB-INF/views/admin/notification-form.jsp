@@ -354,7 +354,6 @@ function loadSpecialtiesInput() {
 }
 
 function allSponsoredUserAction(checkboxElem) {
-	console.log(checkboxElem);
 	  if (checkboxElem.checked) {
 		  console.log("INVI");
 		  $("#sponsorsBox").css('display','none');

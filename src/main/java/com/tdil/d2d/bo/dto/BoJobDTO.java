@@ -8,7 +8,6 @@ import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 
 public class BoJobDTO {
 
-	private long id;
 	
 	private long userId;
 
@@ -36,14 +35,11 @@ public class BoJobDTO {
 
 	private String offerHour;
 	
+	private String name;
+	
+	private String lastName;
 
-	public long getId() {
-		return id;
-	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getTitle() {
 		return title;
@@ -155,7 +151,13 @@ public class BoJobDTO {
 	}
 
 	public void setOfferDateForView(String string) {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+		
+		if(string == null || string.trim().equals("")) {
+			setOfferDate(null);
+			return;
+		}
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			Date date = formatter.parse(string);
 			setOfferDate(date);
@@ -173,4 +175,20 @@ public class BoJobDTO {
 		this.offerDate = offerDate;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
 }

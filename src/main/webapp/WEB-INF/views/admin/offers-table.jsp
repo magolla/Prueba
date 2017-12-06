@@ -31,7 +31,7 @@
 											<th>Zona</th>
 											<th>Fecha Oferta</th>
 											<th>Editar</th>
-											<th>Eliminar</th>
+											<th>Cerrar Aviso</th>
 										</tr>
 									</thead>
 									<tfoot>
@@ -49,7 +49,7 @@
 											<th>Zona</th>
 											<th>Fecha Oferta</th>
 											<th>Editar</th>
-											<th>Eliminar</th>
+											<th>Cerrar Aviso</th>
 										</tr>
 										
 										
@@ -174,7 +174,7 @@
                         	 if(data=='CLOSED'){
                         		 return '';
                         	 } else {
-                        		 return "<button id='deleteButton' >Eliminar</button>";
+                        		 return "<button id='deleteButton' >Cerrar Aviso</button>";
                         	 }
                         }
                     }
@@ -240,7 +240,7 @@
         var rowData = table.row($(this).closest('tr')).data()	;
     	
     	if(this.id == 'editButton'){ 
-    		console.log("Tocaste Edit");
+    		window.location.href = '/d2d/admin/editOffer/' + rowData.id;
     	} else {
             $.get('/d2d/admin/deleteOffer',{ offerId: rowData.id }, function(data, textStatus, xhr) {
             	if(xhr.status == 200) {

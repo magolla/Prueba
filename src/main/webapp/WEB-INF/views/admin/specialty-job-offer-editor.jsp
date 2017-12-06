@@ -3,8 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<select id="specialtiesSelect" class="selectpicker specialtiesCombo" name="specialtyId">
-<option value="-1">Seleccione una Especialidad</option>
+<select id="specialtiesSelect" class="selectpicker specialtiesCombo" title="Seleccione una especialidad" name="specialtyId">
 	<c:forEach var="specialty" items="${specialtyList}">
 		<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
 	</c:forEach>
@@ -23,11 +22,14 @@
 		loadTasks();
 	});
 
-	<c:if test="${fn:length(specialtyList) == 0}">
+	<c:if test="${specialtyList[0].name == ''}">
 		$("#filterBySpecialtiesBox").addClass("hide");
+		$("#specialtiesSelect").val("${specialtyList[0].id}");
+		loadTasks();
 	</c:if>
 
-	<c:if test="${fn:length(specialtyList) > 0}">
+	<c:if test="${specialtyList[0].name != ''}">
+	console.log('${specialtyList[0].name}')
 		$("#filterBySpecialtiesBox").removeClass("hide");
 	</c:if>
 	

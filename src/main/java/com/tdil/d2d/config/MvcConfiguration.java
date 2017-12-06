@@ -14,7 +14,7 @@ import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
 @Configuration
-@ComponentScan(basePackages="com.tdil.d2d.bo.controller")
+@ComponentScan(basePackages= {"com.tdil.d2d.bo.controller","com.tdil.d2d.bo.formValidators"})
 @EnableWebMvc
 public class MvcConfiguration extends WebMvcConfigurerAdapter{
 
@@ -70,5 +70,16 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
     }
     */
+    
+//    
+//	@Bean
+//	public ReloadableResourceBundleMessageSource messageSource()
+//	{
+//		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+//		messageSource.setBasename("messages");
+////		messageSource.setDefaultEncoding("UTF-8");
+//		return messageSource;
+//		
+//	}
      
 }

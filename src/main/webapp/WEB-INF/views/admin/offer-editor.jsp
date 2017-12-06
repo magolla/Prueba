@@ -20,9 +20,9 @@
 									<h3 class="box-title">Crear o modificar Oferta de trabajo</h3>
 								</div>
 								
-<%-- 								<c:if test="${not empty msg}"> --%>
-<%-- 									<div class="msg">${msg}</div> --%>
-<%-- 								</c:if> --%>
+								<c:if test="${not empty param.confirmed}">
+									<div class="msg">${param.confirmed}</div>
+								</c:if>
 								
 <%-- 								<c:if test="${not empty errors}"> --%>
 <%-- 								    <c:forEach var="error" items="${errors}"> --%>
@@ -30,55 +30,91 @@
 <%-- 									</c:forEach> --%>
 <%-- 								</c:if> --%>
 				
-<%-- 								<form:form method="POST" modelAttribute="userForm" autocomplete="off"  action="${pageContext.request.contextPath}/admin/users/save?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data"> --%>
-
- (Determinar metodología: podría ser con un buscador)
-Seleccionar tipo (Temporal/Permanente)
-Seleccionar Ocupación
-Seleccionar Especialidad (si aplica)
-Seleccionar Tarea
-Determinar tipo de institución
-Ingresar un Título (Si es Permanente)
-Ingresar un subtítulo (Si es Permanente)
-Seleccionar Zona
-Determinar Fecha del trabajo (Si es Temporal)
-Determinar Hora del trabajo (Si es Temporal)
-Texto del aviso
-
-							<form:form method="POST" modelAttribute="jobForm"
-							autocomplete="off"
-							action="${pageContext.request.contextPath}/admin/BoOffers/save?${_csrf.parameterName}=${_csrf.token}"
+							<form:form method="POST" modelAttribute="boJobDTO" autocomplete="off"
 							enctype="multipart/form-data">
 									<div class="box-body">
-										<div class="form-group">
-											<label id="selectedUser" for="email" class="col-sm-10 control-label">Usuario al que se le cargará la oferta: [??????????]</label>
-											<form:input path="userId" id="userId" hidden="true"></form:input>
-											<div class="col-sm-2">
- 												<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#userModal">Seleccionar Usuario</button>
+										<c:if test="${empty offerId}">
+											<div class="form-group">
+												<label id="selectedUser" for="email" class="col-sm-10 control-label">Usuario al que se le cargará la oferta: [??????????]</label>
+
+												<div class="col-sm-2">
+	 												<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#userModal">Seleccionar Usuario</button>
+												</div>
 											</div>
-										</div>
-										<div class="form-group">
-											<label for="name" ">Tipo de oferta</label>
-												<div >
-													<form:radiobutton id="temporalRadio" path="permanent"  name="permanent" value="false" element="span class='radio'"></form:radiobutton><label>Temporal</label>
-												</div>
-												<div>
-													<form:radiobutton id="permanentRadio"  path="permanent" name="permanent" value="true" element="span class='radio'"></form:radiobutton><label>Permanente</label>
-												</div>
-										</div>
+										</c:if>
+										<form:input path="userId" id="userId" val='${boJobDTO.userId}' hidden="true"></form:input>
+										<form:errors path="userId"></form:errors>
+										<form:hidden id="userName" path="name" value="${boJobDTO.name}"/>
+										<form:hidden id="userLastName" path="lastName" value="${boJobDTO.lastName}"/>
+										<c:if test="${empty offerId}">
+											<div class="form-group">
+												<label for="name" ">Tipo de oferta</label>
+												<c:choose>
+													<c:when test="${boJobDTO.permanent eq true}">
+														<div>
+															<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false" element="span class='radio'"></form:radiobutton>
+															<label>Temporal</label>
+														</div>
+														<div>
+															<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true"  checked="checked" element="span class='radio'"></form:radiobutton>
+															<label>Permanente</label>
+														</div>
+													</c:when>
+													<c:otherwise>
+														<div>
+															<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false"  element="span class='radio'"></form:radiobutton>
+															<label>Temporal</label>
+														</div>
+														<div>
+															<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true" element="span class='radio'"></form:radiobutton>
+															<label>Permanente</label>
+														</div>
+													</c:otherwise>
+												</c:choose>
+											</div>
+										</c:if>
+										<c:if test="${not empty offerId}">
+											<div class="form-group" hidden="true"">
+												<label for="name" ">Tipo de oferta</label>
+												<c:choose>
+													<c:when test="${boJobDTO.permanent eq true}">
+														<div>
+															<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false" element="span class='radio'"></form:radiobutton>
+															<label>Temporal</label>
+														</div>
+														<div>
+															<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true"  checked="checked" element="span class='radio'"></form:radiobutton>
+															<label>Permanente</label>
+														</div>
+													</c:when>
+													<c:otherwise>
+														<div>
+															<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false"  element="span class='radio'"></form:radiobutton>
+															<label>Temporal</label>
+														</div>
+														<div>
+															<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true" element="span class='radio'"></form:radiobutton>
+															<label>Permanente</label>
+														</div>
+													</c:otherwise>
+												</c:choose>
+											</div>
+										</c:if>
 									<!-- Inicio del bloque de ocupaciones -->
 										<div class="row">
 											<div class="col-md-6">
 												<div class="form-group form-group-job-offer-combos">
 													<label for="name" class="control-label">Filtrar por Ocupaci&oacute;n principal</label>
 																			
-													<select id="occupationsSelect" class="selectpicker"  title="Seleccione una ocupacion" name="occupationId" required oninvalid="this.setCustomValidity('Debes seleccionar una ocupacion')">
+													<form:select id="occupationsSelect" class="selectpicker"  path="occupationId">
+<%-- 													<option value=""/><c:out value="Seleccione una ocupacion"/></option> --%>
+													<form:option value="0">Seleccione una ocupacion</form:option>
 														<c:forEach var="occupation" items="${occupationList}">
 															<option value="<c:out value="${occupation.id}"/>"><c:out value="${occupation.name}"/></option>
 														</c:forEach>
-													</select>
+													</form:select>
 												</div>
-												<div id="filterBySpecialtiesBox" class="form-group form-group-job-offer-combos <c:if test="${specialtyList == null}">hide</c:if>">
+												<div id="filterBySpecialtiesBox" class="form-group form-group-job-offer-combos <c:if test="${(specialtyList == null) || (specialtyList[0].name == '')}">hide</c:if>">
 													<label for="name" class="control-label">Filtrar por Especialidad</label>
 													
 													<div id="specialtiesSelectBox">
@@ -100,15 +136,17 @@ Texto del aviso
 														</select>
 													</div>
 												</div>
+												<form:errors path="occupationId"></form:errors>
 											</div>
 											<div class="col-md-6">
 												<div class="form-group">
 													<label for="zones" class="control-label">Seleccionar Ubicacion: </label>
-													<input id="zones" required oninvalid="this.setCustomValidity('Este campo no puede quedar vacio.')" oninput="setCustomValidity('')">
+													<input id="zones" value="${boJobDTO.geoDto.name}">
 													<button id="clearButton" type="button">Vaciar</button>
-												<form:hidden id="zoneName" path="geoDto.name" />
-												<form:hidden id="zoneId" path="geoDto.id" />
-												<form:hidden id="zoneLevel" path="geoDto.level" />
+												<form:hidden id="zoneName" path="geoDto.name" value="${boJobDTO.geoDto.name}"/>
+												<form:hidden id="zoneId" path="geoDto.id" value="${boJobDTO.geoDto.id}"/>
+												<form:hidden id="zoneLevel" path="geoDto.level" value="${boJobDTO.geoDto.level}"/>
+												<form:errors path="geoDto.name"></form:errors>
 												</div>
 											</div>
 										</div>
@@ -116,27 +154,43 @@ Texto del aviso
 											<div class="col-sm-10">
 												<div class="form-group">
 													<label for="name" ">Tipo de institucion</label>
+
+														
+											<c:choose>
+												<c:when test="${boJobDTO.privateInstitution eq true}">
 														<div >
-<!-- 															<input type="radio" name="institutionType" value="private"><label>Privada</label> -->
+															<form:radiobutton path="privateInstitution" checked="checked" value="true" element="span class='radio'"></form:radiobutton><label>Privada</label>
+														</div>
+														<div>
+															<form:radiobutton path="privateInstitution" value="false" element="span class='radio'"></form:radiobutton><label>Publica</label>
+														</div>
+												</c:when>
+												<c:otherwise>
+														<div >
 															<form:radiobutton path="privateInstitution" value="true" element="span class='radio'"></form:radiobutton><label>Privada</label>
 														</div>
 														<div>
-<!-- 															<input type="radio" name="institutionType" value="public" ><label>Publica</label> -->
-																<form:radiobutton path="privateInstitution" value="false" element="span class='radio'"></form:radiobutton><label>Publica</label>
+															<form:radiobutton path="privateInstitution" value="false" checked="checked" element="span class='radio'"></form:radiobutton><label>Publica</label>
 														</div>
+												</c:otherwise>
+											</c:choose>
+														
 												</div>
 											</div>
 										</div>
 										<div class="form-group">
 											<label>Nombre del profesional o empresa(Opcional): </label>
 											<form:input id="companyScreenName" path="companyScreenName"/>
+											<form:errors path="companyScreenName"></form:errors>
 										</div>
 										<div id="titlesBox" hidden="true">
 											<div class="col-sm-4">
-												<label>Ingrese un Titulo <input></label>
+												<label>Ingrese un Titulo <form:input path="title" var="${boJobDTO.title}"/></label>
+												<form:errors path="title"></form:errors>
 											</div>
 											<div class="col-sm-12">
-												<label>Ingrese un Subtitulo <input></label>
+												<label>Ingrese un Subtitulo <form:input path="subtitle" var="${boJobDTO.subtitle}"/></label>
+												<form:errors path="subtitle"></form:errors>
 											</div>
 										</div>
 									<!--Fecha de Publicacion y de Expiracion -->
@@ -150,9 +204,10 @@ Texto del aviso
 														<i class="fa fa-calendar"></i>
 													</div>
 													<input type="text" class="form-control pull-right"
-														id="offerDateForView" name="offerDateForView" required oninvalid="this.setCustomValidity('Este campo no puede quedar vacio.')" oninput="setCustomValidity('')"
-														value="${noteForm.publishingDateForView}"
+														id="offerDateForView" name="offerDateForView" 
+														value="${boJobDTO.offerDateForView}"
 														data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+														<form:errors path="offerDate"></form:errors>
 												</div>
 											</div>
 										</div>
@@ -166,20 +221,29 @@ Texto del aviso
 													<div class="input-group-addon">
 														<i class="fa fa-calendar"></i>
 													</div>
-													<input type="text" name="offerHour" id="offerHour" required oninvalid="this.setCustomValidity('Este campo no puede quedar vacio.')" oninput="setCustomValidity('')" onblur="hourBlur(this);">
+													<form:input type="text" path="offerHour" id="offerHour"></form:input>
+													<form:errors path="offerHour"></form:errors>
 												</div>
 											</div>
 										</div>
 										<!--Fecha de Publicacion y de Expiracion FIN -->
 										
 										<div class="col-sm-4">
-											<form:textarea path="offerText" rows="20" cols="155" required="true" oninvalid="this.setCustomValidity('Este campo no puede quedar vacio.')" oninput="setCustomValidity('')"></form:textarea>
+											<form:textarea id="offerText" path="offerText" rows="20" cols="155"></form:textarea>
 										</div>
 									</div>
-									
-									<div class="box-footer">
-										<button type="submit" class="btn btn-info pull-right">Guardar y publicar</button>
-									</div>
+										<c:choose>
+											<c:when test="${empty offerId}">
+												 <div class="box-footer">
+													<button type="submit" class="btn btn-info pull-right" formaction="${pageContext.request.contextPath}/admin/BoOffers/save?${_csrf.parameterName}=${_csrf.token}">Guardar y publicar</button>
+												</div>
+											</c:when>
+											<c:otherwise>
+												<div class="box-footer">
+													<button type="submit" class="btn btn-info pull-right" formaction="${pageContext.request.contextPath}/admin/BoOffers/edit/${offerId}?${_csrf.parameterName}=${_csrf.token}">Guardar y publicar</button>
+												</div>
+											</c:otherwise>
+										</c:choose>
 									</form:form>
 							</div>
 						</div>
@@ -207,10 +271,16 @@ Texto del aviso
 										<span id="previewTask" class="form-wpp-subtitle">Para trabajos de Task</span>
 									</div>
 									<div style="padding:0 17px 0; display:inline-block;">
-										<span id="previewDate" class="form-wpp-body-text">Fecha: 10-11-2017</span>
-										<span id="previewHour" class="form-wpp-body-text">Hora: 10:29hs</span>
+											<div id="previewTitlesBox">
+												<span id="previewTitle" class="form-wpp-body-text">Titulo: Titulo de Oferta</span>
+												<span id="previewSubtitle" class="form-wpp-body-text">Subtitulo: Subtitulo de Oferta</span>
+											</div>
+											<div id="previewDateBox">
+												<span id="previewDate" class="form-wpp-body-text">Fecha: 10-11-2017</span>
+												<span id="previewHour" class="form-wpp-body-text">Hora: 10:29hs</span>
+											</div>
 										<span id="previewZone" class="form-wpp-body-text">Zona: SECTOR ANTARTICO ARGENTINO, TIERRA DEL FUEGO</span>
-										<span class="form-wpp-body-text" style="margin:18px 0 0;">Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso </span>
+										<span id="previewOfferText" class="form-wpp-body-text" style="margin:18px 0 0;">Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso </span>
 									</div>
 								</div>
 							</div>
@@ -296,7 +366,6 @@ Texto del aviso
 			endDate: 'now',
 			format: "dd-mm-yyyy"
 		}).on("changeDate", function (e) {
-			console.log($('#offerDateForView').val())
 			$('#previewDate').text('Fecha:' + " " + $('#offerDateForView').val())
 		});
 		
@@ -369,66 +438,58 @@ Texto del aviso
 		    } );
 		    
 			$('#users tbody').on( 'click', 'button', function (e) {
-				
-				
-// 				console.log("val anterior: " + $('#userId').val());
-				
 				var table = $('#users').DataTable();
 				var data = table.row( $(this).parents('tr') ).data();
 				$('#selectedUser').text("Usuario al que se le cargará la oferta: " + data.name + " " + data.lastname);
 				$('#userId').text(data.id);
 				$('#userId').val(data.id);
+				$('#userName').val(data.name);
+				$('#userLastName').val(data.lastname);
 				$('#userModal').modal('toggle');
 				$('#previewName').text(data.name + " " + data.lastname);
 				
 				
 			} );
 			
+			if($('#permanentRadio').is(":checked")) {
+				checkOfferTypeRadio('Permanent');
+			}	else {
+				checkOfferTypeRadio('Temporal');
+			}
 			
 			
 			// Esto se encarga de hacer visible Titulo y Subtitulo en caso de que la oferta sea permanente.
 			 $('#permanentRadio').change(function() {
-				 console.log(this.value)
 				 checkOfferTypeRadio('Permanent');
 			  });
 			
 			 $('#temporalRadio').change(function() {
-				 console.log(this.value)
 				 checkOfferTypeRadio('Temporal');
 			  });
 			
-			  
-			
 			
 			//SET OCCUPATION
-			$('#occupationsSelect').selectpicker('val', ${filterForm.occupationId});
+			$('#occupationsSelect').selectpicker('val', ${boJobDTO.occupationId});
 		
 			$('#occupationsSelect').on('changed.bs.select', function (e) {
 				loadSpecialties();
 			});
 			
 			<c:if test="${specialtyList != null}">
-				$('#specialtiesSelect').selectpicker('val', ${filterForm.specialtyId});
+			
+				$('#specialtiesSelect').selectpicker('val', ${boJobDTO.specialtyId});
 				$("#specialtiesSelect").on('changed.bs.select', function (e) {
 					loadTasks();
 				});
 			</c:if>
 			
 			<c:if test="${taskList != null}">
-				$('#tasksSelect').selectpicker('val', ${filterForm.taskId});
+				$('#tasksSelect').selectpicker('val', ${boJobDTO.taskId});
 			</c:if>
 			
-			//Set GEOS
-			$('#geosSelect').selectpicker('val', ${filterForm.geoLevels2});
 			
-			$('#geosSelect').on('changed.bs.select', function (e) {
-				loadGeosInput();
-			});
 			
-			arrayGeosIds = [];
-			
-			loadGeosInput();
-			
+			// Zonas
 			$( "#clearButton" ).click(function() {
 		    	$('#zoneId').val("");
 		    	$('#zoneName').val("");
@@ -437,19 +498,32 @@ Texto del aviso
 		    	$("#zones").prop('disabled', false);
 			});
 			
+			<c:if test="${boJobDTO.geoDto.id != 0}">
+				$("#zones").prop('disabled', true);
+			</c:if>
+			
+			
 			
 			// Funciones encargadas de actualizar el preview Mobile
 			
 			$( "#companyScreenName" ).keyup(function() {
-				console.log($(this).val())
 				  $('#previewCompanyScreen').text($(this).val());
+			});
+			
+			$( "#offerText" ).keyup(function() {
+				  $('#previewOfferText').text($(this).val());
+			});
+			
+			
+			$( "#offerHour").keyup(function() {
+				hourBlur(this.text)
 			});
 			
 			// La funcion con el autoComplete de Georeferencia
 			$("#zones").autocomplete({
 			    source: function (request, response) {
 			        $.ajax({
-			            url: "BoOffers/countries/",
+			            url: "countries/",
 			            data: { query: request.term },
 			            success: function (data) {
 			                var transformed = $.map(data, function (el) {
@@ -476,6 +550,8 @@ Texto del aviso
 			   	minLength: 3
 			});
 
+			//Se carga el preview
+			loadPreviewEdit();
 			
 		} );
 		
@@ -506,8 +582,7 @@ Texto del aviso
 		function loadSpecialties() {
 			occupation_id = $("#occupationsSelect").val();
 			var occupation_name = $("#occupationsSelect option:selected").text();
-			$('#previewInterest').text(occupation_name)
-			
+			$('#previewInterest').text(occupation_name);
 			$.ajax({
 		        url: 'BoOffers/specialties/' + occupation_id,
 		        type: 'GET',
@@ -522,12 +597,16 @@ Texto del aviso
 		function checkOfferTypeRadio(value) {
 		      if(value == 'Permanent') {
 		            $('#titlesBox').attr("hidden", false)
+		            $('#previewTitlesBox').attr("hidden", false)
 		            $('#publishDate').attr("hidden", true)
+		            $('#previewDateBox').attr("hidden", true)
 		            $('#expirationDate').attr("hidden", true)
 					$('#mobileOfferType').text("Publicar oferta permanente")
 		        } else {
 		        	$('#titlesBox').attr("hidden", true)
+		        	$('#previewTitlesBox').attr("hidden", true)
 		        	$('#publishDate').attr("hidden", false)
+		        	$('#previewDateBox').attr("hidden", false)
 		        	$('#expirationDate').attr("hidden", false)
 		        	$('#mobileOfferType').text("Publicar oferta temporal")
 		        }
@@ -535,7 +614,6 @@ Texto del aviso
 		
 		function hourBlur(hour) {
 			var hour = $('#offerHour')
-			console.log(hour.val())
 				
 			var res = hour.val().split(":");
 			
@@ -545,6 +623,69 @@ Texto del aviso
 			}
 			
 		}
+		
+		
+		function loadPreviewEdit() {
+			<c:if test="${not empty boJobDTO.geoDto.name}">
+				$('#previewZone').text('Zona: ' + "${boJobDTO.geoDto.name}");
+			</c:if>
+			
+			<c:if test="${not empty boJobDTO.offerHour}">
+				var hour = ${boJobDTO.offerHour}
+				hour = hour.toString()
+				$('#previewHour').text('Hora: ' + hour.slice(0, 2) + ":" + hour.slice(2, 4) + " " + 'hs')
+			</c:if>
+			
+				
+			<c:if test="${not empty boJobDTO.offerDateForView}">
+				$('#previewDate').text('Fecha:' + " " + $('#offerDateForView').val())
+			</c:if>
+			<c:if test="${not empty boJobDTO.taskId}">
+			
+				var occupation = $("#occupationsSelect  option:selected").text();
+				var specialty = $('#specialtiesSelect  option:selected').text();
+				var task = $('#tasksSelect  option:selected').text();
+			
+				if(specialty == ''){
+					$('#previewInterest').text(occupation)	
+				} else {
+					$('#previewInterest').text(occupation + ', ' + specialty)
+				}
+				
+				$('#previewTask').text('Para trabajos de ' + task)
+			</c:if>
+			<c:if test="${not empty boJobDTO.offerText}">
+				$('#previewOfferText').text('${boJobDTO.offerText}')
+			</c:if>
+				
+			
+			<c:if test="${not empty boJobDTO.name}">
+					$('#selectedUser').text("Usuario al que se le cargará la oferta: " + "${boJobDTO.name}" + " " + "${boJobDTO.lastName}");
+			</c:if>
+			
+			<c:if test="${not empty boJobDTO.name}">
+				$('#previewName').text('${boJobDTO.name}' + " " + '${boJobDTO.lastName}');
+			</c:if>
+			
+			/*
+			<div class="form-wpp-offer-top-names-container">
+			<span id="previewName" class="form-wpp-title form-wpp-title-sm">Nombre y Apellido</span>
+			<span id="previewCompanyScreen" class="form-wpp-subtitle">Company name</span>
+		</div>
+	</div>
+	<div class="form-wpp-offer-bottom">
+		<div class="form-wpp-offer-bottom-title-container">
+			<span id="previewInterest" class="form-wpp-title form-wpp-title-sm">Occupation, Specialty</span>
+			<span id="previewTask" class="form-wpp-subtitle">Para trabajos de Task</span>
+		</div>
+		<div style="padding:0 17px 0; display:inline-block;">
+			<span id="previewDate" class="form-wpp-body-text">Fecha: 10-11-2017</span>
+			<span id="previewHour" class="form-wpp-body-text">Hora: 10:29hs</span>
+			<span id="previewZone" class="form-wpp-body-text">Zona: SECTOR ANTARTICO ARGENTINO, TIERRA DEL FUEGO</span>
+			<span id="previewOfferText" 
+			*/
+		}
+			
 		
 		</script>
 	</tiles:putAttribute>
