@@ -33,218 +33,227 @@
 							<form:form method="POST" modelAttribute="boJobDTO" autocomplete="off"
 							enctype="multipart/form-data">
 									<div class="box-body">
+									<div class="form-group">
 										<c:if test="${empty offerId}">
-											<div class="form-group">
-												<label id="selectedUser" for="email" class="col-sm-10 control-label">Usuario al que se le cargará la oferta: [??????????]</label>
-
-												<div class="col-sm-2">
-	 												<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#userModal">Seleccionar Usuario</button>
-												</div>
+											<label class="col-sm-10 control-label">Usuario al que se le cargará la oferta: <span id="selectedUser" class="unselectedUser"> USUARIO NO SELECCIONADO</span></label>
+											<div class="col-sm-2">
+												<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#userModal">Seleccionar Usuario</button>
+												<form:errors path="userId" class="error-text"></form:errors>
 											</div>
 										</c:if>
 										<form:input path="userId" id="userId" val='${boJobDTO.userId}' hidden="true"></form:input>
-										<form:errors path="userId"></form:errors>
 										<form:hidden id="userName" path="name" value="${boJobDTO.name}"/>
 										<form:hidden id="userLastName" path="lastName" value="${boJobDTO.lastName}"/>
-										<c:if test="${empty offerId}">
-											<div class="form-group">
-												<label for="name" ">Tipo de oferta</label>
-												<c:choose>
-													<c:when test="${boJobDTO.permanent eq true}">
-														<div>
-															<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false" element="span class='radio'"></form:radiobutton>
-															<label>Temporal</label>
-														</div>
-														<div>
-															<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true"  checked="checked" element="span class='radio'"></form:radiobutton>
-															<label>Permanente</label>
-														</div>
-													</c:when>
-													<c:otherwise>
-														<div>
-															<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false"  element="span class='radio'"></form:radiobutton>
-															<label>Temporal</label>
-														</div>
-														<div>
-															<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true" element="span class='radio'"></form:radiobutton>
-															<label>Permanente</label>
-														</div>
-													</c:otherwise>
-												</c:choose>
-											</div>
-										</c:if>
-										<c:if test="${not empty offerId}">
-											<div class="form-group" hidden="true"">
-												<label for="name" ">Tipo de oferta</label>
-												<c:choose>
-													<c:when test="${boJobDTO.permanent eq true}">
-														<div>
-															<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false" element="span class='radio'"></form:radiobutton>
-															<label>Temporal</label>
-														</div>
-														<div>
-															<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true"  checked="checked" element="span class='radio'"></form:radiobutton>
-															<label>Permanente</label>
-														</div>
-													</c:when>
-													<c:otherwise>
-														<div>
-															<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false"  element="span class='radio'"></form:radiobutton>
-															<label>Temporal</label>
-														</div>
-														<div>
-															<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true" element="span class='radio'"></form:radiobutton>
-															<label>Permanente</label>
-														</div>
-													</c:otherwise>
-												</c:choose>
-											</div>
-										</c:if>
-									<!-- Inicio del bloque de ocupaciones -->
-										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group form-group-job-offer-combos">
-													<label for="name" class="control-label">Filtrar por Ocupaci&oacute;n principal</label>
-																			
-													<form:select id="occupationsSelect" class="selectpicker"  path="occupationId">
-<%-- 													<option value=""/><c:out value="Seleccione una ocupacion"/></option> --%>
-													<form:option value="0">Seleccione una ocupacion</form:option>
-														<c:forEach var="occupation" items="${occupationList}">
-															<option value="<c:out value="${occupation.id}"/>"><c:out value="${occupation.name}"/></option>
-														</c:forEach>
-													</form:select>
-												</div>
-												<div id="filterBySpecialtiesBox" class="form-group form-group-job-offer-combos <c:if test="${(specialtyList == null) || (specialtyList[0].name == '')}">hide</c:if>">
-													<label for="name" class="control-label">Filtrar por Especialidad</label>
-													
-													<div id="specialtiesSelectBox">
-														<select id="specialtiesSelect" class="selectpicker" title="" name="specialtyId">
-															<c:forEach var="specialty" items="${specialtyList}">
-																<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
-															</c:forEach>
-														</select>
-													</div>					
-												</div>
-												<div id="filterByTasksBox" class="form-group form-group-job-offer-combos <c:if test="${taskList == null}">hide</c:if>">
-													<label for="name" class="control-label">Filtrar por Tarea</label>
-													
-													<div id="tasksSelectBox">					
-														<select id="tasksSelect" class="selectpicker" title="" name="taskId">
-															<c:forEach var="task" items="${taskList}">
-																<option value="<c:out value="${task.id}"/>"><c:out value="${task.name}"/></option>
-															</c:forEach>
-														</select>
-													</div>
-												</div>
-												<form:errors path="occupationId"></form:errors>
-											</div>
-											<div class="col-md-6">
-												<div class="form-group">
-													<label for="zones" class="control-label">Seleccionar Ubicacion: </label>
-													<input id="zones" value="${boJobDTO.geoDto.name}">
-													<button id="clearButton" type="button">Vaciar</button>
-												<form:hidden id="zoneName" path="geoDto.name" value="${boJobDTO.geoDto.name}"/>
-												<form:hidden id="zoneId" path="geoDto.id" value="${boJobDTO.geoDto.id}"/>
-												<form:hidden id="zoneLevel" path="geoDto.level" value="${boJobDTO.geoDto.level}"/>
-												<form:errors path="geoDto.name"></form:errors>
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-10">
-												<div class="form-group">
-													<label for="name" ">Tipo de institucion</label>
-
-														
-											<c:choose>
-												<c:when test="${boJobDTO.privateInstitution eq true}">
-														<div >
-															<form:radiobutton path="privateInstitution" checked="checked" value="true" element="span class='radio'"></form:radiobutton><label>Privada</label>
-														</div>
-														<div>
-															<form:radiobutton path="privateInstitution" value="false" element="span class='radio'"></form:radiobutton><label>Publica</label>
-														</div>
-												</c:when>
-												<c:otherwise>
-														<div >
-															<form:radiobutton path="privateInstitution" value="true" element="span class='radio'"></form:radiobutton><label>Privada</label>
-														</div>
-														<div>
-															<form:radiobutton path="privateInstitution" value="false" checked="checked" element="span class='radio'"></form:radiobutton><label>Publica</label>
-														</div>
-												</c:otherwise>
-											</c:choose>
-														
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<label>Nombre del profesional o empresa(Opcional): </label>
-											<form:input id="companyScreenName" path="companyScreenName"/>
-											<form:errors path="companyScreenName"></form:errors>
-										</div>
-										<div id="titlesBox" hidden="true">
-											<div class="col-sm-4">
-												<label>Ingrese un Titulo <form:input path="title" var="${boJobDTO.title}"/></label>
-												<form:errors path="title"></form:errors>
-											</div>
-											<div class="col-sm-12">
-												<label>Ingrese un Subtitulo <form:input path="subtitle" var="${boJobDTO.subtitle}"/></label>
-												<form:errors path="subtitle"></form:errors>
-											</div>
-										</div>
-									<!--Fecha de Publicacion y de Expiracion -->
-										<div id="publishDate" class="form-group">
-											<div class=col-sm-2>
-												<label for="content" class="control-label">Fecha</label>
-											</div>
-											<div class=col-sm-10>
-												<div class="input-group date" id="publishDatePicker">
-													<div class="input-group-addon">
-														<i class="fa fa-calendar"></i>
-													</div>
-													<input type="text" class="form-control pull-right"
-														id="offerDateForView" name="offerDateForView" 
-														value="${boJobDTO.offerDateForView}"
-														data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
-														<form:errors path="offerDate"></form:errors>
-												</div>
-											</div>
-										</div>
-
-										<div id="expirationDate" class="form-group">
-											<div class=col-sm-2>
-												<label for="content" class="control-label">Hora</label>
-											</div>
-											<div class=col-sm-10>
-												<div class="input-group date">
-													<div class="input-group-addon">
-														<i class="fa fa-calendar"></i>
-													</div>
-													<form:input type="text" path="offerHour" id="offerHour"></form:input>
-													<form:errors path="offerHour"></form:errors>
-												</div>
-											</div>
-										</div>
-										<!--Fecha de Publicacion y de Expiracion FIN -->
-										
-										<div class="col-sm-4">
-											<form:textarea id="offerText" path="offerText" rows="20" cols="155"></form:textarea>
-										</div>
 									</div>
+										<!--El siguiente div se oculta hasta que no se seleccione un usuario -->
 										<c:choose>
-											<c:when test="${empty offerId}">
-												 <div class="box-footer">
-													<button type="submit" class="btn btn-info pull-right" formaction="${pageContext.request.contextPath}/admin/BoOffers/save?${_csrf.parameterName}=${_csrf.token}">Guardar y publicar</button>
-												</div>
+											<c:when test="${boJobDTO.userId != 0}">
+												<div id="hideableFormPart">
 											</c:when>
 											<c:otherwise>
-												<div class="box-footer">
-													<button type="submit" class="btn btn-info pull-right" formaction="${pageContext.request.contextPath}/admin/BoOffers/edit/${offerId}?${_csrf.parameterName}=${_csrf.token}">Guardar y publicar</button>
-												</div>
+												<div id="hideableFormPart" hidden="true">
 											</c:otherwise>
 										</c:choose>
+											<c:if test="${empty offerId}">
+												<div class="form-group">
+													<label for="name" ">Tipo de oferta</label>
+													<c:choose>
+														<c:when test="${boJobDTO.permanent eq true}">
+															<div>
+																<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false" element="span class='radio'"></form:radiobutton>
+																<label>Temporal</label>
+															</div>
+															<div>
+																<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true"  checked="checked" element="span class='radio'"></form:radiobutton>
+																<label>Permanente</label>
+															</div>
+														</c:when>
+														<c:otherwise>
+															<div>
+																<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false"  element="span class='radio'"></form:radiobutton>
+																<label>Temporal</label>
+															</div>
+															<div>
+																<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true" element="span class='radio'"></form:radiobutton>
+																<label>Permanente</label>
+															</div>
+														</c:otherwise>
+													</c:choose>
+												</div>
+											</c:if>
+											<c:if test="${not empty offerId}">
+												<div class="form-group" hidden="true"">
+													<label for="name" ">Tipo de oferta</label>
+													<c:choose>
+														<c:when test="${boJobDTO.permanent eq true}">
+															<div>
+																<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false" element="span class='radio'"></form:radiobutton>
+																<label>Temporal</label>
+															</div>
+															<div>
+																<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true"  checked="checked" element="span class='radio'"></form:radiobutton>
+																<label>Permanente</label>
+															</div>
+														</c:when>
+														<c:otherwise>
+															<div>
+																<form:radiobutton id="temporalRadio" path="permanent" name="permanent" value="false"  element="span class='radio'"></form:radiobutton>
+																<label>Temporal</label>
+															</div>
+															<div>
+																<form:radiobutton id="permanentRadio" path="permanent" name="permanent" value="true" element="span class='radio'"></form:radiobutton>
+																<label>Permanente</label>
+															</div>
+														</c:otherwise>
+													</c:choose>
+												</div>
+											</c:if>
+										<!-- Inicio del bloque de ocupaciones -->
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group form-group-job-offer-combos">
+														<label for="name" class="control-label">Filtrar por Ocupaci&oacute;n principal</label>
+																				
+														<form:select id="occupationsSelect" class="selectpicker"  path="occupationId">
+	<%-- 													<option value=""/><c:out value="Seleccione una ocupacion"/></option> --%>
+														<form:option value="0">Seleccione una ocupacion</form:option>
+															<c:forEach var="occupation" items="${occupationList}">
+																<option value="<c:out value="${occupation.id}"/>"><c:out value="${occupation.name}"/></option>
+															</c:forEach>
+														</form:select>
+													</div>
+													<div id="filterBySpecialtiesBox" class="form-group form-group-job-offer-combos <c:if test="${(specialtyList == null) || (specialtyList[0].name == '')}">hide</c:if>">
+														<label for="name" class="control-label">Filtrar por Especialidad</label>
+														
+														<div id="specialtiesSelectBox">
+															<select id="specialtiesSelect" class="selectpicker" title="" name="specialtyId">
+																<c:forEach var="specialty" items="${specialtyList}">
+																	<option value="<c:out value="${specialty.id}"/>"><c:out value="${specialty.name}"/></option>
+																</c:forEach>
+															</select>
+														</div>					
+													</div>
+													<div id="filterByTasksBox" class="form-group form-group-job-offer-combos <c:if test="${taskList == null}">hide</c:if>">
+														<label for="name" class="control-label">Filtrar por Tarea</label>
+														
+														<div id="tasksSelectBox">					
+															<select id="tasksSelect" class="selectpicker" title="" name="taskId">
+																<c:forEach var="task" items="${taskList}">
+																	<option value="<c:out value="${task.id}"/>"><c:out value="${task.name}"/></option>
+																</c:forEach>
+															</select>
+														</div>
+													</div>
+													<form:errors path="occupationId" class="error-text"></form:errors>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label for="zones" class="control-label">Seleccionar Ubicacion: </label>
+														<input id="zones" value="${boJobDTO.geoDto.name}">
+														<button id="clearButton" type="button">Vaciar</button>
+														<form:hidden id="zoneName" path="geoDto.name" value="${boJobDTO.geoDto.name}"/>
+														<form:hidden id="zoneId" path="geoDto.id" value="${boJobDTO.geoDto.id}"/>
+														<form:hidden id="zoneLevel" path="geoDto.level" value="${boJobDTO.geoDto.level}"/>
+														<form:errors path="geoDto.name" class="col-md-6 error-text"></form:errors>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-sm-10">
+													<div class="form-group">
+														<label for="name" ">Tipo de institucion</label>
+	
+															
+												<c:choose>
+													<c:when test="${boJobDTO.privateInstitution eq true}">
+															<div >
+																<form:radiobutton path="privateInstitution" checked="checked" value="true" element="span class='radio'"></form:radiobutton><label>Privada</label>
+															</div>
+															<div>
+																<form:radiobutton path="privateInstitution" value="false" element="span class='radio'"></form:radiobutton><label>Publica</label>
+															</div>
+													</c:when>
+													<c:otherwise>
+															<div >
+																<form:radiobutton path="privateInstitution" value="true" element="span class='radio'"></form:radiobutton><label>Privada</label>
+															</div>
+															<div>
+																<form:radiobutton path="privateInstitution" value="false" checked="checked" element="span class='radio'"></form:radiobutton><label>Publica</label>
+															</div>
+													</c:otherwise>
+												</c:choose>
+															
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>Nombre del profesional o empresa(Opcional): </label>
+												<form:input id="companyScreenName" path="companyScreenName"/>
+												<form:errors path="companyScreenName" class="error-text"></form:errors>
+											</div>
+											<div id="titlesBox" hidden="true">
+												<div class="col-sm-4">
+													<label>Ingrese un Titulo <form:input id="offerTitle" path="title" var="${boJobDTO.title}"/></label>
+												</div>
+												<form:errors path="title" class="col-sm-10 error-text"></form:errors>
+												<div class="col-sm-12">
+													<label>Ingrese un Subtitulo <form:input id="offerSubtitle" path="subtitle" var="${boJobDTO.subtitle}"/></label>
+												</div>
+												<form:errors path="subtitle" class="col-sm-10 error-text"></form:errors>
+											</div>
+										<!--Fecha de Publicacion y de Expiracion -->
+											<div id="dateForOffer" class="form-group">
+												<div class=col-sm-2>
+													<label for="content" class="control-label">Fecha</label>
+												</div>
+												<div class=col-sm-10>
+													<div class="input-group date" id="publishDatePicker">
+														<div class="input-group-addon">
+															<i class="fa fa-calendar"></i>
+														</div>
+														<input type="text" class="form-control pull-right"
+															id="offerDateForView" name="offerDateForView" 
+															value="${boJobDTO.offerDateForView}"
+															data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+													</div>
+													<form:errors path="offerDate" class="error-text"></form:errors>
+												</div>
+											</div>
+											<div id="hourForOffer" class="form-group">
+												<div class=col-sm-2>
+													<label for="content" class="control-label">Hora</label>
+												</div>
+												<div class=col-sm-10>
+													<div class="input-group date">
+														<div class="input-group-addon">
+															<i class="fa fa-calendar"></i>
+														</div>
+														<form:input type="text" path="offerHour" id="offerHour"></form:input>
+													</div>
+													<form:errors path="offerHour" class="error-text"></form:errors>
+												</div>
+											</div>
+											<!--Fecha de Publicacion y de Expiracion FIN -->
+											
+											<div class="col-sm-4">
+												<form:textarea id="offerText" path="offerText" rows="20" cols="155"></form:textarea>
+												<form:errors path="offerText" class="error-text"></form:errors>
+											</div>
+											<c:choose>
+												<c:when test="${empty offerId}">
+													 <div class="box-footer">
+														<button type="submit" class="btn btn-info pull-right" formaction="${pageContext.request.contextPath}/admin/BoOffers/save?${_csrf.parameterName}=${_csrf.token}">Guardar y publicar</button>
+													</div>
+												</c:when>
+												<c:otherwise>
+													<div class="box-footer">
+														<button type="submit" class="btn btn-info pull-right" formaction="${pageContext.request.contextPath}/admin/BoOffers/edit/${offerId}?${_csrf.parameterName}=${_csrf.token}">Guardar y publicar</button>
+													</div>
+												</c:otherwise>
+											</c:choose>
+										</div>
 									</form:form>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -254,7 +263,15 @@
 						<div class="form-wpp-offer">
 							<div>
 								<div class="form-wpp-offer-top">
-									<div class="form-wpp-offer-top-avatar"><img src="<c:url value="/images/user-philip-more-80x80.jpg" />"></div>
+								<c:choose>
+									<c:when test="${empty user.avatar}">
+										<div  class="form-wpp-offer-top-avatar"><img id="userAvatar" src="<c:url value="/images/ic_avatar.png" />"></div>
+									</c:when>
+									<c:otherwise>
+										<div  class="form-wpp-offer-top-avatar"><img id="userAvatar" src="<c:url value="data:image/png;base64,${user.avatar}" />"></div>
+									</c:otherwise>
+								</c:choose>
+									
 									<div class="form-wpp-offer-top-mask"><img src="<c:url value="/images/admin/abm-offers/mask-avatar.png" />"></div>
 									<div class="form-wpp-offer-top-title-container">
 										<span class="form-wpp-title" id="mobileOfferType">Publicar oferta temporal</span>
@@ -272,47 +289,45 @@
 									</div>
 									<div style="padding:0 17px 0; display:inline-block;">
 											<div id="previewTitlesBox">
-												<span id="previewTitle" class="form-wpp-body-text">Titulo: Titulo de Oferta</span>
-												<span id="previewSubtitle" class="form-wpp-body-text">Subtitulo: Subtitulo de Oferta</span>
+												<span id="previewTitle" class="form-wpp-body-text">Titulo: </span>
+												<span id="previewSubtitle" class="form-wpp-body-text">Subtitulo: </span>
 											</div>
 											<div id="previewDateBox">
-												<span id="previewDate" class="form-wpp-body-text">Fecha: 10-11-2017</span>
-												<span id="previewHour" class="form-wpp-body-text">Hora: 10:29hs</span>
+												<span id="previewDate" class="form-wpp-body-text">Fecha: </span>
+												<span id="previewHour" class="form-wpp-body-text">Hora: </span>
 											</div>
-										<span id="previewZone" class="form-wpp-body-text">Zona: SECTOR ANTARTICO ARGENTINO, TIERRA DEL FUEGO</span>
-										<span id="previewOfferText" class="form-wpp-body-text" style="margin:18px 0 0;">Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso Texto del aviso </span>
+										<span id="previewZone" class="form-wpp-body-text">Zona: </span>
+										<span id="previewOfferText" class="form-wpp-body-text" style="margin:18px 0 0;"></span>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 		</section>
 		
 		
 		<!-- Modal de usuarios -->
 		<div id="userModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-lg">
-		
 		    <!-- Modal content-->
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal">&times;</button>
-		        <h4 class="modal-title">Modal Header</h4>
+		        <h4 class="modal-title">Seleccionar usuario</h4>
 		      </div>
-		      <div class="modal-body">
-			  	<section class="content">
-				 <div class="row">
-			        <div class="col-md-12">
-			          <!-- Custom Tabs -->
-			          <div class="nav-tabs-custom">
-			            <ul class="nav nav-tabs">
-			              <li  class="active"><a href="#tab_1" >Usuarios Publicos</a></li>
-			            </ul>
-			            <div class="tab-content">
+		      <div id="bodyModalBootstrap" class="modal-body">
+<!-- 			  	<section class="content"> -->
+<!-- 				 <div class="row"> -->
+<!-- 			        <div class="col-md-12"> -->
+<!-- 			          Custom Tabs -->
+<!-- 			          <div class="nav-tabs-custom"> -->
+<!-- 			            <ul class="nav nav-tabs"> -->
+<!-- 			              <li  class="active"><a href="#tab_1" >Usuarios Publicos</a></li> -->
+<!-- 			            </ul> -->
+<!-- 			            <div class="tab-content"> -->
 			             
-			              <div class="tab-pane active" id="tab_1" style="margin-top:15px">
+<!-- 			              <div class="tab-pane active" id="tab_1" style="margin-top:15px"> -->
 			              
 			              			<table id="users" class="display" cellspacing="0" width="100%">
 								        <thead>
@@ -343,15 +358,15 @@
 								        </tfoot>
 								    </table>
 								
-			              </div>
-			             <!-- /.tab-pane -->
-			            </div>
-			            <!-- /.tab-content -->
-			          </div>
-			          <!-- nav-tabs-custom -->
-			        </div>
-		        </div>
-			</section>
+<!-- 			              </div> -->
+<!-- 			             /.tab-pane -->
+<!-- 			            </div> -->
+<!-- 			            /.tab-content -->
+<!-- 			          </div> -->
+<!-- 			          nav-tabs-custom -->
+<!-- 			        </div> -->
+<!-- 		        </div> -->
+<!-- 			</section> -->
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -363,7 +378,7 @@
 		
 		$('#offerDateForView').datepicker({
 			autoclose: true,
-			endDate: 'now',
+			startDate: 'now',
 			format: "dd-mm-yyyy"
 		}).on("changeDate", function (e) {
 			$('#previewDate').text('Fecha:' + " " + $('#offerDateForView').val())
@@ -440,15 +455,20 @@
 			$('#users tbody').on( 'click', 'button', function (e) {
 				var table = $('#users').DataTable();
 				var data = table.row( $(this).parents('tr') ).data();
-				$('#selectedUser').text("Usuario al que se le cargará la oferta: " + data.name + " " + data.lastname);
+				$('#selectedUser').text(data.name + " " + data.lastname);
 				$('#userId').text(data.id);
 				$('#userId').val(data.id);
 				$('#userName').val(data.name);
 				$('#userLastName').val(data.lastname);
 				$('#userModal').modal('toggle');
-				$('#previewName').text(data.name + " " + data.lastname);
-				
-				
+				$('#hideableFormPart').attr("hidden", false)
+				if(data.avatar != null) {
+					var src = "data:image/png;base64," + data.avatar;
+					$("#userAvatar").attr("src",src);
+				} else {
+					$("#userAvatar").attr("src","/d2d/images/ic_avatar.png");
+				}
+				$('#previewName').text(" " + data.name + " " + data.lastname);
 			} );
 			
 			if($('#permanentRadio').is(":checked")) {
@@ -479,6 +499,11 @@
 			
 				$('#specialtiesSelect').selectpicker('val', ${boJobDTO.specialtyId});
 				$("#specialtiesSelect").on('changed.bs.select', function (e) {
+					var occupation_name = $("#occupationsSelect option:selected").text();
+					var specialty_name = $("#specialtiesSelect option:selected").text();
+					if(specialty_name != '' && specialty_name != 'Seleccione una Especialidad') {
+						$('#previewInterest').text(occupation_name + ', ' + specialty_name)
+					}
 					loadTasks();
 				});
 			</c:if>
@@ -486,6 +511,15 @@
 			<c:if test="${taskList != null}">
 				$('#tasksSelect').selectpicker('val', ${boJobDTO.taskId});
 			</c:if>
+			
+			$("#tasksSelect").on('changed.bs.select', function (e) {
+				
+				var task_name = $("#tasksSelect option:selected").text();
+				if(task_name != '' && task_name != 'Seleccione una Especialidad') {
+					$('#previewTask').text('Para trabajos de ' + task_name)
+				}
+				
+			});	
 			
 			
 			
@@ -517,6 +551,14 @@
 			
 			$( "#offerHour").keyup(function() {
 				hourBlur(this.text)
+			});
+			
+			$( "#offerTitle" ).keyup(function() {
+				  $('#previewTitle').text("Titulo: " + $(this).val());
+			});
+			
+			$( "#offerSubtitle" ).keyup(function() {
+				  $('#previewSubtitle').text("Subtitulo: " + $(this).val());
 			});
 			
 			// La funcion con el autoComplete de Georeferencia
@@ -598,22 +640,22 @@
 		      if(value == 'Permanent') {
 		            $('#titlesBox').attr("hidden", false)
 		            $('#previewTitlesBox').attr("hidden", false)
-		            $('#publishDate').attr("hidden", true)
+		            $('#dateForOffer').attr("hidden", true)
 		            $('#previewDateBox').attr("hidden", true)
-		            $('#expirationDate').attr("hidden", true)
+		            $('#hourForOffer').attr("hidden", true)
 					$('#mobileOfferType').text("Publicar oferta permanente")
 		        } else {
 		        	$('#titlesBox').attr("hidden", true)
 		        	$('#previewTitlesBox').attr("hidden", true)
-		        	$('#publishDate').attr("hidden", false)
+		        	$('#dateForOffer').attr("hidden", false)
 		        	$('#previewDateBox').attr("hidden", false)
-		        	$('#expirationDate').attr("hidden", false)
+		        	$('#hourForOffer').attr("hidden", false)
 		        	$('#mobileOfferType').text("Publicar oferta temporal")
 		        }
 		}
 		
 		function hourBlur(hour) {
-			var hour = $('#offerHour')
+			var hour = $('#offerHour');
 				
 			var res = hour.val().split(":");
 			
@@ -631,9 +673,9 @@
 			</c:if>
 			
 			<c:if test="${not empty boJobDTO.offerHour}">
-				var hour = ${boJobDTO.offerHour}
-				hour = hour.toString()
-				$('#previewHour').text('Hora: ' + hour.slice(0, 2) + ":" + hour.slice(2, 4) + " " + 'hs')
+				var hour = '${boJobDTO.offerHour}'
+				hour = hour.toString();
+				$('#previewHour').text('Hora: ' + hour.slice(0, 2) + ":" + hour.slice(2, 4) + " " + 'hs');
 			</c:if>
 			
 				
@@ -660,30 +702,25 @@
 				
 			
 			<c:if test="${not empty boJobDTO.name}">
-					$('#selectedUser').text("Usuario al que se le cargará la oferta: " + "${boJobDTO.name}" + " " + "${boJobDTO.lastName}");
+					$('#selectedUser').text("${boJobDTO.name}" + " " + "${boJobDTO.lastName}");
 			</c:if>
 			
 			<c:if test="${not empty boJobDTO.name}">
 				$('#previewName').text('${boJobDTO.name}' + " " + '${boJobDTO.lastName}');
 			</c:if>
 			
-			/*
-			<div class="form-wpp-offer-top-names-container">
-			<span id="previewName" class="form-wpp-title form-wpp-title-sm">Nombre y Apellido</span>
-			<span id="previewCompanyScreen" class="form-wpp-subtitle">Company name</span>
-		</div>
-	</div>
-	<div class="form-wpp-offer-bottom">
-		<div class="form-wpp-offer-bottom-title-container">
-			<span id="previewInterest" class="form-wpp-title form-wpp-title-sm">Occupation, Specialty</span>
-			<span id="previewTask" class="form-wpp-subtitle">Para trabajos de Task</span>
-		</div>
-		<div style="padding:0 17px 0; display:inline-block;">
-			<span id="previewDate" class="form-wpp-body-text">Fecha: 10-11-2017</span>
-			<span id="previewHour" class="form-wpp-body-text">Hora: 10:29hs</span>
-			<span id="previewZone" class="form-wpp-body-text">Zona: SECTOR ANTARTICO ARGENTINO, TIERRA DEL FUEGO</span>
-			<span id="previewOfferText" 
-			*/
+			<c:if test="${not empty boJobDTO.companyScreenName}">
+				$('#previewCompanyScreen').text('${boJobDTO.companyScreenName}');
+			</c:if>
+			
+			<c:if test="${not empty boJobDTO.title}">
+				$('#previewTitle').text("Titulo: " + '${boJobDTO.title}');
+			</c:if>
+			
+			<c:if test="${not empty boJobDTO.subtitle}">
+				$('#previewSubtitle').text("Subtitulo: " + '${boJobDTO.subtitle}');
+			</c:if>
+			
 		}
 			
 		

@@ -2316,7 +2316,12 @@ public class UserServiceImpl implements UserService {
 				result.setHasActiveSuscription(false);
 			}
 		}
-
+		
+		
+		if (user.getAvatar() != null) {
+			Base64DTO avatar = new Base64DTO(new String(user.getAvatar().getData()));
+			result.setAvatar(avatar.getBase64());
+		}
 		try {
 			UserReceiptResponse receipt = subscriptionService.getLastReceipt(user.getId());
 

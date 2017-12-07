@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.tdil.d2d.bo.dto.BoJobDTO;
+import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.bo.formValidators.BoJobOfferValidator;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.dto.JobOfferStatusDTO;
@@ -135,8 +136,10 @@ public class AdminOffersController {
 		
 		JobOfferStatusDTO offerToEdit = userService.getOfferById(offerId);
 		BoJobDTO boJobDTO = offerStatusToBoJob(offerToEdit);	
+	
 		
 		try{ 
+			UserDTO user = userService.getUserWebDetails(boJobDTO.getUserId());
 			ModelAndView model = new ModelAndView();
 			model.setViewName("admin/offer-editor");
 			model.addObject("occupationList", this.specialtyService.listOccupations());
@@ -147,8 +150,8 @@ public class AdminOffersController {
 			Collection<TaskDTO> tasks = this.specialtyService.listTasks(boJobDTO.getSpecialtyId());
 			model.addObject("specialtyList", specialties);
 			model.addObject("taskList", tasks);
-
 			model.addObject("boJobDTO", boJobDTO);
+			model.addObject("user", user);
 			
 			return model;
 
@@ -216,7 +219,12 @@ public class AdminOffersController {
 			model.addObject("specialtyList", specialties);
 			model.addObject("taskList", tasks);
 
+
 			if (bindingResult.hasErrors()) {
+				if(boJob.getUserId() != 0) {
+					UserDTO user = userService.getUserWebDetails(boJob.getUserId());
+					model.addObject("user", user);
+				}
 				model.addObject("boJobDTO", boJob);
 				return model;
 			}
@@ -255,6 +263,10 @@ public class AdminOffersController {
 			
 			
 			if (bindingResult.hasErrors()) {
+				if(boJob.getUserId() != 0) {
+					UserDTO user = userService.getUserWebDetails(boJob.getUserId());
+					model.addObject("user", user);
+				}
 				model.addObject("boJobDTO", boJob);
 				return model;
 			}
@@ -275,14 +287,13 @@ public class AdminOffersController {
 
 	}
 
-	@RequestMapping(value = {"/BoOffers/specialties/{occupationId}","/BoOffers/BoOffers/specialties/{occupationId}", "/editOffer/BoOffers/specialties/{occupationId}"} , method = RequestMethod.GET)
+	@RequestMapping(value = {"/BoOffers/specialties/{occupationId}","/BoOffers/edit/BoOffers/specialties/{occupationId}","/BoOffers/BoOffers/specialties/{occupationId}", "/editOffer/BoOffers/specialties/{occupationId}"} , method = RequestMethod.GET)
 	public ModelAndView getSpecialties(@PathVariable long occupationId) {
 		try{ 
 
 			ModelAndView model = new ModelAndView();
 
 			OccupationDTO occupation = specialtyService.getOccupationDTOById(occupationId);
-
 			Collection<SpecialtyDTO> specialties = this.specialtyService.listSpecialties(occupationId);
 			model.addObject("occupation", occupation);
 			model.addObject("specialtyList", specialties);
@@ -300,7 +311,7 @@ public class AdminOffersController {
 	}
 
 
-	@RequestMapping(value = {"/BoOffers/tasks/{specialtyId}","/BoOffers/BoOffers/tasks/{specialtyId}","/editOffer/BoOffers/tasks/{specialtyId}"} , method = RequestMethod.GET)
+	@RequestMapping(value = {"/BoOffers/tasks/{specialtyId}","/BoOffers/edit/BoOffers/tasks/{specialtyId}","/BoOffers/BoOffers/tasks/{specialtyId}","/editOffer/BoOffers/tasks/{specialtyId}"} , method = RequestMethod.GET)
 	public ModelAndView getTasks(@PathVariable long specialtyId) {
 		try{ 
 
@@ -325,7 +336,7 @@ public class AdminOffersController {
 	}
 
 
-	@RequestMapping(value = {"/BoOffers/countries","/countries", "BoOffers/edit/countries"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = {"/BoOffers/countries","/countries", "BoOffers/edit/countries", "/editOffer/countries"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> autocomplete(@RequestParam("query") String searchString) {
 		try {
 			List<GeoLevelDTO> levels = this.geoService.search(searchString);

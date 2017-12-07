@@ -15,7 +15,6 @@
 	$("#tasksSelect").on('changed.bs.select', function (e) {
 		
 		var task_name = $("#tasksSelect option:selected").text();
-		console.log('task: ' + task_name)
 		if(task_name != '' && task_name != 'Seleccione una Especialidad') {
 			$('#previewTask').text('Para trabajos de ' + task_name)
 		}

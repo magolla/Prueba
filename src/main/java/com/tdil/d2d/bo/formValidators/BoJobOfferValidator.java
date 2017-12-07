@@ -34,6 +34,9 @@ public class BoJobOfferValidator implements Validator{
 		
 		//Se Valida la Geolocalizacion
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "geoDto.name", "geoDto.name.required");
+		
+//		Se Valida el texto de la oferta
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "offerText", "offerText.required");
 
 		if(boJob.isPermanent()) {
 			//Se valida que el titulo y subtitulo no esten vacios

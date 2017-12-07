@@ -375,12 +375,9 @@
 			
 
 			function alluserAction(checkboxElem) {
-				console.log(checkboxElem);
 				  if (checkboxElem.checked) {
-					  console.log("INVI");
 					  $("#sponsorsBox").css('display','none');
 				  } else {
-					  console.log("NO INVI");
 					  $("#sponsorsBox").css('display','block');
 				  }
 			}

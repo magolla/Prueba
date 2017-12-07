@@ -225,13 +225,14 @@ div.form-wpp-offer							{ width:313px; height:379px; position:relative; top:-11
 div.form-wpp-offer::-webkit-scrollbar		{ display:none; }
 div.form-wpp-offer-top						{ border-bottom:1px solid #f2f1f3; background-color:#fff; width:313px; height:184px; }
 div.form-wpp-offer-top-avatar				{ width:80px; height:80px; position:relative; top:54px; left:117px; z-index:4; overflow:hidden; }
+div.form-wpp-offer-top-avatar img			{ width:80px; height:80px; }
 div.form-wpp-offer-top-mask					{ width:90px; height:90px; position:relative; top:-30px; left:113px; z-index:5; overflow:hidden; }
 div.form-wpp-offer-top-title-container		{ text-align:center; width:300px; height:41px; position:relative; top:-164px; left:7px; z-index:6; overflow:hidden; display:inline-block; }
 div.form-wpp-offer-top-names-container		{ text-align:center; width:300px; height:41px; position:relative; top:-79px; left:7px; z-index:6; overflow:hidden; display:inline-block; }
 span.form-wpp-title							{ font-size:17px; line-height:17px; font-weight:700; width:100%; padding-top:2px; display:inline-block; }
 span.form-wpp-subtitle						{ font-size:12px; line-height:12px; font-weight:500; width:100%; display:inline-block; }
 span.form-wpp-title-sm						{ font-size:15px; line-height:15px; }
-div.form-wpp-offer-bottom					{ border-top:1px solid #c5cbcf; background-color:#bbd2d0; width:100%; display:inline-block; padding:18px 20px 10px; }
+div.form-wpp-offer-bottom					{ border-top:1px solid #c5cbcf; background-color:#bbd2d0; width:100%; display:inline-block; padding:18px 20px 10px; min-height: 195px;}
 div.form-wpp-offer-bottom-title-container	{ text-align:center; width:100%; display:inline-block; padding:0 0 12px; }
 span.form-wpp-body-text						{ font-size:14px; font-weight:700; width:100%; display:inline-block; }
     
@@ -247,3 +248,14 @@ span.form-wpp-body-text						{ font-size:14px; font-weight:700; width:100%; disp
 .row						{ margin-right:0!important; margin-left:0!important; display:block; }
 .error						{ width:100%; text-align:center; padding:15px; margin-bottom:20px; border:1px solid transparent; border-radius:4px; display:block; margin-top:15px; }
 .msg						{ width:100%; text-align:center; padding:15px; margin-bottom:20px; border:1px solid transparent; border-radius:4px; color:#31708f; background-color:#d9edf7; border-color:#bce8f1; display:block; }
+div#userModal .modal-dialog { width: 90%;}
+div#bodyModalBootstrap  	{ overflow: auto;}
+.error-text					{ color:#d9534f; }
+span#previewOfferText 		{font-size: 14px; font-weight: 700; width: 243px; display: inline-block; word-wrap: break-word; overflow: hidden;}
+
+
+
+
+
+
+
