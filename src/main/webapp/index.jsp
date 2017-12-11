@@ -85,15 +85,8 @@
 						} else {
 							type = "Temporal"
 						}
-						
-						var something = offer.offerHour
-						
-						var a = offer.offerHour
-						var b = ":";
-						var position = 2;
-						var offerHour = [a.slice(0, position), b, a.slice(position)].join('');
 
-						html += '<tr><td>' + type + '</td><td>' + category + '</td><td>'+ offer.geoLevelName +'</td><td>' + offer.creationDate.split(":")[0] + ":" + offer.creationDate.split(":")[1] + '</td></tr>'
+						html += '<tr><td>' + type + '</td><td>' + category + '</td><td>'+ offer.geoLevelName +'</td><td>' + offer.creationDate.split(" ")[0] + '</td></tr>'
 						counter ++
 					});
 					
