@@ -157,7 +157,7 @@ public class BoJobDTO {
 			return;
 		}
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 		try {
 			Date date = formatter.parse(string);
 			setOfferDate(date);

@@ -247,13 +247,31 @@ span.form-wpp-body-text						{ font-size:14px; font-weight:700; width:100%; disp
 
 .row						{ margin-right:0!important; margin-left:0!important; display:block; }
 .error						{ width:100%; text-align:center; padding:15px; margin-bottom:20px; border:1px solid transparent; border-radius:4px; display:block; margin-top:15px; }
-.msg						{ width:100%; text-align:center; padding:15px; margin-bottom:20px; border:1px solid transparent; border-radius:4px; color:#31708f; background-color:#d9edf7; border-color:#bce8f1; display:block; }
+.msg						{ text-align:center; padding:15px; margin:20px; border:1px solid transparent; border-radius:4px; color:#31708f; background-color:#d9edf7; border-color:#bce8f1; display:block; }
 div#userModal .modal-dialog { width: 90%;}
 div#bodyModalBootstrap  	{ overflow: auto;}
 .error-text					{ color:#d9534f; }
-span#previewOfferText 		{font-size: 14px; font-weight: 700; width: 243px; display: inline-block; word-wrap: break-word; overflow: hidden;}
+span#previewOfferText 		{ font-size: 14px; font-weight: 700; width: 243px; display: inline-block; word-wrap: break-word; overflow: hidden;}
+.unselectedUser				{ color:#d9534f; }
+.overwriteSelectedUser		{ color:#008d4c; }
 
-
+.custom-combobox {
+    position: relative;
+    display: inline-block;
+  }
+  .custom-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+  }
+  .custom-combobox-input {
+    margin: 0;
+    padding-top: 2px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+  }
 
 
 

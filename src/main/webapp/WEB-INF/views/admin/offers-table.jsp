@@ -4,7 +4,7 @@
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
-		Reporte: Detalle de avisos
+		ABM de ofertas
 	</tiles:putAttribute>
 
 	<tiles:putAttribute name="body">
@@ -12,10 +12,38 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="nav-tabs-custom">
-						<div class="tab-content">
+			            <ul class="nav nav-tabs">
+			              <li class="active"><a href="#tab_1" data-toggle="tab">Listado de ofertas laborales</a></li>
+			            </ul>
+			            <div class="tab-content">
 							<div class="tab-pane active" id="tab_1">
-								<table id="offers-table" class="display" cellspacing="0"
-									width="100%">
+								<div style="display:inline-flex; width:100%; padding:20px 0px;">
+									<div style="width:33%; display:block; margin:0 20px 0 0;">
+										<label for="offerStatus" style="width:100%;">Mostrar avisos según estado</label>
+										<select id="offerStatus" style="width:100%; height: 32px;">
+											<option value="All">Todos</option>
+											<option value="Closed">Cerrado</option>
+											<option value="Vacant">Vacante</option>
+										</select>
+									</div>
+									
+									<div style="width:33%; display:block; margin:0 20px 0 0;">
+										<label for="offerJobType" style="width:100%;">Mostrar avisos según tipo</label>
+										<select id="offerJobType" style="width:100%; height:32px;">
+											<option value="All">Todos</option>
+											<option value="Temporal">Temporales</option>
+											<option value="Permanent">Permanentes</option>
+										</select>
+									</div>
+									<div style="width:33%; display:block;">
+										<label style="width:100%;">&nbsp;</label>
+										<a type="submit" class="btn btn-info pull-right" href="<c:url value='/admin/new-offer'/>">Crear nueva oferta</a>
+									</div>
+								</div>
+								
+								<hr>
+								
+								<table id="offers-table" class="display" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 											<th>Estado</th>
@@ -55,25 +83,6 @@
 										
 									</tfoot>
 								</table>
-								
-								<div class="box-footer" style="margin-top:15px">
-										<select id="offerStatus">
-										  <option value="All">Todos</option>
-										  <option value="Closed">Cerrado</option>
-										  <option value="Vacant">Vacante</option>
-										</select>
-								</div>
-								
-								<div class="box-footer" style="margin-top:15px">
-										<select id="offerJobType">
-										  <option value="All">Todos</option>
-										  <option value="Temporal">Temporales</option>
-										  <option value="Permanent">Permanentes</option>
-										</select>
-								</div>
-								<div class="box-footer" style="margin-top:15px">
-									<a type="submit" class="btn btn-info pull-right" href="<c:url value='/admin/new-offer'/>">Nuevo</a>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -135,8 +144,8 @@
     	"scrollX": true,
         "ajax": '<c:url value="/admin/reports/all-jobsoffer" />',
         "language": {
-            "search": "Buscar:",
-            "info": "PÃ¡gina _PAGE_ de _PAGES_",
+            "search": "Filtrar:",
+            "info": "Página _PAGE_ de _PAGES_",
             "paginate": {
                 "previous": "Previa",
                 "next": "Siguiente",
@@ -167,14 +176,23 @@
                         return data.offerDate + ' ' + data.offerHour;
                     } 
                     },
-                    {"defaultContent": "<button id='editButton' >Editar</button>"},
                     {
                         "data": "status",
                         "render": function ( data, type, full, meta ) {
                         	 if(data=='CLOSED'){
                         		 return '';
                         	 } else {
-                        		 return "<button id='deleteButton' >Cerrar Aviso</button>";
+                        		 return "<button id='editButton' class='btn btn-info'>Editar</button>";
+                        	 }
+                        }
+                    },
+                    {
+                        "data": "status",
+                        "render": function ( data, type, full, meta ) {
+                        	 if(data=='CLOSED'){
+                        		 return '';
+                        	 } else {
+                        		 return "<button id='deleteButton' class='btn btn-warning'>Cerrar Aviso</button>";
                         	 }
                         }
                     }
