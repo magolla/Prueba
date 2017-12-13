@@ -136,9 +136,11 @@ public class AdminOffersController {
 		
 		JobOfferStatusDTO offerToEdit = userService.getOfferById(offerId);
 		BoJobDTO boJobDTO = offerStatusToBoJob(offerToEdit);	
-	
 		
-		try{ 
+		
+		try{
+			User userDatabase = userService.getUserById(boJobDTO.getUserId());
+			boJobDTO.setCompanyScreenName(userDatabase.getCompanyScreenName());
 			UserDTO user = userService.getUserWebDetails(boJobDTO.getUserId());
 			ModelAndView model = new ModelAndView();
 			model.setViewName("admin/offer-editor");

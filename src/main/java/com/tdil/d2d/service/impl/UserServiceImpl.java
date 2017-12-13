@@ -2453,6 +2453,7 @@ public class UserServiceImpl implements UserService {
 
 		try {
 			User user = getUserById(boJob.getUserId());
+			user.setCompanyScreenName(boJob.getCompanyScreenName());
 			Base64DTO avatar = null;
 			if (user.getAvatar() != null) {
 				avatar =  new Base64DTO(new String(user.getAvatar().getData()));
@@ -2478,6 +2479,7 @@ public class UserServiceImpl implements UserService {
 				createPermanentJobOfferRequest.setTaskId(boJob.getTaskId());
 				createPermanentJobOfferRequest.setTitle(boJob.getTitle());
 				createPermanentJobOfferRequest.setVacants(1);
+				this.userDAO.save(user);
 				createJobOffer(createPermanentJobOfferRequest, user,offerId);
 			} else {
 				CreateTemporaryJobOfferRequest createTemporaryJobOfferRequest = new CreateTemporaryJobOfferRequest();
@@ -2497,10 +2499,13 @@ public class UserServiceImpl implements UserService {
 				createTemporaryJobOfferRequest.setSpecialtyId(boJob.getSpecialtyId());
 				createTemporaryJobOfferRequest.setTaskId(boJob.getTaskId());
 				createTemporaryJobOfferRequest.setVacants(1);
+				this.userDAO.save(user);
 				createJobOffer(createTemporaryJobOfferRequest, user,offerId);
 			}
 
 		} catch (ServiceException e) {
+			e.printStackTrace();
+		} catch (DAOException e) {
 			e.printStackTrace();
 		}
 	}
