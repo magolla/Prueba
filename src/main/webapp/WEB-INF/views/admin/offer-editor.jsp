@@ -285,7 +285,7 @@
 									</div>
 									<div class="form-wpp-offer-top-names-container">
 										<span id="previewName" class="form-wpp-title form-wpp-title-sm">Nombre y Apellido</span>
-										<span id="previewCompanyScreen" class="form-wpp-subtitle"></span>
+										<span id="previewCompanyScreen" class="form-wpp-subtitle" var="${boJobDTO.companyScreenName}"></span>
 									</div>
 								</div>
 								<div class="form-wpp-offer-bottom">

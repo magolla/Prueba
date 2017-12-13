@@ -1,6 +1,10 @@
 package com.tdil.d2d.bo.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,7 +197,10 @@ public class AdminOffersController {
 		} else {
 			boJobDTO.setPermanent(false);
 			boJobDTO.setOfferHour(offerToEdit.getOfferHour());
-			boJobDTO.setOfferDateForView(offerToEdit.getOfferDate());
+			
+			
+			
+			boJobDTO.setOfferDateForView(getDateForView(offerToEdit.getOfferDate()));
 		}
 		
 		if(offerToEdit.getInstitutionType().equals(InstitutionType.PRIVATE.name())) {
@@ -204,6 +211,27 @@ public class AdminOffersController {
 
 		boJobDTO.setUserId(offerToEdit.getOfferent_id());
 		return boJobDTO;
+	}
+
+
+	private String getDateForView(String offerDate) {
+		
+		String[] dateOfOffer = offerDate.split(" ");
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+		Date date;
+		try {
+			date = formatter.parse(dateOfOffer[0]);
+			DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+			String reportDate = df.format(date);
+
+			return reportDate;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 
 
