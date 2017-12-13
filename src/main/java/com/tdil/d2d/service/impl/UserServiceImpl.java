@@ -2494,8 +2494,23 @@ public class UserServiceImpl implements UserService {
 					createTemporaryJobOfferRequest.setInstitutionType(InstitutionType.PUBLIC);
 				}
 				createTemporaryJobOfferRequest.setOccupationId(boJob.getOccupationId());
-				createTemporaryJobOfferRequest.setOfferDate(boJob.getOfferDateForView());
-				createTemporaryJobOfferRequest.setOfferHour(boJob.getOfferHour());
+				
+				String dateForJob = "";
+				try {
+					Date date = getDate(boJob.getOfferDateForView(),"dd-MM-yyyy");
+					DateFormat df = new SimpleDateFormat("yyyyMMdd");
+					dateForJob = df.format(date);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				createTemporaryJobOfferRequest.setOfferDate(dateForJob);
+
+				String[] parts = boJob.getOfferHour().split(":");
+				String part1 = parts[0]; // 004
+				String part2 = parts[1]; // 034556
+				
+				
+				createTemporaryJobOfferRequest.setOfferHour(part1 + part2);
 				createTemporaryJobOfferRequest.setSpecialtyId(boJob.getSpecialtyId());
 				createTemporaryJobOfferRequest.setTaskId(boJob.getTaskId());
 				createTemporaryJobOfferRequest.setVacants(1);
