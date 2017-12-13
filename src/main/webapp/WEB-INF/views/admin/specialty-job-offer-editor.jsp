@@ -16,7 +16,11 @@
 		var occupation_name = $("#occupationsSelect option:selected").text();
 		var specialty_name = $("#specialtiesSelect option:selected").text();
 		if(specialty_name != '' && specialty_name != 'Seleccione una Especialidad') {
-			$('#previewInterest').text(occupation_name + ', ' + specialty_name)
+			if(permanent) {
+				$('#previewDate').text("Busco:" + occupation_name + ', ' + specialty_name);				
+			} else {
+				$('#previewInterest').text(occupation_name + ', ' + specialty_name);	
+			}
 		}
 		loadTasks();
 	});

@@ -16,7 +16,13 @@
 		
 		var task_name = $("#tasksSelect option:selected").text();
 		if(task_name != '' && task_name != 'Seleccione una Especialidad') {
-			$('#previewTask').text('Para trabajos de ' + task_name)
+			
+			if(permanent) {
+				$('#previewHour').text('Para trabajos de ' + task_name);					
+			} else {
+				$('#previewTask').text('Para trabajos de ' + task_name);
+			}
+			
 		}
 		
 	});

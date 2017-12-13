@@ -119,7 +119,7 @@
 											<!-- Nombre del profesional o empresa -->
 											<div class="form-group">
 												<label class="control-label">Nombre del profesional o empresa(Opcional): </label>
-												<form:input id="companyScreenName" path="companyScreenName" class="form-control" />
+												<form:input id="companyScreenName" var="${boJobDTO.companyScreenName}" path="companyScreenName" class="form-control" />
 												<form:errors path="companyScreenName" class="error-text"></form:errors>
 											</div>
 											<!-- TÃ­tulo y subtÃ­tulo -->
@@ -174,24 +174,24 @@
 													<c:when test="${boJobDTO.privateInstitution eq true}">
 														<div class="form-check">
 															<label class="form-check-label" >
-																<form:radiobutton path="privateInstitution" checked="checked" value="true" element="span class='radio'"></form:radiobutton>
+																<form:radiobutton id="privateRadio" path="privateInstitution" checked="checked" value="true" element="span class='radio'"></form:radiobutton>
 															Privada</label>
 														</div>
 														<div class="form-check">
 															<label class="form-check-label">
-																<form:radiobutton path="privateInstitution" value="false" element="span class='radio'"></form:radiobutton>
+																<form:radiobutton id="publicRadio" path="privateInstitution" value="false" element="span class='radio'"></form:radiobutton>
 															P&uacute;blica</label>
 														</div>
 													</c:when>
 													<c:otherwise>
 														<div class="form-check">
 															<label class="form-check-label">
-																<form:radiobutton path="privateInstitution" value="true" element="span class='radio'"></form:radiobutton>
+																<form:radiobutton id="privateRadio" path="privateInstitution" value="true" element="span class='radio'"></form:radiobutton>
 															Privada</label>
 														</div>
 														<div class="form-check">
 															<label class="form-check-label">
-																<form:radiobutton path="privateInstitution" value="false" checked="checked" element="span class='radio'"></form:radiobutton>
+																<form:radiobutton id="publicRadio" path="privateInstitution" value="false" checked="checked" element="span class='radio'"></form:radiobutton>
 															P&uacute;blica</label>
 														</div>
 													</c:otherwise>
@@ -286,24 +286,21 @@
 									</div>
 									<div class="form-wpp-offer-top-names-container">
 										<span id="previewName" class="form-wpp-title form-wpp-title-sm">Nombre y Apellido</span>
-										<span id="previewCompanyScreen" class="form-wpp-subtitle">Company name</span>
+										<span id="previewCompanyScreen" class="form-wpp-subtitle"></span>
 									</div>
 								</div>
 								<div class="form-wpp-offer-bottom">
 									<div class="form-wpp-offer-bottom-title-container">
-										<span id="previewInterest" class="form-wpp-title form-wpp-title-sm">Occupation, Specialty</span>
-										<span id="previewTask" class="form-wpp-subtitle">Para trabajos de Task</span>
+										<span id="previewInterest" class="form-wpp-title form-wpp-title-sm"></span>
+										<span id="previewTask" class="form-wpp-subtitle"></span>
 									</div>
 									<div style="padding:0 17px 0; display:inline-block;">
-											<div id="previewTitlesBox">
-												<span id="previewTitle" class="form-wpp-body-text">T&iacute;tulo: </span>
-												<span id="previewSubtitle" class="form-wpp-body-text">Subt&iacute;tulo: </span>
-											</div>
 											<div id="previewDateBox">
 												<span id="previewDate" class="form-wpp-body-text">Fecha: </span>
 												<span id="previewHour" class="form-wpp-body-text">Hora: </span>
 											</div>
 										<span id="previewZone" class="form-wpp-body-text">Zona: </span>
+										<span id="previewInstitutionType" class="form-wpp-body-text">Tipo de institución: </span>
 										<span id="previewOfferText" class="form-wpp-body-text" style="margin:18px 0 0;"></span>
 									</div>
 								</div>
@@ -360,6 +357,9 @@
 		  </div>
 		</div>
 		<script>
+		
+		
+		var permanent = false
 		
 		$('#offerDateForView').datepicker({
 			autoclose: true,
@@ -458,26 +458,49 @@
 			} );
 			
 			if($('#permanentRadio').is(":checked")) {
+				permanent = true
 				checkOfferTypeRadio('Permanent');
 			}	else {
+				permanent = false
 				checkOfferTypeRadio('Temporal');
+			}
+			
+			loadProfessionsForPermanent(permanent);
+			if($('#privateRadio').is(":checked")) {
+				checkInstitutionTypeRadio('Private');
+			}	else {
+				checkInstitutionTypeRadio('Public');
 			}
 			
 			
 			// Esto se encarga de hacer visible T&iacute;tulo y Subt&iacute;tulo en caso de que la oferta sea permanente.
 			 $('#permanentRadio').change(function() {
+				 permanent = true
 				 checkOfferTypeRadio('Permanent');
 			  });
 			
 			 $('#temporalRadio').change(function() {
+				 permanent = false
 				 checkOfferTypeRadio('Temporal');
 			  });
 			
+			 
+				// Esto se encarga de cambiar el tipo de institucion en el preview
+			 $('#privateRadio').change(function() {
+				 checkInstitutionTypeRadio('Private');
+			  });
+			
+			 $('#publicRadio').change(function() {
+				 checkInstitutionTypeRadio('Public');
+			  });
+			 
 			
 			//SET OCCUPATION
 			$('#occupationsSelect').selectpicker('val', ${boJobDTO.occupationId});
 		
 			$('#occupationsSelect').on('changed.bs.select', function (e) {
+				$('#previewTask').text('')
+				$('#previewHour').text('')
 				loadSpecialties();
 			});
 			
@@ -506,8 +529,6 @@
 				}
 				
 			});	
-			
-			
 			
 			// Zonas
 			$( "#clearButton" ).click(function() {
@@ -540,11 +561,11 @@
 			});
 			
 			$( "#offerTitle" ).keyup(function() {
-				  $('#previewTitle').text("Titulo: " + $(this).val());
+				  $('#previewInterest').text($(this).val());
 			});
 			
 			$( "#offerSubtitle" ).keyup(function() {
-				  $('#previewSubtitle').text("Subtitulo: " + $(this).val());
+				  $('#previewTask').text($(this).val());
 			});
 			
 			// La funci&oacute;n con el autoComplete de Georeferencia
@@ -610,7 +631,14 @@
 		function loadSpecialties() {
 			occupation_id = $("#occupationsSelect").val();
 			var occupation_name = $("#occupationsSelect option:selected").text();
-			$('#previewInterest').text(occupation_name);
+			
+			if(permanent) {
+				$('#previewDate').text("Busco:" + occupation_name);	
+			} else {
+				$('#previewInterest').text(occupation_name);
+				
+			}
+			
 			$.ajax({
 		        url: 'BoOffers/specialties/' + occupation_id,
 		        type: 'GET',
@@ -627,18 +655,31 @@
 		            $('#titlesBox').attr("hidden", false)
 		            $('#previewTitlesBox').attr("hidden", false)
 		            $('#dateForOffer').attr("hidden", true)
-		            $('#previewDateBox').attr("hidden", true)
+// 		            $('#previewDateBox').attr("hidden", true)
 		            $('#hourForOffer').attr("hidden", true)
 					$('#mobileOfferType').text("Publicar oferta permanente")
+					loadTitles()
+					loadProfessionsForPermanent(true);
 		        } else {
+		        	
 		        	$('#titlesBox').attr("hidden", true)
 		        	$('#previewTitlesBox').attr("hidden", true)
 		        	$('#dateForOffer').attr("hidden", false)
-		        	$('#previewDateBox').attr("hidden", false)
+// 		        	$('#previewDateBox').attr("hidden", false)
 		        	$('#hourForOffer').attr("hidden", false)
 		        	$('#mobileOfferType').text("Publicar oferta temporal")
+		        	loadProfessionsForPermanent(false);
 		        }
 		}
+		
+		function checkInstitutionTypeRadio(value) {
+		      if(value == 'Private') {
+					$('#previewInstitutionType').text("Tipo de institución: Privada")
+		        } else {
+		        	$('#previewInstitutionType').text("Tipo de institución: Publica")
+		        }
+		}
+		
 		
 		function hourBlur(hour) {
 			var hour = $('#offerHour');
@@ -649,6 +690,113 @@
 			{
 			   $('#previewHour').text('Hora: ' + hour.val() + 'hs')
 			}
+			
+		}
+		
+		
+		function loadProfessionsForPermanent(value) {
+			
+			if(value){
+				var occupationText = $("#occupationsSelect  option:selected").text();
+				var specialtyText = $('#specialtiesSelect  option:selected').text();
+				var taskText = $('#tasksSelect  option:selected').text();
+			
+				var occupationVal = $("#occupationsSelect  option:selected").val();
+				var specialtyVal = $('#specialtiesSelect  option:selected').val();
+				var taskVal = $('#tasksSelect  option:selected').val();
+				
+				
+				if(occupationVal != 0){
+					if(specialtyVal != 0 && specialtyText != ''){
+						$('#previewDate').text("Busco: " + occupationText + ', ' + specialtyText)
+					} else {
+						$('#previewDate').text("Busco: " + occupationText)
+					}
+					
+					if(taskVal != null && taskVal != 0  ){
+						$('#previewHour').text('Para trabajos de ' + taskText)
+					}
+				} else {
+					$('#previewDate').text('')
+					$('#previewHour').text('')
+				}
+				
+
+
+			} else {
+				var occupationText = $("#occupationsSelect  option:selected").text();
+				var specialtyText = $('#specialtiesSelect  option:selected').text();
+				var taskText = $('#tasksSelect  option:selected').text();
+			
+				var occupationVal = $("#occupationsSelect  option:selected").val();
+				var specialtyVal = $('#specialtiesSelect  option:selected').val();
+				var taskVal = $('#tasksSelect  option:selected').val();
+				
+				// Hora
+				var hour = $('#offerHour');
+				
+				var res = hour.val().split(":");
+				
+				if($.isNumeric(res[0]) &&  $.isNumeric(res[1]))
+				{
+				   $('#previewHour').text('Hora: ' + hour.val() + 'hs')
+				} else {
+					$('#previewHour').text('Hora: ')
+				}
+				
+				// Fecha
+				
+				
+				var date = $('#offerDateForView').val()
+				
+				if(date != null && date != ''){
+					$('#previewDate').text('Fecha:' + " " + date)	
+				} else {
+					$('#previewDate').text('Fecha:')
+				}
+				
+				
+				
+				// Ocupaciones
+				
+				if(occupationVal != 0){
+					if(specialtyVal != 0){
+						$('#previewInterest').text(occupationText + ', ' + specialtyText)
+					} else {
+						$('#previewInterest').text(occupationText)
+					}
+					
+					if(taskVal != null && taskVal != 0  ){
+						$('#previewTask').text('Para trabajos de ' + taskText)
+					}
+				}
+				
+				
+				
+
+			}
+			
+			
+
+		}
+
+		function loadTitles() {
+			
+			var title = $("#offerTitle").val();
+			var subtitle = $('#offerSubtitle').val();
+			if(title != ''){
+				$('#previewInterest').text(title)	
+			} else {
+				$('#previewInterest').text('')
+			}
+
+			
+			if(subtitle != ''){
+				$('#previewTask').text(subtitle)	
+			} else {
+				$('#previewTask').text('')
+			}
+			
 			
 		}
 		
@@ -669,18 +817,12 @@
 				$('#previewDate').text('Fecha:' + " " + $('#offerDateForView').val())
 			</c:if>
 			<c:if test="${not empty boJobDTO.taskId}">
+			if(permanent){
+				loadProfessionsForPermanent(true);	
+			} else {
+				loadProfessionsForPermanent(false);
+			}
 			
-				var occupation = $("#occupationsSelect  option:selected").text();
-				var specialty = $('#specialtiesSelect  option:selected').text();
-				var task = $('#tasksSelect  option:selected').text();
-			
-				if(specialty == ''){
-					$('#previewInterest').text(occupation)	
-				} else {
-					$('#previewInterest').text(occupation + ', ' + specialty)
-				}
-				
-				$('#previewTask').text('Para trabajos de ' + task)
 			</c:if>
 			<c:if test="${not empty boJobDTO.offerText}">
 				$('#previewOfferText').text('${boJobDTO.offerText}')
