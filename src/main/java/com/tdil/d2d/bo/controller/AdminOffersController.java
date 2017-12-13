@@ -336,7 +336,7 @@ public class AdminOffersController {
 	}
 
 
-	@RequestMapping(value = {"/BoOffers/countries","/countries", "BoOffers/edit/countries", "/editOffer/countries"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = {"/BoOffers/countries","/countries", "BoOffers/edit/countries", "/editOffer/countries"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
 	public ResponseEntity<String> autocomplete(@RequestParam("query") String searchString) {
 		try {
 			List<GeoLevelDTO> levels = this.geoService.search(searchString);

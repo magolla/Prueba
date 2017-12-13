@@ -1,7 +1,6 @@
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
@@ -536,6 +535,7 @@
 		    	$('#zoneName').val("");
 		    	$('#zoneLevel').val("");
 		    	$('#zones').val("");
+		    	$('#previewZone').text("Zona: ");
 		    	$("#zones").prop('disabled', false);
 			});
 			
