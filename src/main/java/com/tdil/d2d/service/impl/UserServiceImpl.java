@@ -90,13 +90,14 @@ import com.tdil.d2d.dao.NoteDAO;
 import com.tdil.d2d.dao.NotificationConfigurationDAO;
 import com.tdil.d2d.dao.NotificationDAO;
 import com.tdil.d2d.dao.PaymentDAO;
+import com.tdil.d2d.dao.PointsDAO;
 import com.tdil.d2d.dao.SpecialtyDAO;
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.SystemPropertyDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
-import com.tdil.d2d.persistence.ActivityAction;
+import com.tdil.d2d.persistence.ActivityActionEnum;
 import com.tdil.d2d.persistence.ActivityLog;
 import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
@@ -111,6 +112,7 @@ import com.tdil.d2d.persistence.NotificationConfiguration;
 import com.tdil.d2d.persistence.NotificationType;
 import com.tdil.d2d.persistence.Occupation;
 import com.tdil.d2d.persistence.Payment;
+import com.tdil.d2d.persistence.Points;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.Subscription;
@@ -167,6 +169,8 @@ public class UserServiceImpl implements UserService {
 	private GeoDAO geoDAO;
 	@Autowired
 	private NoteDAO noteDAO;
+	@Autowired
+	private PointsDAO pointsDAO;
 
 	@Autowired
 	private PaymentDAO paymentDAO;
@@ -256,7 +260,8 @@ public class UserServiceImpl implements UserService {
 				this.notificationConfigurationDAO.save(notificationConfiguration);
 			}
 
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.REGISTER.getMessage()));
+			savePoints(ActivityActionEnum.REGISTER, user);
 
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link "
@@ -272,6 +277,17 @@ public class UserServiceImpl implements UserService {
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
 			throw new ServiceException(e);
+		}
+	}
+
+	private void savePoints(ActivityActionEnum register, User user) {
+
+		if(register.getValue() != 0) {
+			try {
+				pointsDAO.save(new Points(register, user));
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -322,7 +338,8 @@ public class UserServiceImpl implements UserService {
 				this.notificationConfigurationDAO.save(notificationConfiguration);
 			}
 
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.REGISTER));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.REGISTER.getMessage()));
+			savePoints(ActivityActionEnum.REGISTER, user);
 
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link "
@@ -407,7 +424,8 @@ public class UserServiceImpl implements UserService {
 			Specialty specialty = this.specialtyDAO.getSpecialtyById(addSpecialtyRequest.getSpecialtyId());
 			user.getSpecialties().add(specialty);
 			this.userDAO.save(user);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SPECIALTY));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_SPECIALTY.getMessage()));
+			savePoints(ActivityActionEnum.ADD_SPECIALTY, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -424,7 +442,8 @@ public class UserServiceImpl implements UserService {
 				user.getSpecialties().add(specialty);
 			}
 			this.userDAO.save(user);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SPECIALTY));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_SPECIALTY.getMessage()));
+			savePoints(ActivityActionEnum.ADD_SPECIALTY, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -440,7 +459,8 @@ public class UserServiceImpl implements UserService {
 			loc.setGeoLevelId(addLocationRequest.getGeoLevelId());
 			user.getUserGeoLocations().add(loc);
 			this.userDAO.save(user);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_GEO_LEVEL));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_GEO_LEVEL.getMessage()));
+			savePoints(ActivityActionEnum.ADD_GEO_LEVEL, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -465,7 +485,8 @@ public class UserServiceImpl implements UserService {
 				user.getUserGeoLocations().add(loc);
 			}
 			this.userDAO.save(user);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_GEO_LEVEL));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_GEO_LEVEL.getMessage()));
+			savePoints(ActivityActionEnum.ADD_GEO_LEVEL, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -478,7 +499,8 @@ public class UserServiceImpl implements UserService {
 			User user = getLoggedUser();
 			user.setLicense(setLicenseRequest.getLicense());
 			this.userDAO.save(user);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_LICENSE));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.SET_LICENSE.getMessage()));
+			savePoints(ActivityActionEnum.SET_LICENSE, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -548,7 +570,8 @@ public class UserServiceImpl implements UserService {
 			}
 			userProfile.setInstitutionType(institutionTypeRequest.getInstitutionType());
 			this.userDAO.save(userProfile);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.CHANGE_INSTITUTION_TYPE));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.CHANGE_INSTITUTION_TYPE.getMessage()));
+			savePoints(ActivityActionEnum.CHANGE_INSTITUTION_TYPE, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -567,7 +590,8 @@ public class UserServiceImpl implements UserService {
 			Task task = this.specialtyDAO.getTaskById(taskToProfileRequest.getTaskId());
 			userProfile.getTasks().add(task);
 			this.userDAO.save(userProfile);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_TASK_TO_PROFILE));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_TASK_TO_PROFILE.getMessage()));
+			savePoints(ActivityActionEnum.ADD_TASK_TO_PROFILE, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -589,7 +613,8 @@ public class UserServiceImpl implements UserService {
 			}
 			this.userDAO.save(userProfile);
 			this.userDAO.save(user);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_TASK_TO_PROFILE));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_TASK_TO_PROFILE.getMessage()));
+			savePoints(ActivityActionEnum.ADD_TASK_TO_PROFILE, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -614,7 +639,8 @@ public class UserServiceImpl implements UserService {
 			if (toRemove != null) {
 				userProfile.getTasks().remove(toRemove);
 				this.userDAO.save(userProfile);
-				activityLogDAO.save(new ActivityLog(user, ActivityAction.REMOVE_TASK_FROM_PROFILE));
+				activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.REMOVE_TASK_FROM_PROFILE.getMessage()));
+				savePoints(ActivityActionEnum.REMOVE_TASK_FROM_PROFILE, user);
 			}
 			return true;
 		} catch (DAOException e) {
@@ -674,7 +700,8 @@ public class UserServiceImpl implements UserService {
 			User user = getLoggedUser();
 			user.setLastLoginDate(new Date());
 			this.userDAO.save(user);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.LOGIN));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.LOGIN.getMessage()));
+			savePoints(ActivityActionEnum.LOGIN, user);
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
@@ -725,7 +752,8 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_TEMPORARY_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.POST_TEMPORARY_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -759,7 +787,8 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_TEMPORARY_OFFER));
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_TEMPORARY_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.POST_TEMPORARY_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -799,7 +828,8 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -840,7 +870,8 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.POST_PERMANENT_OFFER));
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -885,7 +916,8 @@ public class UserServiceImpl implements UserService {
 			this.jobApplicationDAO.save(jobApplication);
 			jobOffer.setApplications(jobOffer.getApplications() + 1);
 			this.jobDAO.save(jobOffer);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.APPLY_TO_OFFER));
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.APPLY_TO_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.APPLY_TO_OFFER, getLoggedUser());
 
 			sendNotification(NotificationType.NEW_APPLICATION, jobOffer.getOfferent(), jobOffer);
 
@@ -1156,7 +1188,8 @@ public class UserServiceImpl implements UserService {
 
 			this.jobDAO.save(offer);
 			this.jobApplicationDAO.save(application);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.ACCEPT_OFFER));
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.ACCEPT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.ACCEPT_OFFER, getLoggedUser());
 
 			sendNotification(NotificationType.APPLICATION_ACCEPTED, application.getUser(), offer);
 
@@ -1199,7 +1232,8 @@ public class UserServiceImpl implements UserService {
 			JobApplication application = this.jobApplicationDAO.getById(JobApplication.class, applicationId);
 			application.setStatus(JobApplication.REJECTED);
 			this.jobApplicationDAO.save(application);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.REJECT_OFFER));
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.REJECT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.REJECT_OFFER, getLoggedUser());
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -1221,8 +1255,8 @@ public class UserServiceImpl implements UserService {
 			}
 			offer.setStatus(JobOffer.CLOSED);
 			this.jobDAO.save(offer);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityAction.CLOSED_OFFER));
-
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.CLOSED_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.CLOSED_OFFER, getLoggedUser());
 			if(JobApplication.CLOSED.equals(offer.getStatus())){
 
 				//Notify rejected applications
@@ -1635,7 +1669,8 @@ public class UserServiceImpl implements UserService {
 			this.userDAO.save(media);
 			this.userDAO.save(user);
 
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.SET_AVATAR));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.SET_AVATAR.getMessage()));
+			savePoints(ActivityActionEnum.SET_AVATAR, getLoggedUser());
 
 			return true;			
 

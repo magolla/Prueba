@@ -18,6 +18,7 @@ import com.tdil.d2d.controller.api.request.ReceiptSuscriptionRequest;
 import com.tdil.d2d.controller.api.request.RedeemSponsorCodeRequest;
 import com.tdil.d2d.controller.api.response.UserReceiptResponse;
 import com.tdil.d2d.dao.ActivityLogDAO;
+import com.tdil.d2d.dao.PointsDAO;
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.SystemPropertyDAO;
 import com.tdil.d2d.dao.UserDAO;
@@ -25,8 +26,9 @@ import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ExceptionDefinition;
 import com.tdil.d2d.exceptions.ServiceException;
-import com.tdil.d2d.persistence.ActivityAction;
+import com.tdil.d2d.persistence.ActivityActionEnum;
 import com.tdil.d2d.persistence.ActivityLog;
+import com.tdil.d2d.persistence.Points;
 import com.tdil.d2d.persistence.Receipt;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
@@ -59,6 +61,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Autowired
 	private UserService	userService;
+	
+	@Autowired
+	private PointsDAO pointsDAO;
 
 	@Autowired
 	public SubscriptionServiceImpl(SessionService sessionService, SubscriptionDAO subscriptionDAO,
@@ -114,7 +119,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			}
 			// sponsorCode.setRemainingUses(sponsorCode.getRemainingUses() - 1);
 			subscriptionDAO.saveSponsorCode(sponsorCode);
-			activityLogDAO.save(new ActivityLog(user, ActivityAction.ADD_SUBSCRIPTION));
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_SUBSCRIPTION.getMessage()));
+			pointsDAO.save(new Points(ActivityActionEnum.ADD_SUBSCRIPTION, user));
 			Subscription subscription = new Subscription();
 			subscription.setSponsorCode(sponsorCode);
 			subscription.setExpirationDate(getExpirationDate(Calendar.getInstance(), sponsorCode));
