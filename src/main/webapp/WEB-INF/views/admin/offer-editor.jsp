@@ -240,7 +240,7 @@
 											<!--Fecha de Publicacion y de Expiracion FIN -->
 											<div class="form-group" style="padding-bottom:15px!important; margin:70px 0 0; display:flow-root;">
 												<label for="offerText" class="control-label">Contenido de la publicaci&oacute;n</label>
-												<form:textarea id="offerText" path="offerText" rows="11" class="form-control col-md-12"></form:textarea>
+												<form:textarea id="offerText" path="offerText" rows="11" val="${boJobDTO.offerText}" class="form-control col-md-12"></form:textarea>
 												<form:errors path="offerText" class="error-text"></form:errors>
 											</div>
 											<div class="form-group">
@@ -285,7 +285,7 @@
 									</div>
 									<div class="form-wpp-offer-top-names-container">
 										<span id="previewName" class="form-wpp-title form-wpp-title-sm">Nombre y Apellido</span>
-										<span id="previewCompanyScreen" class="form-wpp-subtitle" var="${boJobDTO.companyScreenName}"></span>
+										<span id="previewCompanyScreen" class="form-wpp-subtitle">${boJobDTO.companyScreenName}</span>
 									</div>
 								</div>
 								<div class="form-wpp-offer-bottom">
@@ -300,7 +300,7 @@
 											</div>
 										<span id="previewZone" class="form-wpp-body-text">Zona: </span>
 										<span id="previewInstitutionType" class="form-wpp-body-text">Tipo de institución: </span>
-										<span id="previewOfferText" class="form-wpp-body-text" style="margin:18px 0 0;"></span>
+										<span id="previewOfferText" class="form-wpp-body-text" style="margin:18px 0 0;">${boJobDTO.offerText}</span>
 									</div>
 								</div>
 							</div>
@@ -824,21 +824,13 @@
 			}
 			
 			</c:if>
-			<c:if test="${not empty boJobDTO.offerText}">
-				$('#previewOfferText').text('${boJobDTO.offerText}')
-			</c:if>
 				
-			
 			<c:if test="${not empty boJobDTO.name}">
 					$('#selectedUser').text("${boJobDTO.name}" + " " + "${boJobDTO.lastName}");
 			</c:if>
 			
 			<c:if test="${not empty boJobDTO.name}">
 				$('#previewName').text('${boJobDTO.name}' + " " + '${boJobDTO.lastName}');
-			</c:if>
-			
-			<c:if test="${not empty boJobDTO.companyScreenName}">
-				$('#previewCompanyScreen').text('${boJobDTO.companyScreenName}');
 			</c:if>
 			
 			<c:if test="${not empty boJobDTO.title}">

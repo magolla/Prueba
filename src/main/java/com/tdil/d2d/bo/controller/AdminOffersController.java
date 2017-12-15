@@ -135,7 +135,7 @@ public class AdminOffersController {
 	}
 	
 	@Transactional
-	@RequestMapping(value = {"/editOffer/{offerId}"} , method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = {"/editOffer/{offerId}"} , method = RequestMethod.GET, produces = "application/json"  + ";charset=UTF-8")
 	public ModelAndView boOpenOfferForEdit(@PathVariable("offerId") int offerId) {
 		
 		JobOfferStatusDTO offerToEdit = userService.getOfferById(offerId);
