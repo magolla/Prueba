@@ -37,6 +37,7 @@
 											<th>Usuario seleccionado</th>
 											<th>Estado</th>
 											<th>Vacantes</th>
+											<th>Cantidad de Matches en el momento de la creacion</th>
 										</tr>
 									</thead>
 									<tfoot>
@@ -60,6 +61,7 @@
 											<th>Usuario seleccionado</th>
 											<th>Estado</th>
 											<th>Vacantes</th>
+											<th>Cantidad de Matches en el momento de la creacion</th>
 										</tr>
 									</tfoot>
 								</table>
@@ -229,7 +231,8 @@ $(document).ready(function() {
                         	 }
                         }
                     },  
-                    { "data": "vacants" }
+                    { "data": "vacants" },
+                    { "data": "matchesAtCreation" }
                 ],
                 "columnDefs": [
                                {
