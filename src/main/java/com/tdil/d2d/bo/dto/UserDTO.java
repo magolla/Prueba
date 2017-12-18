@@ -39,6 +39,8 @@ public class UserDTO {
 	
 	private String userOccupation;
 	
+	private String companyScreenName;
+	
 	private List<SpecialtyDTO> userSpecialty;
 	
 	private List<GeoLevelDTO> geoLevels;
@@ -186,5 +188,13 @@ public class UserDTO {
 
 	public void setGeoLevels(List<GeoLevelDTO> geoLevels) {
 		this.geoLevels = geoLevels;
+	}
+
+	public String getCompanyScreenName() {
+		return companyScreenName;
+	}
+
+	public void setCompanyScreenName(String companyScreenName) {
+		this.companyScreenName = companyScreenName;
 	}
 }

@@ -836,6 +836,7 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(finalUser, ActivityAction.POST_PERMANENT_OFFER));
+			
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -1977,6 +1978,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException {
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
+		
+		try {
+			JobOffer saveMatches = jobDAO.getById(JobOffer.class, offerId);
+			int matchCount = (this.getMatchedUsers(saveMatches.getId()).size());
+			saveMatches.setMatchesAtCreation(matchCount);
+			jobDAO.save(saveMatches);
+		} catch (DAOException e1) {
+			e1.printStackTrace();
+		}
+		
 		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
 
 			boolean alreadyApplied = this.searchIfApplied(offerId,matchedUserDTO.getUserId());
@@ -2303,6 +2314,7 @@ public class UserServiceImpl implements UserService {
 		result.setLastname(user.getLastname());
 		result.setActive(user.isPhoneValidated());
 		result.setUserB(user.isUserb());
+		result.setCompanyScreenName(user.getCompanyScreenName());
 
 		result.setMobilePhone(user.getMobilePhone());
 

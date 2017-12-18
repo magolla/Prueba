@@ -440,6 +440,9 @@
 				var table = $('#users').DataTable();
 				var data = table.row( $(this).parents('tr') ).data();
 				$('#selectedUser').text(data.name + " " + data.lastname);
+				$('#companyScreenName').val(data.companyScreenName);
+				$('#previewCompanyScreen').text(data.companyScreenName);
+				
 				$('#selectedUser').addClass("overwriteSelectedUser");
 				$('#userId').text(data.id);
 				$('#userId').val(data.id);
