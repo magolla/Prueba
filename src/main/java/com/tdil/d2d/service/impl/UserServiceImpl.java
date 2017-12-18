@@ -2571,6 +2571,18 @@ public class UserServiceImpl implements UserService {
 		return result;
 	}
 
+    @Override
+    public List<JobOfferStatusDTO> getLastOffers() {
+        
+        
+        List<JobOffer> offers = this.jobDAO.getLastOffers();
+        
+        List<JobOfferStatusDTO> offerDto = offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
+        
+        return offerDto;
+
+
+    }
 
 
 }
