@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mercadopago.MP;
 import com.tdil.d2d.bo.dto.BONoteDTO;
 import com.tdil.d2d.bo.dto.BoJobDTO;
+import com.tdil.d2d.bo.dto.UserCandidateDTO;
 import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
@@ -2535,6 +2536,39 @@ public class UserServiceImpl implements UserService {
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public List<UserCandidateDTO> getcandidatesForOffer(long offerId) {
+
+		List<JobApplication> jobApplicationList;
+		try {
+			jobApplicationList = jobApplicationDAO.getJobApplications(offerId);
+			return jobApplicationList.stream().map(elem -> toUserCandidateDTO(elem)).collect(Collectors.toList());
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	private UserCandidateDTO toUserCandidateDTO(JobApplication elem) {
+		UserCandidateDTO result = new UserCandidateDTO();
+		result.setId(elem.getUser().getId());
+		result.setName(elem.getUser().getFirstname());
+		result.setLastName(elem.getUser().getLastname());
+		result.setEmail(elem.getUser().getEmail());
+		result.setMobilePhone(elem.getUser().getMobilePhone());
+		
+
+		Iterator<Specialty> iter = elem.getUser().getSpecialties().iterator();
+
+		Specialty first = iter.next();
+		
+		if(first != null) {
+			result.setOccupation(first.getOccupation().getName());
+		}
+		return result;
 	}
 
 

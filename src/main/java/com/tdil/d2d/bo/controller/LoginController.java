@@ -95,12 +95,12 @@ public class LoginController {
         
 		try {
 			//CHECK CAPTCHA
-//	        if(username != null && password != null && recaptchaResponse != null) {
-//	        	if(!validateGoogleCaptcha(recaptchaResponse)) {
-//	        		httpResponse.sendRedirect(servletContext.getContextPath() + "/admin/login?invalidCaptcha");
-//	        		return;
-//	        	}
-//	        }
+	        if(username != null && password != null && recaptchaResponse != null) {
+	        	if(!validateGoogleCaptcha(recaptchaResponse)) {
+	        		httpResponse.sendRedirect(servletContext.getContextPath() + "/admin/login?invalidCaptcha");
+	        		return;
+	        	}
+	        }
 			
 			//CHECK CREDENTIALS
 	        try {

@@ -6,11 +6,13 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tdil.d2d.dao.JobApplicationDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.persistence.JobApplication;
 
+@Transactional
 @Repository
 public class JobApplicationDAOImpl  extends GenericDAO<JobApplication> implements JobApplicationDAO {
 

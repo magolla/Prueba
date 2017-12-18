@@ -8,6 +8,7 @@ import javax.servlet.ServletOutputStream;
 
 import com.tdil.d2d.bo.dto.BONoteDTO;
 import com.tdil.d2d.bo.dto.BoJobDTO;
+import com.tdil.d2d.bo.dto.UserCandidateDTO;
 import com.tdil.d2d.bo.dto.UserDTO;
 import com.tdil.d2d.controller.api.dto.ActivityLogDTO;
 import com.tdil.d2d.controller.api.dto.Base64DTO;
@@ -198,5 +199,7 @@ public interface UserService {
 	User getUserById(long id) throws ServiceException;
 
 	public void addOffer(BoJobDTO boJob, int offerId);
+
+	public List<UserCandidateDTO> getcandidatesForOffer(long offerId);
 
 }

@@ -20,7 +20,7 @@
 										<tr>
 											<th>Id</th>
 											<th>Tipo de Oferta</th>
-											<th>Ocupaci髇</th>
+											<th>Ocupaci贸n</th>
 											<th>Especialidad</th>
 											<th>Tarea</th>
 											<th>Titulo</th>
@@ -28,11 +28,11 @@
 											<th>Comentario</th>
 											<th>Detalle del Oferente</th>
 											<th>Empresa/Profesional</th>
-											<th>Fecha de creaci髇</th>
+											<th>Fecha de creaci贸n</th>
 											<th>Zona</th>
 											<th>Fecha de oferta</th>
 											<th>Horario de la oferta</th>
-											<th>Tipo de instituci髇</th>
+											<th>Tipo de instituci贸n</th>
 											<th>Aplicantes</th>
 											<th>Usuario seleccionado</th>
 											<th>Estado</th>
@@ -43,7 +43,7 @@
 										<tr>
 											<th>Id</th>
 											<th>Tipo de Oferta</th>
-											<th>Ocupaci髇</th>
+											<th>Ocupaci贸n</th>
 											<th>Especialidad</th>
 											<th>Tarea</th>
 											<th>Titulo</th>
@@ -51,11 +51,11 @@
 											<th>Comentario</th>
 											<th>Detalle del Oferente</th>
 											<th>Empresa/Profesional</th>
-											<th>Fecha de creaci髇</th>
+											<th>Fecha de creaci贸n</th>
 											<th>Zona</th>
 											<th>Fecha de oferta</th>
 											<th>Horario de la oferta</th>
-											<th>Tipo de instituci髇</th>
+											<th>Tipo de instituci贸n</th>
 											<th>Aplicantes</th>
 											<th>Usuario seleccionado</th>
 											<th>Estado</th>
@@ -68,9 +68,96 @@
 					</div>
 				</div>
 			</div>
+			
+					<!-- Modal de Candidatos -->
+		<div id="candidatesModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-lg">
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title">Seleccionar usuario</h4>
+		      </div>
+		      <div id="bodyModalBootstrap" class="modal-body">
+				<table id="candidates" class="display" cellspacing="0" width="100%">
+					<thead>
+					    <tr>
+					        <th>ID</th>
+					        <th>N&uacute;mero Tel</th>
+					        <th>Nombre</th>
+					        <th>Apellido</th>
+					        <th>Email</th>
+					        <th>Profesion</th>
+					    </tr>
+					</thead>
+					<tfoot>
+					    <tr>
+					        <th>ID</th>
+					        <th>N&uacute;mero Tel</th>
+					        <th>Nombre</th>
+					        <th>Apellido</th>
+					        <th>Email</th>
+					        <th>Profesion</th>
+					    </tr>
+					</tfoot>
+				</table>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-danger" onClick="clearTable()" data-dismiss="modal">Cerrar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+			
+			
 		</section>
 
 		<script>
+		
+		
+// 		Esta funcion se usa para aplicar el ellipsis en Datatable
+		 $.fn.dataTable.render.ellipsis = function ( cutoff, wordbreak, escapeHtml ) {
+		        var esc = function ( t ) {
+		            return t
+		                .replace( /&/g, '&amp;' )
+		                .replace( /</g, '&lt;' )
+		                .replace( />/g, '&gt;' )
+		                .replace( /"/g, '&quot;' );
+		        };
+		     
+		        return function ( d, type, row ) {
+		            // Order, search and type get the original data
+		            if ( type !== 'display' ) {
+		                return d;
+		            }
+		     
+		            if ( typeof d !== 'number' && typeof d !== 'string' ) {
+		                return d;
+		            }
+		     
+		            d = d.toString(); // cast numbers
+		     
+		            if ( d.length < cutoff ) {
+		                return d;
+		            }
+		     
+		            var shortened = d.substr(0, cutoff-1);
+		     
+		            // Find the last white space character in the string
+		            if ( wordbreak ) {
+		                shortened = shortened.replace(/\s([^\s]*)$/, '');
+		            }
+		     
+		            // Protect against uncontrolled HTML input
+		            if ( escapeHtml ) {
+		                shortened = esc( shortened );
+		            }
+		     
+		            return '<span class="ellipsis" title="'+esc(d)+'">'+shortened+'&#8230;</span>';
+		        };
+		    };
+		
+		
 $(document).ready(function() {
     $('#reports-detail').DataTable( {
     	 dom: 'Bfrtip',
@@ -81,7 +168,7 @@ $(document).ready(function() {
         "ajax": '<c:url value="/admin/reports/all-jobsoffer" />',
         "language": {
             "search": "Buscar:",
-            "info": "P醙ina _PAGE_ de _PAGES_",
+            "info": "P谩gina _PAGE_ de _PAGES_",
             "paginate": {
                 "previous": "Previa",
                 "next": "Siguiente",
@@ -121,7 +208,16 @@ $(document).ready(function() {
                         	 }
                         }
                     },  
-                    { "data": "applications" },
+                    {
+                    	"data": "applications",
+                        "render": function ( data, type, full, meta ) {
+	                        	if(data == 0) {
+	                        		return "";
+	                        	} else {
+	                        		return "<button class=\"btn btn-info\" onClick=showCandidates(" + full.id + ")  data-toggle=\"modal\" data-target=\"#candidatesModal\" >Ver candidatos: " + data + "</button>";
+	                        	}
+                            }
+                    },
                     { "data": "jobApplication_detail" },
                     {
                         "data": "status",
@@ -135,9 +231,56 @@ $(document).ready(function() {
                     },  
                     { "data": "vacants" }
                 ],
+                "columnDefs": [
+                               {
+                                   targets: 7,
+                                   render: $.fn.dataTable.render.ellipsis(50)
+                               }
+                           ],
          "bLengthChange": false        
     } );
+    
+    
+
+    
+
+    $('#candidatesModal').on('hidden.bs.modal', function () {
+    	var table = $('#candidates').DataTable();
+    	table.destroy();
+
+    })
+    
 } );
+
+
+function showCandidates(data) {
+
+    $('#candidates').DataTable( {
+    	"ajax": "/d2d/admin/reports/getCandidates/" + data,
+        "language": {
+            "search": "Buscar:",
+            "info": "P&aacute;gina _PAGE_ de _PAGES_",
+            "paginate": {
+                "previous": "Previa",
+                "next": "Siguiente",
+              }
+          },
+        "columns": [
+					{ "data": "id" },
+					{ "data": "mobilePhone" },
+                    { "data": "name" },
+                    { "data": "lastName" },
+                    { "data": "email" },
+                    { "data": "occupation" }
+                ],
+         "bLengthChange": false        
+    } );
+	
+} 
+
+
+
+
 </script>
 	</tiles:putAttribute>
 </tiles:insertDefinition>
