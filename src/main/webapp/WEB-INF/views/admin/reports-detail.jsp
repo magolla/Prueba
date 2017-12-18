@@ -255,36 +255,37 @@ $(document).ready(function() {
     
 } );
 
-
-function showCandidates(data) {
-
-    $('#candidates').DataTable( {
-    	"ajax": "/d2d/admin/reports/getCandidates/" + data,
-        "language": {
-            "search": "Buscar:",
-            "info": "P&aacute;gina _PAGE_ de _PAGES_",
-            "paginate": {
-                "previous": "Previa",
-                "next": "Siguiente",
-              }
-          },
-        "columns": [
-					{ "data": "id" },
-					{ "data": "mobilePhone" },
-                    { "data": "name" },
-                    { "data": "lastName" },
-                    { "data": "email" },
-                    { "data": "occupation" }
-                ],
-         "bLengthChange": false        
-    } );
-	
-} 
-
-
-
-
-</script>
+			function showCandidates(data) {
+				$('#candidates').DataTable({
+					dom : 'Bfrtip',
+					buttons : [ 'excelHtml5', 'csvHtml5', 'copyHtml5' ],
+					"ajax" : "/d2d/admin/reports/getCandidates/" + data,
+					"language" : {
+						"search" : "Buscar:",
+						"info" : "P&aacute;gina _PAGE_ de _PAGES_",
+						"paginate" : {
+							"previous" : "Previa",
+							"next" : "Siguiente",
+						}
+					},
+					"columns" : [ {
+						"data" : "id"
+					}, {
+						"data" : "mobilePhone"
+					}, {
+						"data" : "name"
+					}, {
+						"data" : "lastName"
+					}, {
+						"data" : "email"
+					}, {
+						"data" : "occupation"
+					} ],
+					"bLengthChange" : false
+				});
+			}
+			
+		</script>
 	</tiles:putAttribute>
 </tiles:insertDefinition>
 
