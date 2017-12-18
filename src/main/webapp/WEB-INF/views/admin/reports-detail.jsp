@@ -20,48 +20,48 @@
 										<tr>
 											<th>Id</th>
 											<th>Tipo de Oferta</th>
-											<th>Ocupaci贸n</th>
+											<th>Ocupaci髇</th>
 											<th>Especialidad</th>
 											<th>Tarea</th>
-											<th>Titulo</th>
-											<th>Subtitulo</th>
+											<th>T韙ulo</th>
+											<th>Subt韙ulo</th>
 											<th>Comentario</th>
 											<th>Detalle del Oferente</th>
 											<th>Empresa/Profesional</th>
-											<th>Fecha de creaci贸n</th>
+											<th>Fecha de creaci髇</th>
 											<th>Zona</th>
 											<th>Fecha de oferta</th>
 											<th>Horario de la oferta</th>
-											<th>Tipo de instituci贸n</th>
+											<th>Tipo de instituci髇</th>
 											<th>Aplicantes</th>
 											<th>Usuario seleccionado</th>
 											<th>Estado</th>
 											<th>Vacantes</th>
-											<th>Cantidad de Matches en el momento de la creacion</th>
+											<th>Matches al crearla</th>
 										</tr>
 									</thead>
 									<tfoot>
 										<tr>
 											<th>Id</th>
 											<th>Tipo de Oferta</th>
-											<th>Ocupaci贸n</th>
+											<th>Ocupaci髇</th>
 											<th>Especialidad</th>
 											<th>Tarea</th>
-											<th>Titulo</th>
-											<th>Subtitulo</th>
+											<th>T韙ulo</th>
+											<th>Subt韙ulo</th>
 											<th>Comentario</th>
 											<th>Detalle del Oferente</th>
 											<th>Empresa/Profesional</th>
-											<th>Fecha de creaci贸n</th>
+											<th>Fecha de creaci髇</th>
 											<th>Zona</th>
 											<th>Fecha de oferta</th>
 											<th>Horario de la oferta</th>
-											<th>Tipo de instituci贸n</th>
+											<th>Tipo de instituci髇</th>
 											<th>Aplicantes</th>
 											<th>Usuario seleccionado</th>
 											<th>Estado</th>
 											<th>Vacantes</th>
-											<th>Cantidad de Matches en el momento de la creacion</th>
+											<th>Matches al crearla</th>
 										</tr>
 									</tfoot>
 								</table>
