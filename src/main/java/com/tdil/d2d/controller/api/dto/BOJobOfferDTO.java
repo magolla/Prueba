@@ -23,6 +23,7 @@ public class BOJobOfferDTO{
 	private String offerent_detail;
 	private String specialtyName;
 	private String taskName;
+	private Integer matchesAtCreation;
 
 	public long getId() {
 		return id;
@@ -137,5 +138,11 @@ public class BOJobOfferDTO{
 	}
 	public void setGeoLevelName(String string) {
 		this.geoLevelName = string;
+	}
+	public Integer getMatchesAtCreation() {
+		return matchesAtCreation;
+	}
+	public void setMatchesAtCreation(Integer matchesAtCreation) {
+		this.matchesAtCreation = matchesAtCreation;
 	}
 }

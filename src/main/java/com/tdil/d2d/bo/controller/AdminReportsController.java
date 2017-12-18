@@ -25,15 +25,18 @@ import com.tdil.d2d.bo.dto.FilterSubscriptionReportDTO;
 import com.tdil.d2d.bo.dto.JobOfferDailyReportDTO;
 import com.tdil.d2d.bo.dto.JobOfferReportDTO;
 import com.tdil.d2d.bo.dto.SubscriptionReportDTO;
+import com.tdil.d2d.bo.dto.UserCandidateDTO;
 import com.tdil.d2d.controller.api.dto.BOJobOfferDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.dto.TaskDTO;
 import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.dao.JobApplicationDAO;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.service.BOReportsService;
 import com.tdil.d2d.service.GeoService;
 import com.tdil.d2d.service.SpecialtyService;
+import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.LoggerManager;
 
 
@@ -50,6 +53,12 @@ public class AdminReportsController {
 
 	@Autowired
 	private SpecialtyService specialtyService;
+	
+	@Autowired
+	private JobApplicationDAO jobApplicationDAO;
+	
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping(value = {"/reports/details"} , method = RequestMethod.GET)
 	public ModelAndView homePage() {
@@ -336,5 +345,26 @@ public class AdminReportsController {
 		}
 
 	}
+	
+	
+	@RequestMapping(value = {"/reports/getCandidates/{offerId}"} , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<List<UserCandidateDTO>>>  getCandidates(@PathVariable long offerId) {
+		try{ 
+			
+			List<UserCandidateDTO> candidatesList = userService.getcandidatesForOffer(offerId);
+			
+			return ResponseEntity.ok(new GenericResponse<>(200, candidatesList));
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<List<UserCandidateDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);	
+		}
+
+	}
+
+
+	
+	
 }
     

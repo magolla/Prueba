@@ -82,6 +82,17 @@ public class JobOffer implements PersistentEntity {
 
 	@Column(name="jobApplication_id")
 	private Integer jobApplication_id;
+	
+	@Column(name="matchesAtCreation")
+	private Integer matchesAtCreation;
+
+	public Integer getMatchesAtCreation() {
+		return matchesAtCreation;
+	}
+
+	public void setMatchesAtCreation(Integer matchesAtCreation) {
+		this.matchesAtCreation = matchesAtCreation;
+	}
 
 	public Integer getJobApplication_id() {
 		return jobApplication_id;

@@ -12,7 +12,6 @@
 		<section id="note-editor" class="content">
 			<div class="row">
 				<div class="col-md-12">
-		
 					<div class="nav-tabs-custom">
 						<ul class="nav nav-tabs">
 							<li class="active"><a href="#tab_1" data-toggle="tab">Datos de la nota</a></li>
@@ -76,12 +75,8 @@
 												<label for="state" class="control-label">Estado</label>
 											</div>
 											<div class="col-sm-10">
-												<form:radiobutton path="active" value="true"
-													element="span class='radio'" />
-												Activo <br>
-												<form:radiobutton path="active" value="false"
-													element="span class='radio'" />
-												Inactivo
+												<form:radiobutton path="active" value="true" element="span class='radio'" />Activo <br>
+												<form:radiobutton path="active" value="false" element="span class='radio'" />Inactivo
 											</div>
 										</div>
 
@@ -282,7 +277,6 @@
 									</div>
 								</div>
 							</div>
-
 							<div class="box-footer">
 								<button type="submit" class="btn btn-info pull-right">Guardar y Publicar</button>
 							</div>
@@ -381,12 +375,9 @@
 			
 
 			function alluserAction(checkboxElem) {
-				console.log(checkboxElem);
 				  if (checkboxElem.checked) {
-					  console.log("INVI");
 					  $("#sponsorsBox").css('display','none');
 				  } else {
-					  console.log("NO INVI");
 					  $("#sponsorsBox").css('display','block');
 				  }
 			}

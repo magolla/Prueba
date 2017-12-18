@@ -120,6 +120,7 @@ public class BOReportsServiceImpl implements BOReportsService {
 		result.setSpecialtyName(jobOffer.getSpecialty().getName());
 		result.setTaskName(jobOffer.getTask().getName());
 
+		result.setMatchesAtCreation(jobOffer.getMatchesAtCreation());
 		return result;
 	}
 

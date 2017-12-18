@@ -87,8 +87,6 @@
 			  if($('#passwordChanged').val() == "false"){
 				  $('#passwordChanged').val("true");
 				  if($('#password').val().length>0==true){
-					  console.log($(this).val().length);
-					  
 					  $('#password').val("");  
 				  }
 			  }	

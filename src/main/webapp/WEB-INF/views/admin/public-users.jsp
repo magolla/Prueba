@@ -63,6 +63,10 @@
 <script>
 $(document).ready(function() {
     $('#users').DataTable( {
+   	 dom: 'Bfrtip',
+     buttons: [
+    	 'excelHtml5','csvHtml5','copyHtml5' 
+     ],
         "ajax": '<c:url value="/admin/list/public-users" />',
         "language": {
             "search": "Buscar:",

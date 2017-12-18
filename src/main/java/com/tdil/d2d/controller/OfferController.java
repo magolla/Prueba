@@ -58,7 +58,7 @@ public class OfferController extends AbstractController {
 			return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
 		}
 		try {
-			boolean response = this.userService.createJobOffer(createOfferRequest);
+			boolean response = this.userService.createJobOffer(createOfferRequest, null,-1);
 			if (response) {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
 			} else {
@@ -96,7 +96,7 @@ public class OfferController extends AbstractController {
 			return new ResponseEntity<ApiResponse>(getErrorResponse(bidingResult, new ApiResponse(HttpStatus.BAD_REQUEST.value())), HttpStatus.BAD_REQUEST);
 		}
 		try {
-			boolean response = this.userService.createJobOffer(createOfferRequest);
+			boolean response = this.userService.createJobOffer(createOfferRequest, null,-1);
 			if (response) {
 				return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.CREATED.value()), HttpStatus.CREATED);	
 			} else {

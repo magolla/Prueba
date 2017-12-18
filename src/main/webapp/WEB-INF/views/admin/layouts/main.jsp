@@ -25,6 +25,7 @@
 	<link rel="stylesheet" href="<c:url value="/bootstrap-select/css/bootstrap-select.min.css" />">
    
 	<script src="<c:url value="/admin/adminlte/plugins/jQuery/jquery-2.2.3.min.js" />"></script>
+	<script src="<c:url value="/admin/adminlte/plugins/jQueryUI/jquery-ui.min.js" />"></script>
 	<script src="<c:url value="/admin/bootstrap/js/bootstrap.min.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/plugins/fastclick/fastclick.js" />"></script>
 	<script src="<c:url value="/admin/adminlte/dist/js/app.min.js" />"></script>
@@ -126,7 +127,14 @@
 						</a>
 					</li>
 				</sec:authorize>
-
+				
+				<!-- TODO: Roles para Offers -->
+				<li class="treeview">
+					<a href="<c:url value="/admin/BoOffers" />">
+						<i class="fa fa-book"></i> <span>ABM de Ofertas</span>
+					</a>
+				</li>
+				
 				<!-- Roles para Notificaciones -->
 				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_NOTIFICATIONS')">
 					<li class="treeview">
