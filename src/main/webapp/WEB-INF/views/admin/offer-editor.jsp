@@ -454,6 +454,15 @@
 					var src = "data:image/png;base64," + data.avatar;
 					$("#userAvatar").attr("src",src);
 				} else {
+					
+		    		var str = window.location.pathname;
+		    		if (str.indexOf("d2d") >= 0) {
+		    			urlRelative = "/d2d/images/ic_avatar.png";
+		    		} else {
+		    			urlRelative = "/images/ic_avatar.png";
+		    		}
+					
+					
 					$("#userAvatar").attr("src","/d2d/images/ic_avatar.png");
 				}
 				$('#previewName').text(" " + data.name + " " + data.lastname);

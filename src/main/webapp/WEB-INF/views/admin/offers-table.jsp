@@ -258,13 +258,31 @@
         var rowData = table.row($(this).closest('tr')).data()	;
     	
     	if(this.id == 'editButton'){ 
-    		window.location.href = '/d2d/admin/editOffer/' + rowData.id;
+    		var urlRelative;
+    		var str = window.location.pathname;
+    		if (str.indexOf("d2d") >= 0) {
+    			urlRelative = "/d2d/admin/editOffer/";
+    		} else {
+    			urlRelative = "/admin/editOffer/";
+    		}
+    		
+    		window.location.href = urlRelative + rowData.id;
     	} else {
-            $.get('/d2d/admin/deleteOffer',{ offerId: rowData.id }, function(data, textStatus, xhr) {
+    		
+    		var urlRelative;
+    		var str = window.location.pathname;
+    		if (str.indexOf("d2d") >= 0) {
+    			urlRelative = "/d2d/admin/deleteOffer/";
+    		} else {
+    			urlRelative = "/admin/deleteOffer/";
+    		}
+    		
+            $.get(urlRelative,{ offerId: rowData.id }, function(data, textStatus, xhr) {
             	if(xhr.status == 200) {
 					table.row(selectedRow).remove().draw();
             	} 
             }).fail(function() {
+            	alert("Hubo un error al eliminar la oferta.")
             });
     	}
     } );
