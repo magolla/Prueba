@@ -22,26 +22,19 @@
 								<c:if test="${not empty param.confirmed}">
 									<div class="msg" style="margin:20px;">${param.confirmed}</div>
 								</c:if>
-								
-<%-- 								<c:if test="${not empty errors}"> --%>
-<%-- 								    <c:forEach var="error" items="${errors}"> --%>
-<%-- 										<div class="error">${error}</div> --%>
-<%-- 									</c:forEach> --%>
-<%-- 								</c:if> --%>
 				
 								<form:form method="POST" modelAttribute="boJobDTO" autocomplete="off" enctype="multipart/form-data">
 									<div class="box-body">
 										<div class="form-group">
 											<c:if test="${empty offerId}">
-												<label class="col-sm-10 control-label">Usuario al que se le cargar&aacute; la oferta: <span id="selectedUser" class="unselectedUser">NO SELECCIONADO</span></label>
-												<div class="col-sm-2">
-													<button type="button" class="btn btn-success pull-right" onClick="searchUser();">Seleccionar Usuario</button>
-													<form:errors path="userId" class="error-text"></form:errors>
-												</div>
-												<div class="col-sm-2">
-													<label>Ingresar usuario por ID</label>
-													<input id="userIdInput">
+												<label class="col-md-5 control-label">Usuario al que se le cargar&aacute; la oferta: <span id="selectedUser" class="unselectedUser">NO SELECCIONADO</span></label>
+												<div class="col-md-3 control-label">
+													<input id="userIdInput" class="form-control col-md-10" placeholder="Ingresar ID">
 													<label id="userIdError" class="error-text" hidden="true">El usuario ingresado es invalido</label>
+												</div>
+												<div class="col-md-4 control-label">
+													<button type="button" class="btn btn-success pull-right col-md-10" onClick="searchUser();">Seleccionar</button>
+													<form:errors path="userId" class="error-text"></form:errors>
 												</div>
 											</c:if>
 											<form:input path="userId" id="userId" val='${boJobDTO.userId}' hidden="true"></form:input>
@@ -304,7 +297,7 @@
 												<span id="previewHour" class="form-wpp-body-text">Hora: </span>
 											</div>
 										<span id="previewZone" class="form-wpp-body-text">Zona: </span>
-										<span id="previewInstitutionType" class="form-wpp-body-text">Tipo de institución: </span>
+										<span id="previewInstitutionType" class="form-wpp-body-text">Tipo de instituci&oacute;n: </span>
 										<span id="previewOfferText" class="form-wpp-body-text" style="margin:18px 0 0;">${boJobDTO.offerText}</span>
 									</div>
 								</div>
@@ -696,7 +689,7 @@
 		      if(value == 'Private') {
 					$('#previewInstitutionType').text("Tipo de institución: Privada")
 		        } else {
-		        	$('#previewInstitutionType').text("Tipo de institución: Publica")
+		        	$('#previewInstitutionType').text("Tipo de institución: Pública")
 		        }
 		}
 		
