@@ -384,6 +384,24 @@ public class AdminOffersController {
 		}
 	}
 
+	
+	@RequestMapping(value = {"/getUserById/{userId}"} , method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<?> getUserById(@PathVariable("userId") int userId) {
+		UserDTO user;
+		try {
+//			user = userService.getUserById(userId);
+			user = this.userService.getUserWebDetails(userId);
+		} catch (ServiceException e) {
+//			e.printStackTrace();
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		Gson gson = new Gson();
+
+		String jsonString = gson.toJson(user);
+
+		return new ResponseEntity<String>(jsonString, HttpStatus.OK);
+	}
 
 
 }

@@ -35,8 +35,13 @@
 											<c:if test="${empty offerId}">
 												<label class="col-sm-10 control-label">Usuario al que se le cargar&aacute; la oferta: <span id="selectedUser" class="unselectedUser">NO SELECCIONADO</span></label>
 												<div class="col-sm-2">
-													<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#userModal">Seleccionar Usuario</button>
+													<button type="button" class="btn btn-success pull-right" onClick="searchUser();">Seleccionar Usuario</button>
 													<form:errors path="userId" class="error-text"></form:errors>
+												</div>
+												<div class="col-sm-2">
+													<label>Ingresar usuario por ID</label>
+													<input id="userIdInput">
+													<label id="userIdError" class="error-text" hidden="true">El usuario ingresado es invalido</label>
 												</div>
 											</c:if>
 											<form:input path="userId" id="userId" val='${boJobDTO.userId}' hidden="true"></form:input>
@@ -468,6 +473,9 @@
 				$('#previewName').text(" " + data.name + " " + data.lastname);
 			} );
 			
+			
+			$('#userIdError').attr("hidden", true);
+			
 			if($('#permanentRadio').is(":checked")) {
 				permanent = true
 				checkOfferTypeRadio('Permanent');
@@ -854,7 +862,52 @@
 			</c:if>
 			
 		}
+		
+		function searchUser() {
 			
+			$('#userIdError').attr("hidden", true);
+		    if ($('#userIdInput').val() != "") {
+		        if ($.isNumeric($('#userIdInput').val())) {
+		            var jqxhr = $.get("/d2d/admin/getUserById/" + $('#userIdInput').val(), function(data) {
+		                
+						$('#selectedUser').text(data.name + " " + data.lastname);
+						$('#companyScreenName').val(data.companyScreenName);
+						$('#previewCompanyScreen').text(data.companyScreenName);
+						
+						$('#selectedUser').addClass("overwriteSelectedUser");
+						$('#userId').text(data.id);
+						$('#userId').val(data.id);
+						$('#userName').val(data.name);
+						$('#userLastName').val(data.lastname);
+						$('#hideableFormPart').attr("hidden", false)
+						if(data.avatar != null) {
+							var src = "data:image/png;base64," + data.avatar;
+							$("#userAvatar").attr("src",src);
+						} else {
+							
+				    		var str = window.location.pathname;
+				    		if (str.indexOf("d2d") >= 0) {
+				    			urlRelative = "/d2d/images/ic_avatar.png";
+				    		} else {
+				    			urlRelative = "/images/ic_avatar.png";
+				    		}
+							
+							
+							$("#userAvatar").attr("src","/d2d/images/ic_avatar.png");
+						}
+						$('#previewName').text(" " + data.name + " " + data.lastname);
+		            	
+		            	
+		            }).fail(function() {
+						$('#userIdError').attr("hidden", false)
+		            })
+		        } else {
+		        	$('#userIdError').attr("hidden", false)
+		        }
+		    } else {
+		        $('#userModal').modal('toggle');
+		    }
+		}
 		
 		</script>
 	</tiles:putAttribute>

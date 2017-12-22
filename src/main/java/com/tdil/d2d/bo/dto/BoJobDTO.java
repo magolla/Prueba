@@ -10,7 +10,7 @@ public class BoJobDTO {
 
 	
 	private long userId;
-
+	
 	private boolean permanent;
 	
 	private long occupationId;
