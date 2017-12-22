@@ -194,7 +194,7 @@
 	</div>
 	
 	<footer class="main-footer">
-		<div class="pull-right hidden-xs">WebApp DTD v 1.03.05</div>
+		<div class="pull-right hidden-xs">WebApp DTD v 1.03.06</div>
 		<strong>Copyright &copy; 2017 <a href="http://www.doctodocapp.com/">Doc To Doc</a>.</strong> All rights reserved.
 	</footer>
 
