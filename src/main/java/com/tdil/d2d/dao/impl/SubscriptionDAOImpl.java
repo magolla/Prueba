@@ -188,7 +188,7 @@ public class SubscriptionDAOImpl extends HibernateDaoSupport implements Subscrip
 		}
 
 		StringBuilder queryString = new StringBuilder("");
-		queryString.append("SELECT distinct receipt.transactionId ");
+		queryString.append("SELECT receipt.transactionId ");
 		queryString.append("FROM Receipt receipt ");
 		queryString.append("WHERE receipt.transactionId in (:transactionIds) ");
 		queryString.append("order by receipt.creationDate desc");

@@ -275,7 +275,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             VerifyReceiptResultDTO receiptResult = gson.fromJson(responseBody, VerifyReceiptResultDTO.class);
             
             InAppPurchaseDTO lastPurchase = null;
-            if(receiptResult.getStatus() == 0 && !receiptResult.getLatestPurchases().isEmpty()) {
+            if(receiptResult != null && receiptResult.getStatus() == 0 && receiptResult.getLatestPurchases() != null && !receiptResult.getLatestPurchases().isEmpty()) {
             	
             	Comparator<InAppPurchaseDTO> comp = (InAppPurchaseDTO a, InAppPurchaseDTO b) -> {
             		if (b.getExpiresDate() > a.getExpiresDate()){
