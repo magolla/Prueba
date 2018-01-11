@@ -29,4 +29,6 @@ public interface SpecialtyDAO {
 	
 	public List<Occupation> listOccupationsByIds(List<Long> ids) throws DAOException;
 	public List<Specialty> listSpecialtiesByIds(List<Long> ids) throws DAOException;
+	int taskCount(String search) throws DAOException;
+	public List<Task> getTaskByIndex(String length, String start, String search);
 }

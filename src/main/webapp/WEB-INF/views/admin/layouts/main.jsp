@@ -135,6 +135,13 @@
 					</a>
 				</li>
 				
+				<!-- TODO: Roles para categories -->
+				<li class="treeview">
+					<a href="<c:url value="/admin/BoCategory" />">
+						<i class="fa fa-book"></i> <span>ABM de Categorias</span>
+					</a>
+				</li>
+				
 				<!-- Roles para Notificaciones -->
 				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_NOTIFICATIONS')">
 					<li class="treeview">

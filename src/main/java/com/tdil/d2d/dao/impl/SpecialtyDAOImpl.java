@@ -8,7 +8,9 @@ import javax.annotation.PostConstruct;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -165,6 +167,8 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			throw new DAOException(e);
 		}
 	}
+	
+	
 
 	private void basicSave(PersistentEntity entity) throws DAOException {
 		String invocationDetails = "save(" + entity.getClass().getName() + ") ";
@@ -221,5 +225,44 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+	}
+
+	@Override
+	public int taskCount(String search) throws DAOException {
+		try {
+			
+			
+			
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Task.class);
+			criteria.createAlias("specialty", "sn");
+			criteria.createAlias("sn.occupation", "so");
+			criteria.add(Restrictions.disjunction()
+			        .add(Restrictions.like("name", search, MatchMode.ANYWHERE))
+			        .add(Restrictions.like("sn.name", search, MatchMode.ANYWHERE))
+			        .add(Restrictions.like("so.name", search, MatchMode.ANYWHERE))
+			    );
+			
+			int count = ((Number)criteria.setProjection(Projections.rowCount()).uniqueResult()).intValue();
+			return count;
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	
+	@Override
+	public List<Task> getTaskByIndex(String length, String start, String search) {
+		
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Task.class);
+			criteria.createAlias("specialty", "sn");
+			criteria.createAlias("sn.occupation", "so");
+			criteria.add(Restrictions.disjunction()
+			        .add(Restrictions.like("name", search, MatchMode.ANYWHERE))
+			        .add(Restrictions.like("sn.name", search, MatchMode.ANYWHERE))
+			        .add(Restrictions.like("so.name", search, MatchMode.ANYWHERE))
+			    );
+			criteria.setFirstResult(Integer.valueOf(start));
+			criteria.setMaxResults(Integer.valueOf(length));
+			return criteria.list();
 	}
 }

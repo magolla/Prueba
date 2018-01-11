@@ -1,7 +1,9 @@
 package com.tdil.d2d.service;
 
 import java.util.Collection;
+import java.util.List;
 
+import com.tdil.d2d.bo.dto.CategoryDto;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.dto.TaskDTO;
@@ -19,4 +21,9 @@ public interface SpecialtyService {
 
 	public OccupationDTO getOccupationDTOById(Long id);
 	public SpecialtyDTO getSpecialtyDTOById(Long id);
+	
+	public int getTaskCount(String search) throws ServiceException;
+	public List<CategoryDto> getTaskByIndex(String length, String start, String search);
+
+
 }

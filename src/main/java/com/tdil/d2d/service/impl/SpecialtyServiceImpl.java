@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.bo.dto.CategoryDto;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.dto.TaskDTO;
@@ -50,6 +51,15 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 	public Collection<TaskDTO> listTasks(long specialtyId) throws ServiceException {
 		try {
 			return toDtoTask(specialtyDAO.listTasks(specialtyId));
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
+	public int getTaskCount(String search) throws ServiceException {
+		try {
+			return specialtyDAO.taskCount(search);
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
@@ -188,4 +198,29 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 			return null;
 		}
 	}
+
+	@Override
+	public List<CategoryDto> getTaskByIndex(String length, String start, String search) {
+		
+		List<Task> taskList = this.specialtyDAO.getTaskByIndex(length, start, search);
+		
+		return taskList.stream().map(task -> toDtoCategory(task)).collect(Collectors.toList());
+		
+	}
+
+	private CategoryDto toDtoCategory(Task task) {
+		CategoryDto categoryDto = new CategoryDto();
+		
+		categoryDto.setTaskId(task.getId());
+		categoryDto.setTaskName(task.getName());
+		
+		categoryDto.setSpecialtyId(task.getSpecialty().getId());
+		categoryDto.setSpecialtyName(task.getSpecialty().getName());
+		
+		categoryDto.setOccupationId(task.getSpecialty().getOccupation().getId());
+		categoryDto.setOccupationName(task.getSpecialty().getOccupation().getName());
+		
+		return categoryDto;
+	}
+
 }
