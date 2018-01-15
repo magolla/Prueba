@@ -25,5 +25,13 @@ public interface SpecialtyService {
 	public int getTaskCount(String search) throws ServiceException;
 	public List<CategoryDto> getTaskByIndex(String length, String start, String search);
 
+	boolean addSpecialtyToOccupation(String occupationId, String specialtyName) throws ServiceException;
+
+	Collection<OccupationDTO> listOccupationsNoFilter() throws ServiceException;
+
+	Collection<SpecialtyDTO> listAllSpecialties() throws ServiceException;
+
+	public void addTaskToOccupationAndSpecialty(String taskName, String specialtyId) throws ServiceException;
+
 
 }

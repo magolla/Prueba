@@ -2,7 +2,7 @@ package com.tdil.d2d.bo.dto;
 
 import java.util.List;
 
-public class DatatablePaginateOutDto<T> {
+public class DatatablePaginateOutDTO<T> {
 	
 	private int draw;
 	private int recordsTotal;

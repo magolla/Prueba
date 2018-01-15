@@ -1,5 +1,6 @@
 package com.tdil.d2d.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.tdil.d2d.exceptions.DAOException;
@@ -31,4 +32,8 @@ public interface SpecialtyDAO {
 	public List<Specialty> listSpecialtiesByIds(List<Long> ids) throws DAOException;
 	int taskCount(String search) throws DAOException;
 	public List<Task> getTaskByIndex(String length, String start, String search);
+	public List<Specialty> getSpecialtyByOccupationId(String occupationId);
+	public Collection<Occupation> listOccupationNoFilter() throws DAOException;
+	public List<Task> getTasksBySpecialtyId(long id);
+	List<Specialty> listAllSpecialties() throws DAOException;
 }

@@ -71,10 +71,26 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 	public List<Occupation> listOccupation() throws DAOException {
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Occupation.class);
-			return criteria.list();
+			
+			return filterOccupation(criteria.list());
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
+	}
+
+	private List<Occupation> filterOccupation(List<Occupation> list) {
+
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Task.class);
+
+		criteria.add(Restrictions.eq("name",""));
+
+		List<Task> taskList = criteria.list();
+
+		for (Task task : taskList) {
+			list.remove(task.getSpecialty().getOccupation());
+		}
+
+		return list;
 	}
 
 	@Override
@@ -265,4 +281,50 @@ public class SpecialtyDAOImpl extends HibernateDaoSupport implements SpecialtyDA
 			criteria.setMaxResults(Integer.valueOf(length));
 			return criteria.list();
 	}
+
+	@Override
+	public List<Specialty> getSpecialtyByOccupationId(String occupationId) {
+		
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Specialty.class);
+//		criteria.createAlias("specialty", "sn");
+		criteria.createAlias("occupation", "oc");
+		criteria.add(Restrictions.eq("oc.id", Long.valueOf(occupationId)));
+		List<Specialty> specialtyList = criteria.list();
+		
+		return specialtyList;
+	}
+
+	@Override
+	public List<Occupation> listOccupationNoFilter() throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Occupation.class);
+			
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	@Override
+	public List<Task> getTasksBySpecialtyId(long specialtyId) {
+		
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Task.class);
+		criteria.createAlias("specialty", "sn");
+		criteria.add(Restrictions.eq("sn.id", specialtyId));
+		List<Task> specialtyList = criteria.list();
+		
+		return specialtyList;
+	}
+	
+	@Override
+	public List<Specialty> listAllSpecialties() throws DAOException {
+		try {
+			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Specialty.class);
+			return criteria.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	
 }
