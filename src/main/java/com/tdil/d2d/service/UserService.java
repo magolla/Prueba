@@ -204,4 +204,8 @@ public interface UserService {
 
 	public List<UserCandidateDTO> getcandidatesForOffer(long offerId);
 
+	List<UserDTO> getUserByIndex(String length, String start, String search);
+
+	public int getUserCount(String search);
+
 }
