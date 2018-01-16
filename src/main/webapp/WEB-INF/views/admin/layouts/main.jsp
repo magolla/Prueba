@@ -107,7 +107,7 @@
 			<!-- sidebar menu: : style can be found in sidebar.less -->
 			<ul class="sidebar-menu">
 				<li class="treeview">
-					<a href="<c:url value="/admin/dashboard" />">
+					<a href="<c:url value="/admin/dashboard"/>">
 						<i class="fa fa-dashboard"></i> <span>Inicio</span>
 					</a>
 				</li>
@@ -140,6 +140,14 @@
 				<li class="treeview">
 					<a href="<c:url value="/admin/BoCategory" />">
 						<i class="fa fa-book"></i> <span>ABM de Categorias</span>
+					</a>
+				</li>
+				
+								
+				<!-- TODO: Roles para categories -->
+				<li class="treeview">
+					<a href="<c:url value="/admin/BoGeolevel" />">
+						<i class="fa fa-book"></i> <span>ABM de Geolevels</span>
 					</a>
 				</li>
 				
