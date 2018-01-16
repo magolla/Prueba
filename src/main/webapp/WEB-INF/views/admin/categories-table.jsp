@@ -1,6 +1,7 @@
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
@@ -38,6 +39,9 @@
 											<th>OcupacionId</th>
 											<th>EspecialidadId</th>
 											<th>TareaId</th>
+											<th>Editar Ocupacion</th>
+											<th>Editar Especialidad</th>
+											<th>Editar Tarea</th>
 										</tr>
 									</thead>
 									<tfoot>
@@ -48,6 +52,9 @@
 											<th>OcupacionId</th>
 											<th>EspecialidadId</th>
 											<th>TareaId</th>
+											<th>Editar Ocupacion</th>
+											<th>Editar Especialidad</th>
+											<th>Editar Tarea</th>
 										</tr>
 									</tfoot>
 								</table>
@@ -159,6 +166,93 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- Modal de edit para ocupacion -->
+		<div id="occupationEditModal" class="modal fade bd-example-modal-lg"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Editar ocupacion</h4>
+					</div>
+					<div id="bodyModalBootstrap" class="modal-body">
+					<div class="row" >
+						<div id="occupationEditSuccess" class="msg" style="display: none;" >sfas</div>
+						<div id="occupationEditError" class="error"  style="display: none;">sfas</div>
+					</div>
+						<div class="row">
+							<label class="col-md-4">Nombre:</label>
+							<input id="occupationEditName" class="col-md-4">
+							<input id="occupationEditId" class="col-md-2" style="display: none;">
+							<button onclick="editOccupation()">Editar</button>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Modal de edit para especialidades -->
+		<div id="specialtyEditModal" class="modal fade bd-example-modal-lg"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Editar especialidad</h4>
+					</div>
+					<div id="bodyModalBootstrap" class="modal-body">
+					<div class="row" >
+						<div id="specialtyEditSuccess" class="msg" style="display: none;" >sfas</div>
+						<div id="specialtyEdit	Error" class="error"  style="display: none;">sfas</div>
+					</div>
+						<div class="row">
+							<label class="col-md-4">Nombre:</label>
+							<input id="specialtyEditName" class="col-md-4">
+							<input id="specialtyEditId" class="col-md-2" style="display: none;">
+							<button onclick="editSpecialty()">Editar</button>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Modal de edit para task -->
+		<div id="taskEditModal" class="modal fade bd-example-modal-lg"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Editar tarea</h4>
+					</div>
+					<div id="bodyModalBootstrap" class="modal-body">
+					<div class="row" >
+						<div id="taskEditSuccess" class="msg" style="display: none;" >sfas</div>
+						<div id="taskEditError" class="error"  style="display: none;">sfas</div>
+					</div>
+						<div class="row">
+							<label class="col-md-4">Nombre:</label>
+							<input id="taskEditName" class="col-md-4">
+							<input id="taskEditId" class="col-md-2" style="display: none;">
+							<button onclick="editTask()">Editar</button>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<script>
 
@@ -184,19 +278,41 @@
 							"next" : "Siguiente",
 						}
 					},
-					"columns" : [ {
-						"data" : "occupationName"
-					}, {
-						"data" : "specialtyName"
-					}, {
-						"data" : "taskName"
-					}, {
-						"data" : "occupationId"
-					}, {
-						"data" : "specialtyId"
-					}, {
-						"data" : "taskId"
-					} ],
+					"columns" : [
+						{"data" : "occupationName"},
+						{"data" : "specialtyName"}, 
+						{"data" : "taskName"},
+						{"data" : "occupationId"},
+						{"data" : "specialtyId"},
+						{"data" : "taskId"},
+	                    {
+	                        "data": "status",
+	                        "render": function ( data, type, full, meta ) {
+	                        		 return "<button id='editOccupationBtn' class='btn btn-default'>Editar Ocupacion</button>";
+	                        }
+	                    },
+	                    {
+	                        "data": "status",
+	                        "render": function ( data, type, full, meta ) {
+	                        	if(full.specialtyName == '' && full.taskName == ''){
+	                        		return null;
+	                        	} else {
+	                        		return "<button id='editSpecialtyBtn' class='btn btn-warning'>Editar Especialidad</button>";
+	                        	}
+	                        }
+	                    },
+	                    {
+	                        "data": "status",
+	                        "render": function ( data, type, full, meta ) {
+	                        	if(full.taskName == ''){
+	                        		return null;
+	                        	} else {
+	                        		 return "<button id='editTaskBtn' class='btn btn-info'>Editar Tarea</button>";
+	                        	}
+	                        }
+	                    }
+						
+						],
 					"columnDefs" : [ {
 						"targets" : [ 3, 4, 5 ],
 						"visible" : false,
@@ -206,43 +322,8 @@
 				});
 				
 				var table = $('#categories-table').DataTable();
-				
-			//ACA TERMINA LA CONFIGURACION DE LA TABLA				
-			
-			
-			
-			// Comienzo autocomplete modal especialidades
-// 			$("#espOccupationName").autocomplete({
-// 			    source: function (request, response) {
-// 			        $.ajax({
-// 			            url: "/d2d/admin/BoCategory/occupations",
-// 			            data: { query: request.term },
-// 			            success: function (data) {
-// 			                var transformed = $.map(data, function (el) {
-// 			                    return {
-// 			                        label: el.name,
-// 			                        id: el.id,
-// // 			                        level : el.level 
-// 			                    };
-// 			                });
-// 			                response(transformed);
-// 			            },
-// 			            error: function () {
-// 			                response([]);
-// 			            }
-// 			        });
-// 			    },
-// 			    select: function (suggestion,ui) {
-// 			    	$('#espOccupationId').val(ui.item.id);
-// 			    	$('#espOccupationName').val(ui.item.label);
-// // 			    	$('#zoneLevel').val(ui.item.level);
-// // 			    	$("#zones").prop('disabled', true);
-// // 			    	$('#previewZone').text('Zona: ' + ui.item.label)
-// 			   	},
-// 			   	minLength: 3
-// 			});
-			
-			// Inicio
+
+				// Inicio
 				$("#espOccupationName").val("");
 			    $("#espOccupationId").val("");
 			    $("#espOccupationName").prop('disabled', false);
@@ -255,6 +336,7 @@
 			    $("#taskOccupationName").prop('disabled', false);
 			    $("#taskEspCleanButton").prop('disabled', false);
 			    $("#taskSpecialtyName").prop('disabled', false);
+			    hideEditMessages();
 			    
 			
 			    refreshOccupations();
@@ -277,10 +359,25 @@
 			    $("#espSpecialtyName").val("");
 			})
 			
-						//Listener que se ejecuta al cerrar el modal ya sea por medio del boton cerrar como con la cruz
+			//Listener que se ejecuta al cerrar el modal ya sea por medio del boton cerrar como con la cruz
 			$('#taskModal').on('hidden.bs.modal', function () {
 				taskHideMessages();
 			    table.ajax.reload();
+			})
+			
+			$('#occupationEditModal').on('hidden.bs.modal', function () {
+			    table.ajax.reload();
+			    hideEditMessages()
+			})
+			
+			$('#specialtyEditModal').on('hidden.bs.modal', function () {
+			    table.ajax.reload();
+			    hideEditMessages()
+			})
+			
+			$('#taskEditModal').on('hidden.bs.modal', function () {
+			    table.ajax.reload();
+			    hideEditMessages()
 			})
 			
 			
@@ -308,6 +405,29 @@
 			});
 			
 			
+		    $('#categories-table tbody').on( 'click', 'button', function (e) {
+		    	
+		    	
+		        var data = table.row( $(this).parents('tr') ).data();
+		    	
+		    	if(e.target.id == "editOccupationBtn") {
+		    		$('#occupationEditModal').modal('show');
+		    		$("#occupationEditId").val(data.occupationId);
+		    		$("#occupationEditName").val(data.occupationName);
+		    		
+		    	} else if(e.target.id == "editSpecialtyBtn") {
+		    		$('#specialtyEditModal').modal('show');
+		    		$("#specialtyEditId").val(data.specialtyId);
+		    		$("#specialtyEditName").val(data.specialtyName);
+		    	} else {
+		    		$('#taskEditModal').modal('show');
+		    		$("#taskEditId").val(data.taskId);
+		    		$("#taskEditName").val(data.taskName);
+		    	}
+		    	
+
+		        
+		    } );
 
 			});
 			
@@ -540,6 +660,144 @@
 					},'json');
 					
 
+			}
+			
+			function editOccupation() {
+				
+				var occupationName = $("#occupationEditName").val();
+				var occupationId = $("#occupationEditId").val();
+				
+				var data = {}
+				data["name"] = occupationName;
+				data["id"] = occupationId;
+				
+				$.ajax({ 
+				    type: 'POST', 
+				    contentType: "application/json",
+				    url: "/d2d/admin/BoCategory/editOccupation?${_csrf.parameterName}=${_csrf.token}", 
+				    data: JSON.stringify(data),
+				    dataType: 'json',
+				    success: function (data) { 
+						if(data.status == 200){
+							$("#occupationName").val("");
+						    $("#occupationId").val("");
+						    occupationEditShowSuccess(data.data);
+						} else {
+							occupationEditShowError("Hubo un error al editar la ocupacion");
+					    }
+				    },
+				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+				    	occupationEditShowError("Hubo un error al editar la ocupacion");
+	                }   
+				    
+				});
+			}
+			
+			function editSpecialty() {
+				var specialtyName = $("#specialtyEditName").val();
+				var specialtyId = $("#specialtyEditId").val();
+				
+				var data = {}
+				data["name"] = specialtyName;
+				data["id"] = specialtyId;
+				
+				$.ajax({ 
+				    type: 'POST', 
+				    contentType: "application/json",
+				    url: "/d2d/admin/BoCategory/editSpecialty?${_csrf.parameterName}=${_csrf.token}", 
+				    data: JSON.stringify(data),
+				    dataType: 'json',
+				    success: function (data) { 
+						if(data.status == 200){
+							$("#specialtyName").val("");
+						    $("#specialtyId").val("");
+
+						    specialtyEditShowSuccess(data.data);
+						} else {
+							specialtyEditShowError("Hubo un error al editar la especialidad");
+					    }
+				    },
+				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+				    	specialtyEditShowError("Hubo un error al editar la especialidad");
+	                }   
+				    
+				});
+			}
+						
+			function editTask() {
+				
+				var taskName = $("#taskEditName").val();
+				var taskId = $("#taskEditId").val();
+
+				var data = {}
+				data["name"] = taskName;
+				data["id"] = taskId;
+				
+				$.ajax({ 
+				    type: 'POST', 
+				    contentType: "application/json",
+				    url: "/d2d/admin/BoCategory/editTask?${_csrf.parameterName}=${_csrf.token}", 
+				    data: JSON.stringify(data),
+				    dataType: 'json',
+				    success: function (data) { 
+						if(data.status == 200){
+							$("#specialtyName").val("");
+						    $("#specialtyId").val("");
+
+						    taskEditShowSuccess(data.data);
+						} else {
+							taskEditShowError("Hubo un error al editar la tarea");
+					    }
+				    },
+				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+				    	taskEditShowError("Hubo un error al editar la tarea");
+	                }   
+				    
+				});
+				
+			}
+			
+			
+			//Funciones para edit ocupacion
+			function occupationEditShowSuccess(message) {
+				$("#occupationEditSuccess").show();
+				$("#occupationEditSuccess").text(message);
+			}
+			function occupationEditShowError(message) {
+				$("#occupationEditError").show();
+				$("#occupationEditError").text(message);
+			}
+			
+			//Funciones para edit tarea
+			function specialtyEditShowSuccess(message) {
+				$("#specialtyEditSuccess").show();
+				$("#specialtyEditSuccess").text(message);
+			}
+			function specialtyEditShowError(message) {
+				$("#specialtyEditError").show();
+				$("#specialtyEditError").text(message);
+			}
+			
+			//Funciones para edit tarea
+			function taskEditShowSuccess(message) {
+				$("#taskEditSuccess").show();
+				$("#taskEditSuccess").text(message);
+			}
+			function taskEditShowError(message) {
+				$("#taskEditError").show();
+				$("#taskEditError").text(message);
+			}
+			
+			//Funcion ocultar mensajes modales de edicion
+			function hideEditMessages() {
+				$("#occupationEditSuccess").hide();
+				$("#occupationEditError").hide();
+				
+				$("#specialtyEditSuccess").hide();
+				$("#specialtyEditError").hide();
+				
+				$("#taskEditSuccess").hide();
+				$("#taskEditError").hide();
 			}
 			
 		</script>

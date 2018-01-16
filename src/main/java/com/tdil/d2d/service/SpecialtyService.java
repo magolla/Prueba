@@ -7,6 +7,7 @@ import com.tdil.d2d.bo.dto.CategoryDto;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.dto.TaskDTO;
+import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
 
 public interface SpecialtyService {
@@ -31,7 +32,13 @@ public interface SpecialtyService {
 
 	Collection<SpecialtyDTO> listAllSpecialties() throws ServiceException;
 
-	public void addTaskToOccupationAndSpecialty(String taskName, String specialtyId) throws ServiceException;
+	public void addTaskToOccupationAndSpecialty(String taskName, String specialtyId) throws ServiceException, DAOException;
+
+	public void editOccupation(long l, String occupationName) throws DAOException;
+
+	void editSpecialty(long specialtyId, String specialtyName) throws DAOException;
+
+	void editTask(long taskId, String taskName) throws DAOException;
 
 
 }

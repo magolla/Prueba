@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +24,9 @@ import com.tdil.d2d.bo.dto.DatatablePaginateOutDTO;
 import com.tdil.d2d.bo.dto.DatatablePaginationInDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
+import com.tdil.d2d.controller.api.request.CategoryEditRequest;
 import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.service.SpecialtyService;
 import com.tdil.d2d.utils.LoggerManager;
@@ -111,7 +114,44 @@ public class AdminCategoryController {
 		try {
 			specialtyService.addTaskToOccupationAndSpecialty(taskName,specialtyId);
 			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
-		} catch (ServiceException e) {
+		} catch (ServiceException | DAOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
+	@RequestMapping(value = "/BoCategory/editOccupation", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> editOccupation(@RequestBody CategoryEditRequest body) {
+		
+		try {
+			specialtyService.editOccupation(body.getId(), body.getName());
+			return ResponseEntity.ok(new GenericResponse<>(200, "La ocupacion se ha editado exitosamente."));
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/BoCategory/editSpecialty", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> editSpecialty(@RequestBody CategoryEditRequest body) {
+		
+		try {
+			specialtyService.editSpecialty(body.getId(), body.getName());
+			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha editado exitosamente."));
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/BoCategory/editTask", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> editTask(@RequestBody CategoryEditRequest body) {
+		
+		try {
+			specialtyService.editTask(body.getId(), body.getName());
+			return ResponseEntity.ok(new GenericResponse<>(200, "La tarea se ha editado exitosamente."));
+		} catch (DAOException e) {
 			e.printStackTrace();
 			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

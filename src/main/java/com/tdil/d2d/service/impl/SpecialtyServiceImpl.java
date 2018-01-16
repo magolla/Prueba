@@ -304,4 +304,25 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 
 	}
 
+	@Override
+	public void editOccupation(long occupationId, String occupationName) throws DAOException {
+			Occupation oc = specialtyDAO.getOccupationById(occupationId);
+			oc.setName(occupationName);
+			specialtyDAO.save(oc);
+	}
+	
+	@Override
+	public void editSpecialty(long specialtyId, String specialtyName) throws DAOException {
+			Specialty sp = specialtyDAO.getSpecialtyById(specialtyId);
+			sp.setName(specialtyName);
+			specialtyDAO.save(sp);
+	}
+	
+	@Override
+	public void editTask(long taskId, String taskName) throws DAOException {
+			Task ta = specialtyDAO.getTaskById(taskId);
+			ta.setName(taskName);
+			specialtyDAO.save(ta);
+	}
+
 }
