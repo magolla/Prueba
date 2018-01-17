@@ -256,18 +256,10 @@ $(document).ready(function() {
 } );
 
 			function showCandidates(data) {
-				
-	    		var str = window.location.pathname;
-	    		if (str.indexOf("d2d") >= 0) {
-	    			urlRelative = "/d2d/admin/reports/getCandidates/";
-	    		} else {
-	    			urlRelative = "/admin/reports/getCandidates/";
-	    		}
-				
 				$('#candidates').DataTable({
 					dom : 'Bfrtip',
 					buttons : [ 'excelHtml5', 'csvHtml5', 'copyHtml5' ],
-					"ajax" : urlRelative + data,
+					"ajax" : '<c:url value="/admin/reports/getCandidates/" />' + data,
 					"language" : {
 						"search" : "Buscar:",
 						"info" : "P&aacute;gina _PAGE_ de _PAGES_",

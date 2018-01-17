@@ -379,6 +379,10 @@
 		$(document).ready(function() {
 		    $('#users').DataTable( {
 		        "ajax": '<c:url value="/admin/list/public-users" />',
+		        "processing": true, // for show progress bar 
+		        "serverSide": true, // for process server side 
+		        "iDisplayLength": 20, 
+		        "start":0, 
 		        "language": {
 		            "search": "Buscar:",
 		            "info": "P&aacute;gina _PAGE_ de _PAGES_",
@@ -452,16 +456,7 @@
 					var src = "data:image/png;base64," + data.avatar;
 					$("#userAvatar").attr("src",src);
 				} else {
-					
-		    		var str = window.location.pathname;
-		    		if (str.indexOf("d2d") >= 0) {
-		    			urlRelative = "/d2d/images/ic_avatar.png";
-		    		} else {
-		    			urlRelative = "/images/ic_avatar.png";
-		    		}
-					
-					
-					$("#userAvatar").attr("src","/d2d/images/ic_avatar.png");
+					$("#userAvatar").attr("src",'<c:url value="/images/ic_avatar.png" />');
 				}
 				$('#previewName').text(" " + data.name + " " + data.lastname);
 			} );
@@ -861,8 +856,8 @@
 			$('#userIdError').attr("hidden", true);
 		    if ($('#userIdInput').val() != "") {
 		        if ($.isNumeric($('#userIdInput').val())) {
-		            var jqxhr = $.get("/d2d/admin/getUserById/" + $('#userIdInput').val(), function(data) {
-		                
+		            var jqxhr = $.get('<c:url value="/admin/getUserById/" />' + $('#userIdInput').val(), function(data) {
+		            	
 						$('#selectedUser').text(data.name + " " + data.lastname);
 						$('#companyScreenName').val(data.companyScreenName);
 						$('#previewCompanyScreen').text(data.companyScreenName);
@@ -878,15 +873,7 @@
 							$("#userAvatar").attr("src",src);
 						} else {
 							
-				    		var str = window.location.pathname;
-				    		if (str.indexOf("d2d") >= 0) {
-				    			urlRelative = "/d2d/images/ic_avatar.png";
-				    		} else {
-				    			urlRelative = "/images/ic_avatar.png";
-				    		}
-							
-							
-							$("#userAvatar").attr("src","/d2d/images/ic_avatar.png");
+							$("#userAvatar").attr("src",'<c:url value="/images/ic_avatar.png" />');
 						}
 						$('#previewName').text(" " + data.name + " " + data.lastname);
 		            	
