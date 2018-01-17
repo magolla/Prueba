@@ -381,7 +381,7 @@
 		        "ajax": '<c:url value="/admin/list/public-users" />',
 		        "processing": true, // for show progress bar 
 		        "serverSide": true, // for process server side 
-		        "iDisplayLength": 20, 
+		        "iDisplayLength": 10, 
 		        "start":0, 
 		        "language": {
 		            "search": "Buscar:",
