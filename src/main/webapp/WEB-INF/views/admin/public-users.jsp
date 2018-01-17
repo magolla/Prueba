@@ -68,6 +68,10 @@ $(document).ready(function() {
     	 'excelHtml5','csvHtml5','copyHtml5' 
      ],
         "ajax": '<c:url value="/admin/list/public-users" />',
+        "processing": true, // for show progress bar 
+        "serverSide": true, // for process server side 
+        "iDisplayLength": 20, 
+        "start":0, 
         "language": {
             "search": "Buscar:",
             "info": "Página _PAGE_ de _PAGES_",

@@ -258,26 +258,10 @@
         var rowData = table.row($(this).closest('tr')).data()	;
     	
     	if(this.id == 'editButton'){ 
-    		var urlRelative;
-    		var str = window.location.pathname;
-    		if (str.indexOf("d2d") >= 0) {
-    			urlRelative = "/d2d/admin/editOffer/";
-    		} else {
-    			urlRelative = "/admin/editOffer/";
-    		}
-    		
-    		window.location.href = urlRelative + rowData.id;
+    		window.location.href = '<c:url value="/admin/editOffer/' + rowData.id + '"/>' ;
     	} else {
-    		
-    		var urlRelative;
-    		var str = window.location.pathname;
-    		if (str.indexOf("d2d") >= 0) {
-    			urlRelative = "/d2d/admin/deleteOffer/";
-    		} else {
-    			urlRelative = "/admin/deleteOffer/";
-    		}
-    		
-            $.get(urlRelative,{ offerId: rowData.id }, function(data, textStatus, xhr) {
+
+			$.get('<c:url value="/admin/deleteOffer"/>',{ offerId: rowData.id }, function(data, textStatus, xhr) {
             	if(xhr.status == 200) {
 					table.row(selectedRow).remove().draw();
             	} 

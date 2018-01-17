@@ -62,5 +62,9 @@ public interface UserDAO {
 	public List<User> getUsersBNoSponsor();
 
 	public List<User> getUsersASponsor();
+
+	public List<User> getUserByIndex(String length, String start, String search);
+
+	public int getCountWithFilter(String search);
 	
 }

@@ -13,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -390,7 +391,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	@Override
 	public List<User> getMatchedUsersNote(Note note, List<User> userList) throws DAOException {
 		try {
-			
+
 			if((userList == null || userList.isEmpty()) && (note.getSpecialties() == null || note.getSpecialties().isEmpty())
 					&& (note.getOccupations() == null || note.getOccupations().isEmpty())) {
 				return new ArrayList<User>();
@@ -435,7 +436,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	private Object checkInterests(Set<Specialty> specialties, Set<Occupation> occupations, boolean usedWhere) {
 
 		StringBuilder query = new StringBuilder("");
-		
+
 		if(usedWhere) {
 			query.append(" and ");
 		} else {
@@ -502,7 +503,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	@Override
 	public List<User> getUsersBoNotification(BoNotificationDTO boNotificationDTO,List<Long> idList) throws DAOException {
 		try {
-			
+
 			List<Long> userIdsList = new ArrayList<Long>();
 			Query query;
 
@@ -539,11 +540,11 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 				if(!boNotificationDTO.getUserIds().isEmpty()) {
 					userIdsList.addAll(Arrays.asList(Stream.of(boNotificationDTO.getUserIds().split("\\s*,\\s*")).map(Long::valueOf).toArray(Long[]::new)));
 				}
-				
+
 				if(!idList.isEmpty()) {
 					userIdsList.addAll(idList);
 				}
-				
+
 				if(!idList.isEmpty() || !boNotificationDTO.getUserIds().isEmpty()) {
 					query.setParameterList("users", userIdsList);
 				}
@@ -562,20 +563,20 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
 	}
 
-//	@SuppressWarnings("unchecked")
-//	@Override
-//	public List<User> getUsersBNoSponsor() {
-//
-//		StringBuilder queryString = new StringBuilder("select * from d2d_prod.D2D_USER where D2D_USER.userb is true && D2D_USER.id not in(select  distinct something.id from (SELECT * FROM D2D_USER) AS something \n" + 
-//				"join D2D_SPONSOR_CODE on something.id = D2D_SPONSOR_CODE.consumer_id join D2D_SUBSCRIPTION on D2D_SUBSCRIPTION.sponsorCode_id = D2D_SPONSOR_CODE.id where D2D_SUBSCRIPTION.expirationDate > now())");
-//
-//		SQLQuery query = this.getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
-//		query.addEntity(User.class);
-//		List<User> filterUser = (List<User>)query.list();
-//
-//		return filterUser;
-//	}
-	
+	//	@SuppressWarnings("unchecked")
+	//	@Override
+	//	public List<User> getUsersBNoSponsor() {
+	//
+	//		StringBuilder queryString = new StringBuilder("select * from d2d_prod.D2D_USER where D2D_USER.userb is true && D2D_USER.id not in(select  distinct something.id from (SELECT * FROM D2D_USER) AS something \n" + 
+	//				"join D2D_SPONSOR_CODE on something.id = D2D_SPONSOR_CODE.consumer_id join D2D_SUBSCRIPTION on D2D_SUBSCRIPTION.sponsorCode_id = D2D_SPONSOR_CODE.id where D2D_SUBSCRIPTION.expirationDate > now())");
+	//
+	//		SQLQuery query = this.getSessionFactory().getCurrentSession().createSQLQuery(queryString.toString());
+	//		query.addEntity(User.class);
+	//		List<User> filterUser = (List<User>)query.list();
+	//
+	//		return filterUser;
+	//	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsersBNoSponsor() {
@@ -587,9 +588,9 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
 		Query query = this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 		List<Subscription> filterSubscription = (List<Subscription>)query.list();
-		
+
 		List<User> listUser = filterSubscription.stream().map(Subscription::getUser).collect(Collectors.toList());
-		
+
 		StringBuilder queryStringUser = new StringBuilder("");
 		queryStringUser.append("SELECT distinct user ");
 		queryStringUser.append("FROM User user ");
@@ -597,7 +598,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 		queryStringUser.append("and user not in :userList ");
 		Query queryUser = this.getSessionFactory().getCurrentSession().createQuery(queryStringUser.toString());
 		queryUser.setParameterList("userList", listUser);
-		
+
 		List<User> filterUser = (List<User>)queryUser.list();
 
 		return filterUser;
@@ -615,6 +616,45 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 		query.setParameter("userB", false);
 
 		return query.list();
+	}
+
+	@Override
+	public List<User> getUserByIndex(String length, String start, String search) {
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class); 
+
+		criteria.add(Restrictions.disjunction() 
+				.add(Restrictions.like("mobilePhone", search, MatchMode.ANYWHERE)) 
+				.add(Restrictions.like("firstname", search, MatchMode.ANYWHERE)) 
+				.add(Restrictions.like("lastname", search, MatchMode.ANYWHERE)) 
+				.add(Restrictions.like("lastname", search, MatchMode.ANYWHERE)) 
+				.add(Restrictions.like("email", search, MatchMode.ANYWHERE)) 
+				.add(Restrictions.sqlRestriction(" id LIKE '%"+search+"%' "))
+				); 
+		criteria.setFirstResult(Integer.valueOf(start)); 
+		criteria.setMaxResults(Integer.valueOf(length)); 
+
+		return criteria.list();
+	}
+
+	@Override
+	public int getCountWithFilter(String search) {
+
+		Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(User.class);
+
+		if(!search.trim().equals("")) {
+			criteria.add(Restrictions.disjunction() 
+					.add(Restrictions.like("mobilePhone", search, MatchMode.ANYWHERE)) 
+					.add(Restrictions.like("firstname", search, MatchMode.ANYWHERE)) 
+					.add(Restrictions.like("lastname", search, MatchMode.ANYWHERE)) 
+					.add(Restrictions.like("lastname", search, MatchMode.ANYWHERE)) 
+					.add(Restrictions.like("email", search, MatchMode.ANYWHERE)) 
+					.add(Restrictions.sqlRestriction(" id LIKE '%"+search+"%' "))
+					); 
+		}
+		Long longValue = (long)criteria.setProjection(Projections.rowCount()).uniqueResult();
+		Integer intValue = longValue != null ? longValue.intValue() : null;
+		return intValue;
+
 	}
 
 }

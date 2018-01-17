@@ -2231,6 +2231,16 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		} 
 	}
+	
+	
+	  @Override 
+	  public List<UserDTO> getUserByIndex(String length, String start, String search) { 
+	     
+	    List<User> userList = this.userDAO.getUserByIndex(length, start, search); 
+	     
+	    return toDtoList(userList); 
+	     
+	  } 
 
 	private List<UserDTO> toDtoList(Collection<User> list) {
 		return list.stream().map(user -> toDto(user)).collect(Collectors.toList());
@@ -2627,6 +2637,12 @@ public class UserServiceImpl implements UserService {
 
 
     }
+
+	@Override
+	public int getUserCount(String search) {
+		
+		return userDAO.getCountWithFilter(search);
+	}
 
 
 }

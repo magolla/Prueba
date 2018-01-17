@@ -2,6 +2,8 @@ package com.tdil.d2d.bo.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tdil.d2d.bo.dto.BOUserDTO;
+import com.tdil.d2d.bo.dto.DatatablePaginateOutDto;
+import com.tdil.d2d.bo.dto.DatatablePaginationInDTO;
 import com.tdil.d2d.bo.dto.ResultDTO;
 import com.tdil.d2d.bo.dto.RoleDTO;
 import com.tdil.d2d.bo.dto.UserDTO;
@@ -71,16 +75,29 @@ public class AdminUserController {
 	}
 	
 	@RequestMapping(value = "/list/public-users", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse<List<UserDTO>>> getPublicUsers() {
-		try{ 
-			
-			List<UserDTO> users = this.userService.getAll();
-	
-			return ResponseEntity.ok(new GenericResponse<>(200, users));
-		} catch (ServiceException e) {
-			LoggerManager.error(this, e);
-			return new ResponseEntity<GenericResponse<List<UserDTO>>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public ResponseEntity<DatatablePaginateOutDto<UserDTO>> getPublicUsers(HttpServletRequest request) {
+		
+	    DatatablePaginationInDTO datatablePaginationInDTO = new DatatablePaginationInDTO(request); 
+
+		int taskCount = 0; 
+		int taskCountFilter = 0; 
+		
+		taskCount = userService.getUserCount(""); 
+		taskCountFilter = userService.getUserCount(datatablePaginationInDTO.getSearch()); 
+
+		
+		List<UserDTO> users = this.userService.getUserByIndex(datatablePaginationInDTO.getLength(), datatablePaginationInDTO.getStart(), datatablePaginationInDTO.getSearch());
+		
+		DatatablePaginateOutDto<UserDTO> datatablePaginateOutDto = new DatatablePaginateOutDto<>(); 
+		
+ 
+		datatablePaginateOutDto.setData(users); 
+		datatablePaginateOutDto.setDraw(Integer.valueOf(datatablePaginationInDTO.getDraw())); 
+		datatablePaginateOutDto.setRecordsTotal(taskCount); 
+		datatablePaginateOutDto.setRecordsFiltered(taskCountFilter); 
+		
+	    return ResponseEntity.ok(datatablePaginateOutDto); 
+
 	}
 	
 	
