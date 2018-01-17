@@ -5,7 +5,7 @@
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
-		ABM de categorias
+		ABM de Geolevels
 	</tiles:putAttribute>
 
 	<tiles:putAttribute name="body">
@@ -14,47 +14,47 @@
 				<div class="col-md-12">
 					<div class="nav-tabs-custom">
 			            <ul class="nav nav-tabs">
-			              <li class="active"><a href="#tab_1" data-toggle="tab">Listado de categorias</a></li>
+			              <li class="active"><a href="#tab_1" data-toggle="tab">Listado de Geolevels</a></li>
 			            </ul>
 			            <div class="tab-content">
 							<div class="tab-pane active" id="tab_1">
 								<div class="col-md-12" style="margin-bottom:50px;">
 									<div class="col-md-4">
-										<a type="submit" class="btn btn-default col-md-12" data-toggle="modal" data-target="#occupationModal" >Crear nueva Ocupacion</a>
+										<a type="submit" class="btn btn-default col-md-12" data-toggle="modal" data-target="#provinceModal" >Crear nueva Provincia</a>
 									</div>
 									<div class="col-md-4">
-										<a type="submit" class="btn btn-warning col-md-12" data-toggle="modal" data-target="#specialtyModal" >Crear nueva Especialidad</a>
+										<a type="submit" class="btn btn-warning col-md-12" data-toggle="modal" data-target="#regionModal" >Crear nueva Localidad/Partido</a>
 									</div>
 									<div class="col-md-4">
-										<a type="submit" class="btn btn-info col-md-12"    data-toggle="modal" data-target="#taskModal" >Crear nueva Tarea</a>
+										<a type="submit" class="btn btn-info col-md-12"    data-toggle="modal" data-target="#taskModal" >Crear nueva Ciudad/Barrio</a>
 									</div>
 								</div>
 								<hr>
 								<table id="categories-table" class="display" cellspacing="0" width="100%">
 									<thead>
 										<tr>
-											<th>Ocupacion</th>
-											<th>Especialidad</th>
-											<th>Tarea</th>
-											<th>OcupacionId</th>
-											<th>EspecialidadId</th>
-											<th>TareaId</th>
-											<th>Editar Ocupacion</th>
-											<th>Editar Especialidad</th>
-											<th>Editar Tarea</th>
+											<th>Provincia</th>
+											<th>Localidad/Partido</th>
+											<th>Ciudad/Barrio</th>
+											<th>geo2Id</th>
+											<th>geo3Id</th>
+											<th>geo4Id</th>
+											<th>Editar Provincia</th>
+											<th>Editar Localidad/Partido</th>
+											<th>Editar Ciudad/Barrio</th>
 										</tr>
 									</thead>
 									<tfoot>
 										<tr>
-											<th>Ocupacion</th>
-											<th>Especialidad</th>
-											<th>Tarea</th>
-											<th>OcupacionId</th>
-											<th>EspecialidadId</th>
-											<th>TareaId</th>
-											<th>Editar Ocupacion</th>
-											<th>Editar Especialidad</th>
-											<th>Editar Tarea</th>
+											<th>Provincia</th>
+											<th>Localidad/Partido</th>
+											<th>Ciudad/Barrio</th>
+											<th>geo2Id</th>
+											<th>geo3Id</th>
+											<th>geo4Id</th>
+											<th>Editar Provincia</th>
+											<th>Editar Localidad/Partido</th>
+											<th>Editar Ciudad/Barrio</th>
 										</tr>
 									</tfoot>
 								</table>
@@ -67,24 +67,24 @@
 
 
 		<!-- Modal de ocupacion -->
-		<div id="occupationModal" class="modal fade bd-example-modal-lg"
+		<div id="provinceModal" class="modal fade bd-example-modal-lg"
 			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Crear ocupacion</h4>
+						<h4 class="modal-title">Crear provincia</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
 					<div class="row" >
-						<div id="occupationSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="occupationError" class="error"  style="display: none;">sfas</div>
+						<div id="provinceSuccess" class="msg" style="display: none;" >sfas</div>
+						<div id="provinceError" class="error"  style="display: none;">sfas</div>
 					</div>
 						<div class="row">
 							<label class="col-md-4">Nombre:</label>
-							<input id="occupationTxt" class="col-md-4">
-							<button onclick="addOccupation()">Agregar</button>
+							<input id="provinceTxt" class="col-md-4">
+							<button onclick="addProvince()">Agregar</button>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -94,30 +94,30 @@
 			</div>
 		</div>
 		<!-- Modal de Especialidad -->
-		<div id="specialtyModal" class="modal fade bd-example-modal-lg"
+		<div id="regionModal" class="modal fade bd-example-modal-lg"
 			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Crear Especialidad</h4>
+						<h4 class="modal-title">Crear Localidad/Partido</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
 					<div class="row" >
-						<div id="specialtySuccess" class="msg" style="display: none;" ></div>
-						<div id="specialtyError" class="error"  style="display: none;"></div>
+						<div id="regionSuccess" class="msg" style="display: none;" ></div>
+						<div id="regionError" class="error"  style="display: none;"></div>
 					</div>
 						<div class="row">
-							<label class="col-md-4">Ocupacion:</label>
-							<input id="espOccupationName" type="text" class="typeahead col-md-4" data-provide="typeahead" >
-							<input id="espOccupationId" class="col-md-2" style="display: none;">
-							<button id="espCleanButton">Borrar</button>
+							<label class="col-md-4">Provincia:</label>
+							<input id="geo3ProvinceName" type="text" class="typeahead col-md-4" data-provide="typeahead" >
+							<input id="geo3ProvinceId" class="col-md-2" style="display: none;">
+							<button id="geo3CleanButton">Borrar</button>
 						</div>
 						<div class="row">
-							<label class="col-md-4">Especialidad:</label>
-							<input id="espSpecialtyName" class="col-md-4">
-							<button onclick="addSpecialty()">Agregar</button>
+							<label class="col-md-4">Localidad/Partido:</label>
+							<input id="geo3RegionName" class="col-md-4">
+							<button onclick="addRegion()">Agregar</button>
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -168,7 +168,7 @@
 		</div>
 		
 		<!-- Modal de edit para ocupacion -->
-		<div id="occupationEditModal" class="modal fade bd-example-modal-lg"
+		<div id="provinceEditModal" class="modal fade bd-example-modal-lg"
 			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
@@ -179,13 +179,13 @@
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
 					<div class="row" >
-						<div id="occupationEditSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="occupationEditError" class="error"  style="display: none;">sfas</div>
+						<div id="provinceEditSuccess" class="msg" style="display: none;" >sfas</div>
+						<div id="provinceEditError" class="error"  style="display: none;">sfas</div>
 					</div>
 						<div class="row">
 							<label class="col-md-4">Nombre:</label>
-							<input id="occupationEditName" class="col-md-4">
-							<input id="occupationEditId" class="col-md-2" style="display: none;">
+							<input id="provinceEditName" class="col-md-4">
+							<input id="provinceEditId" class="col-md-2" style="display: none;">
 							<button onclick="editOccupation()">Editar</button>
 						</div>
 					</div>
@@ -266,7 +266,7 @@
 					"processing" : true, // for show progress bar
 					"serverSide" : true, // for process server side
 					"ajax" : {
-						"url" : '/d2d/admin/BoCategory/getCategories',
+						"url" : '/d2d/admin/BoGeolevel/getGeolevels',
 						"type" : "GET",
 						"datatype" : "json"
 					},
@@ -279,16 +279,16 @@
 						}
 					},
 					"columns" : [
-						{"data" : "occupationName"},
-						{"data" : "specialtyName"}, 
-						{"data" : "taskName"},
-						{"data" : "occupationId"},
-						{"data" : "specialtyId"},
-						{"data" : "taskId"},
+						{"data" : "geo2Name"},
+						{"data" : "geo3Name"}, 
+						{"data" : "geo4Name"},
+						{"data" : "geo2Id"},
+						{"data" : "geo3Id"},
+						{"data" : "geo4Id"},
 	                    {
 	                        "data": "status",
 	                        "render": function ( data, type, full, meta ) {
-	                        		 return "<button id='editOccupationBtn' class='btn btn-default'>Editar Ocupacion</button>";
+	                        		 return "<button id='editOccupationBtn' class='btn btn-default'>Editar Provincia</button>";
 	                        }
 	                    },
 	                    {
@@ -297,7 +297,7 @@
 	                        	if(full.specialtyName == '' && full.taskName == ''){
 	                        		return null;
 	                        	} else {
-	                        		return "<button id='editSpecialtyBtn' class='btn btn-warning'>Editar Especialidad</button>";
+	                        		return "<button id='editSpecialtyBtn' class='btn btn-warning'>Editar Localidad/Partido</button>";
 	                        	}
 	                        }
 	                    },
@@ -307,7 +307,7 @@
 	                        	if(full.taskName == ''){
 	                        		return null;
 	                        	} else {
-	                        		 return "<button id='editTaskBtn' class='btn btn-info'>Editar Tarea</button>";
+	                        		 return "<button id='editTaskBtn' class='btn btn-info'>Editar Ciudad/Barrio</button>";
 	                        	}
 	                        }
 	                    }
@@ -324,10 +324,10 @@
 				var table = $('#categories-table').DataTable();
 
 				// Inicio
-				$("#espOccupationName").val("");
-			    $("#espOccupationId").val("");
-			    $("#espOccupationName").prop('disabled', false);
-			    $("#espSpecialtyName").val("");
+				$("#geo3ProvinceName").val("");
+			    $("#geo3ProvinceId").val("");
+			    $("#geo3ProvinceName").prop('disabled', false);
+			    $("#geo3RegionName").val("");
 			    $("#taskOccupationName").val("");
 			    $("#taskOccupationId").val("");
 			    $("#taskSpecialtyName").val("");
@@ -339,24 +339,24 @@
 			    hideEditMessages();
 			    
 			
-			    refreshOccupations();
+			    refreshProvinces();
 
 				
 			//Listener que se ejecuta al cerrar el modal ya sea por medio del boton cerrar como con la cruz
-			$('#occupationModal').on('hidden.bs.modal', function () {
+			$('#provinceModal').on('hidden.bs.modal', function () {
 				hideMessages();
 			    table.ajax.reload();
-				$("#occupationTxt").val("");
+				$("#provinceTxt").val("");
 			})
 			
 			//Listener que se ejecuta al cerrar el modal ya sea por medio del boton cerrar como con la cruz
-			$('#specialtyModal').on('hidden.bs.modal', function () {
+			$('#regionModal').on('hidden.bs.modal', function () {
 				specialtyHideMessages();
 			    table.ajax.reload();
-				$("#espOccupationName").val("");
-			    $("#espOccupationId").val("");
-			    $("#espOccupationName").prop('disabled', false);
-			    $("#espSpecialtyName").val("");
+				$("#geo3ProvinceName").val("");
+			    $("#geo3ProvinceId").val("");
+			    $("#geo3ProvinceName").prop('disabled', false);
+			    $("#geo3RegionName").val("");
 			})
 			
 			//Listener que se ejecuta al cerrar el modal ya sea por medio del boton cerrar como con la cruz
@@ -365,7 +365,7 @@
 			    table.ajax.reload();
 			})
 			
-			$('#occupationEditModal').on('hidden.bs.modal', function () {
+			$('#provinceEditModal').on('hidden.bs.modal', function () {
 			    table.ajax.reload();
 			    hideEditMessages()
 			})
@@ -381,10 +381,10 @@
 			})
 			
 			
-			$("#espCleanButton").click(function() {
-			    $("#espOccupationName").val("");
-			    $("#espOccupationId").val("");
-			    $("#espOccupationName").prop('disabled', false);
+			$("#geo3CleanButton").click(function() {
+			    $("#geo3ProvinceName").val("");
+			    $("#geo3ProvinceId").val("");
+			    $("#geo3ProvinceName").prop('disabled', false);
 			});
 			
 			$("#TaskOccuCleanButton").click(function() {
@@ -411,9 +411,9 @@
 		        var data = table.row( $(this).parents('tr') ).data();
 		    	
 		    	if(e.target.id == "editOccupationBtn") {
-		    		$('#occupationEditModal').modal('show');
-		    		$("#occupationEditId").val(data.occupationId);
-		    		$("#occupationEditName").val(data.occupationName);
+		    		$('#provinceEditModal').modal('show');
+		    		$("#provinceEditId").val(data.provinceId);
+		    		$("#provinceEditName").val(data.provinceName);
 		    		
 		    	} else if(e.target.id == "editSpecialtyBtn") {
 		    		$('#specialtyEditModal').modal('show');
@@ -431,21 +431,21 @@
 
 			});
 			
-			function addOccupation(){
+			function addProvince(){
 				
-				var newOccupation = $("#occupationTxt").val();
+				var newProvince = $("#provinceTxt").val();
 				hideMessages();
 				
-				$("#occupationTxt").val("");
+				$("#provinceTxt").val("");
 				
 				$.ajax({ 
 				    type: 'GET', 
-				    url: '/d2d/admin/BoCategory/saveOccupation', 
-				    data: { occupationName: newOccupation }, 
+				    url: '/d2d/admin/BoGeolevel/saveProvince', 
+				    data: { provinceName: newProvince }, 
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
-							refreshOccupations();
+							refreshProvinces();
 							showSuccess(data.data);
 						} else if(data.status == 201){
 							showError(data.data);
@@ -462,12 +462,12 @@
 			}
 			
 			
-			function addSpecialty(){
+			function addRegion(){
 				specialtyHideMessages();
-				var occupationId = $("#espOccupationId").val();
-				var specialtyName = $("#espSpecialtyName").val();
+				var provinceId = $("#geo3ProvinceId").val();
+				var regionName = $("#geo3RegionName").val();
 				
-				if(occupationId == "" || specialtyName == "") {
+				if(provinceId == "" || regionName == "") {
 					specialtyShowError("Los campos no pueden estar vacios.");
 					return;
 				}
@@ -476,16 +476,16 @@
 				
 				$.ajax({ 
 				    type: 'GET', 
-				    url: '/d2d/admin/BoCategory/saveSpecialty', 
-				    data: { espOccupationId: occupationId,
-				    		newSpecialtyName: specialtyName}, 
+				    url: '/d2d/admin/BoGeolevel/saveRegion', 
+				    data: { geo3ProvinceId: provinceId,
+				    		newRegionName: regionName}, 
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
-							$("#espOccupationName").val("");
-						    $("#espOccupationId").val("");
-						    $("#espOccupationName").prop('disabled', false);
-						    $("#espSpecialtyName").val("");
+							$("#geo3ProvinceName").val("");
+						    $("#geo3ProvinceId").val("");
+						    $("#geo3ProvinceName").prop('disabled', false);
+						    $("#geo3RegionName").val("");
 						    specialtyShowSuccess(data.data);
 						} else {
 							specialtyShowError();
@@ -542,23 +542,23 @@
 			
 			//Funciones para ocupacion
 			function showSuccess(message) {
-				$("#occupationSuccess").show();
-				$("#occupationSuccess").text(message);
+				$("#provinceSuccess").show();
+				$("#provinceSuccess").text(message);
 			}
 			
 			function showError() {
-				$("#occupationError").show();
-				$("#occupationError").text("Ha ocurrido un error, por favor intente mas tarde.");
+				$("#provinceError").show();
+				$("#provinceError").text("Ha ocurrido un error, por favor intente mas tarde.");
 			}
 			
 			function showError(message) {
-				$("#occupationError").show();
-				$("#occupationError").text(message);
+				$("#provinceError").show();
+				$("#provinceError").text(message);
 			}
 			
 			function hideMessages() {
-				$("#occupationError").hide();
-				$("#occupationSuccess").hide();
+				$("#provinceError").hide();
+				$("#provinceSuccess").hide();
 			}
 			
 			//Funciones para especialidad
@@ -604,29 +604,29 @@
 			}
 
 			
-			function refreshOccupations(){
+			function refreshProvinces(){
 			    
 				$('.typeahead').typeahead('destroy');
 				
-				$.get("/d2d/admin/BoCategory/occupations", function(data){
-				  $("#espOccupationName").typeahead({
+				$.get("/d2d/admin/BoGeolevel/provinces", function(data){
+				  $("#geo3ProvinceName").typeahead({
 					  source:data,
 					  afterSelect: function(item) {
-						    $("#espOccupationName").val(item.name);
-						    $("#espOccupationId").val(item.id);
-						    $("#espOccupationName").prop('disabled', true);
+						    $("#geo3ProvinceName").val(item.name);
+						    $("#geo3ProvinceId").val(item.id);
+						    $("#geo3ProvinceName").prop('disabled', true);
 						}
 				  });
 				},'json');
 				// Fin autocomplete modal especialidades
 				
-				$.get("/d2d/admin/BoCategory/occupations", function(data){
-				  $("#taskOccupationName").typeahead({
+				$.get("/d2d/admin/BoGeolevel/provinces", function(data){
+				  $("#taskProvinceName").typeahead({
 					  source:data,
 					  afterSelect: function(item) {
-						    $("#taskOccupationName").val(item.name);
-						    $("#taskOccupationId").val(item.id);
-						    $("#taskOccupationName").prop('disabled', true);
+						    $("#taskProvinceName").val(item.name);
+						    $("#taskProvinceId").val(item.id);
+						    $("#taskProvinceName").prop('disabled', true);
 						    refreshSpecialty(item.id);
 						}
 				  });
@@ -664,12 +664,12 @@
 			
 			function editOccupation() {
 				
-				var occupationName = $("#occupationEditName").val();
-				var occupationId = $("#occupationEditId").val();
+				var provinceName = $("#provinceEditName").val();
+				var provinceId = $("#provinceEditId").val();
 				
 				var data = {}
-				data["name"] = occupationName;
-				data["id"] = occupationId;
+				data["name"] = provinceName;
+				data["id"] = provinceId;
 				
 				$.ajax({ 
 				    type: 'POST', 
@@ -679,15 +679,15 @@
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
-							$("#occupationName").val("");
-						    $("#occupationId").val("");
-						    occupationEditShowSuccess(data.data);
+							$("#provinceName").val("");
+						    $("#provinceId").val("");
+						    provinceEditShowSuccess(data.data);
 						} else {
-							occupationEditShowError("Hubo un error al editar la ocupacion");
+							provinceEditShowError("Hubo un error al editar la ocupacion");
 					    }
 				    },
 				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
-				    	occupationEditShowError("Hubo un error al editar la ocupacion");
+				    	provinceEditShowError("Hubo un error al editar la ocupacion");
 	                }   
 				    
 				});
@@ -759,13 +759,13 @@
 			
 			
 			//Funciones para edit ocupacion
-			function occupationEditShowSuccess(message) {
-				$("#occupationEditSuccess").show();
-				$("#occupationEditSuccess").text(message);
+			function provinceEditShowSuccess(message) {
+				$("#provinceEditSuccess").show();
+				$("#provinceEditSuccess").text(message);
 			}
-			function occupationEditShowError(message) {
-				$("#occupationEditError").show();
-				$("#occupationEditError").text(message);
+			function provinceEditShowError(message) {
+				$("#provinceEditError").show();
+				$("#provinceEditError").text(message);
 			}
 			
 			//Funciones para edit tarea
@@ -790,8 +790,8 @@
 			
 			//Funcion ocultar mensajes modales de edicion
 			function hideEditMessages() {
-				$("#occupationEditSuccess").hide();
-				$("#occupationEditError").hide();
+				$("#provinceEditSuccess").hide();
+				$("#provinceEditError").hide();
 				
 				$("#specialtyEditSuccess").hide();
 				$("#specialtyEditError").hide();

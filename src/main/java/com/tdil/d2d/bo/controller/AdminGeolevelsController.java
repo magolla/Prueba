@@ -1,12 +1,30 @@
 package com.tdil.d2d.bo.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.tdil.d2d.bo.dto.DatatablePaginateOutDTO;
+import com.tdil.d2d.bo.dto.DatatablePaginationInDTO;
+import com.tdil.d2d.bo.dto.GeosDto;
+import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
+import com.tdil.d2d.controller.api.response.GenericResponse;
+import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.service.GeoService;
 import com.tdil.d2d.service.SpecialtyService;
+import com.tdil.d2d.utils.LoggerManager;
 
 @Controller
 public class AdminGeolevelsController {
@@ -14,6 +32,9 @@ public class AdminGeolevelsController {
 
 	@Autowired
 	private SpecialtyService specialtyService;
+	
+	@Autowired
+	private GeoService geoService;
 	
 	
 
@@ -28,62 +49,68 @@ public class AdminGeolevelsController {
 
 	}
 
-//
-//	@RequestMapping(value = "/BoCategory/getCategories", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<DatatablePaginateOutDTO<CategoryDto>> getUsers(HttpServletRequest request, HttpServletResponse res) {
-//
-//
-//		DatatablePaginationInDTO datatablePaginationInDTO = new DatatablePaginationInDTO(request);
-//
-//		int taskCount = 0;
-//		int taskCountFilter = 0;
-//		try {
-//			taskCount = specialtyService.getTaskCount("");
-//			taskCountFilter = specialtyService.getTaskCount(datatablePaginationInDTO.getSearch());
-//		} catch (ServiceException e) {
-//			e.printStackTrace();
-//		}
-//
-//		DatatablePaginateOutDTO<CategoryDto> datatablePaginateOutDto = new DatatablePaginateOutDTO<>();
-//
-//		List<CategoryDto> categoryList = specialtyService.getTaskByIndex(datatablePaginationInDTO.getLength(), datatablePaginationInDTO.getStart(), datatablePaginationInDTO.getSearch());
-//
-//		datatablePaginateOutDto.setData(categoryList);
-//		datatablePaginateOutDto.setDraw(Integer.valueOf(datatablePaginationInDTO.getDraw()));
-//		datatablePaginateOutDto.setRecordsTotal(taskCount);
-//		datatablePaginateOutDto.setRecordsFiltered(taskCountFilter);
-//		return ResponseEntity.ok(datatablePaginateOutDto);
-//	}
-//
-//	@RequestMapping(value = "/BoCategory/saveOccupation", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<GenericResponse<String>> saveOccupation(@RequestParam("occupationName") String occupationName) {
-//
-//		if(occupationName.trim().isEmpty()) {
-//			return ResponseEntity.ok(new GenericResponse<>(201, "El campo no puede estar vacio."));
-//		}
-//
-//
-//		try {
-//			specialtyService.add(occupationName, "", "");
-//			return ResponseEntity.ok(new GenericResponse<>(200, "La ocupacion se ha cargado exitosamente."));
-//		} catch (ServiceException e) {
-//			e.printStackTrace();
-//			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//
-//	}
-//	
-//	@RequestMapping(value = "/BoCategory/saveSpecialty", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<GenericResponse<String>> saveSpecialty(@RequestParam("espOccupationId") String espOccupationId, @RequestParam("newSpecialtyName") String newSpecialtyName) {
-//		
-//		try {
+
+	@RequestMapping(value = "/BoGeolevel/getGeolevels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<DatatablePaginateOutDTO<GeosDto>> getUsers(HttpServletRequest request) {
+
+
+		DatatablePaginationInDTO datatablePaginationInDTO = new DatatablePaginationInDTO(request);
+
+		int geoCount = 0;
+		int geoCountFilter = 0;
+		try {
+			geoCount = geoService.getGeoCount("");
+			geoCountFilter = geoService.getGeoCount(datatablePaginationInDTO.getSearch());
+		} catch (DAOException e1) {
+			e1.printStackTrace();
+		}
+		
+
+		DatatablePaginateOutDTO<GeosDto> datatablePaginateOutDto = new DatatablePaginateOutDTO<>();
+
+		List<GeosDto> geoList = null;
+		try {
+			geoList = geoService.getGeoByIndex(datatablePaginationInDTO.getLength(), datatablePaginationInDTO.getStart(), datatablePaginationInDTO.getSearch());
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+
+		datatablePaginateOutDto.setData(geoList);
+		datatablePaginateOutDto.setDraw(Integer.valueOf(datatablePaginationInDTO.getDraw()));
+		datatablePaginateOutDto.setRecordsTotal(geoCount);
+		datatablePaginateOutDto.setRecordsFiltered(geoCountFilter);
+		return ResponseEntity.ok(datatablePaginateOutDto);
+	}
+
+	@RequestMapping(value = "/BoGeolevel/saveProvince", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<String>> saveProvince(@RequestParam("provinceName") String provinceName) {
+
+		if(provinceName.trim().isEmpty()) {
+			return ResponseEntity.ok(new GenericResponse<>(201, "El campo no puede estar vacio."));
+		}
+
+		try {
+			geoService.add(provinceName, "", "");
+			return ResponseEntity.ok(new GenericResponse<>(200, "La provincia se ha cargado exitosamente."));
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+	
+	@RequestMapping(value = "/BoGeolevel/saveRegion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<String>> saveRegion(@RequestParam("geo3ProvinceId") String geo3ProvinceId, @RequestParam("newRegionName") String newRegionName) {
+		
+		try {
 //			specialtyService.addSpecialtyToOccupation(espOccupationId, newSpecialtyName);
-//			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
-//		} catch (ServiceException e) {
-//			e.printStackTrace();
-//			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
+			geoService.addGeo3(geo3ProvinceId, newRegionName);
+			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
+		} catch (NumberFormatException | DAOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 //	
 //	@RequestMapping(value = "/BoCategory/saveTask", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 //	public ResponseEntity<GenericResponse<String>> saveTask(@RequestParam("taskName") String taskName, @RequestParam("specialtyId") String specialtyId) {
@@ -134,20 +161,21 @@ public class AdminGeolevelsController {
 //		}
 //	}
 //	
-//	@RequestMapping(value = {"/BoCategory/occupations",}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
-//	public ResponseEntity<String> getOccupations() {
-//		try {
+	@RequestMapping(value = {"/BoGeolevel/provinces",}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+	public ResponseEntity<String> getGeo2() {
+		try {
 //			Collection<OccupationDTO> occupationList = specialtyService.listOccupationsNoFilter();
-//
-//			Gson gson = new Gson();
-//			String jsonString = gson.toJson(occupationList);
-//
-//			return new ResponseEntity<String>(jsonString, HttpStatus.OK);
-//		} catch (ServiceException e) {
-//			LoggerManager.error(this, e);
-//			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
+
+			List<GeoLevelDTO> geo2List = geoService.listGeoLevel2();
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(geo2List);
+
+			return new ResponseEntity<String>(jsonString, HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 //	
 //	
 //	@RequestMapping(value = {"/BoCategory/specialties/{specialtyId}",}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
