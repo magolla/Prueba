@@ -1,5 +1,6 @@
 package com.tdil.d2d.bo.controller;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +22,7 @@ import com.tdil.d2d.bo.dto.DatatablePaginateOutDTO;
 import com.tdil.d2d.bo.dto.DatatablePaginationInDTO;
 import com.tdil.d2d.bo.dto.GeosDto;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
+import com.tdil.d2d.controller.api.request.CategoryEditRequest;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
@@ -103,7 +107,6 @@ public class AdminGeolevelsController {
 	public ResponseEntity<GenericResponse<String>> saveRegion(@RequestParam("geo3ProvinceId") String geo3ProvinceId, @RequestParam("newRegionName") String newRegionName) {
 		
 		try {
-//			specialtyService.addSpecialtyToOccupation(espOccupationId, newSpecialtyName);
 			geoService.addGeo3(geo3ProvinceId, newRegionName);
 			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
 		} catch (NumberFormatException | DAOException e) {
@@ -111,56 +114,56 @@ public class AdminGeolevelsController {
 			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-//	
-//	@RequestMapping(value = "/BoCategory/saveTask", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<GenericResponse<String>> saveTask(@RequestParam("taskName") String taskName, @RequestParam("specialtyId") String specialtyId) {
-//		
-//		try {
-//			specialtyService.addTaskToOccupationAndSpecialty(taskName,specialtyId);
-//			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
-//		} catch (ServiceException | DAOException e) {
-//			e.printStackTrace();
-//			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//	
-//	
-//	@RequestMapping(value = "/BoCategory/editOccupation", method = RequestMethod.POST)
-//	public ResponseEntity<GenericResponse<String>> editOccupation(@RequestBody CategoryEditRequest body) {
-//		
-//		try {
-//			specialtyService.editOccupation(body.getId(), body.getName());
-//			return ResponseEntity.ok(new GenericResponse<>(200, "La ocupacion se ha editado exitosamente."));
-//		} catch (DAOException e) {
-//			e.printStackTrace();
-//			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//	
-//	@RequestMapping(value = "/BoCategory/editSpecialty", method = RequestMethod.POST)
-//	public ResponseEntity<GenericResponse<String>> editSpecialty(@RequestBody CategoryEditRequest body) {
-//		
-//		try {
-//			specialtyService.editSpecialty(body.getId(), body.getName());
-//			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha editado exitosamente."));
-//		} catch (DAOException e) {
-//			e.printStackTrace();
-//			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//	
-//	@RequestMapping(value = "/BoCategory/editTask", method = RequestMethod.POST)
-//	public ResponseEntity<GenericResponse<String>> editTask(@RequestBody CategoryEditRequest body) {
-//		
-//		try {
-//			specialtyService.editTask(body.getId(), body.getName());
-//			return ResponseEntity.ok(new GenericResponse<>(200, "La tarea se ha editado exitosamente."));
-//		} catch (DAOException e) {
-//			e.printStackTrace();
-//			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//	
+	
+	@RequestMapping(value = "/BoGeolevel/saveCity", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<String>> saveTask(@RequestParam("cityName") String cityName, @RequestParam("cityGeo3Id") String cityGeo3Id) {
+		
+		try {
+			geoService.addGeo4(cityGeo3Id, cityName);
+			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
+		} catch (NumberFormatException | DAOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	
+	@RequestMapping(value = "/BoCategory/editProvince", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> editProvince(@RequestBody CategoryEditRequest body) {
+		
+		try {
+			geoService.editProvince(body.getId(), body.getName());
+			return ResponseEntity.ok(new GenericResponse<>(200, "La ocupacion se ha editado exitosamente."));
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/BoCategory/editRegion", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> editRegion(@RequestBody CategoryEditRequest body) {
+		
+		try {
+			geoService.editRegion(body.getId(), body.getName());
+			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha editado exitosamente."));
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/BoCategory/editCity", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> editCity(@RequestBody CategoryEditRequest body) {
+		
+		try {
+			geoService.editCity(body.getId(), body.getName());
+			return ResponseEntity.ok(new GenericResponse<>(200, "La tarea se ha editado exitosamente."));
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	@RequestMapping(value = {"/BoGeolevel/provinces",}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
 	public ResponseEntity<String> getGeo2() {
 		try {
@@ -176,21 +179,21 @@ public class AdminGeolevelsController {
 			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-//	
-//	
-//	@RequestMapping(value = {"/BoCategory/specialties/{specialtyId}",}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
-//	public ResponseEntity<String> getSpecialties(@PathVariable("specialtyId") int specialtyId) {
-//		try {
-//			Collection<SpecialtyDTO> specialtyList = specialtyService.listSpecialties(specialtyId);
-//
-//			Gson gson = new Gson();
-//			String jsonString = gson.toJson(specialtyList);
-//
-//			return new ResponseEntity<String>(jsonString, HttpStatus.OK);
-//		} catch (ServiceException e) {
-//			LoggerManager.error(this, e);
-//			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
+	
+	
+	@RequestMapping(value = {"BoGeolevel/city/{provinceId}",}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8")
+	public ResponseEntity<String> getSpecialties(@PathVariable("provinceId") long provinceId) {
+		try {
+			Collection<GeoLevelDTO> geoList = geoService.listGeoLevel3ByProvince(provinceId);
+
+			Gson gson = new Gson();
+			String jsonString = gson.toJson(geoList);
+
+			return new ResponseEntity<String>(jsonString, HttpStatus.OK);
+		} catch (ServiceException e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 }

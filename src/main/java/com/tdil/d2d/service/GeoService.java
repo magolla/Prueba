@@ -1,5 +1,6 @@
 package com.tdil.d2d.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.tdil.d2d.bo.dto.GeosDto;
@@ -22,4 +23,15 @@ public interface GeoService {
 	void add(String geo2, String geo3, String geo4) throws DAOException;
 
 	public void addGeo3(String geo3ProvinceId, String newRegionName) throws NumberFormatException, DAOException;
+
+
+	public Collection<GeoLevelDTO> listGeoLevel3ByProvince(long provinceId) throws ServiceException;
+
+	public void addGeo4(String cityGeo3Id, String cityName) throws NumberFormatException, DAOException;
+
+	public void editProvince(long id, String name) throws DAOException;
+
+	public void editRegion(long id, String name) throws DAOException;
+
+	public void editCity(long id, String name) throws DAOException;
 }

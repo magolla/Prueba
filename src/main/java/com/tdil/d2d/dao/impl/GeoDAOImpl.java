@@ -65,6 +65,7 @@ public class GeoDAOImpl extends HibernateDaoSupport implements GeoDAO  {
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession().createCriteria(Geo4.class);
 			criteria.add(Restrictions.like("name", "%" + text + "%"));
+			criteria.add(Restrictions.ne("name", ""));
 			criteria.addOrder(Order.asc("name"));
 			criteria.setMaxResults(5);
 			return criteria.list();
@@ -199,6 +200,22 @@ public class GeoDAOImpl extends HibernateDaoSupport implements GeoDAO  {
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct geo2 ");
 			queryString.append("FROM Geo2 geo2 ");
+
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Geo3> getListGeo3() throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct geo3 ");
+			queryString.append("FROM Geo3 geo3 ");
 
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 

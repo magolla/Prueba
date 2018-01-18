@@ -41,4 +41,5 @@ public interface SpecialtyService {
 	void editTask(long taskId, String taskName) throws DAOException;
 
 
+
 }

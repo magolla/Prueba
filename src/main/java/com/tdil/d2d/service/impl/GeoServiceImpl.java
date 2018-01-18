@@ -46,6 +46,7 @@ public class GeoServiceImpl implements GeoService {
 			throw new ServiceException(e);
 		}
 	}
+	
 
 	private Collection<? extends GeoLevelDTO> toDto4(List<Geo4> levels) {
 		return levels.stream().map(s -> toDto(s)).collect(Collectors.toList());
@@ -75,6 +76,15 @@ public class GeoServiceImpl implements GeoService {
 		result.setId(s.getId());
 		// TODO setear el path hasta el 2
 		result.setName(s.getName() + ", " + s.getGeo2().getName());
+		return result;
+	}
+	
+	private GeoLevelDTO toDtoBackend(Geo3 s) {
+		GeoLevelDTO result = new GeoLevelDTO();
+		result.setLevel(3);
+		result.setId(s.getId());
+		// TODO setear el path hasta el 2
+		result.setName(s.getName());
 		return result;
 	}
 
@@ -173,7 +183,7 @@ public class GeoServiceImpl implements GeoService {
 
 	@Override
 	public void addGeo3(String geo3ProvinceId, String newRegionName) throws NumberFormatException, DAOException {
-		Geo2 geoLevel = (Geo2) geoDAO.getGeoByIdAndLevel(Long.valueOf(geo3ProvinceId), 3);
+		Geo2 geoLevel = (Geo2) geoDAO.getGeoByIdAndLevel(Long.valueOf(geo3ProvinceId), 2);
 		if(geoLevel == null) {
 			throw new DAOException(new Throwable("Error al obtener provincia"));
 		}
@@ -212,5 +222,60 @@ public class GeoServiceImpl implements GeoService {
 
 
 	}
+	
+	@Override
+	public void addGeo4(String cityGeo3Id, String cityName) throws NumberFormatException, DAOException {
+			List<Geo4> geo4List = geoDAO.getListGeo4ByGeo3(Long.valueOf(cityGeo3Id));
+			
+			if(geo4List.size() == 1 && geo4List.get(0).getName().equals("")) {
+				Geo4 g4 = geo4List.get(0);
+				g4.setName(cityName);
+				geoDAO.save(g4);
+			} else {
+				Geo3 g3 = (Geo3) geoDAO.getGeoByIdAndLevel(Long.valueOf(cityGeo3Id), 3);
+				Geo4 geo4 = new Geo4();
+				geo4.setName(cityName);
+				geo4.setGeo3(g3);
+				geoDAO.save(geo4);
+			}
+	}
+
+	@Override
+	public Collection<GeoLevelDTO> listGeoLevel3ByProvince(long provinceId) throws ServiceException {
+		try {
+			
+			List<Geo3> geoList = geoDAO.getListGeo3ByGeo2(provinceId);
+			
+			return geoList.stream().map(s -> toDtoBackend(s)).collect(Collectors.toList());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public void editProvince(long id, String name) throws DAOException {
+		Geo2 geo2 = (Geo2)geoDAO.getGeoByIdAndLevel(id, 2);
+		geo2.setName(name);
+		geoDAO.save(geo2);
+	}
+
+	@Override
+	public void editRegion(long id, String name) throws DAOException {
+		Geo3 geo3 = (Geo3)geoDAO.getGeoByIdAndLevel(id, 3);
+		geo3.setName(name);
+		geoDAO.save(geo3);
+	}
+
+	@Override
+	public void editCity(long id, String name) throws DAOException {
+		Geo4 geo4 = (Geo4)geoDAO.getGeoByIdAndLevel(id, 4);
+		geo4.setName(name);
+		geoDAO.save(geo4);
+		
+	}
+
+
+
+
 
 }
