@@ -94,7 +94,7 @@ public class AdminGeolevelsController {
 		}
 
 		try {
-			geoService.add(provinceName, "", "");
+			geoService.addBackend(provinceName, "", "");
 			return ResponseEntity.ok(new GenericResponse<>(200, "La provincia se ha cargado exitosamente."));
 		} catch (DAOException e) {
 			e.printStackTrace();

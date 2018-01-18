@@ -34,4 +34,6 @@ public interface GeoService {
 	public void editRegion(long id, String name) throws DAOException;
 
 	public void editCity(long id, String name) throws DAOException;
+
+	void addBackend(String geo2, String geo3, String geo4) throws DAOException;
 }
