@@ -5,7 +5,7 @@
 <tiles:insertDefinition name="d2d.dashboard">
 
 	<tiles:putAttribute name="title">
-		ABM de categorias
+		ABM de categorías
 	</tiles:putAttribute>
 
 	<tiles:putAttribute name="body">
@@ -14,13 +14,13 @@
 				<div class="col-md-12">
 					<div class="nav-tabs-custom">
 			            <ul class="nav nav-tabs">
-			              <li class="active"><a href="#tab_1" data-toggle="tab">Listado de categorias</a></li>
+			              <li class="active"><a href="#tab_1" data-toggle="tab">Listado de categorías</a></li>
 			            </ul>
 			            <div class="tab-content">
 							<div class="tab-pane active" id="tab_1">
 								<div class="col-md-12" style="margin-bottom:50px;">
 									<div class="col-md-4">
-										<a type="submit" class="btn btn-default col-md-12" data-toggle="modal" data-target="#occupationModal" >Crear nueva Ocupacion</a>
+										<a type="submit" class="btn btn-default col-md-12" data-toggle="modal" data-target="#occupationModal" >Crear nueva Ocupación</a>
 									</div>
 									<div class="col-md-4">
 										<a type="submit" class="btn btn-warning col-md-12" data-toggle="modal" data-target="#specialtyModal" >Crear nueva Especialidad</a>
@@ -33,26 +33,26 @@
 								<table id="categories-table" class="display" cellspacing="0" width="100%">
 									<thead>
 										<tr>
-											<th>Ocupacion</th>
+											<th>Ocupación</th>
 											<th>Especialidad</th>
 											<th>Tarea</th>
 											<th>OcupacionId</th>
 											<th>EspecialidadId</th>
 											<th>TareaId</th>
-											<th>Editar Ocupacion</th>
+											<th>Editar Ocupación</th>
 											<th>Editar Especialidad</th>
 											<th>Editar Tarea</th>
 										</tr>
 									</thead>
 									<tfoot>
 										<tr>
-											<th>Ocupacion</th>
+											<th>Ocupación</th>
 											<th>Especialidad</th>
 											<th>Tarea</th>
 											<th>OcupacionId</th>
 											<th>EspecialidadId</th>
 											<th>TareaId</th>
-											<th>Editar Ocupacion</th>
+											<th>Editar Ocupación</th>
 											<th>Editar Especialidad</th>
 											<th>Editar Tarea</th>
 										</tr>
@@ -74,21 +74,25 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Crear ocupacion</h4>
+						<h4 class="modal-title">Crear ocupación</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="occupationSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="occupationError" class="error"  style="display: none;">sfas</div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Nombre:</label>
-							<input id="occupationTxt" class="col-md-4">
-							<button onclick="addOccupation()">Agregar</button>
+						<div class="row" >
+							<div id="occupationSuccess" class="msg" style="display: none;" >error</div>
+							<div id="occupationError" class="error"  style="display: none;">error</div>
+						</div>
+						
+						
+						<div class="form-group row">
+							<label for="occupationTxt" class="col-2 col-form-label">Nombre</label>
+							<div class="col-10">
+								<input class="form-control" id="occupationTxt" placeholder="Ingresá el nombre, ejemplo: Médico">
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button onclick="addOccupation()" class="btn btn-success">Agregar</button>
 					</div>
 				</div>
 			</div>
@@ -104,24 +108,32 @@
 						<h4 class="modal-title">Crear Especialidad</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="specialtySuccess" class="msg" style="display: none;" ></div>
-						<div id="specialtyError" class="error"  style="display: none;"></div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Ocupacion:</label>
-							<input id="espOccupationName" type="text" class="typeahead col-md-4" data-provide="typeahead" >
-							<input id="espOccupationId" class="col-md-2" style="display: none;">
-							<button id="espCleanButton">Borrar</button>
+						<div class="row" >
+							<div id="specialtySuccess" class="msg" style="display: none;" ></div>
+							<div id="specialtyError" class="error"  style="display: none;"></div>
 						</div>
-						<div class="row">
-							<label class="col-md-4">Especialidad:</label>
-							<input id="espSpecialtyName" class="col-md-4">
-							<button onclick="addSpecialty()">Agregar</button>
+						<div class="form-group row">
+							<label for="espOccupationName" class="col-2 col-form-label">Seleccionar ocupación</label>
+							<div class="col-10">
+								<div class="input-group">
+									<input id="espOccupationName" type="text" class="typeahead form-control" placeholder="Buscar ocupación...">
+									<span class="input-group-btn">
+										<button id="espCleanButton" class="btn btn-danger" type="button">Limpiar</button>
+									</span>
+								</div>
+							</div>
+							<input id="espOccupationId" class="col-md-2" style="display: none;">
+						</div>
+						<div class="form-group row">
+							<label for="espSpecialtyName" class="col-2 col-form-label">Especialidad</label>
+							<div class="col-10">
+								<input id="espSpecialtyName" class="form-control" placeholder="Ingresá el nombre de la especialidad, ejemplo: Alergista">
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button onclick="addSpecialty()" class="btn btn-success">Agregar</button>
 					</div>
 				</div>
 			</div>
@@ -138,30 +150,47 @@
 						<h4 class="modal-title">Crear Tarea</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="taskSuccess" class="msg" style="display: none;"></div>
-						<div id="taskError" class="error"  style="display: none;"></div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Ocupacion:</label>
-							<input id="taskOccupationName" type="text" class="typeahead col-md-4" data-provide="typeahead" >
-							<input id="taskOccupationId" class="col-md-2" style="display: none;">
-							<button id="TaskOccuCleanButton">Borrar</button>
+						<div class="row" >
+							<div id="taskSuccess" class="msg" style="display: none;"></div>
+							<div id="taskError" class="error"  style="display: none;"></div>
 						</div>
-						<div class="row">
-							<label class="col-md-4">Especialidad:</label>
-							<input id="taskSpecialtyName" type="text" class="typeahead col-md-4" data-provide="typeahead" >
-							<input id="taskSpecialtyId" class="col-md-2" style="display: none;">
-							<button id="taskEspCleanButton">Borrar</button>
+
+						<div class="form-group row">
+							<label for="taskOccupationName" class="col-2 col-form-label">Seleccionar ocupación</label>
+							<div class="col-10">
+ 								<div class="input-group">
+									<input id="taskOccupationName" type="text" class="typeahead form-control" data-provide="typeahead" placeholder="Buscar ocupación...">
+									<span class="input-group-btn"> 
+										<button id="TaskOccuCleanButton" class="btn btn-danger" type="button">Limpiar</button>
+									</span>
+								</div>
+							</div>
 						</div>
-						<div class="row">
-							<label class="col-md-4">Nombre:</label>
-							<input id="taskTaskName" class="col-md-4">
-							<button onclick="addTask()">Agregar</button>
+						<input id="taskOccupationId" class="col-md-2" style="display: none;">
+						<div class="form-group row">
+							<label for="taskSpecialtyName" class="col-2 col-form-label">Seleccionar especialidad</label>
+							<div class="col-10">
+ 								<div class="input-group">
+									<input id="taskSpecialtyName" type="text" class="typeahead form-control" data-provide="typeahead" placeholder="Buscar especialidad...">
+									<span class="input-group-btn"> 
+										<button id="taskEspCleanButton" class="btn btn-danger" type="button">Limpiar</button>
+									</span>
+								</div>
+							</div>
+						</div>
+						<input id="taskSpecialtyId" class="col-md-2" style="display: none;">
+
+						<div class="form-group row">
+							<label for="taskTaskName" class="col-2 col-form-label">Tarea</label>
+							<div class="col-10">
+								<input id="taskTaskName" class="form-control" placeholder="Ingresá el nombre de la tarea, ejemplo: Guardia">
+							</div>
+							
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button onclick="addTask()" class="btn btn-success">Agregar</button>
 					</div>
 				</div>
 			</div>
@@ -175,22 +204,25 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Editar ocupacion</h4>
+						<h4 class="modal-title">Editar ocupación</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="occupationEditSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="occupationEditError" class="error"  style="display: none;">sfas</div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Nombre:</label>
-							<input id="occupationEditName" class="col-md-4">
-							<input id="occupationEditId" class="col-md-2" style="display: none;">
-							<button onclick="editOccupation()">Editar</button>
+						<div class="row" >
+							<div id="occupationEditSuccess" class="msg" style="display: none;" >error</div>
+							<div id="occupationEditError" class="error"  style="display: none;">error</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="occupationEditName" class="col-2 col-form-label">Nombre</label>
+							<div class="col-10">
+								<input class="form-control" id="occupationEditName" placeholder="Ingresá el nombre, ejemplo: Médico">
+								<input id="occupationEditId" class="col-md-2" style="display: none;">
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button onclick="editOccupation()" class="btn btn-success">Modificar</button>
 					</div>
 				</div>
 			</div>
@@ -207,19 +239,21 @@
 						<h4 class="modal-title">Editar especialidad</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="specialtyEditSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="specialtyEdit	Error" class="error"  style="display: none;">sfas</div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Nombre:</label>
-							<input id="specialtyEditName" class="col-md-4">
-							<input id="specialtyEditId" class="col-md-2" style="display: none;">
-							<button onclick="editSpecialty()">Editar</button>
+						<div class="row" >
+							<div id="specialtyEditSuccess" class="msg" style="display: none;" >sfas</div>
+							<div id="specialtyEdit	Error" class="error"  style="display: none;">sfas</div>
 						</div>
+						<div class="form-group row">
+							<label for="specialtyEditName" class="col-2 col-form-label">Especialidad</label>
+							<div class="col-10">
+								<input id="specialtyEditName" class="form-control" placeholder="Ingresá el nombre, ejemplo: Alergista">
+							</div>
+						</div>
+						<input id="specialtyEditId" class="col-md-2" style="display: none;">
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button onclick="editSpecialty()" class="btn btn-success">Modificar</button>
 					</div>
 				</div>
 			</div>
@@ -236,19 +270,22 @@
 						<h4 class="modal-title">Editar tarea</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="taskEditSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="taskEditError" class="error"  style="display: none;">sfas</div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Nombre:</label>
-							<input id="taskEditName" class="col-md-4">
-							<input id="taskEditId" class="col-md-2" style="display: none;">
-							<button onclick="editTask()">Editar</button>
+						<div class="row" >
+							<div id="taskEditSuccess" class="msg" style="display: none;" >sfas</div>
+							<div id="taskEditError" class="error"  style="display: none;">sfas</div>
 						</div>
+
+						<div class="form-group row">
+							<label for="taskEditName" class="col-2 col-form-label">Especialidad</label>
+							<div class="col-10">
+								<input id="taskEditName" class="form-control" placeholder="Ingresá el nombre, ejemplo: Alergista">
+							</div>
+						</div>
+						<input id="taskEditId" class="col-md-2" style="display: none;">
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button onclick="editTask()" class="btn btn-success">Modificar</button>
 					</div>
 				</div>
 			</div>

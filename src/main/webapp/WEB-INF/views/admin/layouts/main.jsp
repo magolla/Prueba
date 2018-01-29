@@ -139,7 +139,7 @@
 				<!-- TODO: Roles para categories -->
 				<li class="treeview">
 					<a href="<c:url value="/admin/BoCategory" />">
-						<i class="fa fa-book"></i> <span>ABM de Categorias</span>
+						<i class="fa fa-book"></i> <span>ABM de Categorías</span>
 					</a>
 				</li>
 				

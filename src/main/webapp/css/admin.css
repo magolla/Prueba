@@ -323,4 +323,4 @@ span#previewOfferText 		{ font-size: 14px; font-weight: 700; width: 243px; displ
   -moz-border-radius: 0px;
   background-image: none;
 }
-
+.typeahead.dropdown-menu	{ position:fixed; left: 15px!important; }

@@ -88,7 +88,7 @@ public class AdminCategoryController {
 
 		try {
 			specialtyService.add(occupationName, "", "");
-			return ResponseEntity.ok(new GenericResponse<>(200, "La ocupacion se ha cargado exitosamente."));
+			return ResponseEntity.ok(new GenericResponse<>(200, "La ocupación se ha cargado exitosamente. Ingresá una nueva o cerrá la ventana para finalizar."));
 		} catch (ServiceException e) {
 			e.printStackTrace();
 			return new ResponseEntity<GenericResponse<String>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
