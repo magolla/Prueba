@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
-import com.tdil.d2d.bo.dto.DatatablePaginateOutDTO;
+import com.tdil.d2d.bo.dto.DatatablePaginateOutDto;
 import com.tdil.d2d.bo.dto.DatatablePaginationInDTO;
 import com.tdil.d2d.bo.dto.GeosDto;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
@@ -55,7 +55,7 @@ public class AdminGeolevelsController {
 
 
 	@RequestMapping(value = "/BoGeolevel/getGeolevels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<DatatablePaginateOutDTO<GeosDto>> getUsers(HttpServletRequest request) {
+	public ResponseEntity<DatatablePaginateOutDto<GeosDto>> getUsers(HttpServletRequest request) {
 
 
 		DatatablePaginationInDTO datatablePaginationInDTO = new DatatablePaginationInDTO(request);
@@ -70,7 +70,7 @@ public class AdminGeolevelsController {
 		}
 		
 
-		DatatablePaginateOutDTO<GeosDto> datatablePaginateOutDto = new DatatablePaginateOutDTO<>();
+		DatatablePaginateOutDto<GeosDto> datatablePaginateOutDto = new DatatablePaginateOutDto<>();
 
 		List<GeosDto> geoList = null;
 		try {
