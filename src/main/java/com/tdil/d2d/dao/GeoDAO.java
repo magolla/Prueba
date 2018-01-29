@@ -24,4 +24,11 @@ public interface GeoDAO {
 	public List<Geo4> getListGeo4ByGeo3(Long geo3Id) throws DAOException;
 	
 	public List<Geo2> getListGeo2() throws DAOException;
+	public List<Geo4> getGeoByIndex(String length, String start, String search) throws DAOException;
+	public int geoCount(String search);
+	public Geo2 searchGeo2(String geo2) throws DAOException;
+	public Geo3 searchGeo3(String geo3) throws DAOException;
+	public Geo4 searchGeo4(String geo4) throws DAOException;
+	List<Geo3> getListGeo3ByGeo2(Long geo2Id) throws DAOException;
+	List<Geo3> getListGeo3() throws DAOException;
 }

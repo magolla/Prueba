@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tdil.d2d.bo.dto.CategoryDto;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 import com.tdil.d2d.controller.api.dto.TaskDTO;
@@ -24,10 +25,10 @@ import com.tdil.d2d.service.SpecialtyService;
 @Transactional
 @Service
 public class SpecialtyServiceImpl implements SpecialtyService { 
-	
+
 	@Autowired
 	private SpecialtyDAO specialtyDAO;
-	
+
 	@Override
 	public Collection<OccupationDTO> listOccupations() throws ServiceException {
 		try {
@@ -36,7 +37,16 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
+	@Override
+	public Collection<OccupationDTO> listOccupationsNoFilter() throws ServiceException {
+		try {
+			return toDtoOccupation(specialtyDAO.listOccupationNoFilter());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
 	@Override
 	public Collection<SpecialtyDTO> listSpecialties(long occupationId) throws ServiceException {
 		try {
@@ -45,7 +55,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public Collection<TaskDTO> listTasks(long specialtyId) throws ServiceException {
 		try {
@@ -55,14 +65,23 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 		}
 	}
 
+	@Override
+	public int getTaskCount(String search) throws ServiceException {
+		try {
+			return specialtyDAO.taskCount(search);
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
 	private static Collection<OccupationDTO> toDtoOccupation(Collection<Occupation> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
 	}
-	
+
 	protected static Collection<SpecialtyDTO> toDtoSpecialty(Collection<Specialty> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
 	}
-	
+
 	protected static Collection<TaskDTO> toDtoTask(Collection<Task> list) {
 		return list.stream().map(s -> toDto(s)).collect(Collectors.toList());
 	}
@@ -75,7 +94,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 		}
 		return result;
 	}
-	
+
 	private static SpecialtyDTO toDto(Specialty s) {
 		SpecialtyDTO result = new SpecialtyDTO();
 		if(s != null) {
@@ -84,7 +103,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 		}
 		return result;
 	}
-	
+
 	private static TaskDTO toDto(Task s) {
 		TaskDTO result = new TaskDTO();
 		if(s != null) {
@@ -93,7 +112,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public void initDB() throws ServiceException {
 		try {
@@ -102,7 +121,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 			throw new ServiceException(e);
 		}
 	}
-	
+
 	@Override
 	public void add(String occupation, String specialty, String task) throws ServiceException {
 		try {
@@ -134,6 +153,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 			throw new ServiceException(e);
 		}
 	}
+
 
 	private String normalize(String task) {
 		String result = task;
@@ -188,4 +208,123 @@ public class SpecialtyServiceImpl implements SpecialtyService {
 			return null;
 		}
 	}
+
+	@Override
+	public List<CategoryDto> getTaskByIndex(String length, String start, String search) {
+
+		List<Task> taskList = this.specialtyDAO.getTaskByIndex(length, start, search);
+
+		return taskList.stream().map(task -> toDtoCategory(task)).collect(Collectors.toList());
+
+	}
+
+	private CategoryDto toDtoCategory(Task task) {
+		CategoryDto categoryDto = new CategoryDto();
+
+		categoryDto.setTaskId(task.getId());
+		categoryDto.setTaskName(task.getName());
+
+		categoryDto.setSpecialtyId(task.getSpecialty().getId());
+		categoryDto.setSpecialtyName(task.getSpecialty().getName());
+
+		categoryDto.setOccupationId(task.getSpecialty().getOccupation().getId());
+		categoryDto.setOccupationName(task.getSpecialty().getOccupation().getName());
+
+		return categoryDto;
+	}
+
+	@Override
+	public boolean addSpecialtyToOccupation(String occupationId, String specialtyName) throws ServiceException {
+		try {
+
+			Occupation o = specialtyDAO.getOccupationById(Long.valueOf(occupationId));
+			if (o == null) {
+				return false;
+			}
+
+			List<Specialty> specialtyList = specialtyDAO.getSpecialtyByOccupationId(occupationId);
+
+			if(specialtyList.size() == 1 && specialtyList.get(0).getName().equals("")) {
+				List<Task> tasksList = specialtyDAO.getTasksBySpecialtyId(specialtyList.get(0).getId());
+
+				if(tasksList.size() == 1 && tasksList.get(0).getName().equals("")) {
+					Specialty specialty = specialtyList.get(0);
+					specialty.setName(specialtyName);
+					specialtyDAO.save(specialty);	
+				}
+
+			} else {
+				Specialty newSpecialty = new Specialty();
+				newSpecialty.setName(specialtyName);
+				newSpecialty.setOccupation(o);
+				specialtyDAO.save(newSpecialty);
+
+				Task t = new Task();
+				t.setSpecialty(newSpecialty);
+				t.setName("");
+				specialtyDAO.save(t);
+			}
+
+			return true;
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public Collection<SpecialtyDTO> listAllSpecialties() throws ServiceException {
+		try {
+			return toDtoSpecialty(specialtyDAO.listAllSpecialties());
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	@Override
+	public void addTaskToOccupationAndSpecialty(String taskName, String specialtyId) throws ServiceException  {
+		try {
+			List<Task> taskList = specialtyDAO.getTasksBySpecialtyId(Long.valueOf(specialtyId));
+			
+			
+			if(taskList.size() == 1 && taskList.get(0).getName().equals("")) {
+				Task task = taskList.get(0);
+				task.setName(taskName);
+				specialtyDAO.save(task);
+			} else {
+				Specialty spe = specialtyDAO.getSpecialtyById(Long.valueOf(specialtyId));
+				Task task = new Task();
+				task.setName(taskName);
+				task.setSpecialty(spe);
+				specialtyDAO.save(task);
+			}
+
+		} catch (NumberFormatException | DAOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void editOccupation(long occupationId, String occupationName) throws DAOException {
+			Occupation oc = specialtyDAO.getOccupationById(occupationId);
+			oc.setName(occupationName);
+			specialtyDAO.save(oc);
+	}
+	
+	@Override
+	public void editSpecialty(long specialtyId, String specialtyName) throws DAOException {
+			Specialty sp = specialtyDAO.getSpecialtyById(specialtyId);
+			sp.setName(specialtyName);
+			specialtyDAO.save(sp);
+	}
+	
+	@Override
+	public void editTask(long taskId, String taskName) throws DAOException {
+			Task ta = specialtyDAO.getTaskById(taskId);
+			ta.setName(taskName);
+			specialtyDAO.save(ta);
+	}
+
+
+
 }
