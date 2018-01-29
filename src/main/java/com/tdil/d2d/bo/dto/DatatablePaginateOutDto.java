@@ -2,6 +2,7 @@ package com.tdil.d2d.bo.dto;
  
 import java.util.List; 
  
+//version corregida
 public class DatatablePaginateOutDto<T> { 
    
   private int draw; 

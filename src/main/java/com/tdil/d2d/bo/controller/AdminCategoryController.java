@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.tdil.d2d.bo.dto.CategoryDto;
-import com.tdil.d2d.bo.dto.DatatablePaginateOutDTO;
+import com.tdil.d2d.bo.dto.DatatablePaginateOutDto;
 import com.tdil.d2d.bo.dto.DatatablePaginationInDTO;
 import com.tdil.d2d.controller.api.dto.OccupationDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
@@ -53,7 +53,7 @@ public class AdminCategoryController {
 
 
 	@RequestMapping(value = "/BoCategory/getCategories", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<DatatablePaginateOutDTO<CategoryDto>> getUsers(HttpServletRequest request, HttpServletResponse res) {
+	public ResponseEntity<DatatablePaginateOutDto<CategoryDto>> getUsers(HttpServletRequest request, HttpServletResponse res) {
 
 
 		DatatablePaginationInDTO datatablePaginationInDTO = new DatatablePaginationInDTO(request);
@@ -67,7 +67,7 @@ public class AdminCategoryController {
 			e.printStackTrace();
 		}
 
-		DatatablePaginateOutDTO<CategoryDto> datatablePaginateOutDto = new DatatablePaginateOutDTO<>();
+		DatatablePaginateOutDto<CategoryDto> datatablePaginateOutDto = new DatatablePaginateOutDto<>();
 
 		List<CategoryDto> categoryList = specialtyService.getTaskByIndex(datatablePaginationInDTO.getLength(), datatablePaginationInDTO.getStart(), datatablePaginationInDTO.getSearch());
 
