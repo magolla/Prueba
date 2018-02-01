@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
@@ -78,16 +77,16 @@ public class AdminCategoryController {
 		return ResponseEntity.ok(datatablePaginateOutDto);
 	}
 
-	@RequestMapping(value = "/BoCategory/saveOccupation", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse<String>> saveOccupation(@RequestParam("occupationName") String occupationName) {
+	@RequestMapping(value = "/BoCategory/saveOccupation", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> saveOccupation(@RequestBody CategoryEditRequest body) {
 
-		if(occupationName.trim().isEmpty()) {
+		if(body.getName().trim().isEmpty()) {
 			return ResponseEntity.ok(new GenericResponse<>(201, "El campo no puede estar vacio."));
 		}
 
 
 		try {
-			specialtyService.add(occupationName, "", "");
+			specialtyService.add(body.getName().trim(), "", "");
 			return ResponseEntity.ok(new GenericResponse<>(200, "La ocupación se ha cargado exitosamente. Ingresá una nueva o cerrá la ventana para finalizar."));
 		} catch (ServiceException e) {
 			e.printStackTrace();
@@ -96,11 +95,11 @@ public class AdminCategoryController {
 
 	}
 	
-	@RequestMapping(value = "/BoCategory/saveSpecialty", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse<String>> saveSpecialty(@RequestParam("espOccupationId") String espOccupationId, @RequestParam("newSpecialtyName") String newSpecialtyName) {
+	@RequestMapping(value = "/BoCategory/saveSpecialty", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> saveSpecialty(@RequestBody CategoryEditRequest body) {
 		
 		try {
-			specialtyService.addSpecialtyToOccupation(espOccupationId, newSpecialtyName);
+			specialtyService.addSpecialtyToOccupation(String.valueOf(body.getId()), body.getName());
 			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
 		} catch (ServiceException e) {
 			e.printStackTrace();
@@ -108,11 +107,11 @@ public class AdminCategoryController {
 		}
 	}
 	
-	@RequestMapping(value = "/BoCategory/saveTask", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse<String>> saveTask(@RequestParam("taskName") String taskName, @RequestParam("specialtyId") String specialtyId) {
+	@RequestMapping(value = "/BoCategory/saveTask", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> saveTask(@RequestBody CategoryEditRequest body) {
 		
 		try {
-			specialtyService.addTaskToOccupationAndSpecialty(taskName,specialtyId);
+			specialtyService.addTaskToOccupationAndSpecialty(body.getName(), String.valueOf(body.getId()));
 			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
 		} catch (ServiceException | DAOException e) {
 			e.printStackTrace();

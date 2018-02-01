@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
@@ -86,15 +85,15 @@ public class AdminGeolevelsController {
 		return ResponseEntity.ok(datatablePaginateOutDto);
 	}
 
-	@RequestMapping(value = "/BoGeolevel/saveProvince", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse<String>> saveProvince(@RequestParam("provinceName") String provinceName) {
+	@RequestMapping(value = "/BoGeolevel/saveProvince", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> saveProvince(@RequestBody CategoryEditRequest body) {
 
-		if(provinceName.trim().isEmpty()) {
+		if(body.getName().trim().isEmpty()) {
 			return ResponseEntity.ok(new GenericResponse<>(201, "El campo no puede estar vacio."));
 		}
 
 		try {
-			geoService.addBackend(provinceName, "", "");
+			geoService.addBackend(body.getName(), "", "");
 			return ResponseEntity.ok(new GenericResponse<>(200, "La provincia se ha cargado exitosamente."));
 		} catch (DAOException e) {
 			e.printStackTrace();
@@ -103,11 +102,11 @@ public class AdminGeolevelsController {
 
 	}
 	
-	@RequestMapping(value = "/BoGeolevel/saveRegion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse<String>> saveRegion(@RequestParam("geo3ProvinceId") String geo3ProvinceId, @RequestParam("newRegionName") String newRegionName) {
+	@RequestMapping(value = "/BoGeolevel/saveRegion", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> saveRegion(@RequestBody CategoryEditRequest body) {
 		
 		try {
-			geoService.addGeo3(geo3ProvinceId, newRegionName);
+			geoService.addGeo3(String.valueOf(body.getId()), body.getName());
 			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
 		} catch (NumberFormatException | DAOException e) {
 			e.printStackTrace();
@@ -115,11 +114,11 @@ public class AdminGeolevelsController {
 		}
 	}
 	
-	@RequestMapping(value = "/BoGeolevel/saveCity", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse<String>> saveTask(@RequestParam("cityName") String cityName, @RequestParam("cityGeo3Id") String cityGeo3Id) {
+	@RequestMapping(value = "/BoGeolevel/saveCity", method = RequestMethod.POST)
+	public ResponseEntity<GenericResponse<String>> saveTask(@RequestBody CategoryEditRequest body) {
 		
 		try {
-			geoService.addGeo4(cityGeo3Id, cityName);
+			geoService.addGeo4(String.valueOf(body.getId()), body.getName());
 			return ResponseEntity.ok(new GenericResponse<>(200, "La especialidad se ha cargado exitosamente."));
 		} catch (NumberFormatException | DAOException e) {
 			e.printStackTrace();

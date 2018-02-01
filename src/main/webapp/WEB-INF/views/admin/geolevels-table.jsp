@@ -437,10 +437,15 @@
 				
 				$("#provinceTxt").val("");
 				
+				var data = {}
+				data["name"] = newProvince;
+				data["id"] = "";
+				
 				$.ajax({ 
-				    type: 'GET', 
-				    url: '/d2d/admin/BoGeolevel/saveProvince', 
-				    data: { provinceName: newProvince }, 
+				    type: 'POST', 
+				    contentType: "application/json",
+				    url: '/d2d/admin/BoGeolevel/saveProvince?${_csrf.parameterName}=${_csrf.token}', 
+				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
@@ -470,13 +475,18 @@
 					return;
 				}
 				
+				
+				var data = {}
+				data["name"] = regionName;
+				data["id"] = provinceId;
+				
 				hideMessages();
 				
 				$.ajax({ 
-				    type: 'GET', 
-				    url: '/d2d/admin/BoGeolevel/saveRegion', 
-				    data: { geo3ProvinceId: provinceId,
-				    		newRegionName: regionName}, 
+				    type: 'POST', 
+				    contentType: "application/json",
+				    url: '/d2d/admin/BoGeolevel/saveRegion?${_csrf.parameterName}=${_csrf.token}', 
+				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
@@ -508,11 +518,16 @@
 					return;
 				}
 				
+				var data = {}
+				data["name"] = cityName;
+				data["id"] = cityGeo3Id;
+				
+				
 				$.ajax({ 
-				    type: 'GET', 
-				    url: '/d2d/admin/BoGeolevel/saveCity', 
-				    data: { cityName: cityName,
-				    	cityGeo3Id: cityGeo3Id}, 
+				    type: 'POST', 
+				    contentType: "application/json",
+				    url: '/d2d/admin/BoGeolevel/saveCity?${_csrf.parameterName}=${_csrf.token}', 
+				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){

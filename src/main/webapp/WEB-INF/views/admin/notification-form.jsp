@@ -286,7 +286,6 @@ function submitFormModal() {
 }
 
 function alluserAction(checkboxElem) {
-	console.log(checkboxElem);
 	  if (checkboxElem.checked) {
 		  $("#userIds").prop('disabled', true);
 	  } else {
@@ -355,10 +354,8 @@ function loadSpecialtiesInput() {
 
 function allSponsoredUserAction(checkboxElem) {
 	  if (checkboxElem.checked) {
-		  console.log("INVI");
 		  $("#sponsorsBox").css('display','none');
 	  } else {
-		  console.log("NO INVI");
 		  $("#sponsorsBox").css('display','block');
 	  }
 }

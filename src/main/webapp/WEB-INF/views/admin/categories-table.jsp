@@ -475,10 +475,15 @@
 				
 				$("#occupationTxt").val("");
 				
+				var data = {}
+				data["name"] = newOccupation;
+				data["id"] = "";
+				
 				$.ajax({ 
-				    type: 'GET', 
-				    url: '/d2d/admin/BoCategory/saveOccupation', 
-				    data: { occupationName: newOccupation }, 
+	 			    type: 'POST', 
+	 			    contentType: "application/json",
+				    url: '/d2d/admin/BoCategory/saveOccupation?${_csrf.parameterName}=${_csrf.token}',  
+				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
@@ -509,19 +514,24 @@
 					return;
 				}
 				
+				var data = {}
+				data["name"] = specialtyName;
+				data["id"] = occupationId;
+				
+				
 				hideMessages();
 				
 				$.ajax({ 
-				    type: 'GET', 
-				    url: '/d2d/admin/BoCategory/saveSpecialty', 
-				    data: { espOccupationId: occupationId,
-				    		newSpecialtyName: specialtyName}, 
+				    type: 'POST', 
+				    contentType: "application/json",
+				    url: '/d2d/admin/BoCategory/saveSpecialty?${_csrf.parameterName}=${_csrf.token}', 
+				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
-							$("#espOccupationName").val("");
-						    $("#espOccupationId").val("");
-						    $("#espOccupationName").prop('disabled', false);
+// 							$("#espOccupationName").val("");
+// 						    $("#espOccupationId").val("");
+// 						    $("#espOccupationName").prop('disabled', false);
 						    $("#espSpecialtyName").val("");
 						    specialtyShowSuccess(data.data);
 						} else {
@@ -543,26 +553,30 @@
 				var taskSpecialtyId = $("#taskSpecialtyId").val();
 				var taskOccupationId = $("#taskOccupationId").val();
 				
+				var data = {}
+				data["name"] = taskTaskName;
+				data["id"] = taskSpecialtyId;
+				
 				if(taskOccupationId == "" || taskSpecialtyId == "" || taskTaskName == "") {
 					taskShowError("Los campos no pueden estar vacios.");
 					return;
 				}
 				
 				$.ajax({ 
-				    type: 'GET', 
-				    url: '/d2d/admin/BoCategory/saveTask', 
-				    data: { taskName: taskTaskName,
-				    		specialtyId: taskSpecialtyId}, 
+				    type: 'POST', 
+				    contentType: "application/json",
+				    url: '/d2d/admin/BoCategory/saveTask?${_csrf.parameterName}=${_csrf.token}', 
+				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
-							$("#taskOccupationName").val("");
-						    $("#taskOccupationId").val("");
-						    $("#taskSpecialtyName").val("");
-						    $("#taskSpecialtyId").val("");
+// 							$("#taskOccupationName").val("");
+// 						    $("#taskOccupationId").val("");
+// 						    $("#taskSpecialtyName").val("");
+// 						    $("#taskSpecialtyId").val("");
 						    $("#taskTaskName").val("");
-						    $("#taskOccupationName").prop('disabled', false);
-						    $("#taskSpecialtyName").prop('disabled', false);
+// 						    $("#taskOccupationName").prop('disabled', false);
+// 						    $("#taskSpecialtyName").prop('disabled', false);
 
 						    taskShowSuccess(data.data);
 						} else {
