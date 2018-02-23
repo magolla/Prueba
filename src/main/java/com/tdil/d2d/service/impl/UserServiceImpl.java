@@ -874,9 +874,9 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
-            savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
-
+			activityLogDAO.save(new ActivityLog(finalUser, ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, finalUser);
+			
 			this.notifyToMatchedUsers(jobOffer.getId());
 
 			return true;
@@ -916,10 +916,11 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
+			this.notifyToMatchedUsers(jobOffer.getId());
+			
+			// TODO: Revisar si esto es correcto
             activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
             savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
-
-			this.notifyToMatchedUsers(jobOffer.getId());
 
 			return true;
 		} catch (Exception e) {
