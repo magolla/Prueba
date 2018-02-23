@@ -130,26 +130,29 @@
 				</sec:authorize>
 				
 				<!-- TODO: Roles para Offers -->
+				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_OFFERS')">
 				<li class="treeview">
 					<a href="<c:url value="/admin/BoOffers" />">
 						<i class="fa fa-book"></i> <span>ABM de Ofertas</span>
 					</a>
 				</li>
+				</sec:authorize>
 				
 				<!-- TODO: Roles para categories -->
+				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_REFERENCEDATA')">
 				<li class="treeview">
 					<a href="<c:url value="/admin/BoCategory" />">
 						<i class="fa fa-book"></i> <span>ABM de Categorías</span>
 					</a>
 				</li>
 				
-								
 				<!-- TODO: Roles para categories -->
 				<li class="treeview">
 					<a href="<c:url value="/admin/BoGeolevel" />">
 						<i class="fa fa-book"></i> <span>ABM de Geolevels</span>
 					</a>
 				</li>
+				</sec:authorize>
 				
 				<!-- Roles para Notificaciones -->
 				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_NOTIFICATIONS')">

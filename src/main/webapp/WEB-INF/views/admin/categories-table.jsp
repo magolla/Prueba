@@ -138,7 +138,6 @@
 				</div>
 			</div>
 		</div>
-		
 		<!-- Modal de Tareas -->
 		<div id="taskModal" class="modal fade bd-example-modal-lg"
 			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -179,13 +178,11 @@
 							</div>
 						</div>
 						<input id="taskSpecialtyId" class="col-md-2" style="display: none;">
-
 						<div class="form-group row">
 							<label for="taskTaskName" class="col-2 col-form-label">Tarea</label>
 							<div class="col-10">
 								<input id="taskTaskName" class="form-control" placeholder="Ingresá el nombre de la tarea, ejemplo: Guardia">
 							</div>
-							
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -195,10 +192,9 @@
 				</div>
 			</div>
 		</div>
-		
+		<!-- EDITORES -->
 		<!-- Modal de edit para ocupacion -->
-		<div id="occupationEditModal" class="modal fade bd-example-modal-lg"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div id="occupationEditModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -227,10 +223,8 @@
 				</div>
 			</div>
 		</div>
-		
 		<!-- Modal de edit para especialidades -->
-		<div id="specialtyEditModal" class="modal fade bd-example-modal-lg"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div id="specialtyEditModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -258,7 +252,6 @@
 				</div>
 			</div>
 		</div>
-		
 		<!-- Modal de edit para task -->
 		<div id="taskEditModal" class="modal fade bd-example-modal-lg"
 			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -303,7 +296,7 @@
 					"processing" : true, // for show progress bar
 					"serverSide" : true, // for process server side
 					"ajax" : {
-						"url" : '/d2d/admin/BoCategory/getCategories',
+				    	"url" : '<c:url value="/admin/BoCategory/getCategories" />',
 						"type" : "GET",
 						"datatype" : "json"
 					},
@@ -482,7 +475,7 @@
 				$.ajax({ 
 	 			    type: 'POST', 
 	 			    contentType: "application/json",
-				    url: '/d2d/admin/BoCategory/saveOccupation?${_csrf.parameterName}=${_csrf.token}',  
+				    url: '<c:url value="/admin/BoCategory/saveOccupation?${_csrf.parameterName}=${_csrf.token}" />',  
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -497,12 +490,9 @@
 				    },
 				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
 				    	showError();
-	                }   
-				    
+	                }
 				});
-				
 			}
-			
 			
 			function addSpecialty(){
 				specialtyHideMessages();
@@ -517,21 +507,17 @@
 				var data = {}
 				data["name"] = specialtyName;
 				data["id"] = occupationId;
-				
-				
+
 				hideMessages();
 				
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: '/d2d/admin/BoCategory/saveSpecialty?${_csrf.parameterName}=${_csrf.token}', 
+				    url: '<c:url value="/admin/BoCategory/saveSpecialty?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
-// 							$("#espOccupationName").val("");
-// 						    $("#espOccupationId").val("");
-// 						    $("#espOccupationName").prop('disabled', false);
 						    $("#espSpecialtyName").val("");
 						    specialtyShowSuccess(data.data);
 						} else {
@@ -540,12 +526,9 @@
 				    },
 				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
 				    	specialtyShowError();
-	                }   
-				    
+	                }
 				});
-				
 			}
-			
 			
 			function addTask(){
 				taskHideMessages();
@@ -565,19 +548,12 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: '/d2d/admin/BoCategory/saveTask?${_csrf.parameterName}=${_csrf.token}', 
+				    url: '<c:url value="/admin/BoCategory/saveTask?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
 						if(data.status == 200){
-// 							$("#taskOccupationName").val("");
-// 						    $("#taskOccupationId").val("");
-// 						    $("#taskSpecialtyName").val("");
-// 						    $("#taskSpecialtyId").val("");
 						    $("#taskTaskName").val("");
-// 						    $("#taskOccupationName").prop('disabled', false);
-// 						    $("#taskSpecialtyName").prop('disabled', false);
-
 						    taskShowSuccess(data.data);
 						} else {
 							taskShowError();
@@ -585,10 +561,8 @@
 				    },
 				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
 				    	taskShowError();
-	                }   
-				    
+	                }
 				});
-				
 			}
 			
 			//Funciones para ocupacion
@@ -659,7 +633,7 @@
 			    
 				$('.typeahead').typeahead('destroy');
 				
-				$.get("/d2d/admin/BoCategory/occupations", function(data){
+				$.get("<c:url value='/admin/BoCategory/occupations/' />", function(data){
 				  $("#espOccupationName").typeahead({
 					  source:data,
 					  afterSelect: function(item) {
@@ -671,7 +645,7 @@
 				},'json');
 				// Fin autocomplete modal especialidades
 				
-				$.get("/d2d/admin/BoCategory/occupations", function(data){
+				$.get("<c:url value='/admin/BoCategory/occupations/' />", function(data){
 				  $("#taskOccupationName").typeahead({
 					  source:data,
 					  afterSelect: function(item) {
@@ -689,7 +663,7 @@
 			function refreshSpecialty(id){
 				$('#taskSpecialtyName').typeahead('destroy');
 				
-				$.get("/d2d/admin/BoCategory/specialties/" + id, function(data){
+				$.get("<c:url value='/admin/BoCategory/specialties/' />" + id, function(data){
 					
 					if(data.length == 1 && data[0].name == ""){
 						$("#taskSpecialtyName").prop('disabled', true);
@@ -709,12 +683,9 @@
 						// Fin autocomplete modal Tareas Ocupaciones
 					
 					},'json');
-					
-
 			}
 			
 			function editOccupation() {
-				
 				var occupationName = $("#occupationEditName").val();
 				var occupationId = $("#occupationEditId").val();
 				
@@ -725,7 +696,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: "/d2d/admin/BoCategory/editOccupation?${_csrf.parameterName}=${_csrf.token}", 
+				    url: '<c:url value="/admin/BoCategory/editOccupation?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -739,8 +710,7 @@
 				    },
 				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
 				    	occupationEditShowError("Hubo un error al editar la ocupacion");
-	                }   
-				    
+	                }
 				});
 			}
 			
@@ -755,7 +725,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: "/d2d/admin/BoCategory/editSpecialty?${_csrf.parameterName}=${_csrf.token}", 
+				    url: '<c:url value="/admin/BoCategory/editSpecialty?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -770,16 +740,13 @@
 				    },
 				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
 				    	specialtyEditShowError("Hubo un error al editar la especialidad");
-	                }   
-				    
+	                }
 				});
 			}
 						
 			function editTask() {
-				
 				var taskName = $("#taskEditName").val();
 				var taskId = $("#taskEditId").val();
-
 				var data = {}
 				data["name"] = taskName;
 				data["id"] = taskId;
@@ -787,7 +754,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: "/d2d/admin/BoCategory/editTask?${_csrf.parameterName}=${_csrf.token}", 
+				    url: '<c:url value="/admin/BoCategory/editTask?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -802,12 +769,9 @@
 				    },
 				    error: function(XMLHttpRequest, textStatus, errorThrown) { 
 				    	taskEditShowError("Hubo un error al editar la tarea");
-	                }   
-				    
+	                }
 				});
-				
 			}
-			
 			
 			//Funciones para edit ocupacion
 			function occupationEditShowSuccess(message) {
@@ -854,4 +818,3 @@
 		</script>
 	</tiles:putAttribute>
 </tiles:insertDefinition>
-

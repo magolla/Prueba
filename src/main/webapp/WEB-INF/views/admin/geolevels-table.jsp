@@ -67,8 +67,7 @@
 
 
 		<!-- Modal de provincia -->
-		<div id="provinceModal" class="modal fade bd-example-modal-lg"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div id="provinceModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -77,25 +76,26 @@
 						<h4 class="modal-title">Crear provincia</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="provinceSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="provinceError" class="error"  style="display: none;">sfas</div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Nombre:</label>
-							<input id="provinceTxt" class="col-md-4">
-							<button onclick="addProvince()">Agregar</button>
+						<div class="row" >
+							<div id="provinceSuccess" class="msg" style="display:none;">error</div>
+							<div id="provinceError" class="error" style="display:none;">error</div>
+						</div>
+						<div class="form-group row">
+							<label for="provinceTxt" class="col-2 col-form-label">Nombre</label>
+							<div class="col-10">
+								<input id="provinceTxt" class="form-control" placeholder="Ingresá el nombre, ejemplo: Santa Cruz">
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button onclick="addProvince()" class="btn btn-success">Agregar</button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>		
 		<!-- Modal de Localidad/Partido -->
-		<div id="regionModal" class="modal fade bd-example-modal-lg"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div id="regionModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -104,72 +104,91 @@
 						<h4 class="modal-title">Crear Localidad/Partido</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="regionSuccess" class="msg" style="display: none;" ></div>
-						<div id="regionError" class="error"  style="display: none;"></div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Provincia:</label>
-							<input id="geo3ProvinceName" type="text" class="typeahead col-md-4" data-provide="typeahead" >
-							<input id="geo3ProvinceId" class="col-md-2" style="display: none;">
-							<button id="geo3CleanButton">Borrar</button>
+						<div class="row" >
+							<div id="regionSuccess" class="msg" style="display: none;" ></div>
+							<div id="regionError" class="error"  style="display: none;"></div>
 						</div>
-						<div class="row">
-							<label class="col-md-4">Localidad/Partido:</label>
-							<input id="geo3RegionName" class="col-md-4">
-							<button onclick="addRegion()">Agregar</button>
+						<div class="form-group row">
+							<label for="geo3ProvinceName" class="col-2 col-form-label">Seleccionar provincia</label>
+							<div class="col-10">
+								<div class="input-group">
+									<input id="geo3ProvinceName" type="text" data-provide="typeahead" class="typeahead form-control" placeholder="Buscar provincia...">
+									<span class="input-group-btn">
+										<button id="geo3CleanButton" class="btn btn-danger" type="button">Limpiar</button>
+									</span>
+								</div>
+							</div>
+							<input id="geo3ProvinceId" class="col-md-2" style="display: none;">
+						</div>
+						<div class="form-group row">
+							<label for="geo3RegionName" class="col-2 col-form-label">Localidad/Partido:</label>
+							<div class="col-10">
+								<input id="geo3RegionName" class="form-control" placeholder="Ingresá el nombre de la localidad o partido, ejemplo: Tigre">
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button onclick="addRegion()" class="btn btn-success">Agregar</button>
 					</div>
 				</div>
 			</div>
 		</div>
-		
-		<!-- Modal de Tareas -->
-		<div id="cityModal" class="modal fade bd-example-modal-lg"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<!-- Modal de Barrio o Ciudad -->
+		<div id="cityModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Crear Tarea</h4>
+						<h4 class="modal-title">Crear Ciudad o Barrio</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="citySuccess" class="msg" style="display: none;"></div>
-						<div id="cityError" class="error"  style="display: none;"></div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Provincia:</label>
-							<input id="cityGeo2Name" type="text" class="typeahead col-md-4" data-provide="typeahead" >
+						<div class="row" >
+							<div id="citySuccess" class="msg" style="display: none;"></div>
+							<div id="cityError" class="error"  style="display: none;"></div>
+						</div>
+						<div class="form-group row">
+							<label for="cityGeo2Name" class="col-2 col-form-label">Seleccionar Provincia</label>
+							<div class="col-10">
+ 								<div class="input-group">
+									<input id="cityGeo2Name" type="text" class="typeahead form-control" data-provide="typeahead" placeholder="Buscar provincia...">
+									<span class="input-group-btn"> 
+										<button id="CityGeo2CleanButton" class="btn btn-danger" type="button">Limpiar</button>
+									</span>
+								</div>
+							</div>
 							<input id="cityGeo2Id" class="col-md-2" style="display: none;">
-							<button id="CityGeo2CleanButton">Borrar</button>
 						</div>
-						<div class="row">
-							<label class="col-md-4">Localidad/Partido:</label>
-							<input id="cityGeo3Name" type="text" class="typeahead col-md-4" data-provide="typeahead" >
+						<div class="form-group row">
+							<label for="cityGeo3Name" class="col-2 col-form-label">Seleccionar Partido/Localidad</label>
+							<div class="col-10">
+ 								<div class="input-group">
+									<input id="cityGeo3Name" type="text" class="typeahead form-control" data-provide="typeahead" placeholder="Buscar Partido o Localidad...">
+									<span class="input-group-btn"> 
+										<button id="cityGeo3CleanButton" class="btn btn-danger" type="button">Limpiar</button>
+									</span>
+								</div>
+							</div>
 							<input id="cityGeo3Id" class="col-md-2" style="display: none;">
-							<button id="cityGeo3CleanButton">Borrar</button>
 						</div>
-						<div class="row">
-							<label class="col-md-4">Ciudad/Barrio:</label>
-							<input id="cityName" class="col-md-4">
-							<button onclick="addCity()">Agregar</button>
+						<div class="form-group row">
+							<label for="cityName" class="col-2 col-form-label">Ciudad/Barrio:</label>
+							<div class="col-10">
+								<input id="cityName" class="form-control" placeholder="Ingresá el nombre de la Ciudad o Barrio, ejemplo: Caballito">
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button onclick="addCity()" class="btn btn-success">Agregar</button>
 					</div>
 				</div>
 			</div>
 		</div>
-		
+		<!-- EDITORES -->
 		<!-- Modal de edit para provincia -->
-		<div id="provinceEditModal" class="modal fade bd-example-modal-lg"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div id="provinceEditModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
 				<div class="modal-content">
@@ -178,84 +197,85 @@
 						<h4 class="modal-title">Editar provincia</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="provinceEditSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="provinceEditError" class="error"  style="display: none;">sfas</div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Nombre:</label>
-							<input id="provinceEditName" class="col-md-4">
-							<input id="provinceEditId" class="col-md-2" style="display: none;">
-							<button onclick="editProvince()">Editar</button>
+						<div class="row" >
+							<div id="provinceEditSuccess" class="msg" style="display: none;" >error</div>
+							<div id="provinceEditError" class="error"  style="display: none;">error</div>
 						</div>
+						<div class="form-group row">
+							<label for="provinceEditName" class="col-2 col-form-label">Nombre</label>
+							<div class="col-10">
+								<input id="provinceEditName" class="form-control" placeholder="Ingresá el nombre, ejemplo: Buenos Aires">
+							</div>
+						</div>
+						<input id="provinceEditId" class="col-md-2" style="display: none;">
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button onclick="editProvince()" class="btn btn-success">Modificar</button>
 					</div>
 				</div>
 			</div>
 		</div>
-		
 		<!-- Modal de edit para Localidades/Partidos -->
-		<div id="regionEditModal" class="modal fade bd-example-modal-lg"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div id="regionEditModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Editar Localidad/Partido</h4>
+						<h4 class="modal-title">Editar Partido/Localidad</h4>
 					</div>
 					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="regionEditSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="regionEditError" class="error"  style="display: none;">sfas</div>
+						<div class="row" >
+							<div id="regionEditSuccess" class="msg" style="display:none;">error</div>
+							<div id="regionEditError" class="error" style="display:none;">error</div>
+						</div>
+						<div class="form-group row">
+							<label for="regionEditName" class="col-2 col-form-label">Nombre</label>
+							<div class="col-10">
+								<input id="regionEditName" class="form-control" placeholder="Ingresá el nombre, ejemplo: Tigre">
+							</div>
+						</div>
+						<input id="regionEditId" class="col-md-2" style="display: none;">
 					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button onclick="editRegion()" class="btn btn-success">Modificar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal de edit para Ciudad/Barrio -->
+		<div id="cityEditModal" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Editar Ciudad o Barrio</h4>
+					</div>
+					<div id="bodyModalBootstrap" class="modal-body">
+						<div class="row" >
+							<div id="cityEditSuccess" class="msg" style="display:none;">error</div>
+							<div id="cityEditError" class="error" style="display:none;">error</div>
+						</div>
 						<div class="row">
-							<label class="col-md-4">Nombre:</label>
-							<input id="regionEditName" class="col-md-4">
-							<input id="regionEditId" class="col-md-2" style="display: none;">
-							<button onclick="editRegion()">Editar</button>
+							<label for="cityEditName" class="col-2 col-form-label">Nombre:</label>
+							<div class="col-10">
+								<input id="cityEditName" class="form-control" placeholder="Ingresá el nombre, ejemplo: Caballito">
+							</div>
+							<input id="cityEditId" class="col-md-2" style="display: none;">
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						<button onclick="editCity()" class="btn btn-success">Modificar</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		
-		<!-- Modal de edit para Ciudad/Barrio -->
-		<div id="cityEditModal" class="modal fade bd-example-modal-lg"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Editar tarea</h4>
-					</div>
-					<div id="bodyModalBootstrap" class="modal-body">
-					<div class="row" >
-						<div id="cityEditSuccess" class="msg" style="display: none;" >sfas</div>
-						<div id="cityEditError" class="error"  style="display: none;">sfas</div>
-					</div>
-						<div class="row">
-							<label class="col-md-4">Nombre:</label>
-							<input id="cityEditName" class="col-md-4">
-							<input id="cityEditId" class="col-md-2" style="display: none;">
-							<button onclick="editCity()">Editar</button>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<script>
-
 			$(document).ready(function() {
 				$('#categories-table').DataTable({
 					dom : 'Bfrtip',
