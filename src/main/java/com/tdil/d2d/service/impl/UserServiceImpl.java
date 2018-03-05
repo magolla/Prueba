@@ -171,9 +171,9 @@ public class UserServiceImpl implements UserService {
 	private GeoDAO geoDAO;
 	@Autowired
 	private NoteDAO noteDAO;
-	
-    @Autowired
-    private PointsDAO pointsDAO;
+
+	@Autowired
+	private PointsDAO pointsDAO;
 
 	@Autowired
 	private PaymentDAO paymentDAO;
@@ -283,17 +283,17 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		}
 	}
-	
-    private void savePoints(ActivityActionEnum register, User user) {
 
-        if(register.getValue() != 0) {
-            try {
-                pointsDAO.save(new Points(register, user));
-            } catch (DAOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+	private void savePoints(ActivityActionEnum register, User user) {
+
+		if(register.getValue() != 0) {
+			try {
+				pointsDAO.save(new Points(register, user));
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	private void sendSMS(String mobilePhone, String mobileHash) throws IOException{
 		OkHttpClient client = new OkHttpClient();
@@ -342,8 +342,8 @@ public class UserServiceImpl implements UserService {
 				this.notificationConfigurationDAO.save(notificationConfiguration);
 			}
 
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.REGISTER.getMessage()));
-            savePoints(ActivityActionEnum.REGISTER, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.REGISTER.getMessage()));
+			savePoints(ActivityActionEnum.REGISTER, user);
 
 			try {
 				String body = "Para terminar la registracion use el siguiente codigo en la app o cliquea el siguiente link "
@@ -428,8 +428,8 @@ public class UserServiceImpl implements UserService {
 			Specialty specialty = this.specialtyDAO.getSpecialtyById(addSpecialtyRequest.getSpecialtyId());
 			user.getSpecialties().add(specialty);
 			this.userDAO.save(user);
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_SPECIALTY.getMessage()));
-            savePoints(ActivityActionEnum.ADD_SPECIALTY, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_SPECIALTY.getMessage()));
+			savePoints(ActivityActionEnum.ADD_SPECIALTY, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -446,8 +446,8 @@ public class UserServiceImpl implements UserService {
 				user.getSpecialties().add(specialty);
 			}
 			this.userDAO.save(user);
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_SPECIALTY.getMessage()));
-            savePoints(ActivityActionEnum.ADD_SPECIALTY, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_SPECIALTY.getMessage()));
+			savePoints(ActivityActionEnum.ADD_SPECIALTY, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -463,8 +463,8 @@ public class UserServiceImpl implements UserService {
 			loc.setGeoLevelId(addLocationRequest.getGeoLevelId());
 			user.getUserGeoLocations().add(loc);
 			this.userDAO.save(user);
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_GEO_LEVEL.getMessage()));
-            savePoints(ActivityActionEnum.ADD_GEO_LEVEL, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_GEO_LEVEL.getMessage()));
+			savePoints(ActivityActionEnum.ADD_GEO_LEVEL, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -489,8 +489,8 @@ public class UserServiceImpl implements UserService {
 				user.getUserGeoLocations().add(loc);
 			}
 			this.userDAO.save(user);
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_GEO_LEVEL.getMessage()));
-            savePoints(ActivityActionEnum.ADD_GEO_LEVEL, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_GEO_LEVEL.getMessage()));
+			savePoints(ActivityActionEnum.ADD_GEO_LEVEL, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -503,8 +503,8 @@ public class UserServiceImpl implements UserService {
 			User user = getLoggedUser();
 			user.setLicense(setLicenseRequest.getLicense());
 			this.userDAO.save(user);
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.SET_LICENSE.getMessage()));
-            savePoints(ActivityActionEnum.SET_LICENSE, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.SET_LICENSE.getMessage()));
+			savePoints(ActivityActionEnum.SET_LICENSE, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -574,8 +574,8 @@ public class UserServiceImpl implements UserService {
 			}
 			userProfile.setInstitutionType(institutionTypeRequest.getInstitutionType());
 			this.userDAO.save(userProfile);
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.CHANGE_INSTITUTION_TYPE.getMessage()));
-            savePoints(ActivityActionEnum.CHANGE_INSTITUTION_TYPE, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.CHANGE_INSTITUTION_TYPE.getMessage()));
+			savePoints(ActivityActionEnum.CHANGE_INSTITUTION_TYPE, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -594,8 +594,8 @@ public class UserServiceImpl implements UserService {
 			Task task = this.specialtyDAO.getTaskById(taskToProfileRequest.getTaskId());
 			userProfile.getTasks().add(task);
 			this.userDAO.save(userProfile);
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_TASK_TO_PROFILE.getMessage()));
-            savePoints(ActivityActionEnum.ADD_TASK_TO_PROFILE, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_TASK_TO_PROFILE.getMessage()));
+			savePoints(ActivityActionEnum.ADD_TASK_TO_PROFILE, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -617,8 +617,8 @@ public class UserServiceImpl implements UserService {
 			}
 			this.userDAO.save(userProfile);
 			this.userDAO.save(user);
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_TASK_TO_PROFILE.getMessage()));
-            savePoints(ActivityActionEnum.ADD_TASK_TO_PROFILE, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.ADD_TASK_TO_PROFILE.getMessage()));
+			savePoints(ActivityActionEnum.ADD_TASK_TO_PROFILE, user);
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -643,8 +643,8 @@ public class UserServiceImpl implements UserService {
 			if (toRemove != null) {
 				userProfile.getTasks().remove(toRemove);
 				this.userDAO.save(userProfile);
-                activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.REMOVE_TASK_FROM_PROFILE.getMessage()));
-                savePoints(ActivityActionEnum.REMOVE_TASK_FROM_PROFILE, user);
+				activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.REMOVE_TASK_FROM_PROFILE.getMessage()));
+				savePoints(ActivityActionEnum.REMOVE_TASK_FROM_PROFILE, user);
 			}
 			return true;
 		} catch (DAOException e) {
@@ -704,8 +704,8 @@ public class UserServiceImpl implements UserService {
 			User user = getLoggedUser();
 			user.setLastLoginDate(new Date());
 			this.userDAO.save(user);
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.LOGIN.getMessage()));
-            savePoints(ActivityActionEnum.LOGIN, user);
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.LOGIN.getMessage()));
+			savePoints(ActivityActionEnum.LOGIN, user);
 		} catch (DAOException e) {
 			throw new ServiceException(e);
 		}
@@ -733,18 +733,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean createJobOffer(CreateTemporaryJobOfferRequest createOfferRequest, User user, int offerId) throws ServiceException {
 		try {
-			
+
 			User finalUser = new User();
-			
+
 			if(user != null) {
-				 finalUser = user;
+				finalUser = user;
 			} else {
 				finalUser = getLoggedUser();
 			}
-			
-			
+
+
 			JobOffer jobOffer = null;
-			
+
 			if(offerId == -1) {
 				jobOffer = new JobOffer();
 			} else {
@@ -772,7 +772,7 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-			
+
 			if(jobOffer.isPermanent()){
 				activityLogDAO.save(new ActivityLog(finalUser, ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
 				savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, finalUser);
@@ -780,7 +780,7 @@ public class UserServiceImpl implements UserService {
 				activityLogDAO.save(new ActivityLog(finalUser, ActivityActionEnum.POST_TEMPORARY_OFFER.getMessage()));
 				savePoints(ActivityActionEnum.POST_TEMPORARY_OFFER, finalUser);
 			}
-			
+
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -814,8 +814,8 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_TEMPORARY_OFFER.getMessage()));
-            savePoints(ActivityActionEnum.POST_TEMPORARY_OFFER, getLoggedUser());
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_TEMPORARY_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.POST_TEMPORARY_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -828,30 +828,30 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean createJobOffer(CreatePermanentJobOfferRequest createOfferRequest, User user, int offerId) throws ServiceException {
 		try {
-			
+
 			User finalUser = new User();
-			
+
 			if(user != null) {
-				 finalUser = user;
+				finalUser = user;
 			} else {
 				finalUser = getLoggedUser();
 			}
-			
-			
+
+
 			JobOffer jobOffer = null;
-			
+
 			if(offerId == -1) {
 				jobOffer = new JobOffer();
 			} else {
 				jobOffer = jobDAO.getById(JobOffer.class, offerId);
 			}
-			
-			
+
+
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MONTH, 1);
 			createOfferRequest.setOfferDate(new SimpleDateFormat("yyyyMMdd").format(cal.getTime()));
 			createOfferRequest.setOfferHour("0000");
-		
+
 			jobOffer.setOfferent(finalUser);
 			jobOffer.getOfferent().setCompanyScreenName(createOfferRequest.getCompanyScreenName());
 			jobOffer.setCreationDate(new Date());
@@ -874,8 +874,8 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
-            savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -916,8 +916,8 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
-            savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -963,7 +963,7 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setApplications(jobOffer.getApplications() + 1);
 			this.jobDAO.save(jobOffer);
 			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.APPLY_TO_OFFER.getMessage()));
-            savePoints(ActivityActionEnum.APPLY_TO_OFFER, getLoggedUser());
+			savePoints(ActivityActionEnum.APPLY_TO_OFFER, getLoggedUser());
 
 			sendNotification(NotificationType.NEW_APPLICATION, jobOffer.getOfferent(), jobOffer);
 
@@ -1234,8 +1234,8 @@ public class UserServiceImpl implements UserService {
 
 			this.jobDAO.save(offer);
 			this.jobApplicationDAO.save(application);
-            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.ACCEPT_OFFER.getMessage()));
-            savePoints(ActivityActionEnum.ACCEPT_OFFER, getLoggedUser());
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.ACCEPT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.ACCEPT_OFFER, getLoggedUser());
 
 			sendNotification(NotificationType.APPLICATION_ACCEPTED, application.getUser(), offer);
 
@@ -1278,8 +1278,8 @@ public class UserServiceImpl implements UserService {
 			JobApplication application = this.jobApplicationDAO.getById(JobApplication.class, applicationId);
 			application.setStatus(JobApplication.REJECTED);
 			this.jobApplicationDAO.save(application);
-            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.REJECT_OFFER.getMessage()));
-            savePoints(ActivityActionEnum.REJECT_OFFER, getLoggedUser());
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.REJECT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.REJECT_OFFER, getLoggedUser());
 			return true;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
@@ -1301,8 +1301,8 @@ public class UserServiceImpl implements UserService {
 			}
 			offer.setStatus(JobOffer.CLOSED);
 			this.jobDAO.save(offer);
-            activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.CLOSED_OFFER.getMessage()));
-            savePoints(ActivityActionEnum.CLOSED_OFFER, getLoggedUser());
+			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.CLOSED_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.CLOSED_OFFER, getLoggedUser());
 
 			if(JobApplication.CLOSED.equals(offer.getStatus())){
 
@@ -1729,8 +1729,8 @@ public class UserServiceImpl implements UserService {
 			this.userDAO.save(media);
 			this.userDAO.save(user);
 
-            activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.SET_AVATAR.getMessage()));
-//            savePoints(ActivityActionEnum.SET_AVATAR, getLoggedUser());
+			activityLogDAO.save(new ActivityLog(user, ActivityActionEnum.SET_AVATAR.getMessage()));
+			//            savePoints(ActivityActionEnum.SET_AVATAR, getLoggedUser());
 
 			return true;			
 
@@ -2023,7 +2023,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException {
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
-		
+
 		try {
 			JobOffer saveMatches = jobDAO.getById(JobOffer.class, offerId);
 			int matchCount = (this.getMatchedUsers(saveMatches.getId()).size());
@@ -2032,7 +2032,7 @@ public class UserServiceImpl implements UserService {
 		} catch (DAOException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
 
 			boolean alreadyApplied = this.searchIfApplied(offerId,matchedUserDTO.getUserId());
@@ -2231,16 +2231,16 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException(e);
 		} 
 	}
-	
-	
-	  @Override 
-	  public List<UserDTO> getUserByIndex(String length, String start, String search) { 
-	     
-	    List<User> userList = this.userDAO.getUserByIndex(length, start, search); 
-	     
-	    return toDtoList(userList); 
-	     
-	  } 
+
+
+	@Override 
+	public List<UserDTO> getUserByIndex(String length, String start, String search) { 
+
+		List<User> userList = this.userDAO.getUserByIndex(length, start, search); 
+
+		return toDtoList(userList); 
+
+	} 
 
 	private List<UserDTO> toDtoList(Collection<User> list) {
 		return list.stream().map(user -> toDto(user)).collect(Collectors.toList());
@@ -2383,8 +2383,8 @@ public class UserServiceImpl implements UserService {
 				result.setHasActiveSuscription(false);
 			}
 		}
-		
-		
+
+
 		if (user.getAvatar() != null) {
 			Base64DTO avatar = new Base64DTO(new String(user.getAvatar().getData()));
 			result.setAvatar(avatar.getBase64());
@@ -2561,7 +2561,7 @@ public class UserServiceImpl implements UserService {
 					createTemporaryJobOfferRequest.setInstitutionType(InstitutionType.PUBLIC);
 				}
 				createTemporaryJobOfferRequest.setOccupationId(boJob.getOccupationId());
-				
+
 				String dateForJob = "";
 				try {
 					Date date = getDate(boJob.getOfferDateForView(),"dd-MM-yyyy");
@@ -2575,8 +2575,8 @@ public class UserServiceImpl implements UserService {
 				String[] parts = boJob.getOfferHour().split(":");
 				String part1 = parts[0]; // 004
 				String part2 = parts[1]; // 034556
-				
-				
+
+
 				createTemporaryJobOfferRequest.setOfferHour(part1 + part2);
 				createTemporaryJobOfferRequest.setSpecialtyId(boJob.getSpecialtyId());
 				createTemporaryJobOfferRequest.setTaskId(boJob.getTaskId());
@@ -2604,8 +2604,8 @@ public class UserServiceImpl implements UserService {
 		}
 		return null;
 	}
-	
-	
+
+
 	private UserCandidateDTO toUserCandidateDTO(JobApplication elem) {
 		UserCandidateDTO result = new UserCandidateDTO();
 		result.setId(elem.getUser().getId());
@@ -2613,34 +2613,38 @@ public class UserServiceImpl implements UserService {
 		result.setLastName(elem.getUser().getLastname());
 		result.setEmail(elem.getUser().getEmail());
 		result.setMobilePhone(elem.getUser().getMobilePhone());
-		
 
-		Iterator<Specialty> iter = elem.getUser().getSpecialties().iterator();
 
-		Specialty first = iter.next();
-		
-		if(first != null) {
-			result.setOccupation(first.getOccupation().getName());
+		if(elem.getUser().getSpecialties().isEmpty()) {
+			result.setOccupation("No cargo la Profesión");
+		} else {
+			Iterator<Specialty> iter = elem.getUser().getSpecialties().iterator();
+
+			Specialty first = iter.next();
+
+			if(first != null) {
+				result.setOccupation(first.getOccupation().getName());
+			}
 		}
 		return result;
 	}
 
-    @Override
-    public List<JobOfferStatusDTO> getLastOffers() {
-        
-        
-        List<JobOffer> offers = this.jobDAO.getLastOffers();
-        
-        List<JobOfferStatusDTO> offerDto = offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
-        
-        return offerDto;
+	@Override
+	public List<JobOfferStatusDTO> getLastOffers() {
 
 
-    }
+		List<JobOffer> offers = this.jobDAO.getLastOffers();
+
+		List<JobOfferStatusDTO> offerDto = offers.stream().map(s -> toDTO(s)).collect(Collectors.toList());
+
+		return offerDto;
+
+
+	}
 
 	@Override
 	public int getUserCount(String search) {
-		
+
 		return userDAO.getCountWithFilter(search);
 	}
 
