@@ -1264,11 +1264,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	/*
-	 * <<<<<<< HEAD ESTE MÉTODO EST� DEPRECADO YA QUE NO SE VAN A RECHAZAR
-	 * PERFILES POR AHORA ======= ESTE M�TODO EST� DEPRECADO YA QUE NO SE VAN A
-	 * RECHAZAR PERFILES POR AHORA >>>>>>> master
-	 */
 	@Override
 	public boolean reject(long offerId, long applicationId) throws ServiceException {
 		try {
