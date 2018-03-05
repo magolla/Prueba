@@ -2341,6 +2341,11 @@ public class UserServiceImpl implements UserService {
 			}
 
 			result.setGeoLevels(geoList);
+			
+			// TODO: Agregar en el result los tres elementos explicados a continuación
+			// link de linkedin
+			// El pdf en formato descargable
+			// el texto del cv cargado a mano
 		}
 		if(user.isUserb()) {
 			result.setLicense(user.getLicense());				
