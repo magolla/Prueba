@@ -874,8 +874,8 @@ public class UserServiceImpl implements UserService {
 			jobOffer.setVacants(createOfferRequest.getVacants());
 			jobOffer.setStatus(JobOffer.VACANT);
 			this.jobDAO.save(jobOffer);
-			activityLogDAO.save(new ActivityLog(getLoggedUser(), ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
-			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
+			activityLogDAO.save(new ActivityLog(finalUser, ActivityActionEnum.POST_PERMANENT_OFFER.getMessage()));
+			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, finalUser);
 
 			this.notifyToMatchedUsers(jobOffer.getId());
 
@@ -937,6 +937,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean apply(long offerId, ApplyToOfferRequest applyToOffer) throws ServiceException {
 		try {
+			
+			User user = getLoggedUser();
+			
+			if(user.getSpecialties().isEmpty()) {
+				return false;
+			}
+			
 			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
 			if (jobOffer.getVacants() == 0) {
 				return false;
@@ -952,7 +959,7 @@ public class UserServiceImpl implements UserService {
 			jobApplication.setComment(applyToOffer.getComment());
 			jobApplication.setCvAttach(Base64.decodeBase64(applyToOffer.getCvPdf())); //TODO debería salir del profile
 			jobApplication.setCvPlain(applyToOffer.getCvPlain()); //TODO debería salir del profile
-			User user = getLoggedUser();
+			
 			UserLinkedinProfile linkedinProfile = this.userDAO.getUserLinkedinProfile(user);
 			if(linkedinProfile != null) {
 				jobApplication.setLinkedInCv(linkedinProfile.getPublicProfileURL());
@@ -1257,11 +1264,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	/*
-	 * <<<<<<< HEAD ESTE MÉTODO EST� DEPRECADO YA QUE NO SE VAN A RECHAZAR
-	 * PERFILES POR AHORA ======= ESTE M�TODO EST� DEPRECADO YA QUE NO SE VAN A
-	 * RECHAZAR PERFILES POR AHORA >>>>>>> master
-	 */
 	@Override
 	public boolean reject(long offerId, long applicationId) throws ServiceException {
 		try {
@@ -2339,6 +2341,11 @@ public class UserServiceImpl implements UserService {
 			}
 
 			result.setGeoLevels(geoList);
+			
+			// TODO: Agregar en el result los tres elementos explicados a continuación
+			// link de linkedin
+			// El pdf en formato descargable
+			// el texto del cv cargado a mano
 		}
 		if(user.isUserb()) {
 			result.setLicense(user.getLicense());				
