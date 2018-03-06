@@ -141,16 +141,17 @@ public class WebSecurityConfig  {
 	                .antMatchers("/admin/BoNotification/**").access("hasAnyRole('ROLE_NOTIFICATIONS','ROLE_ADMIN')")
 	                //Accesos del usuario con rol LOGS
 	                .antMatchers("/admin/logs").access("hasAnyRole('ROLE_LOGS','ROLE_ADMIN')")
+	                //Accesos del usuario con rol OFFERS
+	                .antMatchers("/admin/BoOffers","/admin/BoOffers/**","/admin/offers-table/**","/admin/reports/all-jobsoffer","/admin/new-offer","/admin/list/public-users",
+	                		"/admin/getUserById/{\\d+}","/admin/editOffer/{\\d+}","/admin/countries/**","/admin/deleteOffer").access("hasAnyRole('ROLE_OFFERS','ROLE_ADMIN')")
 	                //Accesos del usuario con rol REPORTS
 	                .antMatchers("/admin/reports/**").access("hasAnyRole('ROLE_REPORTS','ROLE_ADMIN')")
 	                //Accesos del usuario con rol EDITOR
 	                .antMatchers("/admin/BoNotes","/admin/notes/**","/admin/list/bo-notes").access("hasAnyRole('ROLE_EDITOR','ROLE_ADMIN')")
-	                //Accesos del usuario con rol OFFERS
-	                .antMatchers("/admin/BoOffers","/admin/offers-table/**","/admin/reports/all-jobsoffer").access("hasAnyRole('ROLE_OFFERS','ROLE_ADMIN')")
 	                //Accesos del usuario con rol REFERENCEDATA
-	                .antMatchers("/admin/BoCategory","/admin/categories-table/**","/admin/BoCategory/getCategories").access("hasAnyRole('ROLE_REFERENCEDATA','ROLE_ADMIN')")
+	                .antMatchers("/admin/BoCategory","/admin/categories-table/**","/admin/BoCategory/**").access("hasAnyRole('ROLE_REFERENCEDATA','ROLE_ADMIN')")
 	                //Accesos del usuario con rol REFERENCEDATA
-	                .antMatchers("/admin/BoGeolevel","/admin/geolevels-table/**","/admin/BoGeolevel").access("hasAnyRole('ROLE_REFERENCEDATA','ROLE_ADMIN')")
+	                .antMatchers("/admin/BoGeolevel","/admin/geolevels-table/**","/admin/BoGeolevel/**").access("hasAnyRole('ROLE_REFERENCEDATA','ROLE_ADMIN')")
 	                //Accesos del usuario con rol ADMIN
 	                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
 	                .and()

@@ -705,7 +705,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: "/d2d/admin/BoCategory/editProvince?${_csrf.parameterName}=${_csrf.token}", 
+				    url: "/d2d/admin/BoGeolevel/editProvince?${_csrf.parameterName}=${_csrf.token}", 
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -735,7 +735,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: "/d2d/admin/BoCategory/editRegion?${_csrf.parameterName}=${_csrf.token}", 
+				    url: "/d2d/admin/BoGeolevel/editRegion?${_csrf.parameterName}=${_csrf.token}", 
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -767,7 +767,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: "/d2d/admin/BoCategory/editCity?${_csrf.parameterName}=${_csrf.token}", 
+				    url: "/d2d/admin/BoGeolevel/editCity?${_csrf.parameterName}=${_csrf.token}", 
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 

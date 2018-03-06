@@ -4972,3 +4972,12 @@ table.text-center th {
 }
 
 .link-to-right				{ font-size: 18px; position: absolute; right: 28px; line-height: normal; }
+
+
+.stateVacant {
+	background: red;
+}
+
+.stateClosed {
+	background: yellow;
+}

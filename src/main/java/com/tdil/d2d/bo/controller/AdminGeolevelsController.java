@@ -127,7 +127,7 @@ public class AdminGeolevelsController {
 	}
 	
 	
-	@RequestMapping(value = "/BoCategory/editProvince", method = RequestMethod.POST)
+	@RequestMapping(value = "/BoGeolevel/editProvince", method = RequestMethod.POST)
 	public ResponseEntity<GenericResponse<String>> editProvince(@RequestBody CategoryEditRequest body) {
 		
 		try {
@@ -139,7 +139,7 @@ public class AdminGeolevelsController {
 		}
 	}
 	
-	@RequestMapping(value = "/BoCategory/editRegion", method = RequestMethod.POST)
+	@RequestMapping(value = "/BoGeolevel/editRegion", method = RequestMethod.POST)
 	public ResponseEntity<GenericResponse<String>> editRegion(@RequestBody CategoryEditRequest body) {
 		
 		try {
@@ -151,7 +151,7 @@ public class AdminGeolevelsController {
 		}
 	}
 	
-	@RequestMapping(value = "/BoCategory/editCity", method = RequestMethod.POST)
+	@RequestMapping(value = "/BoGeolevel/editCity", method = RequestMethod.POST)
 	public ResponseEntity<GenericResponse<String>> editCity(@RequestBody CategoryEditRequest body) {
 		
 		try {

@@ -142,6 +142,13 @@
         	 'excelHtml5','csvHtml5','copyHtml5' 
          ],
     	"scrollX": true,
+    	 "rowCallback": function( row, data, index ) {
+    		    if ( data.status == "VACANT" ) {
+    		    	 $('td:lt(100)', row).addClass( "stateVacant" );
+    		    } else if(data.status == "CLOSED"){
+    		    	$('td:lt(100)', row).addClass( "stateClosed" );
+    		    }
+    		  },
         "ajax": '<c:url value="/admin/reports/all-jobsoffer" />',
         "language": {
             "search": "Filtrar:",
