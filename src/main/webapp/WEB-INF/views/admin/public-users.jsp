@@ -18,38 +18,35 @@
 		              <li  class="active"><a href="#tab_1" >Usuarios Publicos</a></li>
 		            </ul>
 		            <div class="tab-content">
-		             
 		              <div class="tab-pane active" id="tab_1" style="margin-top:15px">
-		              
-		              			<table id="users" class="display" cellspacing="0" width="100%">
-							        <thead>
-							            <tr>
-							                <th>ID</th>
-							                <th>Número Tel</th>
-							                <th>Nombre</th>
-							                <th>Apellido</th>
-							                <th>Email</th>
-							                <th>Estado</th>
-							                <th>Tipo Suscripción</th>
-							                <th>Estado Suscripción</th>
-							                <th>Acción</th>
-							            </tr>
-							        </thead>
-							        <tfoot>
-							            <tr>
-							                <th>ID</th>
-							                <th>Número Tel</th>
-							                <th>Nombre</th>
-							                <th>Apellido</th>
-							                <th>Email</th>
-							                <th>Estado</th>
-							                <th>Tipo Suscripción</th>
-							                <th>Estado Suscripción</th>
-							                <th>Acción</th>
-							            </tr>
-							        </tfoot>
-							    </table>
-							
+              			<table id="users" class="display" cellspacing="0" width="100%">
+					        <thead>
+					            <tr>
+					                <th>ID</th>
+					                <th>Número Tel</th>
+					                <th>Nombre</th>
+					                <th>Apellido</th>
+					                <th>Email</th>
+					                <th>Estado</th>
+					                <th>Tipo Suscripción</th>
+					                <th>Estado Suscripción</th>
+					                <th>Acción</th>
+					            </tr>
+					        </thead>
+					        <tfoot>
+					            <tr>
+					                <th>ID</th>
+					                <th>Número Tel</th>
+					                <th>Nombre</th>
+					                <th>Apellido</th>
+					                <th>Email</th>
+					                <th>Estado</th>
+					                <th>Tipo Suscripción</th>
+					                <th>Estado Suscripción</th>
+					                <th>Acción</th>
+					            </tr>
+					        </tfoot>
+					    </table>
 		              </div>
 		             <!-- /.tab-pane -->
 		            </div>
