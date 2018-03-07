@@ -119,7 +119,7 @@
 	</noscript>
 	<!-- End Facebook Pixel Code -->
   </head>
-  <!-- Versión de la aplicación backend: WebApp DTD v 1.03.09 -->
+  <!-- Versión de la aplicación backend: WebApp DTD v 1.03.12 -->
   <body>
     <!-- Page-->
     <div class="page text-center">
@@ -469,33 +469,6 @@
             <div class="cell-sm-8 cell-md-12">
               <div class="range range-xs-center">
                 <div class="cell-xs-7 text-xs-left cell-md-4 cell-lg-4 cell-lg-push-2">
-                  <p class="text-uppercase text-spacing-60 text-ubold">Últimas novedades</p>
-                  <!-- Post Widget-->   
-                  <article class="post widget-post text-left"><a href="https://itunes.apple.com/ar/app/doc-to-doc/id1242930513?l=en&mt=8" target="_blank">
-                      <div class="unit unit-horizontal unit-spacing-xs unit-middle">
-                        <div class="unit-body">
-                          <div class="post-meta"><span class="icon-xxs mdi mdi-arrow-right text-macaroni"></span>
-                            <time datetime="2016-06-28" class="text-dark">28/06/2017</time>
-                          </div>
-                          <div class="post-title">
-                            <h6 class="text-regular">Disponible en AppStore</h6>
-                          </div>
-                        </div>
-                      </div></a></article>
-                  <!-- Post Widget-->
-                  <article class="post widget-post text-left"><a href="https://play.google.com/store/apps/details?id=com.tdil.d2d.android" target="_blank">
-                      <div class="unit unit-horizontal unit-spacing-xs unit-middle">
-                        <div class="unit-body">
-                          <div class="post-meta"><span class="icon-xxs mdi mdi-arrow-right text-macaroni"></span>
-                            <time datetime="2016-06-27" class="text-dark">27/06/2017</time>
-                          </div>
-                          <div class="post-title">
-                            <h6 class="text-regular">Disponible en Google Play</h6>
-                          </div>
-                        </div>
-                      </div></a></article>
-                </div>
-                <div class="cell-xs-12 offset-top-40 cell-md-5 offset-md-top-0 text-md-left cell-lg-4 cell-lg-push-3">
                   <p class="text-uppercase text-spacing-60 text-ubold">Newsletter</p>
                   <p><span class="small">Pronto vas a poder suscribite al newsletter de Doc to Doc, para recibir mensualmente el resumen de las novedades.</br>Envianos un mail a admin@doctodocapp.com</span></p>
                   <div class="offset-top-30" style="display:none;">

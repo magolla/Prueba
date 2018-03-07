@@ -230,6 +230,48 @@
 										</div>
 									</c:forEach>
 								</c:if>
+								                                
+                                <hr/>
+                                
+                                <h4>Currículum vitae</h4>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                      <label for="name" class="control-label">PDF:</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <!-- IF tiene pdf -->
+                                        <a href="">DESCARGAR PDF</a>
+                                        <!-- Else
+                                            QUEDA EL TEXTO "No cuenta con PDF"
+                                         -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                      <label for="name" class="control-label">Linkedin:</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <!-- IF tiene linkedin -->
+                                        <a href="" target="_blank">Ir al perfil en Linkedin</a>
+                                        <!-- Else
+                                            QUEDA EL TEXTO "No cargó perfil en linkedin"
+                                         -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                      <label for="name" class="control-label">Texto:</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <!-- IF tiene texto guardado como cv 
+                                        Insertar el texto
+                                        <!-- Else
+                                            QUEDA EL TEXTO "No cargó cv"
+                                         -->
+                                    </div>
+                                </div>
+                            
+								
 							</div>
 						</div>
 					</div>
