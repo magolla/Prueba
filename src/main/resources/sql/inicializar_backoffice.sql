@@ -7,8 +7,9 @@ INSERT INTO d2d_role (id,name,description) VALUES (3,'ROLE_LOGS','Logs');
 INSERT INTO d2d_role (id,name,description) VALUES (4,'ROLE_REPORTS','Reports');
 INSERT INTO d2d_role (id,name,description) VALUES (5,'ROLE_EDITOR','Editor');
 INSERT INTO d2d_role (id,name,description) VALUES (6,'ROLE_NOTIFICATIONS','Notifications');
-INSERT INTO d2d_role (id,name,description) VALUES (7,'ROLE_OFFERS','Ofertas');
-INSERT INTO d2d_role (id,name,description) VALUES (8,'ROLE_REFERENCEDATA','Datos de referencia');
+INSERT INTO d2d_role (name,description) VALUES ('ROLE_OFFERS','Ofertas');
+INSERT INTO d2d_role (name,description) VALUES ('ROLE_REFERENCEDATA','Datos de referencia');
+INSERT INTO d2d_role (name,description) VALUES ('ROLE_PUBLIC_USERS','Usuarios y perfiles públicos');
 
 INSERT INTO d2d_bouser_role (USER_ID,ROLE_ID) VALUES (1,1);
 
