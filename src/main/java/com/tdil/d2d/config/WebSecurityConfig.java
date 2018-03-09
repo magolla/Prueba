@@ -138,11 +138,14 @@ public class WebSecurityConfig  {
 	                //Este se va a usar para las syspro
 	                //.antMatchers("/admin/reports/**").access("hasRole('ROLE_SYSPRO')")
 	                .antMatchers("/admin/dashboard").authenticated()
+	                .antMatchers("/admin/users","/admin/public-users","/admin/public-users/{\\d+}","/admin/users/pdfByUser/{\\d+}","/admin/public-users/{\\d+}/activity").access("hasAnyRole('ROLE_PUBLIC_USERS','ROLE_ADMIN')")
 	                .antMatchers("/admin/BoNotification/**").access("hasAnyRole('ROLE_NOTIFICATIONS','ROLE_ADMIN')")
 	                //Accesos del usuario con rol LOGS
-	                .antMatchers("/admin/logs").access("hasAnyRole('ROLE_LOGS','ROLE_ADMIN')")
+	                .antMatchers("/admin/logs","/admin/downloadLog").access("hasAnyRole('ROLE_LOGS','ROLE_ADMIN')")
+	                //Accesos de los usuarios con rol OFFERS y REPORTS
+	                .antMatchers("/admin/reports/all-jobsoffer").access("hasAnyRole('ROLE_REPORTS','ROLE_OFFERS','ROLE_ADMIN')")
 	                //Accesos del usuario con rol OFFERS
-	                .antMatchers("/admin/BoOffers","/admin/BoOffers/**","/admin/offers-table/**","/admin/reports/all-jobsoffer","/admin/new-offer","/admin/list/public-users",
+	                .antMatchers("/admin/BoOffers","/admin/BoOffers/**","/admin/offers-table/**","/admin/new-offer","/admin/list/public-users",
 	                		"/admin/getUserById/{\\d+}","/admin/editOffer/{\\d+}","/admin/countries/**","/admin/deleteOffer").access("hasAnyRole('ROLE_OFFERS','ROLE_ADMIN')")
 	                //Accesos del usuario con rol REPORTS
 	                .antMatchers("/admin/reports/**").access("hasAnyRole('ROLE_REPORTS','ROLE_ADMIN')")

@@ -52,6 +52,7 @@ public class AdminUserController {
 		return model;
 
 	}
+	
 
 	@RequestMapping(value = "/list/bo-users", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<List<BOUserDTO>>> getUsers() {

@@ -3,9 +3,7 @@
 
 <tiles:insertDefinition name="d2d.dashboard">
 
-	<tiles:putAttribute name="title">
-		Usuarios
-	</tiles:putAttribute>
+	<tiles:putAttribute name="title">Usuarios de Sistema</tiles:putAttribute>
 
 	<tiles:putAttribute name="body">
 		<section class="content">
@@ -15,7 +13,6 @@
 		          <div class="nav-tabs-custom">
 		            <ul class="nav nav-tabs">
 		              <li class="active"><a href="#tab_1" data-toggle="tab">Usuarios de Sistema</a></li>
-		              <li><a href="public-users">Usuarios Publicos</a></li>
 		            </ul>
 		            <div class="tab-content">
 		             

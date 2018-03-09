@@ -111,11 +111,20 @@
 						<i class="fa fa-dashboard"></i> <span>Inicio</span>
 					</a>
 				</li>
-				<!--Roles para Usuarios -->
+				<!--Roles para Usuarios de sistema -->
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<li class="treeview">
 					<a href="<c:url value="/admin/users" />">
-						<i class="fa fa-user"></i> <span>Usuarios</span>
+						<i class="fa fa-user"></i> <span>Usuarios del sistema</span>
+					</a>
+				</li>
+				</sec:authorize>
+				
+				<!--Roles para Usuarios publicos -->
+				<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC_USERS')">
+					<li class="treeview">
+					<a href="<c:url value="/admin/public-users" />">
+						<i class="fa fa-user"></i> <span>Usuarios públicos</span>
 					</a>
 				</li>
 				</sec:authorize>
@@ -213,7 +222,7 @@
 	</div>
 	
 	<footer class="main-footer">
-		<div class="pull-right hidden-xs">WebApp DTD v 1.03.12</div>
+		<div class="pull-right hidden-xs">WebApp DTD v 1.03.13</div>
 		<strong>Copyright &copy; 2017 <a href="http://www.doctodocapp.com/">Doc To Doc</a>.</strong> All rights reserved.
 	</footer>
 
