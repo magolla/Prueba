@@ -1528,8 +1528,9 @@ public class UserServiceImpl implements UserService {
 		return getUserDetailsResponse(user);
 	}
 
-
+	
 	@Override
+	@Transactional
 	public User getUserById(long id) throws ServiceException {
 		User user = null;
 		try {
@@ -1878,6 +1879,23 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Base64DTO getPdfCVBase64() throws ServiceException {
 		User user = getLoggedUser();
+		Base64DTO base64dto = null;
+		if(user != null && user.getPdfCV() != null) {
+			base64dto = new Base64DTO(new String(Base64.encodeBase64(user.getPdfCV().getData())));
+		}
+		return base64dto;
+	}
+	
+	
+	@Override
+	public Base64DTO getPdfCVBase64ById(long id) throws ServiceException {
+//		User user = getLoggedUser();
+		User user = null;
+		try {
+			user = this.userDAO.getById(User.class, id);
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
 		Base64DTO base64dto = null;
 		if(user != null && user.getPdfCV() != null) {
 			base64dto = new Base64DTO(new String(Base64.encodeBase64(user.getPdfCV().getData())));
@@ -2342,6 +2360,20 @@ public class UserServiceImpl implements UserService {
 
 			result.setGeoLevels(geoList);
 			
+			if(user.getPdfCV() != null){
+				result.setPdfBase64(user.getPdfCV().getData());
+			}
+			UserLinkedinProfile userLinkedinProfile = null;
+			try {
+				userLinkedinProfile = this.userDAO.getUserLinkedinProfile(user);
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
+			
+			result.setCvPlainTxt(user.getCV());
+			if(userLinkedinProfile != null && userLinkedinProfile.getPublicProfileURL() != null) {
+				result.setLinkedinUrl(userLinkedinProfile.getPublicProfileURL());
+			}
 			// TODO: Agregar en el result los tres elementos explicados a continuación
 			// link de linkedin
 			// El pdf en formato descargable

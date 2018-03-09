@@ -208,4 +208,6 @@ public interface UserService {
 
 	public int getUserCount(String search);
 
+	Base64DTO getPdfCVBase64ById(long id) throws ServiceException;
+
 }

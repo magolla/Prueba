@@ -5,6 +5,10 @@ import java.util.List;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.dto.SpecialtyDTO;
 
+/**
+ * @author pablo
+ *
+ */
 public class UserDTO {
 
 	private long id;
@@ -44,6 +48,12 @@ public class UserDTO {
 	private List<SpecialtyDTO> userSpecialty;
 	
 	private List<GeoLevelDTO> geoLevels;
+
+	private byte[] pdfBase64;
+	
+	private String linkedinUrl;
+	
+	private String cvPlainTxt;
 	
 	
 	public String getLicense() {
@@ -197,4 +207,29 @@ public class UserDTO {
 	public void setCompanyScreenName(String companyScreenName) {
 		this.companyScreenName = companyScreenName;
 	}
+	
+	public byte[] getPdfBase64() {
+		return pdfBase64;
+	}
+
+	public void setPdfBase64(byte[] bs) {
+		this.pdfBase64 = bs;
+	}
+
+	public String getLinkedinUrl() {
+		return linkedinUrl;
+	}
+
+	public void setLinkedinUrl(String linkedinUrl) {
+		this.linkedinUrl = linkedinUrl;
+	}
+
+	public String getCvPlainTxt() {
+		return cvPlainTxt;
+	}
+
+	public void setCvPlainTxt(String cvPlainTxt) {
+		this.cvPlainTxt = cvPlainTxt;
+	}
+
 }

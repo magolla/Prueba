@@ -240,10 +240,21 @@
                                     </div>
                                     <div class="col-md-10">
                                         <!-- IF tiene pdf -->
-                                        <a href="">DESCARGAR PDF</a>
-                                        <!-- Else
+<!--                                         <a href="">DESCARGAR PDF</a> -->
+<%--                                         <a href = "<c:url value = "/admin/pdfByUser/${user.id}"/>">TEST</a> --%>
+<!--                                         Else
                                             QUEDA EL TEXTO "No cuenta con PDF"
                                          -->
+                                         
+                                         <c:choose>
+										    <c:when test="${not empty user.pdfBase64}">
+										        <a href="<c:url value ="/admin/users/pdfByUser/${user.id}"/>" target="_blank">DESCARGAR PDF</a>
+										    </c:when>    
+										    <c:otherwise>
+										        <label for="name" class="control-label">No cuenta con PDF</label>
+										    </c:otherwise>
+										</c:choose>
+                                         
                                     </div>
                                 </div>
                                 <div class="row">
@@ -251,11 +262,14 @@
                                       <label for="name" class="control-label">Linkedin:</label>
                                     </div>
                                     <div class="col-md-10">
-                                        <!-- IF tiene linkedin -->
-                                        <a href="" target="_blank">Ir al perfil en Linkedin</a>
-                                        <!-- Else
-                                            QUEDA EL TEXTO "No cargó perfil en linkedin"
-                                         -->
+										<c:choose>
+										    <c:when test="${not empty user.linkedinUrl}">
+										        <a href="${user.linkedinUrl}" target="_blank"/>Ir al perfil en Linkedin</a>
+										    </c:when>    
+										    <c:otherwise>
+										        <label for="name" class="control-label">No cargó perfil en linkedin</label>
+										    </c:otherwise>
+										</c:choose>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -263,11 +277,14 @@
                                       <label for="name" class="control-label">Texto:</label>
                                     </div>
                                     <div class="col-md-10">
-                                        <!-- IF tiene texto guardado como cv 
-                                        Insertar el texto
-                                        <!-- Else
-                                            QUEDA EL TEXTO "No cargó cv"
-                                         -->
+                                         <c:choose>
+										    <c:when test="${not empty user.cvPlainTxt}">
+										        <label for="name" class="control-label">${user.cvPlainTxt}</label>
+										    </c:when>    
+										    <c:otherwise>
+										        <label for="name" class="control-label">No cargó cv</label>
+										    </c:otherwise>
+										</c:choose>
                                     </div>
                                 </div>
                             
@@ -300,4 +317,3 @@ $(document).ready(function() {
 </script>
 	</tiles:putAttribute>
 </tiles:insertDefinition>
-
