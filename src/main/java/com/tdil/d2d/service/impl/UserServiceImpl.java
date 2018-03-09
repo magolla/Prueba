@@ -255,7 +255,9 @@ public class UserServiceImpl implements UserService {
 
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
-
+			if(!user.getMobilePhone().equals("94572109469428712369")) {
+				subscribeUser(user);	
+			}
 			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
 			if (notificationConfiguration == null) {
 				notificationConfiguration = NotificationConfiguration.getDefaultConfiguration();
@@ -276,7 +278,7 @@ public class UserServiceImpl implements UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
@@ -334,7 +336,9 @@ public class UserServiceImpl implements UserService {
 
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
-
+			if(!user.getMobilePhone().equals("94572109469428712369")) {
+				subscribeUser(user);	
+			}
 			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
 			if (notificationConfiguration == null) {
 				notificationConfiguration = NotificationConfiguration.getDefaultConfiguration();
@@ -386,12 +390,19 @@ public class UserServiceImpl implements UserService {
 				validationCode.setEnabled(false);
 
 				this.userDAO.save(validationCode);
-
 				return true;
 			}
 			return false;
 		} catch (DAOException e) {
 			throw new ServiceException(e);
+		}
+	}
+
+	private void subscribeUser(User user) {
+		try {
+			this.subscriptionService.createFreeSubscription(user);
+		} catch (ServiceException e) {
+			e.printStackTrace();
 		}
 	}
 

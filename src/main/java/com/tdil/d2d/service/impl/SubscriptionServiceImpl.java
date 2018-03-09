@@ -213,8 +213,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	
 	@Override
 	public Subscription createFreeSubscription(User user) throws ServiceException {
-		if(user.isAlreadyUsedFreeSuscription()) {
+		
+		if(user.isAlreadyUsedFreeSuscription() ) {
 			LoggerManager.error(this, "This user has already used the free suscription");
+			return null;
+		}
+		
+		Subscription subscription = this.subscriptionDAO.getSubscriptionByUser(user);
+		if(subscription != null && subscription.getId() != 0) {
+			LoggerManager.error(this, "Este usuario posee una subscripcion paga activa");
 			return null;
 		}
 		

@@ -286,7 +286,7 @@
 					"processing" : true, // for show progress bar
 					"serverSide" : true, // for process server side
 					"ajax" : {
-						"url" : '/d2d/admin/BoGeolevel/getGeolevels',
+						"url": '<c:url value="/admin/BoGeolevel/getGeolevels" />',
 						"type" : "GET",
 						"datatype" : "json"
 					},
@@ -464,7 +464,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: '/d2d/admin/BoGeolevel/saveProvince?${_csrf.parameterName}=${_csrf.token}', 
+				    url: '<c:url value="/admin/BoGeolevel/saveProvince?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -505,7 +505,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: '/d2d/admin/BoGeolevel/saveRegion?${_csrf.parameterName}=${_csrf.token}', 
+				    url: '<c:url value="/admin/BoGeolevel/saveRegion?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -546,7 +546,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: '/d2d/admin/BoGeolevel/saveCity?${_csrf.parameterName}=${_csrf.token}', 
+				    url: '<c:url value="/admin/BoGeolevel/saveCity?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -638,8 +638,7 @@
 			function refreshProvinces(){
 			    
 				$('.typeahead').typeahead('destroy');
-				
-				$.get("/d2d/admin/BoGeolevel/provinces", function(data){
+				$.get('<c:url value="/admin/BoGeolevel/provinces" />', function(data){
 				  $("#geo3ProvinceName").typeahead({
 					  source:data,
 					  afterSelect: function(item) {
@@ -651,7 +650,7 @@
 				},'json');
 				// Fin autocomplete modal Localidades/Partidos
 				
-				$.get("/d2d/admin/BoGeolevel/provinces", function(data){
+				$.get('<c:url value="/admin/BoGeolevel/provinces" />', function(data){
 				  $("#cityGeo2Name").typeahead({
 					  source:data,
 					  afterSelect: function(item) {
@@ -668,8 +667,7 @@
 			
 			function refreshRegion(id){
 				$('#cityGeo3Name').typeahead('destroy');
-				
-				$.get("/d2d/admin/BoGeolevel/city/" + id, function(data){
+				$.get('<c:url value="/admin/BoGeolevel/city/" />' + id, function(data){
 					
 					if(data.length == 1 && data[0].name == ""){
 						$("#cityGeo3Name").prop('disabled', true);
@@ -705,7 +703,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: "/d2d/admin/BoGeolevel/editProvince?${_csrf.parameterName}=${_csrf.token}", 
+				    url: '<c:url value="/admin/BoGeolevel/editProvince?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -735,7 +733,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: "/d2d/admin/BoGeolevel/editRegion?${_csrf.parameterName}=${_csrf.token}", 
+				    url: '<c:url value="/admin/BoGeolevel/editRegion?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
@@ -767,7 +765,7 @@
 				$.ajax({ 
 				    type: 'POST', 
 				    contentType: "application/json",
-				    url: "/d2d/admin/BoGeolevel/editCity?${_csrf.parameterName}=${_csrf.token}", 
+				    url: '<c:url value="/admin/BoGeolevel/editCity?${_csrf.parameterName}=${_csrf.token}" />',
 				    data: JSON.stringify(data),
 				    dataType: 'json',
 				    success: function (data) { 
