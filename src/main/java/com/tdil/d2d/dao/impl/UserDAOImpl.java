@@ -657,4 +657,52 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
 	}
 
+	@Override
+	public List<User> getSemiMatchedUsers(JobOffer offer, List<GeoLevelDTO> locations) throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct user ");
+			queryString.append("FROM UserProfile userProfile ");
+			queryString.append("JOIN userProfile.user user ");
+			queryString.append("JOIN user.userGeoLocations location ");
+			queryString.append("WHERE (userProfile.institutionType = :both OR userProfile.institutionType = :institutionType) ");
+			
+			queryString.append("AND :specialty in elements(user.specialties) ");
+			
+			queryString.append("AND user.userb = true ");
+			queryString.append("AND user.id != :offerentId ");
+
+//			if(offer.getGeoLevelLevel() == 2) {
+//				queryString.append("AND location ");	
+//			} else if(offer.getGeoLevelLevel() == 3) {
+//				
+//			} else {
+//				
+//			}
+//			queryString.append("and location")
+//			if(!locations.isEmpty()) {
+//				queryString.append("AND (");
+//				String OR = "";
+//				for (GeoLevelDTO location : locations) {
+////					if(location.getLevel() != )
+//					queryString.append(OR + "(location.geoLevelId = " + location.getId() + " AND location.geoLevelLevel = " + location.getLevel() + ") ");
+//					OR = "OR ";
+//				}
+//				queryString.append(") ");
+//			}
+
+			queryString.append("order by user.lastLoginDate desc");
+
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameter("both", InstitutionType.BOTH);
+			query.setParameter("institutionType", offer.getInstitutionType());
+			query.setParameter("specialty", offer.getTask().getSpecialty());
+			query.setParameter("offerentId", offer.getOfferent().getId());
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
 }

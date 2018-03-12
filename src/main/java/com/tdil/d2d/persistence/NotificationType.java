@@ -159,6 +159,22 @@ public enum NotificationType {
 		public String getMessage() {
 			return "Ingresá a DOC TO DOC ahora para leer sobre el nuevo Producto o Servicio";
 		}
+	},
+	NEW_OFFER_SEMI_MATCH {
+		@Override
+		public int getIntValue() {
+			return 1;
+		}
+
+		@Override
+		public String getTitle() {
+			return "Nueva oferta en DOC TO DOC";
+		}
+
+		@Override
+		public String getMessage() {
+			return "Hay ofertas de trabajo que podrían interesarte";
+		}
 	};
 
 	public abstract int getIntValue();

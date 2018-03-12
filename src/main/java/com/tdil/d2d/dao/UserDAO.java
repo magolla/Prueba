@@ -44,6 +44,8 @@ public interface UserDAO {
 	public void deleteUserGeoLocations(User user) throws DAOException;
 
 	public List<User> getMatchedUsers(JobOffer offer, List<GeoLevelDTO> locations) throws DAOException;
+	
+	public List<User> getSemiMatchedUsers(JobOffer offer, List<GeoLevelDTO> locations) throws DAOException;
 
 	public ValidationCode getValidationCode(String mobilePhone, String smsCode) throws DAOException;
 
