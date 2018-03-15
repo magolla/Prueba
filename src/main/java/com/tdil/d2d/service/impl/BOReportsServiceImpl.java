@@ -25,6 +25,7 @@ import com.tdil.d2d.bo.dto.SubscriptionReportDTO;
 import com.tdil.d2d.controller.api.dto.BOJobOfferDTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.dao.GeoDAO;
+import com.tdil.d2d.dao.JobApplicationDAO;
 import com.tdil.d2d.dao.JobOfferDAO;
 import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.dao.UserDAO;
@@ -33,6 +34,7 @@ import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.GeoLevel;
+import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Receipt;
 import com.tdil.d2d.persistence.Subscription;
@@ -49,13 +51,15 @@ public class BOReportsServiceImpl implements BOReportsService {
 	private final UserDAO userDAO;
 	private final GeoDAO geoDAO;
 	private final SubscriptionDAO subscriptionDAO;
+	private final JobApplicationDAO jobApplicationDAO;
 	
 	@Autowired
-	public BOReportsServiceImpl(JobOfferDAO jobOfferDAO, UserDAO userDAO,GeoDAO geoDAO, SubscriptionDAO subscriptionDAO) {
+	public BOReportsServiceImpl(JobOfferDAO jobOfferDAO, UserDAO userDAO,GeoDAO geoDAO, SubscriptionDAO subscriptionDAO, JobApplicationDAO jobApplicationDAO) {
 		this.jobOfferDAO = jobOfferDAO;
 		this.userDAO = userDAO;
 		this.geoDAO = geoDAO;
 		this.subscriptionDAO = subscriptionDAO;
+		this.jobApplicationDAO = jobApplicationDAO;
 	}
 
 	@Override
@@ -99,7 +103,8 @@ public class BOReportsServiceImpl implements BOReportsService {
 		result.setOfferHour(hour);
 		result.setInstitutionType(jobOffer.getInstitutionType().name());
 		if(jobOffer.getJobApplication_id() != null) {
-			User usuarioApplicant = userDAO.getById(User.class, jobOffer.getJobApplication_id());	
+			User usuarioApplicant =  	this.jobApplicationDAO.getById(JobApplication.class, jobOffer.getJobApplication_id()).getUser();
+//			User usuarioApplicant = userDAO.getById(User.class, jobOffer.get);	
 			result.setJobApplication_detail(usuarioApplicant.getFirstname() + " " + usuarioApplicant.getLastname() + "<br>" 
 					+ usuarioApplicant.getEmail() + "<br>" + usuarioApplicant.getMobilePhone() + "<br>" + usuarioApplicant.getCompanyScreenName());
 		} else {
