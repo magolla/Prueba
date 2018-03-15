@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -63,45 +64,73 @@ public class DatabaseTest {
 	@org.junit.Test
 	public void test() {
 		
-		long offerId = 21;
+		long offerId = 42;
 		
 		try {
+			List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
 			List<MatchedUserDTO> semiMatchedUserDTOs = this.getSemiMatchedUsers(offerId);
+			
+			semiMatchedUserDTOs.removeIf(obj -> matchedUserDTOs.stream()
+                    .map(MatchedUserDTO::getUserId).collect(Collectors.toList()).contains(obj.getUserId()));
+			
+			for (MatchedUserDTO matchedUserDTO : semiMatchedUserDTOs) {
+				System.out.println("Usuario con ID: " + matchedUserDTO.getUserId());
+			}
+			
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	private List<MatchedUserDTO> removeMatched(List<MatchedUserDTO> matchedUserDTOs, List<MatchedUserDTO> semiMatchedUserDTOs) {
+		List<Long> idList = new ArrayList<Long>();
+		for (MatchedUserDTO semiMatchedUserDTO : semiMatchedUserDTOs) {
+			for (MatchedUserDTO matchedUserDTO : matchedUserDTOs) {
+				if(matchedUserDTO.getUserId() == semiMatchedUserDTO.getUserId()) {
+					idList.add(semiMatchedUserDTO.getUserId());
+				}
+			}
+		}
+		semiMatchedUserDTOs.removeIf(obj -> idList.contains(obj.getUserId()));
+		
+		
+		return semiMatchedUserDTOs;
+		
+	}
+
 	private List<MatchedUserDTO> getSemiMatchedUsers(Long offerId) throws ServiceException {
 		try {
 			List<User> result = new ArrayList<>();
 
 			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
 
-			UserGeoLocation geoLocation = new UserGeoLocation();
-			geoLocation.setGeoLevelId(jobOffer.getGeoLevelId());
-			geoLocation.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
-
-			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
-			geoLocations.add(geoLocation);
-
-			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
+//			UserGeoLocation geoLocation = new UserGeoLocation();
+//			geoLocation.setGeoLevelId(jobOffer.getGeoLevelId());
+//			geoLocation.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
+//
+//			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
+//			geoLocations.add(geoLocation);
+//
+//			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
 
 			GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(jobOffer.getGeoLevelId(), jobOffer.getGeoLevelLevel());
+			Geo3 offerGeo3 = null;
+			if(jobOffer.getGeoLevelLevel() == 4) {
+				Geo4 g4= (Geo4)geoLevel;
+				offerGeo3 = g4.getGeo3();
+			} else {
+				 offerGeo3 = (Geo3)geoLevel;
+			}
 			
-			result = userDAO.getSemiMatchedUsers(jobOffer, geos);
 			
-			
-			List<User> userwithoutFilter = userDAO.getMatchedUsers(jobOffer, geos);
-			
-			result.removeAll(userwithoutFilter);
+			List<Geo4> geo4List = this.geoDAO.getListGeo4ByGeo3(offerGeo3.getId());
+			result = userDAO.getSemiMatchedUsers(jobOffer, geo4List, offerGeo3);
 
 			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
-//			for (User matchedUser : result) {
-//				MatchedUserDTO matchedUserDTO = toMatchedUserDto(matchedUser);
-//				matchedUserDTOs.add(matchedUserDTO);
-//			}
+			for (User matchedUser : result) {
+				MatchedUserDTO matchedUserDTO = toMatchedUserDto(matchedUser);
+				matchedUserDTOs.add(matchedUserDTO);
+			}
 
 			return matchedUserDTOs;
 
@@ -142,6 +171,49 @@ public class DatabaseTest {
 		}
 
 		return geos;
+	}
+	
+	public List<MatchedUserDTO> getMatchedUsers(Long offerId) throws ServiceException {
+		try {
+			List<User> result = new ArrayList<>();
+
+			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
+
+			UserGeoLocation geoLocation = new UserGeoLocation();
+			geoLocation.setGeoLevelId(jobOffer.getGeoLevelId());
+			geoLocation.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
+
+			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
+			geoLocations.add(geoLocation);
+
+			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
+
+			result = userDAO.getMatchedUsers(jobOffer, geos);
+
+			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
+			for (User matchedUser : result) {
+				MatchedUserDTO matchedUserDTO = toMatchedUserDto(matchedUser);
+				matchedUserDTOs.add(matchedUserDTO);
+			}
+
+			return matchedUserDTOs;
+
+		} catch (DAOException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	private MatchedUserDTO toMatchedUserDto(User user) throws ServiceException {
+		MatchedUserDTO result = new MatchedUserDTO();
+		result.setUserId(user.getId());
+		result.setFirstname(user.getFirstname());
+		result.setLastname(user.getLastname());
+		result.setEmail(user.getEmail());
+		result.setMobilePhone(user.getMobilePhone());
+
+//		NotificationConfigurationResponse notificationConfigurationResponse = this.getNotificationConfiguration(user.getId());
+//		result.setNotificationConfigurationResponse(notificationConfigurationResponse);
+		return result;
 	}
 
 }

@@ -163,7 +163,7 @@ public enum NotificationType {
 	NEW_OFFER_SEMI_MATCH {
 		@Override
 		public int getIntValue() {
-			return 1;
+			return 10;
 		}
 
 		@Override

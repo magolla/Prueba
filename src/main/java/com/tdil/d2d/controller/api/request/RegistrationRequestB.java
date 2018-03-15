@@ -35,6 +35,8 @@ public class RegistrationRequestB extends ApiRequest {
 	private String deviceId;
 	
 	private boolean tacAccepted;
+	
+	private String suscriptionCode;
 
 	public String getFirstname() {
 		return firstname;
@@ -82,6 +84,14 @@ public class RegistrationRequestB extends ApiRequest {
 
 	public void setTacAccepted(boolean tacAccepted) {
 		this.tacAccepted = tacAccepted;
+	}
+
+	public String getSuscriptionCode() {
+		return suscriptionCode;
+	}
+
+	public void setSuscriptionCode(String suscriptionCode) {
+		this.suscriptionCode = suscriptionCode;
 	}
 
 }

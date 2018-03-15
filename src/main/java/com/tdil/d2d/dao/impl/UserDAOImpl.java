@@ -26,6 +26,8 @@ import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.controller.api.request.InstitutionType;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.Geo3;
+import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
@@ -658,8 +660,12 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 	}
 
 	@Override
-	public List<User> getSemiMatchedUsers(JobOffer offer, List<GeoLevelDTO> locations) throws DAOException {
+	public List<User> getSemiMatchedUsers(JobOffer offer, List<Geo4> geo4List, Geo3 offerGeo3) throws DAOException {
 		try {
+			
+			
+			List<Long> userIdList = geo4List.stream().map(Geo4::getId).collect(Collectors.toList());
+			
 			StringBuilder queryString = new StringBuilder("");
 			queryString.append("SELECT distinct user ");
 			queryString.append("FROM UserProfile userProfile ");
@@ -672,32 +678,30 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			queryString.append("AND user.userb = true ");
 			queryString.append("AND user.id != :offerentId ");
 
-//			if(offer.getGeoLevelLevel() == 2) {
-//				queryString.append("AND location ");	
-//			} else if(offer.getGeoLevelLevel() == 3) {
-//				
-//			} else {
-//				
-//			}
-//			queryString.append("and location")
+//			queryString.append("and location");
 //			if(!locations.isEmpty()) {
 //				queryString.append("AND (");
 //				String OR = "";
 //				for (GeoLevelDTO location : locations) {
-////					if(location.getLevel() != )
 //					queryString.append(OR + "(location.geoLevelId = " + location.getId() + " AND location.geoLevelLevel = " + location.getLevel() + ") ");
 //					OR = "OR ";
 //				}
 //				queryString.append(") ");
 //			}
-
-			queryString.append("order by user.lastLoginDate desc");
+			queryString.append(" AND (((location.geoLevelId in (:geo4Ids)) AND (location.geoLevelLevel = 4))");
+			queryString.append(" OR ((location.geoLevelId = :geo3Id) AND (location.geoLevelLevel = 3)))");
+			
+			
+			queryString.append(" order by user.lastLoginDate desc");
 
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
 			query.setParameter("both", InstitutionType.BOTH);
 			query.setParameter("institutionType", offer.getInstitutionType());
 			query.setParameter("specialty", offer.getTask().getSpecialty());
 			query.setParameter("offerentId", offer.getOfferent().getId());
+			
+			query.setParameterList("geo4Ids", userIdList);
+			query.setParameter("geo3Id", offerGeo3.getId());
 
 			return query.list();
 		} catch (Exception e) {

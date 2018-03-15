@@ -3,13 +3,7 @@ package com.tdil.d2d.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.tdil.d2d.dao.GeoDAO;
-import com.tdil.d2d.dao.JobApplicationDAO;
-import com.tdil.d2d.dao.JobOfferDAO;
 import com.tdil.d2d.dao.UserDAO;
-import com.tdil.d2d.dao.impl.GeoDAOImpl;
-import com.tdil.d2d.dao.impl.JobApplicationDAOImpl;
-import com.tdil.d2d.dao.impl.JobOfferDAOImpl;
 import com.tdil.d2d.dao.impl.UserDAOImpl;
 
 @Configuration
@@ -25,21 +19,21 @@ public class DaoConfig {
 //	public UserService userService() {
 //		return new UserServiceImpl();
 //	}
-	
-	@Bean(name = "jobOfferDAO")
-	public JobOfferDAO jobOfferDAO() {
-		return new JobOfferDAOImpl();
-	}
-	
-	
-	@Bean(name = "jobApplicationDAO")
-	public JobApplicationDAO jobApplicationDAO() {
-		return new JobApplicationDAOImpl();
-	}
-	
-	@Bean(name = "geoDAO")
-	public GeoDAO geoDAO() {
-		return new GeoDAOImpl();
-	}
+//	
+//	@Bean(name = "jobOfferDAO")
+//	public JobOfferDAO jobOfferDAO() {
+//		return new JobOfferDAOImpl();
+//	}
+//	
+//	
+//	@Bean(name = "jobApplicationDAO")
+//	public JobApplicationDAO jobApplicationDAO() {
+//		return new JobApplicationDAOImpl();
+//	}
+//	
+//	@Bean(name = "geoDAO")
+//	public GeoDAO geoDAO() {
+//		return new GeoDAOImpl();
+//	}
 
 }

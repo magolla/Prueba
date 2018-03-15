@@ -128,6 +128,7 @@ import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.CryptographicService;
 import com.tdil.d2d.service.EmailService;
 import com.tdil.d2d.service.NotificationService;
+import com.tdil.d2d.service.SponsorCodeService;
 import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.service.UserService;
 
@@ -202,6 +203,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private SubscriptionDAO subscriptionDAO;
+	
+	@Autowired
+	private SponsorCodeService sponsorCodeService;
 
 	@Override
 	public User getUserByUsername(String username) throws ServiceException {
@@ -337,7 +341,13 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 			if(!user.getMobilePhone().equals("94572109469428712369")) {
-				subscribeUser(user);	
+				if(registrationRequest.getSuscriptionCode() == null) {
+					subscribeUser(user);	
+				} else {
+					Subscription suscription = this.sponsorCodeService.consumeSponsorCode(user, registrationRequest.getSuscriptionCode());
+				}
+				
+					
 			}
 			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
 			if (notificationConfiguration == null) {
@@ -794,8 +804,9 @@ public class UserServiceImpl implements UserService {
 
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-			this.notifyToSemiMatchedUsers(jobOffer.getId());
-
+			if(jobOffer.getGeoLevelLevel() != 2) {
+				this.notifyToSemiMatchedUsers(jobOffer.getId());
+			}
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -832,7 +843,9 @@ public class UserServiceImpl implements UserService {
 			savePoints(ActivityActionEnum.POST_TEMPORARY_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-
+			if(jobOffer.getGeoLevelLevel() != 2) {
+				this.notifyToSemiMatchedUsers(jobOffer.getId());
+			}
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -892,7 +905,9 @@ public class UserServiceImpl implements UserService {
 			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, finalUser);
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-
+			if(jobOffer.getGeoLevelLevel() != 2) {
+				this.notifyToSemiMatchedUsers(jobOffer.getId());
+			}
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -934,7 +949,9 @@ public class UserServiceImpl implements UserService {
 			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-
+			if(jobOffer.getGeoLevelLevel() != 2) {
+				this.notifyToSemiMatchedUsers(jobOffer.getId());
+			}
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -2059,7 +2076,8 @@ public class UserServiceImpl implements UserService {
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
 		List<MatchedUserDTO> semiMatchedUserDTOs = this.getSemiMatchedUsers(offerId);
 
-		semiMatchedUserDTOs.removeAll(matchedUserDTOs);
+		semiMatchedUserDTOs.removeIf(obj -> matchedUserDTOs.stream()
+                .map(MatchedUserDTO::getUserId).collect(Collectors.toList()).contains(obj.getUserId()));
 		
 		for (MatchedUserDTO matchedUserDTO : semiMatchedUserDTOs) {
 
@@ -2179,17 +2197,27 @@ public class UserServiceImpl implements UserService {
 
 			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
 
-			UserGeoLocation geoLocation = new UserGeoLocation();
-			geoLocation.setGeoLevelId(jobOffer.getGeoLevelId());
-			geoLocation.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
-
-			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
-			geoLocations.add(geoLocation);
-
-			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
+//			UserGeoLocation geoLocation = new UserGeoLocation();
+//			geoLocation.setGeoLevelId(jobOffer.getGeoLevelId());
+//			geoLocation.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
+//
+//			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
+//			geoLocations.add(geoLocation);
+//
+//			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
 
 			GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(jobOffer.getGeoLevelId(), jobOffer.getGeoLevelLevel());
-			result = userDAO.getSemiMatchedUsers(jobOffer, geos);
+			Geo3 offerGeo3 = null;
+			if(jobOffer.getGeoLevelLevel() == 4) {
+				Geo4 g4= (Geo4)geoLevel;
+				offerGeo3 = g4.getGeo3();
+			} else {
+				 offerGeo3 = (Geo3)geoLevel;
+			}
+			
+			
+			List<Geo4> geo4List = this.geoDAO.getListGeo4ByGeo3(offerGeo3.getId());
+			result = userDAO.getSemiMatchedUsers(jobOffer, geo4List, offerGeo3);
 
 			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
 			for (User matchedUser : result) {
