@@ -47,6 +47,7 @@
 									<thead>
 										<tr>
 											<th>Estado</th>
+											<th>ID</th>
 											<th>Tipo de Oferta</th>
 											<th>Ocupaci&oacuten</th>
 											<th>Especialidad</th>
@@ -65,6 +66,7 @@
 									<tfoot>
 										<tr>
 											<th>Estado</th>
+											<th>ID</th>
 											<th>Tipo de Oferta</th>
 											<th>Ocupaci&oacuten</th>
 											<th>Especialidad</th>
@@ -79,8 +81,6 @@
 											<th>Editar</th>
 											<th>Cerrar Aviso</th>
 										</tr>
-										
-										
 									</tfoot>
 								</table>
 							</div>
@@ -144,9 +144,9 @@
     	"scrollX": true,
     	 "rowCallback": function( row, data, index ) {
     		    if ( data.status == "VACANT" ) {
-    		    	 $('td:lt(100)', row).addClass( "stateVacant" );
+    		    	 $('td:lt(99)', row).addClass( "stateVacant" );
     		    } else if(data.status == "CLOSED"){
-    		    	$('td:lt(100)', row).addClass( "stateClosed" );
+    		    	$('td:lt(99)', row).addClass( "stateClosed" );
     		    }
     		  },
         "ajax": '<c:url value="/admin/reports/all-jobsoffer" />',
@@ -160,6 +160,7 @@
           },
         "columns": [
         			{ "data": "status" },
+		        	{ "data": "id" },
                     {
                         "data": "permanent",
                         "render": function ( data, type, full, meta ) {
@@ -211,18 +212,18 @@
                         "searchable": true
                     },
                     {
-                        targets: 7,
+                        targets: 8,
                         render: $.fn.dataTable.render.ellipsis(50)
+                    },
+                    {
+                        targets: 7,
+                        render: $.fn.dataTable.render.ellipsis(35)
                     },
                     {
                         targets: 6,
                         render: $.fn.dataTable.render.ellipsis(35)
                     },
-                    {
-                        targets: 5,
-                        render: $.fn.dataTable.render.ellipsis(35)
-                    },
-                    { "width": "150px", "targets": 7 }
+                    { "width": "150px", "targets": 8 }
                 ],
          "bLengthChange": false        
     } );
