@@ -60,6 +60,7 @@ import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
+import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.SponsorCode;
@@ -93,6 +94,9 @@ public class UserController extends AbstractController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	private SubscriptionDAO subscriptionDAO;
 
     @Autowired
 	@Qualifier("jwtUserDetailsService")
@@ -698,6 +702,7 @@ public class UserController extends AbstractController {
 	@RequestMapping(value = "/user/subscription/validateCode/{subscriptionCode}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse<Boolean>> getOfferById(@PathVariable String subscriptionCode) {
 		try {
+			
 			
 			SponsorCode sponsorCode = this.sponsorCodeService.validateSponsorCode(subscriptionCode);
 			
