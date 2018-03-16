@@ -128,6 +128,7 @@ import com.tdil.d2d.security.RuntimeContext;
 import com.tdil.d2d.service.CryptographicService;
 import com.tdil.d2d.service.EmailService;
 import com.tdil.d2d.service.NotificationService;
+import com.tdil.d2d.service.SponsorCodeService;
 import com.tdil.d2d.service.SubscriptionService;
 import com.tdil.d2d.service.UserService;
 
@@ -202,6 +203,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private SubscriptionDAO subscriptionDAO;
+
+	@Autowired
+	private SponsorCodeService sponsorCodeService;
 
 	@Override
 	public User getUserByUsername(String username) throws ServiceException {
@@ -278,7 +282,7 @@ public class UserServiceImpl implements UserService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			return response;
 		} catch (IllegalBlockSizeException | BadPaddingException | DAOException | InvalidKeyException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
@@ -337,7 +341,16 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(passwordEncoder.encode(registrationRequest.getDeviceId()));
 			this.userDAO.save(user);
 			if(!user.getMobilePhone().equals("94572109469428712369")) {
-				subscribeUser(user);	
+
+				Subscription subscription = this.subscriptionDAO.getSubscriptionByUser(user);
+				if(subscription.getId() == 0) {
+					if(registrationRequest.getSuscriptionCode() == null) {
+						subscribeUser(user);	
+					} else {
+						Subscription suscription = this.sponsorCodeService.consumeSponsorCode(user, registrationRequest.getSuscriptionCode());
+					}
+				}
+
 			}
 			NotificationConfiguration notificationConfiguration = this.notificationConfigurationDAO.getByUser(user.getId());
 			if (notificationConfiguration == null) {
@@ -794,12 +807,16 @@ public class UserServiceImpl implements UserService {
 
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-
+			if(jobOffer.getGeoLevelLevel() != 2) {
+				this.notifyToSemiMatchedUsers(jobOffer.getId());
+			}
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
 	}
+
+
 
 	@Override
 	public boolean editJobOffer(CreateTemporaryJobOfferRequest createOfferRequest, long offerId) throws ServiceException {
@@ -829,7 +846,9 @@ public class UserServiceImpl implements UserService {
 			savePoints(ActivityActionEnum.POST_TEMPORARY_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-
+			if(jobOffer.getGeoLevelLevel() != 2) {
+				this.notifyToSemiMatchedUsers(jobOffer.getId());
+			}
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -889,7 +908,9 @@ public class UserServiceImpl implements UserService {
 			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, finalUser);
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-
+			if(jobOffer.getGeoLevelLevel() != 2) {
+				this.notifyToSemiMatchedUsers(jobOffer.getId());
+			}
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -931,7 +952,9 @@ public class UserServiceImpl implements UserService {
 			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-
+			if(jobOffer.getGeoLevelLevel() != 2) {
+				this.notifyToSemiMatchedUsers(jobOffer.getId());
+			}
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -948,13 +971,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean apply(long offerId, ApplyToOfferRequest applyToOffer) throws ServiceException {
 		try {
-			
+
 			User user = getLoggedUser();
-			
+
 			if(user.getSpecialties().isEmpty()) {
 				return false;
 			}
-			
+
 			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
 			if (jobOffer.getVacants() == 0) {
 				return false;
@@ -970,7 +993,7 @@ public class UserServiceImpl implements UserService {
 			jobApplication.setComment(applyToOffer.getComment());
 			jobApplication.setCvAttach(Base64.decodeBase64(applyToOffer.getCvPdf())); //TODO debería salir del profile
 			jobApplication.setCvPlain(applyToOffer.getCvPlain()); //TODO debería salir del profile
-			
+
 			UserLinkedinProfile linkedinProfile = this.userDAO.getUserLinkedinProfile(user);
 			if(linkedinProfile != null) {
 				jobApplication.setLinkedInCv(linkedinProfile.getPublicProfileURL());
@@ -1539,7 +1562,7 @@ public class UserServiceImpl implements UserService {
 		return getUserDetailsResponse(user);
 	}
 
-	
+
 	@Override
 	@Transactional
 	public User getUserById(long id) throws ServiceException {
@@ -1896,11 +1919,11 @@ public class UserServiceImpl implements UserService {
 		}
 		return base64dto;
 	}
-	
-	
+
+
 	@Override
 	public Base64DTO getPdfCVBase64ById(long id) throws ServiceException {
-//		User user = getLoggedUser();
+		//		User user = getLoggedUser();
 		User user = null;
 		try {
 			user = this.userDAO.getById(User.class, id);
@@ -2052,6 +2075,37 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public boolean notifyToSemiMatchedUsers(Long offerId) throws ServiceException {
+		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
+		List<MatchedUserDTO> semiMatchedUserDTOs = this.getSemiMatchedUsers(offerId);
+
+		semiMatchedUserDTOs.removeIf(obj -> matchedUserDTOs.stream()
+				.map(MatchedUserDTO::getUserId).collect(Collectors.toList()).contains(obj.getUserId()));
+
+		for (MatchedUserDTO matchedUserDTO : semiMatchedUserDTOs) {
+
+			boolean alreadyApplied = this.searchIfApplied(offerId,matchedUserDTO.getUserId());
+
+			if(!alreadyApplied) {
+
+				try {
+
+					User user = userDAO.getById(User.class, matchedUserDTO.getUserId());
+					JobOffer offer = jobDAO.getById(JobOffer.class, offerId);
+
+					sendNotification(NotificationType.NEW_OFFER_SEMI_MATCH, user, offer);
+
+
+				} catch (DAOException e) {
+					logger.error("ERROR", e);
+				}
+			}
+		}
+		return true;
+	}
+
+
+	@Override
 	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException {
 		List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
 
@@ -2085,6 +2139,9 @@ public class UserServiceImpl implements UserService {
 		}
 		return true;
 	}
+
+
+
 
 
 	@Override
@@ -2133,6 +2190,48 @@ public class UserServiceImpl implements UserService {
 				logger.error("ERROR", e);
 			}
 			//			}
+		}
+	}
+
+
+	private List<MatchedUserDTO> getSemiMatchedUsers(Long offerId) throws ServiceException {
+		try {
+			List<User> result = new ArrayList<>();
+
+			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
+
+			//			UserGeoLocation geoLocation = new UserGeoLocation();
+			//			geoLocation.setGeoLevelId(jobOffer.getGeoLevelId());
+			//			geoLocation.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
+			//
+			//			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
+			//			geoLocations.add(geoLocation);
+			//
+			//			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
+
+			GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(jobOffer.getGeoLevelId(), jobOffer.getGeoLevelLevel());
+			Geo3 offerGeo3 = null;
+			if(jobOffer.getGeoLevelLevel() == 4) {
+				Geo4 g4= (Geo4)geoLevel;
+				offerGeo3 = g4.getGeo3();
+			} else {
+				offerGeo3 = (Geo3)geoLevel;
+			}
+
+
+			List<Geo4> geo4List = this.geoDAO.getListGeo4ByGeo3(offerGeo3.getId());
+			result = userDAO.getSemiMatchedUsers(jobOffer, geo4List, offerGeo3);
+
+			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
+			for (User matchedUser : result) {
+				MatchedUserDTO matchedUserDTO = toMatchedUserDto(matchedUser);
+				matchedUserDTOs.add(matchedUserDTO);
+			}
+
+			return matchedUserDTOs;
+
+		} catch (DAOException e) {
+			throw new ServiceException(e);
 		}
 	}
 
@@ -2370,7 +2469,7 @@ public class UserServiceImpl implements UserService {
 			}
 
 			result.setGeoLevels(geoList);
-			
+
 			if(user.getPdfCV() != null){
 				result.setPdfBase64(user.getPdfCV().getData());
 			}
@@ -2380,7 +2479,7 @@ public class UserServiceImpl implements UserService {
 			} catch (DAOException e) {
 				e.printStackTrace();
 			}
-			
+
 			result.setCvPlainTxt(user.getCV());
 			if(userLinkedinProfile != null && userLinkedinProfile.getPublicProfileURL() != null) {
 				result.setLinkedinUrl(userLinkedinProfile.getPublicProfileURL());
@@ -2697,6 +2796,8 @@ public class UserServiceImpl implements UserService {
 
 		return userDAO.getCountWithFilter(search);
 	}
+
+
 
 
 }

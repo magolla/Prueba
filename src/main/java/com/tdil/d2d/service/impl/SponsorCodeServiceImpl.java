@@ -151,6 +151,14 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 		} catch (DAOException e){
 			throw new ServiceException(e);
 		}
+	}
+
+
+
+	@Override
+	public SponsorCode validateSponsorCode(String subscriptionCode) throws DAOException {
+			SponsorCode sponsorCode = this.subscriptionDAO.getSponsorCode(SponsorCode.class, subscriptionCode);
+			return sponsorCode;
 	}	
 
 }

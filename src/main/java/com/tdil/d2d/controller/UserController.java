@@ -60,9 +60,12 @@ import com.tdil.d2d.controller.api.response.ApiResponse;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.controller.api.response.RegistrationResponse;
 import com.tdil.d2d.controller.api.response.UserDetailsResponse;
+import com.tdil.d2d.dao.SubscriptionDAO;
 import com.tdil.d2d.exceptions.DTDException;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.security.JwtTokenUtil;
+import com.tdil.d2d.service.SponsorCodeService;
 import com.tdil.d2d.service.SystemPropertyService;
 import com.tdil.d2d.service.UserService;
 import com.tdil.d2d.utils.Constants;
@@ -91,11 +94,16 @@ public class UserController extends AbstractController {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	private SubscriptionDAO subscriptionDAO;
 
     @Autowired
 	@Qualifier("jwtUserDetailsService")
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SponsorCodeService sponsorCodeService;
 
     static {
         HOSTNAME = UNKNOWN_HOST;
@@ -690,5 +698,24 @@ public class UserController extends AbstractController {
     public ResponseEntity<ApiResponse> checkToken() {
         return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.OK.value()), HttpStatus.OK);
     }
+    
+	@RequestMapping(value = "/user/subscription/validateCode/{subscriptionCode}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<Boolean>> getOfferById(@PathVariable String subscriptionCode) {
+		try {
+			
+			
+			SponsorCode sponsorCode = this.sponsorCodeService.validateSponsorCode(subscriptionCode);
+			
+			if(sponsorCode != null && sponsorCode.isEnabled()) {
+				return new ResponseEntity<GenericResponse<Boolean>>(new GenericResponse<Boolean>(true,HttpStatus.OK.value()), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<GenericResponse<Boolean>>(new GenericResponse<Boolean>(false,HttpStatus.OK.value()), HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			LoggerManager.error(this, e);
+			return new ResponseEntity<GenericResponse<Boolean>>((GenericResponse)null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 }

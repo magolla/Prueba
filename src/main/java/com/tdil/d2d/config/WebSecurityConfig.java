@@ -70,7 +70,7 @@ public class WebSecurityConfig  {
 	               
 	                .antMatcher("/api/**") 
 	                .authorizeRequests()
-	                .antMatchers("/api/auth/**", "/api/user/registerA", "/api/user/registerB", "/api/user/validate", "/api/user/send",  "/api/geo/autocomplete", "/api/initDB", "/api/user/linkedin/auth/step1",
+	                .antMatchers("/api/auth/**", "/api/user/registerA", "/api/user/registerB", "/api/user/validate", "/api/user/send",  "/api/geo/autocomplete", "/api/initDB", "/api/user/linkedin/auth/step1","/api/user/subscription/validateCode/{\\\\d+}",
 	                        "/api/specialties/**",
 	                        "/api/contact/motives",
 	                        "/api/contact", 

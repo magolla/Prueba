@@ -178,6 +178,9 @@ public interface UserService {
 
 	public boolean notifyToMatchedUsers(Long offerId) throws ServiceException;
 	
+	
+	public boolean notifyToSemiMatchedUsers(Long offerId) throws ServiceException;
+	
 	public List<Long> getOfferIdsByDate(Date date) throws ServiceException;
 
 	public void sendSMS(SendSMSRequest request) throws ServiceException;

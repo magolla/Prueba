@@ -2,6 +2,7 @@ package com.tdil.d2d.service;
 
 import java.util.List;
 
+import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
@@ -17,4 +18,6 @@ public interface SponsorCodeService {
 	Subscription consumeWebSponsorCode(String number, String code)  throws ServiceException;
 
 	List<SponsorCode> listSponsorCodesBySponsorId(long sponsorId) ;
+
+	SponsorCode validateSponsorCode(String subscriptionCode) throws DAOException;
 }

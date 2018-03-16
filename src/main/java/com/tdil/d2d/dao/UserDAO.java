@@ -6,6 +6,8 @@ import java.util.Set;
 import com.tdil.d2d.bo.dto.BoNotificationDTO;
 import com.tdil.d2d.controller.api.dto.GeoLevelDTO;
 import com.tdil.d2d.exceptions.DAOException;
+import com.tdil.d2d.persistence.Geo3;
+import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Media;
 import com.tdil.d2d.persistence.MediaType;
@@ -44,6 +46,8 @@ public interface UserDAO {
 	public void deleteUserGeoLocations(User user) throws DAOException;
 
 	public List<User> getMatchedUsers(JobOffer offer, List<GeoLevelDTO> locations) throws DAOException;
+	
+	public List<User> getSemiMatchedUsers(JobOffer offer, List<Geo4> geo4List, Geo3 offerGeo3) throws DAOException;
 
 	public ValidationCode getValidationCode(String mobilePhone, String smsCode) throws DAOException;
 
