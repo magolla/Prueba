@@ -154,6 +154,7 @@ public class NotificationServiceImpl implements NotificationBackofficeService {
 
 				switch (type) {
 				case NEW_OFFER_MATCH:
+				case NEW_OFFER_SEMI_MATCH:
 					if(elem.getOffer().isPermanent()) {
 						dto.setMessage(elem.getOffer().getTitle() + " " + elem.getOffer().getSubtitle());
 					} else {
