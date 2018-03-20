@@ -671,9 +671,10 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			queryString.append("FROM UserProfile userProfile ");
 			queryString.append("JOIN userProfile.user user ");
 			queryString.append("JOIN user.userGeoLocations location ");
-			queryString.append("WHERE (userProfile.institutionType = :both OR userProfile.institutionType = :institutionType) ");
+//			queryString.append("WHERE (userProfile.institutionType = :both OR userProfile.institutionType = :institutionType) ");
+//			queryString.append("WHERE (userProfile.institutionType = :both OR userProfile.institutionType = :institutionType) ");
 			
-			queryString.append("AND :specialty in elements(user.specialties) ");
+			queryString.append("WHERE :specialty in elements(user.specialties) ");
 			
 			queryString.append("AND user.userb = true ");
 			queryString.append("AND user.id != :offerentId ");
@@ -695,8 +696,8 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 			queryString.append(" order by user.lastLoginDate desc");
 
 			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
-			query.setParameter("both", InstitutionType.BOTH);
-			query.setParameter("institutionType", offer.getInstitutionType());
+//			query.setParameter("both", InstitutionType.BOTH);
+//			query.setParameter("institutionType", offer.getInstitutionType());
 			query.setParameter("specialty", offer.getTask().getSpecialty());
 			query.setParameter("offerentId", offer.getOfferent().getId());
 			

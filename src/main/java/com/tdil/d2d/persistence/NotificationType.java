@@ -168,7 +168,7 @@ public enum NotificationType {
 
 		@Override
 		public String getTitle() {
-			return "Nueva oferta en DOC TO DOC";
+			return "Este aviso también podría interesarte.";
 		}
 
 		@Override
