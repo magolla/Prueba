@@ -299,4 +299,38 @@ public class GeoDAOImpl extends HibernateDaoSupport implements GeoDAO  {
 			return geo4List.get(0);
 		}
 	}
+
+	@Override
+	public List<Geo3> getListGeo3OfGeo2(Geo2 offerGeo2) throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct geo3 ");
+			queryString.append("FROM Geo3 geo3 ");
+			queryString.append("WHERE geo3.geo2 = :geo2 ");
+
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameter("geo2", offerGeo2);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	@Override
+	public List<Geo4> getListGeo4OfGeo3List(List<Long> geo3IdList) throws DAOException {
+		try {
+			StringBuilder queryString = new StringBuilder("");
+			queryString.append("SELECT distinct geo4 ");
+			queryString.append("FROM Geo4 geo4 ");
+			queryString.append("WHERE geo4.geo3.id in (:geo3List) ");
+
+			Query query =  this.getSessionFactory().getCurrentSession().createQuery(queryString.toString());
+			query.setParameterList("geo3List", geo3IdList);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 }

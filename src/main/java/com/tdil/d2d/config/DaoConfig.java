@@ -19,7 +19,10 @@ public class DaoConfig {
 //	public UserService userService() {
 //		return new UserServiceImpl();
 //	}
-//	
+	
+	
+	//Descomentar los 3 de abajo
+	
 //	@Bean(name = "jobOfferDAO")
 //	public JobOfferDAO jobOfferDAO() {
 //		return new JobOfferDAOImpl();

@@ -24,6 +24,7 @@ import com.tdil.d2d.dao.JobOfferDAO;
 import com.tdil.d2d.dao.UserDAO;
 import com.tdil.d2d.exceptions.DAOException;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.Geo2;
 import com.tdil.d2d.persistence.Geo3;
 import com.tdil.d2d.persistence.Geo4;
 import com.tdil.d2d.persistence.GeoLevel;
@@ -64,7 +65,7 @@ public class DatabaseTest {
 	@org.junit.Test
 	public void test() {
 		
-		long offerId = 42;
+		long offerId = 35;
 		
 		try {
 			List<MatchedUserDTO> matchedUserDTOs = this.getMatchedUsers(offerId);
@@ -100,31 +101,33 @@ public class DatabaseTest {
 
 	private List<MatchedUserDTO> getSemiMatchedUsers(Long offerId) throws ServiceException {
 		try {
+
 			List<User> result = new ArrayList<>();
 
 			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
 
-//			UserGeoLocation geoLocation = new UserGeoLocation();
-//			geoLocation.setGeoLevelId(jobOffer.getGeoLevelId());
-//			geoLocation.setGeoLevelLevel(jobOffer.getGeoLevelLevel());
-//
-//			Set<UserGeoLocation> geoLocations = new HashSet<UserGeoLocation>();
-//			geoLocations.add(geoLocation);
-//
-//			List<GeoLevelDTO> geos = this.getGeoLevels(geoLocations);
 
 			GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(jobOffer.getGeoLevelId(), jobOffer.getGeoLevelLevel());
-			Geo3 offerGeo3 = null;
+			Geo2 offerGeo2 = null;
 			if(jobOffer.getGeoLevelLevel() == 4) {
 				Geo4 g4= (Geo4)geoLevel;
-				offerGeo3 = g4.getGeo3();
+				offerGeo2 = g4.getGeo3().getGeo2();
+			} else if(jobOffer.getGeoLevelLevel() == 3){
+				Geo3 g3 = (Geo3)geoLevel;
+				offerGeo2 = g3.getGeo2();
 			} else {
-				 offerGeo3 = (Geo3)geoLevel;
+				offerGeo2 = (Geo2)geoLevel;
 			}
+
+			List<Geo3> geo3List = this.geoDAO.getListGeo3OfGeo2(offerGeo2);
 			
+			List<Long> geo3IdList = geo3List.stream().map(Geo3::getId).collect(Collectors.toList());
 			
-			List<Geo4> geo4List = this.geoDAO.getListGeo4ByGeo3(offerGeo3.getId());
-			result = userDAO.getSemiMatchedUsers(jobOffer, geo4List, offerGeo3);
+			List<Geo4> geo4List = this.geoDAO.getListGeo4OfGeo3List(geo3IdList);
+			
+			List<Long> geo4IdList = geo4List.stream().map(Geo4::getId).collect(Collectors.toList());
+			
+			result = userDAO.getSemiMatchedUsers(jobOffer, geo4IdList, geo3IdList, offerGeo2);
 
 			List<MatchedUserDTO> matchedUserDTOs = new ArrayList<MatchedUserDTO>();
 			for (User matchedUser : result) {
