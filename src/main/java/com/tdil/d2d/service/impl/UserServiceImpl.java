@@ -808,9 +808,7 @@ public class UserServiceImpl implements UserService {
 
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-			if(jobOffer.getGeoLevelLevel() != 2) {
-				this.notifyToSemiMatchedUsers(jobOffer.getId());
-			}
+			this.notifyToSemiMatchedUsers(jobOffer.getId());
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -847,9 +845,7 @@ public class UserServiceImpl implements UserService {
 			savePoints(ActivityActionEnum.POST_TEMPORARY_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-			if(jobOffer.getGeoLevelLevel() != 2) {
-				this.notifyToSemiMatchedUsers(jobOffer.getId());
-			}
+			this.notifyToSemiMatchedUsers(jobOffer.getId());
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -909,9 +905,7 @@ public class UserServiceImpl implements UserService {
 			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, finalUser);
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-			if(jobOffer.getGeoLevelLevel() != 2) {
-				this.notifyToSemiMatchedUsers(jobOffer.getId());
-			}
+			this.notifyToSemiMatchedUsers(jobOffer.getId());
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
@@ -953,9 +947,7 @@ public class UserServiceImpl implements UserService {
 			savePoints(ActivityActionEnum.POST_PERMANENT_OFFER, getLoggedUser());
 
 			this.notifyToMatchedUsers(jobOffer.getId());
-			if(jobOffer.getGeoLevelLevel() != 2) {
-				this.notifyToSemiMatchedUsers(jobOffer.getId());
-			}
+			this.notifyToSemiMatchedUsers(jobOffer.getId());
 			return true;
 		} catch (Exception e) {
 			throw new ServiceException(e);
