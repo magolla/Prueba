@@ -31,6 +31,7 @@ import com.tdil.d2d.persistence.GeoLevel;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
+import com.tdil.d2d.service.UserService;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,8 +50,8 @@ public class DatabaseTest {
 
 	}
 	
-//	@Autowired
-//	private UserService userService;
+	@Autowired
+	private UserService userService;
 	
 	
 	@Autowired
@@ -61,6 +62,23 @@ public class DatabaseTest {
 	
 	@Autowired
 	private GeoDAO geoDAO;
+	
+	
+	
+
+
+	@org.junit.Test
+	public void test2() {
+		
+		
+			Long offerId =1L;
+			try {
+				boolean response = this.userService.notifyToSemiMatchedUsers(offerId);
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
+	}
+	
 	
 	@org.junit.Test
 	public void test() {
@@ -105,7 +123,7 @@ public class DatabaseTest {
 			List<User> result = new ArrayList<>();
 
 			JobOffer jobOffer = this.jobDAO.getById(JobOffer.class, offerId);
-
+			
 
 			GeoLevel geoLevel = this.geoDAO.getGeoByIdAndLevel(jobOffer.getGeoLevelId(), jobOffer.getGeoLevelLevel());
 			Geo2 offerGeo2 = null;
