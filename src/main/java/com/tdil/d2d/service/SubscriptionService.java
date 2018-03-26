@@ -19,12 +19,16 @@ public interface SubscriptionService {
 
 	public Subscription registerByDays(User user, int duration, boolean freeSuscription) throws ServiceException;
 
-	public Subscription createFreeSubscription(User user) throws ServiceException ;
+	public Subscription createFreeSubscription(User user,boolean ignorePreviousSubscription) throws ServiceException ;
 
 	public UserReceiptResponse verifyAndRegisterSuscription(User user, ReceiptSuscriptionRequest receiptSuscriptionRequest) throws ServiceException ;
 
 	public UserReceiptResponse getLastReceipt(Long userId) throws ServiceException;
 	
 	public List<Subscription> getSuscriptionCloseExpire() throws ServiceException;
+
+	public List<Subscription> getAllActiveSuscriptions();
+	
+	
 }
 

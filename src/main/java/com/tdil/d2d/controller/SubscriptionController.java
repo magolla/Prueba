@@ -110,7 +110,7 @@ public class SubscriptionController extends AbstractController {
 		try {
 			
 			User user = this.sessionService.getUserLoggedIn();
-			response = this.subscriptionService.createFreeSubscription(user);
+			response = this.subscriptionService.createFreeSubscription(user,false);
 
 			if (response != null) {
 				return ResponseEntity.ok(new GenericResponse<>(200, response.getId()));

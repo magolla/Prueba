@@ -699,4 +699,19 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 		}
 	}
 
+	@Override
+	public List<User> getUserNotIn(List<User> userList) {
+
+		StringBuilder queryStringUser = new StringBuilder("");
+		queryStringUser.append("SELECT distinct user ");
+		queryStringUser.append("FROM User user ");
+		queryStringUser.append("where user not in :userList ");
+		Query queryUser = this.getSessionFactory().getCurrentSession().createQuery(queryStringUser.toString());
+		queryUser.setParameterList("userList", userList);
+
+		List<User> filterUser = (List<User>)queryUser.list();
+
+		return filterUser;
+	}
+
 }

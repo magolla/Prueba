@@ -4,6 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="en" class="wide wow-animation smoothscroll scrollTo">
+
 <head>
 	<title>Doc to Doc App</title>
 	<meta charset="utf-8">
@@ -13,6 +14,7 @@
 	<meta name="keywords" content="intense web design multipurpose template">
 	<meta name="date" content="Dec 26">
 	<link rel="icon" href="images/favicon.ico" type="image/x-icon">
+	<meta property="og:image" content="http://www.doctodocapp.com/images/navbar-logo-ligth-183x32.png"/>
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,700,900">
 	<link rel="stylesheet" href="css/style.css">
 <!-- 	<script -->

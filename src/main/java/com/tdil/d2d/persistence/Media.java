@@ -22,7 +22,7 @@ public class Media implements PersistentEntity {
 	@Enumerated(javax.persistence.EnumType.STRING)
 	private MediaType type;
 	
-	@Size(max = 262144)
+	@Size(max = 1000000)
 	@Column(name = "data")
 	@Lob()
 	private byte[] data;

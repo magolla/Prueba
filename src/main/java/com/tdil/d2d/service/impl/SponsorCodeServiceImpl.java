@@ -19,6 +19,7 @@ import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.SponsorCode;
 import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.persistence.SubscriptionTimeUnit;
+import com.tdil.d2d.persistence.SuscriptionTypeEnum;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.service.SponsorCodeService;
 import com.tdil.d2d.utils.SponsorCodeGenerator;
@@ -84,6 +85,7 @@ public class SponsorCodeServiceImpl implements SponsorCodeService {
 			subscription.setExpirationDate(getExpirationDate(Calendar.getInstance(), sponsorCode));
 			subscription.setUser(user);
 			subscription.setCreationDate(new Date());
+			subscription.setSubscriptionDetail(SuscriptionTypeEnum.SPONSOR_SUSCRIPTION.getMessage());
 			subscriptionDAO.saveSubscription(subscription);
 
 			return subscription;

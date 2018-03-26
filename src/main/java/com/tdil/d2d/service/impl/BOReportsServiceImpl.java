@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,9 +39,11 @@ import com.tdil.d2d.persistence.JobApplication;
 import com.tdil.d2d.persistence.JobOffer;
 import com.tdil.d2d.persistence.Receipt;
 import com.tdil.d2d.persistence.Subscription;
+import com.tdil.d2d.persistence.SuscriptionTypeEnum;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
 import com.tdil.d2d.service.BOReportsService;
+import com.tdil.d2d.service.SubscriptionService;
 
 @Transactional
 @Service
@@ -52,14 +55,18 @@ public class BOReportsServiceImpl implements BOReportsService {
 	private final GeoDAO geoDAO;
 	private final SubscriptionDAO subscriptionDAO;
 	private final JobApplicationDAO jobApplicationDAO;
+	private final SubscriptionService subscriptionService;
+	
+	
 	
 	@Autowired
-	public BOReportsServiceImpl(JobOfferDAO jobOfferDAO, UserDAO userDAO,GeoDAO geoDAO, SubscriptionDAO subscriptionDAO, JobApplicationDAO jobApplicationDAO) {
+	public BOReportsServiceImpl(JobOfferDAO jobOfferDAO, UserDAO userDAO,GeoDAO geoDAO, SubscriptionDAO subscriptionDAO, JobApplicationDAO jobApplicationDAO, SubscriptionService subscriptionService) {
 		this.jobOfferDAO = jobOfferDAO;
 		this.userDAO = userDAO;
 		this.geoDAO = geoDAO;
 		this.subscriptionDAO = subscriptionDAO;
 		this.jobApplicationDAO = jobApplicationDAO;
+		this.subscriptionService = subscriptionService;
 	}
 
 	@Override
@@ -737,6 +744,45 @@ public class BOReportsServiceImpl implements BOReportsService {
 		}
 		
 		return totals;
+	}
+
+	@Override
+	public List<Subscription> getAllActiveSuscriptions() {
+		List<Subscription> subscriptionList = subscriptionDAO.listAllSubscription();
+		
+		List<User> userSubscribedList = subscriptionList.stream().map(Subscription::getUser).collect(Collectors.toList());
+		List<User> userUnSubscribedList = this.userDAO.getUserNotIn(userSubscribedList);
+		
+		Date todayDate = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(todayDate);
+		c.add(Calendar.DATE, 90);
+		Date datePlus90 = c.getTime();
+		
+		for (Subscription subscription : subscriptionList) {
+			
+			if(subscription.isFreeSuscription() == null || subscription.isFreeSuscription() == true) {
+				subscription.setExpirationDate(datePlus90);
+				subscription.setSubscriptionDetail(SuscriptionTypeEnum.EXTENDED_SUSCRIPTION.getMessage());
+				try {
+					subscriptionDAO.saveSubscription(subscription);
+				} catch (DAOException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+		
+		for (User user : userUnSubscribedList) {
+			try {
+				Subscription subscription = this.subscriptionService.createFreeSubscription(user, true);
+				subscription.setSubscriptionDetail(SuscriptionTypeEnum.NEW_FREE_SUSCRIPTION.getMessage());
+				subscriptionDAO.saveSubscription(subscription);
+			} catch (ServiceException | DAOException e) {
+				e.printStackTrace();
+			}
+		}
+		return subscriptionList;
 	}
 	
 	/* END Method for daily report */
