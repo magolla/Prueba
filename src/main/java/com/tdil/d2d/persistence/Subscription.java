@@ -37,6 +37,10 @@ public class Subscription implements PersistentEntity {
 	@Column(name = "freeSuscription")
 	private Boolean freeSuscription;
 	
+	@Column(name = "subscriptionDetail")
+	private String subscriptionDetail;
+	
+
 	public Subscription() {
 	}
 
@@ -97,6 +101,14 @@ public class Subscription implements PersistentEntity {
 
 	public void setExpirationNotified(boolean expirationNotified) {
 		this.expirationNotified = expirationNotified;
+	}
+	
+	public String getSubscriptionDetail() {
+		return subscriptionDetail;
+	}
+
+	public void setSubscriptionDetail(String subscriptionDetail) {
+		this.subscriptionDetail = subscriptionDetail;
 	}
 
 }

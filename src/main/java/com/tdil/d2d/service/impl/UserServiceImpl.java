@@ -119,6 +119,7 @@ import com.tdil.d2d.persistence.Points;
 import com.tdil.d2d.persistence.Specialty;
 import com.tdil.d2d.persistence.Sponsor;
 import com.tdil.d2d.persistence.Subscription;
+import com.tdil.d2d.persistence.SuscriptionTypeEnum;
 import com.tdil.d2d.persistence.Task;
 import com.tdil.d2d.persistence.User;
 import com.tdil.d2d.persistence.UserGeoLocation;
@@ -414,8 +415,13 @@ public class UserServiceImpl implements UserService {
 
 	private void subscribeUser(User user) {
 		try {
-			this.subscriptionService.createFreeSubscription(user);
-		} catch (ServiceException e) {
+			Subscription subscription = this.subscriptionService.createFreeSubscription(user,false);
+			if(subscription == null) {
+				return;
+			}
+			subscription.setSubscriptionDetail(SuscriptionTypeEnum.FREE_SUSCRIPTION.getMessage());
+			subscriptionDAO.saveSubscription(subscription);
+		} catch (ServiceException | DAOException e) {
 			e.printStackTrace();
 		}
 	}

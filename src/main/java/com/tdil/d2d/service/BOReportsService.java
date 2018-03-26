@@ -10,6 +10,7 @@ import com.tdil.d2d.bo.dto.JobOfferReportDTO;
 import com.tdil.d2d.bo.dto.SubscriptionReportDTO;
 import com.tdil.d2d.controller.api.dto.BOJobOfferDTO;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.Subscription;
 
 public interface BOReportsService {
 
@@ -20,4 +21,6 @@ public interface BOReportsService {
 	JobOfferReportDTO getJobOfferReportDTO(FilterJobOfferReportDTO filterDTO) throws ServiceException;
 	
 	JobOfferDailyReportDTO getJobOfferDailyReportDTO(FilterJobOfferDailyReportDTO filterDTO) throws ServiceException;
+
+	List<Subscription> getAllActiveSuscriptions();
 }

@@ -69,5 +69,7 @@ public interface UserDAO {
 	public List<User> getUserByIndex(String length, String start, String search);
 
 	public int getCountWithFilter(String search);
+
+	public List<User> getUserNotIn(List<User> userList);
 	
 }

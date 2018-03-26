@@ -33,6 +33,7 @@ import com.tdil.d2d.controller.api.dto.TaskDTO;
 import com.tdil.d2d.controller.api.response.GenericResponse;
 import com.tdil.d2d.dao.JobApplicationDAO;
 import com.tdil.d2d.exceptions.ServiceException;
+import com.tdil.d2d.persistence.Subscription;
 import com.tdil.d2d.service.BOReportsService;
 import com.tdil.d2d.service.GeoService;
 import com.tdil.d2d.service.SpecialtyService;
@@ -365,6 +366,18 @@ public class AdminReportsController {
 
 
 	
+	@RequestMapping(value = "/reports/extendSuscriptions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse<String>> extendSuscriptions() {
+		
+		List<Subscription> subscriptionList = reportsService.getAllActiveSuscriptions();
+		System.out.println("Cantidad de usuarios suscriptos: " + subscriptionList.size() + "\n");
+		for (Subscription subscription : subscriptionList) {
+			System.out.println("Id Usuario: " + subscription.getUser().getId() +  "\n");
+		}
+		
+		
+		return ResponseEntity.ok(new GenericResponse<>(200, "ok"));
+	}
 	
 }
     

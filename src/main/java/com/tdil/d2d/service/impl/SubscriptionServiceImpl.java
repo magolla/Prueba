@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -212,9 +213,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 	
 	@Override
-	public Subscription createFreeSubscription(User user) throws ServiceException {
+	public Subscription createFreeSubscription(User user, boolean ignorePreviousSubscription) throws ServiceException {
 		
-		if(user.isAlreadyUsedFreeSuscription() ) {
+		if(user.isAlreadyUsedFreeSuscription() && !ignorePreviousSubscription) {
 			LoggerManager.error(this, "This user has already used the free suscription");
 			return null;
 		}
@@ -397,5 +398,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public List<Subscription> getAllActiveSuscriptions() {
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+		return subscriptionDAO.listAllSubscription();
 	}
 }
