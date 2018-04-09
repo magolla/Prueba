@@ -298,7 +298,7 @@
 											</div>
 										<span id="previewZone" class="form-wpp-body-text">Zona: </span>
 										<span id="previewInstitutionType" class="form-wpp-body-text">Tipo de instituci&oacute;n: </span>
-										<span id="previewOfferText" class="form-wpp-body-text" style="margin:18px 0 0;">${boJobDTO.offerText}</span>
+										<span id="previewOfferText" class="form-wpp-body-text" style="margin:18px 0 0;white-space: pre-wrap;">${boJobDTO.offerText}</span>
 									</div>
 								</div>
 							</div>

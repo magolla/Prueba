@@ -247,11 +247,11 @@
 	
 	$('#offerJobType').on( 'change', function (selection) {
 	   if(this.value == 'Permanent') {
-		   table.column(1).search('Permanente', true, false).draw();
+		   table.column(2).search('Permanente', true, false).draw();
 	   } else if(this.value == 'Temporal') {
-		   table.column(1).search('Temporal', true, false).draw();   
+		   table.column(2).search('Temporal', true, false).draw();   
 	   } else {
-		   table.column(1).search('', true, false).draw();   
+		   table.column(2).search('', true, false).draw();   
 	   }
     } );
 	
