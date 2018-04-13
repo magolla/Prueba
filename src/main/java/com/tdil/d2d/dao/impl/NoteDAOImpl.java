@@ -88,10 +88,10 @@ public class NoteDAOImpl extends HibernateDaoSupport implements NoteDAO {
 			queryString.append("OR (occupation.id is null AND specialty.id is null AND note.active = 1)) ");
 			
 			if(userSubscription.getSponsorCode() != null) {
-				queryString.append("AND ((sponsor.id = :sponsorId )");
+				queryString.append("OR ((sponsor.id = :sponsorId )");
 				queryString.append("OR (note.sendUserBAllSponsor is true ))");
 			} else {
-				queryString.append(" AND (note.sendUserBNoSponsor is true )");
+				queryString.append(" OR (note.sendUserBNoSponsor is true )");
 			}
 		}
 		queryString.append("AND (note.expirationDate >= now() OR note.expirationDate is null) ");
